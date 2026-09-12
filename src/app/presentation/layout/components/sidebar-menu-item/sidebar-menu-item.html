@@ -1,0 +1,49 @@
+@if (isVisible()) {
+  @if (root()) {
+    <div class="layout-menuitem-root-text">{{ item().label }}</div>
+  }
+
+  @if (isRouteLink()) {
+    <a
+      [routerLink]="item().routerLink"
+      routerLinkActive="active-route"
+      [routerLinkActiveOptions]="item().routerLinkActiveOptions ?? exactRouteMatch"
+      [queryParams]="item().queryParams"
+      [class]="item().styleClass"
+      [attr.target]="item().target"
+      tabindex="0"
+      pRipple
+      (click)="onClick($event)"
+    >
+      <i class="layout-menuitem-icon" [class]="item().icon"></i>
+      <span class="layout-menuitem-text">{{ item().label }}</span>
+    </a>
+  } @else {
+    <a
+      [attr.href]="item().url"
+      [class]="item().styleClass"
+      [attr.target]="item().target"
+      tabindex="0"
+      pRipple
+      (click)="onClick($event)"
+    >
+      <i class="layout-menuitem-icon" [class]="item().icon"></i>
+      <span class="layout-menuitem-text">{{ item().label }}</span>
+      @if (hasChildren()) {
+        <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
+      }
+    </a>
+  }
+
+  @if (hasChildren() && (root() || isExpanded())) {
+    <ul
+      [class.layout-root-submenulist]="root()"
+      [animate.enter]="animationsEnabled() ? 'submenu-enter' : ''"
+      animate.leave="submenu-leave"
+    >
+      @for (child of item().items; track child.label) {
+        <li app-sidebar-menu-item [item]="child" [parentPath]="fullPath()"></li>
+      }
+    </ul>
+  }
+}

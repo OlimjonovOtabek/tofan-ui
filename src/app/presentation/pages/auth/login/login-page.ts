@@ -1,0 +1,63 @@
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { toAuthErrorMessage } from '@presentation/auth/auth-error-message';
+import { AuthStore } from '@presentation/auth/auth.store';
+import { FloatingThemeSwitcher } from '@presentation/layout/components/floating-theme-switcher/floating-theme-switcher';
+import { AppPaths } from '@presentation/routing/app-paths';
+import { Logo } from '@presentation/shared/components/logo/logo';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Message } from 'primeng/message';
+import { Password } from 'primeng/password';
+
+@Component({
+  selector: 'app-login-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, Button, InputText, Password, Message, Logo, FloatingThemeSwitcher],
+  templateUrl: './login-page.html',
+})
+export class LoginPage {
+  private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
+
+  /** Bound from the `?returnUrl=` query param set by the auth guard. */
+  readonly returnUrl = input<string>();
+
+  protected readonly form = inject(NonNullableFormBuilder).group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+  });
+  protected readonly isSubmitting = signal(false);
+  protected readonly errorMessage = signal<string | null>(null);
+
+  protected async submit(): Promise<void> {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    this.errorMessage.set(null);
+    try {
+      const { username, password } = this.form.getRawValue();
+      await this.authStore.login(username, password);
+      await this.router.navigateByUrl(this.safeReturnUrl());
+    } catch (error) {
+      this.errorMessage.set(toAuthErrorMessage(error));
+    } finally {
+      this.isSubmitting.set(false);
+    }
+  }
+
+  protected isInvalid(controlName: keyof typeof this.form.controls): boolean {
+    const control = this.form.controls[controlName];
+    return control.invalid && control.touched;
+  }
+
+  /** Accepts only in-app paths to prevent open redirects via the query string. */
+  private safeReturnUrl(): string {
+    const url = this.returnUrl();
+    return url?.startsWith('/') && !url.startsWith('//') ? url : AppPaths.dashboard;
+  }
+}

@@ -1,0 +1,76 @@
+<app-floating-theme-switcher />
+
+<div
+  class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden"
+>
+  <div class="flex flex-col items-center justify-center">
+    <div
+      class="rounded-[56px] p-[0.3rem]"
+      style="
+        background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);
+      "
+    >
+      <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20 rounded-[53px]">
+        <div class="text-center mb-8">
+          <app-logo class="mb-8 w-16 mx-auto" />
+          <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
+            Tofan boshqaruv paneli
+          </div>
+          <span class="text-muted-color font-medium">Davom etish uchun tizimga kiring</span>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col" novalidate>
+          @if (errorMessage(); as message) {
+            <p-message severity="error" styleClass="mb-6">{{ message }}</p-message>
+          }
+
+          <label
+            for="username"
+            class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
+          >
+            Login
+          </label>
+          <input
+            pInputText
+            id="username"
+            type="text"
+            autocomplete="username"
+            placeholder="Loginingiz"
+            class="w-full md:w-120"
+            formControlName="username"
+            [invalid]="isInvalid('username')"
+          />
+          <small class="text-red-500 min-h-6 mt-1">
+            @if (isInvalid('username')) {
+              Login kiritilishi shart
+            }
+          </small>
+
+          <label
+            for="password"
+            class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-2"
+          >
+            Parol
+          </label>
+          <p-password
+            inputId="password"
+            formControlName="password"
+            placeholder="Parolingiz"
+            autocomplete="current-password"
+            [toggleMask]="true"
+            [fluid]="true"
+            [feedback]="false"
+            [invalid]="isInvalid('password')"
+          />
+          <small class="text-red-500 min-h-6 mt-1 mb-6">
+            @if (isInvalid('password')) {
+              Parol kiritilishi shart
+            }
+          </small>
+
+          <p-button type="submit" label="Kirish" styleClass="w-full" [loading]="isSubmitting()" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

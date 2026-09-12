@@ -1,11 +1,22 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { environment } from '@environments/environment';
 import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideAuth } from './di/auth.providers';
+import { provideHttp } from './di/http.providers';
+import { provideUi } from './di/ui.providers';
 
+/** Composition root: the only place where all layers are wired together. */
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration()
-  ]
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
+    ),
+    provideHttp(environment.apiBaseUrl),
+    provideAuth({ useMockApi: environment.useMockApi }),
+    provideUi(),
+  ],
 };

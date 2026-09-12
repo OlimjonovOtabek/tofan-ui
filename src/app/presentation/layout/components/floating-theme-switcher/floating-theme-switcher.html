@@ -1,0 +1,24 @@
+<p-button
+  type="button"
+  [rounded]="true"
+  [icon]="darkModeIcon()"
+  severity="secondary"
+  ariaLabel="Mavzu rejimini almashtirish"
+  (onClick)="layoutService.toggleDarkTheme()"
+/>
+
+<div class="relative">
+  <p-button
+    type="button"
+    icon="pi pi-palette"
+    [rounded]="true"
+    ariaLabel="Mavzu sozlamalari"
+    pStyleClass="@next"
+    enterFromClass="hidden"
+    enterActiveClass="animate-scalein"
+    leaveToClass="hidden"
+    leaveActiveClass="animate-fadeout"
+    [hideOnOutsideClick]="true"
+  />
+  <app-configurator [showMenuMode]="false" />
+</div>

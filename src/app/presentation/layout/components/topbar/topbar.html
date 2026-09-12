@@ -1,0 +1,31 @@
+<div class="layout-topbar">
+  <div class="layout-topbar-logo-container">
+    <button
+      type="button"
+      class="layout-menu-button layout-topbar-action"
+      aria-label="Menyuni ochish/yopish"
+      (click)="layoutService.toggleMenu()"
+    >
+      <i class="pi pi-bars"></i>
+    </button>
+    <a class="layout-topbar-logo" [routerLink]="dashboardPath">
+      <app-logo class="w-12" />
+      <span>TOFAN</span>
+    </a>
+  </div>
+
+  <div class="layout-topbar-actions">
+    <app-theme-switcher />
+
+    <button
+      type="button"
+      class="layout-topbar-action"
+      aria-label="Profil"
+      aria-haspopup="true"
+      (click)="profileMenu.toggle($event)"
+    >
+      <i class="pi pi-user"></i>
+    </button>
+    <p-menu #profileMenu [model]="profileMenuItems()" [popup]="true" appendTo="body" />
+  </div>
+</div>

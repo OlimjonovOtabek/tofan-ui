@@ -1,0 +1,29 @@
+.submenu-enter {
+  animation: submenu-expand 450ms cubic-bezier(0.86, 0, 0.07, 1) forwards;
+}
+
+.submenu-leave {
+  animation: submenu-collapse 450ms cubic-bezier(0.86, 0, 0.07, 1) forwards;
+}
+
+@keyframes submenu-expand {
+  from {
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    max-height: 1000px;
+    overflow: visible;
+  }
+}
+
+@keyframes submenu-collapse {
+  from {
+    max-height: 1000px;
+    overflow: hidden;
+  }
+  to {
+    max-height: 0;
+    overflow: hidden;
+  }
+}

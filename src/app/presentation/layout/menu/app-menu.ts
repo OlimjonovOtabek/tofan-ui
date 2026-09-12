@@ -1,0 +1,12 @@
+import { AppPaths } from '@presentation/routing/app-paths';
+import { LayoutMenuItem } from './layout-menu-item';
+
+/** Sidebar navigation. Root items are section headers; add feature links under them. */
+export const APP_MENU: readonly LayoutMenuItem[] = [
+  {
+    label: 'Asosiy',
+    items: [
+      { label: 'Boshqaruv paneli', icon: 'pi pi-fw pi-home', routerLink: [AppPaths.dashboard] },
+    ],
+  },
+];
