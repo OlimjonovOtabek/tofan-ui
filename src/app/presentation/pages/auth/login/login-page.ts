@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { toAuthErrorMessage } from '@presentation/auth/auth-error-message';
@@ -13,7 +13,6 @@ import { Password } from '@openng/optimus-ui/password';
 
 @Component({
   selector: 'app-login-page',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, Button, InputText, Password, Message, Logo, FloatingThemeSwitcher],
   templateUrl: './login-page.html',
 })

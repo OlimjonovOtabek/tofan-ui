@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FloatingThemeSwitcher } from '@presentation/layout/components/floating-theme-switcher/floating-theme-switcher';
 import { AppPaths } from '@presentation/routing/app-paths';
@@ -33,7 +33,6 @@ const ACCENT_STYLES: Record<StatusCardAccent, AccentStyle> = {
 /** Full-screen card used by the not-found, access-denied and error pages. */
 @Component({
   selector: 'app-status-card',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, Button, FloatingThemeSwitcher],
   templateUrl: './status-card.html',
 })

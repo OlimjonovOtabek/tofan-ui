@@ -1,6 +1,6 @@
 # Tofan UI — admin panel
 
-Angular 21 · Node.js 24 · PrimeNG 21 · Sakai layout · Tailwind CSS v4 · OpenAPI (ng-openapi-gen) · Vitest
+Angular 22 · Node.js 24 · Optimus UI 2 · Sakai layout · Tailwind CSS v4 · OpenAPI (ng-openapi-gen) · Vitest
 
 ## Tez start
 
@@ -24,7 +24,7 @@ Development rejimida `useMockApi: true` — backend'siz ishlaydi. Kirish: **admi
 
 ```
 src/app/
-├── domain/           # Biznes qoidalari. Toza TypeScript: Angular, RxJS, PrimeNG YO'Q
+├── domain/           # Biznes qoidalari. Toza TypeScript: Angular, RxJS, Optimus UI YO'Q
 │   └── auth/
 │       ├── entities/        # AuthSession, UserProfile
 │       ├── value-objects/   # Credentials (validatsiya bilan)
@@ -62,7 +62,7 @@ xato beradi.
 ### SOLID qanday qo'llangan
 
 - **S** — har bir klass bitta vazifa: `LoginUseCase` faqat login oqimi, `auth.mapper` faqat
-  DTO → entity, `ThemeService` faqat PrimeNG tokenlarini qo'llaydi, `LayoutService` faqat layout holati.
+  DTO → entity, `ThemeService` faqat Optimus UI tokenlarini qo'llaydi, `LayoutService` faqat layout holati.
 - **O** — yangi backend/manba qo'shish uchun mavjud kod o'zgarmaydi: yangi adapter yoziladi va
   `di/` da bog'lanadi.
 - **L** — `HttpAuthRepository` va `FakeAuthRepository` bir-birining o'rnini to'liq bosadi
@@ -75,12 +75,10 @@ xato beradi.
 ### Kelishuvlar
 
 - Fayl nomlari Angular style guide bo'yicha: `login-page.ts`, `auth.store.ts`, `login.use-case.ts`.
-- Komponentlar standalone, zoneless, holat — `signal`/`computed`.
-- Har bir komponentda `changeDetection: ChangeDetectionStrategy.OnPush` majburiy (Angular 21 da
-  default emas). ESLint tekshiradi, `ng generate component` esa avtomatik qo'yadi.
+- Komponentlar standalone, zoneless, OnPush (Angular 22 da default), holat — `signal`/`computed`.
 - `inject()` ishlatiladi; `public` modifikatori yozilmaydi; template'ga kerakli a'zolar `protected`.
 - Import alias'lar: `@domain/*`, `@application/*`, `@infrastructure/*`, `@presentation/*`, `@environments/*`.
-- Stillar: faqat CSS (`src/styles/`), Tailwind utility klasslari + `tailwindcss-primeui`.
+- Stillar: faqat CSS (`src/styles/`), Tailwind utility klasslari + `@openng/optimus-ui-tailwindcss`.
 - UI matnlari o'zbek tilida.
 
 ## Yangi feature qo'shish (masalan, "Foydalanuvchilar")
@@ -114,21 +112,23 @@ xato beradi.
 | `environment.development.ts`  | `http://localhost:8080/api` | `true`       |
 | `environment.ts` (production) | `/api`                      | `false`      |
 
-## Litsenziyalar va versiyalar
+## UI kutubxonasi: Optimus UI
 
-Loyiha ataylab **Angular 21 + PrimeNG 21** da turibdi, chunki UI stack'i to'liq **MIT** (bepul):
+UI komponentlari — [Optimus UI](https://optimus.openng.org) (`@openng/optimus-ui`). Bu PrimeNG 21
+ning oxirgi MIT kodidan hamjamiyat qilgan fork: API PrimeNG bilan bir xil, faqat importlar
+`primeng/*` o'rniga `@openng/optimus-ui/*`. Shuning uchun PrimeNG v21 hujjatlari ham asosan mos keladi.
 
-| Paket              | Versiya   | Litsenziya |
-| ------------------ | --------- | ---------- |
-| `primeng`          | `21.1.10` | MIT        |
-| `@primeuix/themes` | `2.0.3`   | MIT        |
-| `primeicons`       | `7.0.0`   | MIT        |
-| Sakai (sakai-ng)   | —         | MIT        |
+| Paket                            | Vazifasi                        | Litsenziya |
+| -------------------------------- | ------------------------------- | ---------- |
+| `@openng/optimus-ui`             | Komponentlar                    | MIT        |
+| `@openng/optimus-ui-themes`      | Aura / Lara / Nora presetlari   | MIT        |
+| `@openng/optimus-ui-tailwindcss` | Tailwind plugin                 | MIT        |
+| `@openng/icons`                  | Ikonkalar (`pi pi-*` klasslari) | MIT        |
+| Sakai (sakai-ng)                 | Layout shabloni                 | MIT        |
 
-⚠️ **Bu paketlarni yangilamang:** `primeng@22+`, `@primeuix/themes@3+` va `primeicons@8+`
-PrimeUI License ostida chiqqan, ular litsenziya kalitini talab qiladi va kalit bo'lmasa
-"Invalid PrimeUI License" banneri chiqadi. Shu sabab `package.json` da ular aniq versiyaga
-qotirilgan. Angular 22 ga o'tish ham PrimeNG 22 ni talab qiladi.
+⚠️ **`primeng`, `@primeuix/*` va `primeicons` paketlarini loyihaga qayta qo'shmang.** PrimeNG 22+,
+`@primeuix/themes@3+` va `primeicons@8+` pullik PrimeUI License ostida chiqqan va litsenziya
+kalitisiz "Invalid PrimeUI License" bannerini ko'rsatadi.
 
 ## Sakai haqida
 

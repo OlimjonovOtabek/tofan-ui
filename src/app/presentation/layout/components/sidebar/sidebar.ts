@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -10,7 +10,6 @@ const MENU_TOGGLE_SELECTOR = '.layout-menu-button';
 
 @Component({
   selector: 'app-sidebar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SidebarMenu],
   template: `
     <div class="layout-sidebar">

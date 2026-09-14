@@ -64,7 +64,6 @@ module.exports = defineConfig([
         'error',
         { type: ['element', 'attribute'], prefix: 'app', style: 'kebab-case' },
       ],
-      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@typescript-eslint/explicit-member-accessibility': [
         'error',
         { accessibility: 'no-public', overrides: { constructors: 'off' } },

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthStore } from '@presentation/auth/auth.store';
 import { LayoutService } from '../../layout.service';
@@ -9,7 +9,6 @@ import { Topbar } from '../topbar/topbar';
 /** Authenticated application shell: topbar, sidebar and the routed page. */
 @Component({
   selector: 'app-layout',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, Topbar, Sidebar, Footer],
   templateUrl: './layout.html',
 })

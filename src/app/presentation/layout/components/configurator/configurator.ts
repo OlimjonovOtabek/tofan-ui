@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectButton } from '@openng/optimus-ui/selectbutton';
 import { LayoutService, MenuMode, ThemePresetName } from '../../layout.service';
@@ -15,7 +15,6 @@ const DEFAULT_DARK_SURFACE = 'zinc';
 
 @Component({
   selector: 'app-configurator',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, SelectButton],
   templateUrl: './configurator.html',
   host: {

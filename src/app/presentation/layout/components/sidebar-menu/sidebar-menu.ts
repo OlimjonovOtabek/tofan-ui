@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { APP_MENU } from '../../menu/app-menu';
 import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
 
 @Component({
   selector: 'app-sidebar-menu',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SidebarMenuItem],
   template: `
     <ul class="layout-menu">

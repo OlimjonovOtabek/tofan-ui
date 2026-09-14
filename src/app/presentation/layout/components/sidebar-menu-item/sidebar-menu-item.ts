@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  afterNextRender,
-  computed,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, afterNextRender, computed, inject, input, signal } from '@angular/core';
 import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/router';
 import { Ripple } from '@openng/optimus-ui/ripple';
 import { LayoutService } from '../../layout.service';
@@ -21,7 +13,6 @@ const EXACT_ROUTE_MATCH: IsActiveMatchOptions = {
 
 @Component({
   selector: '[app-sidebar-menu-item]',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive, Ripple],
   templateUrl: './sidebar-menu-item.html',
   styleUrl: './sidebar-menu-item.css',

@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { AuthStore } from '@presentation/auth/auth.store';
 
 @Component({
   selector: 'app-dashboard-page',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard-page.html',
 })
 export class DashboardPage {

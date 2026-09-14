@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthStore } from '@presentation/auth/auth.store';
 import { AppPaths } from '@presentation/routing/app-paths';
@@ -10,7 +10,6 @@ import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 
 @Component({
   selector: 'app-topbar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, Menu, Logo, ThemeSwitcher],
   templateUrl: './topbar.html',
 })
