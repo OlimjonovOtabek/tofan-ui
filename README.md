@@ -130,6 +130,10 @@ ning oxirgi MIT kodidan hamjamiyat qilgan fork: API PrimeNG bilan bir xil, faqat
 `@primeuix/themes@3+` va `primeicons@8+` pullik PrimeUI License ostida chiqqan va litsenziya
 kalitisiz "Invalid PrimeUI License" bannerini ko'rsatadi.
 
+Uchinchi tomon kodidan olingan qismlarning litsenziya matnlari — [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Yangi kutubxona yoki boshqa loyihadan kod olsangiz, uning litsenziyasini tekshiring va kerak
+bo'lsa shu faylga qo'shing.
+
 ## Sakai haqida
 
 Layout [sakai-ng](https://github.com/primefaces/sakai-ng) asosida. O'zgarishlar: SCSS → toza CSS,
