@@ -11,6 +11,8 @@ npm start          # http://localhost:4200
 
 Development rejimida `useMockApi: true` — backend'siz ishlaydi. Kirish: **admin / admin**.
 
+Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
+
 | Buyruq                 | Vazifasi                                        |
 | ---------------------- | ----------------------------------------------- |
 | `npm start`            | Dev server                                      |
