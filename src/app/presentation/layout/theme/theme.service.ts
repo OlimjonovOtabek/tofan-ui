@@ -1,4 +1,4 @@
-import { Injectable, computed, effect, inject } from '@angular/core';
+import { Injectable, computed, effect, inject, untracked } from '@angular/core';
 import { updateSurfacePalette, usePreset } from '@openng/optimus-ui-themes';
 import { LayoutConfig, LayoutService } from '../layout.service';
 import {
@@ -25,7 +25,12 @@ export class ThemeService {
   );
 
   constructor() {
-    effect(() => applyTheme(this.selection()));
+    effect(() => {
+      const selection = this.selection();
+      // Applying a theme synchronously notifies UI components, which read their own config
+      // signals. Untracked, so those reads don't become dependencies that re-trigger this effect.
+      untracked(() => applyTheme(selection));
+    });
   }
 }
 
