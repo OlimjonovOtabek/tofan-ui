@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SelectButton } from 'primeng/selectbutton';
+import { SelectButton } from '@openng/optimus-ui/selectbutton';
 import { LayoutService, MenuMode, ThemePresetName } from '../../layout.service';
 import {
   NOIR_PRIMARY,

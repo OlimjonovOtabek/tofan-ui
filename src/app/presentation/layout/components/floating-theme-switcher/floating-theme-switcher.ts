@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { Button } from 'primeng/button';
-import { StyleClass } from 'primeng/styleclass';
+import { Button } from '@openng/optimus-ui/button';
+import { StyleClass } from '@openng/optimus-ui/styleclass';
 import { LayoutService } from '../../layout.service';
 import { Configurator } from '../configurator/configurator';
 

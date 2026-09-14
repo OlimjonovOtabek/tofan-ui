@@ -17,7 +17,7 @@ const forbid = (...groups) => ['error', { patterns: groups }];
 
 const layer = {
   angular: {
-    group: ['@angular/*', 'primeng', 'primeng/*', '@primeuix/*', 'rxjs', 'rxjs/*'],
+    group: ['@angular/*', '@openng/*', 'rxjs', 'rxjs/*'],
     message: 'Keep this layer framework-agnostic.',
   },
   application: {
@@ -37,7 +37,7 @@ const layer = {
     message: 'Read configuration in the composition root (src/app/di) and pass it in.',
   },
   ui: {
-    group: ['primeng', 'primeng/*', '@primeuix/*'],
+    group: ['@openng/*'],
     message: 'UI libraries belong to presentation.',
   },
 };

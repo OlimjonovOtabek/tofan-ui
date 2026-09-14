@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { StyleClass } from 'primeng/styleclass';
+import { StyleClass } from '@openng/optimus-ui/styleclass';
 import { LayoutService } from '../../layout.service';
 import { Configurator } from '../configurator/configurator';
 

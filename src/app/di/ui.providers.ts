@@ -5,14 +5,14 @@ import {
   provideAppInitializer,
 } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
-import Aura from '@primeuix/themes/aura';
+import Aura from '@openng/optimus-ui-themes/aura';
 import { ThemeService } from '@presentation/layout/theme/theme.service';
 import { AppTitleStrategy } from '@presentation/routing/app-title.strategy';
-import { providePrimeNG } from 'primeng/config';
+import { provideOptimus } from '@openng/optimus-ui/config';
 
 export function provideUi(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    providePrimeNG({
+    provideOptimus({
       theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } },
     }),
     provideAppInitializer(() => {

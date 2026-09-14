@@ -1,6 +1,6 @@
-import Aura from '@primeuix/themes/aura';
-import Lara from '@primeuix/themes/lara';
-import Nora from '@primeuix/themes/nora';
+import Aura from '@openng/optimus-ui-themes/aura';
+import Lara from '@openng/optimus-ui-themes/lara';
+import Nora from '@openng/optimus-ui-themes/nora';
 import { ThemePresetName } from '../layout.service';
 
 export type ColorShade = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;

@@ -1,5 +1,5 @@
 import { Injectable, computed, effect, inject } from '@angular/core';
-import { updateSurfacePalette, usePreset } from '@primeuix/themes';
+import { updateSurfacePalette, usePreset } from '@openng/optimus-ui-themes';
 import { LayoutConfig, LayoutService } from '../layout.service';
 import {
   NOIR_PRIMARY,
@@ -11,7 +11,7 @@ import { buildPresetExtension } from './theme-preset-extension';
 
 type ThemeSelection = Pick<LayoutConfig, 'preset' | 'primary' | 'surface'>;
 
-/** Applies the preset, primary and surface colors chosen in the layout config to PrimeNG. */
+/** Applies the preset, primary and surface colors chosen in the layout config to Optimus UI. */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly layoutService = inject(LayoutService);

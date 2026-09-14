@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { RouterLink } from '@angular/router';
 import { FloatingThemeSwitcher } from '@presentation/layout/components/floating-theme-switcher/floating-theme-switcher';
 import { AppPaths } from '@presentation/routing/app-paths';
-import { Button } from 'primeng/button';
+import { Button } from '@openng/optimus-ui/button';
 
 export type StatusCardAccent = 'primary' | 'warn' | 'danger';
 

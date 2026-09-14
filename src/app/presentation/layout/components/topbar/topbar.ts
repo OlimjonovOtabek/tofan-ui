@@ -3,8 +3,8 @@ import { RouterLink } from '@angular/router';
 import { AuthStore } from '@presentation/auth/auth.store';
 import { AppPaths } from '@presentation/routing/app-paths';
 import { Logo } from '@presentation/shared/components/logo/logo';
-import { MenuItem } from 'primeng/api';
-import { Menu } from 'primeng/menu';
+import { MenuItem } from '@openng/optimus-ui/api';
+import { Menu } from '@openng/optimus-ui/menu';
 import { LayoutService } from '../../layout.service';
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 

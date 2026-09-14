@@ -6,10 +6,10 @@ import { AuthStore } from '@presentation/auth/auth.store';
 import { FloatingThemeSwitcher } from '@presentation/layout/components/floating-theme-switcher/floating-theme-switcher';
 import { AppPaths } from '@presentation/routing/app-paths';
 import { Logo } from '@presentation/shared/components/logo/logo';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { Message } from 'primeng/message';
-import { Password } from 'primeng/password';
+import { Button } from '@openng/optimus-ui/button';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Message } from '@openng/optimus-ui/message';
+import { Password } from '@openng/optimus-ui/password';
 
 @Component({
   selector: 'app-login-page',

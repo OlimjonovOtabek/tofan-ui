@@ -1,8 +1,8 @@
-import { Preset } from '@primeuix/themes/types';
+import { Preset } from '@openng/optimus-ui-themes/types';
 import { ThemePresetName } from '../layout.service';
 import { ColorPalette, NOIR_PRIMARY, NamedPalette } from './theme-palettes';
 
-/** Builds the semantic token overrides that recolor a PrimeNG preset with the chosen primary. */
+/** Builds the semantic token overrides that recolor an Optimus UI preset with the chosen primary. */
 export function buildPresetExtension(preset: ThemePresetName, primary: NamedPalette): Preset {
   if (primary.name === NOIR_PRIMARY) {
     return noirExtension();

@@ -1,4 +1,4 @@
-@import 'primeicons/primeicons.css';
+@import '@openng/icons/openng-icons.css';
 
 @import './layout/variables.css';
 @import './layout/core.css';

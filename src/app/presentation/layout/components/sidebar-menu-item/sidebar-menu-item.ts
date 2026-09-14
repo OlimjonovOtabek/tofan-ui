@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/router';
-import { Ripple } from 'primeng/ripple';
+import { Ripple } from '@openng/optimus-ui/ripple';
 import { LayoutService } from '../../layout.service';
 import { LayoutMenuItem } from '../../menu/layout-menu-item';
 
