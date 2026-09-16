@@ -6,7 +6,9 @@ import { SessionExpiredError } from '@domain/auth/errors/session-expired.error';
 import { AuthRepository } from '@domain/auth/repositories/auth.repository';
 import { Credentials } from '@domain/auth/value-objects/credentials';
 import { ApiClient } from '@infrastructure/api/api-client';
-import { postAuthLogin, postAuthLogout, postAuthRefresh } from '@infrastructure/api/generated';
+import { postAuthLogin } from '@infrastructure/api/generated/fn/auth-authentication/post-auth-login';
+import { postAuthLogout } from '@infrastructure/api/generated/fn/auth-authentication/post-auth-logout';
+import { postAuthRefresh } from '@infrastructure/api/generated/fn/auth-authentication/post-auth-refresh';
 import { toAuthSession, toUserProfile } from './auth.mapper';
 
 /** Error codes the Auth module answers with; see `AuthenticationErrors` in the backend. */

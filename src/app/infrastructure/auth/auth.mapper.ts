@@ -1,6 +1,6 @@
 import { AuthSession } from '@domain/auth/entities/auth-session';
 import { UserProfile } from '@domain/auth/entities/user-profile';
-import { AuthTokenResponse } from '@infrastructure/api/generated';
+import type { AuthTokenResponse } from '@infrastructure/api/generated/models/auth-token-response';
 import { decodeJwtPayload } from './jwt';
 
 const MILLISECONDS_IN_SECOND = 1000;

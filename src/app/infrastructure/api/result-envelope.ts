@@ -1,5 +1,5 @@
 import { DomainError } from '@domain/shared/errors/domain.error';
-import { ApiError } from './generated';
+import type { ApiError } from './generated/models/api-error';
 import { toDomainErrorFromApiError } from './api-error.mapper';
 
 /**

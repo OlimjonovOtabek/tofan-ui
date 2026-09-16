@@ -2,7 +2,7 @@
   <div>
     <span class="text-sm text-muted-color font-semibold">Asosiy rang</span>
     <div class="pt-2 flex gap-2 flex-wrap justify-start">
-      @for (palette of primaryPalettes(); track palette.name) {
+      @for (palette of primaryPalettes; track palette.name) {
         <button
           type="button"
           [title]="palette.name"

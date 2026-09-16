@@ -7,7 +7,8 @@ import { DomainError } from '@domain/shared/errors/domain.error';
 import { NotFoundError } from '@domain/shared/errors/not-found.error';
 import { ServiceUnavailableError } from '@domain/shared/errors/service-unavailable.error';
 import { ValidationError, ValidationIssue } from '@domain/shared/errors/validation.error';
-import { ApiError, ErrorType } from './generated';
+import type { ApiError } from './generated/models/api-error';
+import { ErrorType } from './generated/models/error-type';
 
 /**
  * The backend answers failures with RFC 7807 problem details built from its `Error` type:

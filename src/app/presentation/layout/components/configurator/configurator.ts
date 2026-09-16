@@ -6,7 +6,7 @@ import {
   NOIR_PRIMARY,
   NamedPalette,
   SURFACE_PALETTES,
-  THEME_PRESETS,
+  THEME_PRESET_NAMES,
   getPrimaryPalettes,
 } from '../../theme/theme-palettes';
 
@@ -28,7 +28,7 @@ export class Configurator {
   /** Menu mode makes no sense on pages without the sidebar (e.g. login). */
   readonly showMenuMode = input(true);
 
-  protected readonly presetOptions = Object.keys(THEME_PRESETS) as ThemePresetName[];
+  protected readonly presetOptions = [...THEME_PRESET_NAMES];
   protected readonly menuModeOptions: { label: string; value: MenuMode }[] = [
     { label: 'Static', value: 'static' },
     { label: 'Overlay', value: 'overlay' },
@@ -36,7 +36,7 @@ export class Configurator {
   protected readonly surfacePalettes = SURFACE_PALETTES;
 
   protected readonly config = this.layoutService.layoutConfig;
-  protected readonly primaryPalettes = computed(() => getPrimaryPalettes(this.config().preset));
+  protected readonly primaryPalettes = getPrimaryPalettes();
   protected readonly selectedSurface = computed(
     () =>
       this.config().surface ??

@@ -100,6 +100,29 @@ module.exports = defineConfig([
     },
   },
   {
+    // The app shell (auth, HTTP, the API client) is in the initial bundle. Importing a value from
+    // the generated barrel there drags every module the barrel re-exports into it, so the shell
+    // imports generated code by its own path. Lazy feature modules may use the barrel.
+    files: [
+      'src/app/infrastructure/auth/**/*.ts',
+      'src/app/infrastructure/http/**/*.ts',
+      'src/app/infrastructure/api/*.ts',
+    ],
+    ignores: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: ['@infrastructure/api/generated', './generated'].map((name) => ({
+            name,
+            allowTypeImports: true,
+            message: 'Import generated code by its own path to keep it out of the initial bundle.',
+          })),
+        },
+      ],
+    },
+  },
+  {
     files: ['src/app/presentation/**/*.ts'],
     rules: {
       'no-restricted-imports': forbid(layer.infrastructure, layer.environments),

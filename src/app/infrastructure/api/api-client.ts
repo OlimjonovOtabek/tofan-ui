@@ -2,7 +2,7 @@ import { HttpBackend, HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Api, ApiFnOptional, ApiFnRequired } from './generated/api';
-import { ApiConfiguration } from './generated';
+import { ApiConfiguration } from './generated/api-configuration';
 import { toDomainError } from './api-error.mapper';
 import { ResultPayload, unwrapResult } from './result-envelope';
 

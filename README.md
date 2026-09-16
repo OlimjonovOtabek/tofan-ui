@@ -124,6 +124,13 @@ npm run api:generate    # openapi/tofan-api.json -> src/app/infrastructure/api/g
   (aks holda generator hamma maydonni optional qilib qo'yadi).
 - `openapi/tofan-api.json` va `src/app/infrastructure/api/generated/` git'ga commit qilinadi;
   generatsiya natijasi qo'lda tahrirlanmaydi (Prettier/ESLint uni e'tiborsiz qoldiradi).
+- **Bundle hajmi.** Har bir generatsiya qilingan funksiya faylida `fn.PATH = '...'` qatori bor —
+  bundler uchun bu yon-ta'sir, shuning uchun ishlatilmagan funksiyalar ham tushib qolardi.
+  `infrastructure/api/package.json` dagi `"sideEffects": false` buni to'xtatadi (u `generated/`
+  dan tashqarida, qayta generatsiyada o'chmaydi). Ilova qobig'i (`infrastructure/auth`, `http`,
+  `api/*.ts`) generatsiya qilingan kodni barrel orqali emas, **o'z yo'li** bilan import qiladi —
+  aks holda barrel orqali hamma modullarning funksiyalari boshlang'ich bundle'ga ko'tariladi.
+  ESLint buni tekshiradi; lazy modullar barrel'dan foydalanishi mumkin.
 
 ### Javob konverti va xatoliklar
 

@@ -1,6 +1,5 @@
 import Aura from '@openng/optimus-ui-themes/aura';
-import Lara from '@openng/optimus-ui-themes/lara';
-import Nora from '@openng/optimus-ui-themes/nora';
+import { Preset } from '@openng/optimus-ui-themes/types';
 import { ThemePresetName } from '../layout.service';
 
 export type ColorShade = 0 | 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950;
@@ -11,10 +10,22 @@ export interface NamedPalette {
   palette: ColorPalette;
 }
 
-export const THEME_PRESETS = { Aura, Lara, Nora } as const satisfies Record<
-  ThemePresetName,
-  unknown
->;
+export const THEME_PRESET_NAMES: readonly ThemePresetName[] = ['Aura', 'Lara', 'Nora'];
+
+/**
+ * Aura is the default, so it ships with the shell (the app config applies it before anything
+ * renders). Lara and Nora are ~130 kB each and load only when someone picks them.
+ */
+export function loadThemePreset(name: ThemePresetName): Promise<Preset> {
+  switch (name) {
+    case 'Aura':
+      return Promise.resolve(Aura);
+    case 'Lara':
+      return import('@openng/optimus-ui-themes/lara').then((module) => module.default);
+    case 'Nora':
+      return import('@openng/optimus-ui-themes/nora').then((module) => module.default);
+  }
+}
 
 export const NOIR_PRIMARY = 'noir';
 
@@ -176,8 +187,9 @@ export const SURFACE_PALETTES: readonly NamedPalette[] = [
   },
 ];
 
-export function getPrimaryPalettes(preset: ThemePresetName): NamedPalette[] {
-  const primitive = THEME_PRESETS[preset].primitive as Record<string, ColorPalette | undefined>;
+/** The primitive color palettes are identical in Aura, Lara and Nora, so Aura's serve them all. */
+export function getPrimaryPalettes(): NamedPalette[] {
+  const primitive = Aura.primitive as Record<string, ColorPalette | undefined>;
   const presetPalettes = PRIMARY_COLOR_NAMES.map((name) => ({
     name,
     palette: primitive[name] ?? {},
