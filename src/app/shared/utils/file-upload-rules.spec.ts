@@ -4,17 +4,17 @@ import { ensureUploadIsAllowed, maxUploadSize } from './file-upload-rules';
 const MEGABYTE = 1024 * 1024;
 
 describe('ensureUploadIsAllowed', () => {
-  it('accepts a video within the exercise limit', () => {
+  it('should accept the video when it is within the exercise limit', () => {
     expect(() => ensureUploadIsAllowed('squat.MP4', 150 * MEGABYTE, 'exerciseVideo')).not.toThrow();
   });
 
-  it('rejects an empty file', () => {
+  it('should reject the file when it is empty', () => {
     expect(() => ensureUploadIsAllowed('squat.mp4', 0, 'exerciseVideo')).toThrow(
       expect.objectContaining({ code: 'StoredFile.Empty' }),
     );
   });
 
-  it('rejects a type the category does not accept', () => {
+  it('should reject the file when the category does not accept its type', () => {
     expect(() => ensureUploadIsAllowed('squat.avi', MEGABYTE, 'exerciseVideo')).toThrow(
       expect.objectContaining({ code: 'StoredFile.UnsupportedContent' }),
     );
@@ -23,7 +23,7 @@ describe('ensureUploadIsAllowed', () => {
     );
   });
 
-  it('rejects a file that is over the limit of its category', () => {
+  it('should reject the file when it is over the category limit', () => {
     expect(() => ensureUploadIsAllowed('squat.mp4', 201 * MEGABYTE, 'exerciseVideo')).toThrow(
       expect.objectContaining({ code: 'StoredFile.TooLarge' }),
     );
@@ -32,7 +32,7 @@ describe('ensureUploadIsAllowed', () => {
     );
   });
 
-  it('keeps the same limits as the backend', () => {
+  it('should expose the backend limits when asked per category', () => {
     expect(maxUploadSize('exerciseVideo')).toBe(200 * MEGABYTE);
     expect(maxUploadSize('document')).toBe(20 * MEGABYTE);
     expect(maxUploadSize('avatar')).toBe(10 * MEGABYTE);

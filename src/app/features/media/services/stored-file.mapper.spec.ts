@@ -3,13 +3,13 @@ import { FileCategoryDto as FileCategory, fileCategories } from '@shared/models/
 import { toExerciseVideoUsage, toStoredFile } from './stored-file.mapper';
 
 describe('file mapper', () => {
-  it('maps every category', () => {
+  it('should map every category when converting both ways', () => {
     for (const category of FILE_CATEGORIES) {
       expect(fileCategories.toDomain(fileCategories.toApi(category))).toBe(category);
     }
   });
 
-  it('maps a stored file, preferring the caption as the display name', () => {
+  it('should show the caption when the stored file has one', () => {
     const file = toStoredFile({
       id: '1',
       category: FileCategory.ExerciseVideo,
@@ -27,7 +27,7 @@ describe('file mapper', () => {
     expect(file.createdAt.toISOString()).toBe('2026-09-10T08:30:00.000Z');
   });
 
-  it('falls back to the uploaded name without a caption', () => {
+  it('should show the uploaded name when there is no caption', () => {
     const file = toStoredFile({
       id: '2',
       category: FileCategory.Document,

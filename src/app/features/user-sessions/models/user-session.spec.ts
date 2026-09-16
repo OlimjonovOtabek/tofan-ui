@@ -4,14 +4,14 @@ describe('UserSession', () => {
   const loggedInAt = new Date('2026-09-01T09:00:00Z');
   const expiresAt = new Date('2026-11-30T09:00:00Z');
 
-  it('is unexpired until its access token expires', () => {
+  it('should turn expired when the access token lifetime is over', () => {
     const session = new UserSession('1', 'user', loggedInAt, expiresAt, null);
 
     expect(session.status(new Date('2026-11-30T08:59:59Z'))).toBe('unexpired');
     expect(session.status(expiresAt)).toBe('expired');
   });
 
-  it('reports a logout from every device over expiry', () => {
+  it('should report a logout from every device when the session was revoked', () => {
     const session = new UserSession(
       '1',
       'user',

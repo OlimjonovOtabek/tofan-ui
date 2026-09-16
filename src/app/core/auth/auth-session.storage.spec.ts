@@ -25,7 +25,7 @@ describe('AuthSessionStorage', () => {
     repository = TestBed.inject(AuthSessionStorage);
   });
 
-  it('restores a saved session', () => {
+  it('should restore the session when it was saved before', () => {
     const session = new AuthSession('token', new Date('2030-01-01T00:00:00Z'), 'refresh');
 
     repository.save(session);
@@ -33,7 +33,7 @@ describe('AuthSessionStorage', () => {
     expect(repository.get()).toEqual(session);
   });
 
-  it('returns null after clearing', () => {
+  it('should return null when the session was cleared', () => {
     repository.save(new AuthSession('token', new Date('2030-01-01T00:00:00Z')));
 
     repository.clear();
@@ -41,7 +41,7 @@ describe('AuthSessionStorage', () => {
     expect(repository.get()).toBeNull();
   });
 
-  it('discards corrupted data', () => {
+  it('should discard the stored data when it is corrupted', () => {
     storage.setItem('tofan.session', '{"accessToken": 42}');
 
     expect(repository.get()).toBeNull();

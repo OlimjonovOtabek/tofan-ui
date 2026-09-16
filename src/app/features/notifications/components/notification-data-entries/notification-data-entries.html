@@ -1,0 +1,46 @@
+<div class="flex flex-col gap-2">
+  <div class="flex items-center justify-between">
+    <div>
+      <span class="font-medium">Qo‘shimcha ma’lumot (ixtiyoriy)</span>
+      <div class="text-muted-color text-sm">
+        Ilova uchun kalit–qiymat juftliklari, masalan ekran nomi.
+      </div>
+    </div>
+    <p-button
+      label="Qator qo'shish"
+      icon="pi pi-plus"
+      severity="secondary"
+      [text]="true"
+      (onClick)="add()"
+    />
+  </div>
+
+  @for (entry of entries().controls; track entry; let index = $index) {
+    <div class="flex items-center gap-2" [formGroup]="entry">
+      <input
+        pInputText
+        type="text"
+        class="flex-1"
+        formControlName="key"
+        placeholder="Kalit"
+        [attr.aria-label]="'Kalit ' + (index + 1)"
+      />
+      <input
+        pInputText
+        type="text"
+        class="flex-1"
+        formControlName="value"
+        placeholder="Qiymat"
+        [attr.aria-label]="'Qiymat ' + (index + 1)"
+      />
+      <p-button
+        icon="pi pi-times"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        ariaLabel="Qatorni olib tashlash"
+        (onClick)="remove(index)"
+      />
+    </div>
+  }
+</div>

@@ -11,7 +11,7 @@ const response = {
 };
 
 describe('user session mapper', () => {
-  it('maps the login journal record and leaves the token hash behind', () => {
+  it('should map the record without the token hash when a response arrives', () => {
     const session = toUserSession(response);
 
     expect(session.loggedInAt.toISOString()).toBe('2026-09-01T09:00:00.000Z');
@@ -20,7 +20,7 @@ describe('user session mapper', () => {
     expect(Object.values(session)).not.toContain('A1B2C3');
   });
 
-  it('keeps the revocation time of a logout from every device', () => {
+  it('should keep the revocation time when the session was revoked', () => {
     const session = toUserSession({
       ...response,
       isRevoked: true,

@@ -17,7 +17,7 @@ const draft: ExerciseDraft = {
 };
 
 describe('createExerciseDraft', () => {
-  it('trims the text a user typed', () => {
+  it('should trim the text when the user typed surrounding spaces', () => {
     const prepared = createExerciseDraft({
       ...draft,
       name: '  Squat ',
@@ -28,11 +28,11 @@ describe('createExerciseDraft', () => {
     expect(prepared.instructions).toBe('Tizzani bukib pasaying.');
   });
 
-  it('treats blank instructions as no instructions', () => {
+  it('should drop the instructions when they are blank', () => {
     expect(createExerciseDraft({ ...draft, instructions: '   ' }).instructions).toBeNull();
   });
 
-  it('names every language that is missing', () => {
+  it('should name every missing language when names are blank', () => {
     let error: unknown;
     try {
       createExerciseDraft({ ...draft, name: '', nameUz: ' ', nameRu: 'Приседание' });

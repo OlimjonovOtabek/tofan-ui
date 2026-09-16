@@ -5,15 +5,15 @@ import { unwrapResult } from './result-envelope';
 const noError = { code: '', message: '', type: ErrorType.Failure };
 
 describe('unwrapResult', () => {
-  it('returns the data of a successful envelope', () => {
+  it('should return the data when the envelope succeeded', () => {
     expect(unwrapResult({ isSuccess: true, isFailure: false, error: noError, data: 42 })).toBe(42);
   });
 
-  it('returns nothing for an envelope that carries no data', () => {
+  it('should return nothing when the envelope carries no data', () => {
     expect(unwrapResult({ isSuccess: true, isFailure: false, error: noError })).toBeUndefined();
   });
 
-  it('throws the domain error of a failed envelope', () => {
+  it('should throw the domain error when the envelope failed', () => {
     expect(() =>
       unwrapResult({
         isSuccess: false,
@@ -23,7 +23,7 @@ describe('unwrapResult', () => {
     ).toThrow(NotFoundError);
   });
 
-  it('passes a plain payload, such as a paged list, straight through', () => {
+  it('should pass the payload through when it is not an envelope', () => {
     const page = { data: [{ id: '1' }], totalCount: 1 };
 
     expect(unwrapResult(page)).toBe(page);

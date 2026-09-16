@@ -113,7 +113,8 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
 - **O** — extend via inputs, content projection, strategy maps; do not add `if (type === ...)` chains.
 - **I** — small services per resource (`NotificationTemplatesService`, `PushNotificationsService`).
 - **D** — components talk to stores, stores talk to services, services talk to `ApiClient`.
-  Components never inject a service that does HTTP.
+  Components never inject a service that does HTTP. The one exception is
+  `shared/components/file-upload`, whose whole job is uploading through `FileUploadService`.
 
 ## 5. Angular 22 rules
 
@@ -126,8 +127,9 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
   No `@Input`/`@Output` decorators. `effect()` only for side effects outside Angular (logging, storage).
 - Templates: `@if`, `@for (...; track item.id)`, `@switch`, `@let`, `@defer`.
   No `*ngIf`, `*ngFor`, `ngClass`, `ngStyle` → use `[class.x]`, `[style.x]`.
-- Forms: Signal Forms (`form()`, `[formField]`) for all new forms. Existing Reactive Forms are
-  migrated when a form is reworked.
+- Forms: Signal Forms (`form()`, `[formField]`) for all new forms. Every existing form is still
+  Reactive Forms (login, filters, the three form dialogs, send notification); migrate a form when
+  it is reworked, not in passing.
 - Routing: lazy `loadComponent` / `loadChildren`, functional guards, `withComponentInputBinding()`.
 - No `any`, in any form: annotations, `as any`, `any[]`, rest parameters, `$any()` in templates, or an
   `any` leaking from a library (`JSON.parse`, untyped APIs). Type it or use `unknown` and narrow.

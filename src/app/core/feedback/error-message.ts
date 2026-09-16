@@ -33,11 +33,10 @@ export function toErrorMessage(error: unknown): string {
     return "Serverga ulanib bo'lmadi. Keyinroq qayta urinib ko'ring.";
   }
 
-  const knownMessage = MESSAGES_BY_CODE[error.code];
-  if (knownMessage !== undefined) {
-    return knownMessage;
-  }
+  return MESSAGES_BY_CODE[error.code] ?? messageForErrorClass(error);
+}
 
+function messageForErrorClass(error: DomainError): string {
   if (error instanceof InvalidCredentialsError) {
     return "Login yoki parol noto'g'ri.";
   }
@@ -48,9 +47,7 @@ export function toErrorMessage(error: unknown): string {
     return "Bu amal uchun ruxsatingiz yo'q.";
   }
   if (error instanceof ValidationError) {
-    return error.issues.length === 0
-      ? "Ma'lumotlar to'g'ri to'ldirilmagan."
-      : error.issues.map((issue) => MESSAGES_BY_CODE[issue.code] ?? issue.message).join(' ');
+    return validationMessage(error);
   }
   if (error instanceof NotFoundError) {
     return "Ma'lumot topilmadi — u o'chirilgan bo'lishi mumkin.";
@@ -62,4 +59,10 @@ export function toErrorMessage(error: unknown): string {
     return error.message;
   }
   return "Amalni bajarib bo'lmadi. Keyinroq qayta urinib ko'ring.";
+}
+
+function validationMessage(error: ValidationError): string {
+  return error.issues.length === 0
+    ? "Ma'lumotlar to'g'ri to'ldirilmagan."
+    : error.issues.map((issue) => MESSAGES_BY_CODE[issue.code] ?? issue.message).join(' ');
 }

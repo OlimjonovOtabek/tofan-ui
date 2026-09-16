@@ -35,7 +35,7 @@ function expectRoundTrip<TDomain extends string, TApi extends number>(
 }
 
 describe('exercise enum maps', () => {
-  it('maps every domain value the catalog offers', () => {
+  it('should map every catalog value when converting enums both ways', () => {
     expectRoundTrip(MUSCLE_GROUPS, muscleGroups);
     expectRoundTrip(EQUIPMENT_TYPES, equipmentTypes);
     expectRoundTrip(EXERCISE_DIFFICULTIES, difficulties);
@@ -43,7 +43,7 @@ describe('exercise enum maps', () => {
     expectRoundTrip(EXERCISE_GENDERS, genders);
   });
 
-  it('refuses a value the DTO enum does not know', () => {
+  it('should throw when the DTO enum does not know the value', () => {
     expect(() => muscleGroups.toApi('triceps-brachii' as never)).toThrow(/DTO enum/);
   });
 });
@@ -66,7 +66,7 @@ describe('exercise mapper', () => {
     videoFileId: null,
   };
 
-  it('maps a response into the entity', () => {
+  it('should build the entity when a response arrives', () => {
     const exercise = toExercise(response);
 
     expect(exercise.displayName).toBe('Skvat');
@@ -78,7 +78,7 @@ describe('exercise mapper', () => {
     expect(exercise.hasVideo()).toBe(false);
   });
 
-  it('leaves the optional fields out of a create request', () => {
+  it('should leave the optional fields out when they are empty', () => {
     const request = toCreateExerciseRequest({
       name: 'Squat',
       nameUz: 'Skvat',

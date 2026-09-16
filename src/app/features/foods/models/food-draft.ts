@@ -29,13 +29,7 @@ export function createFoodDraft(draft: FoodDraft): FoodDraft {
     ...missingName('Name', name),
     ...missingName('NameUz', nameUz),
     ...missingName('NameRu', nameRu),
-    ...positive('ServingSize', draft.servingSize),
-    ...positive('ServingSizeGrams', draft.servingSizeGrams),
-    ...notNegative('CaloriesPerServing', draft.caloriesPerServing),
-    ...notNegative('ProteinGrams', draft.proteinGrams),
-    ...notNegative('CarbsGrams', draft.carbsGrams),
-    ...notNegative('FatGrams', draft.fatGrams),
-    ...(draft.fiberGrams === null ? [] : notNegative('FiberGrams', draft.fiberGrams)),
+    ...nutritionIssues(draft),
   ];
   if (issues.length > 0) {
     throw new ValidationError('The food cannot be saved as it is.', issues);
@@ -48,6 +42,18 @@ export function createFoodDraft(draft: FoodDraft): FoodDraft {
     nameRu,
     barcode: barcode.length === 0 ? null : barcode,
   };
+}
+
+function nutritionIssues(draft: FoodDraft): ValidationIssue[] {
+  return [
+    ...positive('ServingSize', draft.servingSize),
+    ...positive('ServingSizeGrams', draft.servingSizeGrams),
+    ...notNegative('CaloriesPerServing', draft.caloriesPerServing),
+    ...notNegative('ProteinGrams', draft.proteinGrams),
+    ...notNegative('CarbsGrams', draft.carbsGrams),
+    ...notNegative('FatGrams', draft.fatGrams),
+    ...(draft.fiberGrams === null ? [] : notNegative('FiberGrams', draft.fiberGrams)),
+  ];
 }
 
 function missingName(field: string, value: string): ValidationIssue[] {

@@ -17,11 +17,11 @@ const draft: NotificationTemplateDraft = {
 };
 
 describe('createNotificationTemplateDraft', () => {
-  it('trims every text', () => {
+  it('should trim every text when it has surrounding spaces', () => {
     expect(createNotificationTemplateDraft({ ...draft, titleUz: '  Suv  ' }).titleUz).toBe('Suv');
   });
 
-  it('requires every language, because the backend sends whichever one the trainee reads', () => {
+  it('should reject the draft when any language is missing', () => {
     let error: unknown;
     try {
       createNotificationTemplateDraft({

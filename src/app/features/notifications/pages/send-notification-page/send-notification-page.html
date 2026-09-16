@@ -59,32 +59,11 @@
 
     @if (mode() === 'templated') {
       @if (store.templatesLoaded()) {
-        @if (coverage().activeStyles.length === 0) {
-          <p-message severity="error">
-            Bu tur uchun faol shablon yo‘q — yuborish muvaffaqiyatsiz bo‘ladi.
-            <a [routerLink]="templatesPath" class="font-medium underline">Shablon qo‘shing</a>.
-          </p-message>
-        } @else if (!coverage().reachesEveryone) {
-          <p-message severity="warn">
-            Faqat {{ styleLabels(coverage().activeStyles) }} uslubi uchun shablon bor. Boshqa
-            uslubni tanlagan foydalanuvchiga professional shablon kerak, u esa yo‘q.
-          </p-message>
-        } @else {
-          <p-message severity="info">
-            Foydalanuvchining uslubi va tiliga mos shablon tanlanadi. Faol uslublar:
-            {{ styleLabels(coverage().activeStyles) }}.
-          </p-message>
-        }
-
-        @if (preview(); as template) {
-          <div class="border-surface-200 dark:border-surface-700 rounded-lg border p-4">
-            <div class="text-muted-color mb-2 text-xs uppercase">
-              Namuna (professional, o‘zbekcha)
-            </div>
-            <div class="font-medium">{{ template.displayTitle }}</div>
-            <div class="mt-1 whitespace-pre-line">{{ template.displayBody }}</div>
-          </div>
-        }
+        <app-template-coverage-hint
+          [coverage]="coverage()"
+          [preview]="preview()"
+          [templatesPath]="templatesPath"
+        />
       }
     } @else {
       <div class="flex flex-col gap-1">
@@ -127,52 +106,7 @@
       </div>
     }
 
-    <div class="flex flex-col gap-2" formArrayName="data">
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="font-medium">Qo‘shimcha ma’lumot (ixtiyoriy)</span>
-          <div class="text-muted-color text-sm">
-            Ilova uchun kalit–qiymat juftliklari, masalan ekran nomi.
-          </div>
-        </div>
-        <p-button
-          label="Qator qo'shish"
-          icon="pi pi-plus"
-          severity="secondary"
-          [text]="true"
-          (onClick)="addDataEntry()"
-        />
-      </div>
-
-      @for (entry of dataEntries.controls; track entry; let index = $index) {
-        <div class="flex items-center gap-2" [formGroupName]="index">
-          <input
-            pInputText
-            type="text"
-            class="flex-1"
-            formControlName="key"
-            placeholder="Kalit"
-            [attr.aria-label]="'Kalit ' + (index + 1)"
-          />
-          <input
-            pInputText
-            type="text"
-            class="flex-1"
-            formControlName="value"
-            placeholder="Qiymat"
-            [attr.aria-label]="'Qiymat ' + (index + 1)"
-          />
-          <p-button
-            icon="pi pi-times"
-            severity="secondary"
-            [text]="true"
-            [rounded]="true"
-            ariaLabel="Qatorni olib tashlash"
-            (onClick)="removeDataEntry(index)"
-          />
-        </div>
-      }
-    </div>
+    <app-notification-data-entries [entries]="dataEntries" />
 
     <div>
       <p-button type="submit" label="Yuborish" icon="pi pi-send" [loading]="store.sending()" />

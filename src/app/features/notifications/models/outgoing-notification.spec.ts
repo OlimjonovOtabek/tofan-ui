@@ -26,7 +26,7 @@ function issueCodesOf(run: () => unknown): string[] {
 }
 
 describe('createCustomNotification', () => {
-  it('trims the text and sends no payload when there is none', () => {
+  it('should trim the text and send no payload when there is none', () => {
     const notification = createCustomNotification({
       ...custom,
       userId: ` ${USER_ID} `,
@@ -38,7 +38,7 @@ describe('createCustomNotification', () => {
     expect(notification.data).toBeNull();
   });
 
-  it('refuses a recipient that is not a UUID', () => {
+  it('should reject the notification when the recipient is not a UUID', () => {
     expect(issueCodesOf(() => createCustomNotification({ ...custom, userId: '' }))).toEqual([
       'UserId.Empty',
     ]);
@@ -47,7 +47,7 @@ describe('createCustomNotification', () => {
     ]);
   });
 
-  it('refuses empty or oversized text with the push provider limits', () => {
+  it('should reject the notification when the text is empty or too long', () => {
     expect(
       issueCodesOf(() =>
         createCustomNotification({ ...custom, title: ' ', body: 'x'.repeat(2049) }),
@@ -58,7 +58,7 @@ describe('createCustomNotification', () => {
     ).not.toThrow();
   });
 
-  it('turns the payload rows into a map, skipping rows left blank', () => {
+  it('should build the payload map when some rows are blank', () => {
     const notification = createCustomNotification({
       ...custom,
       data: [
@@ -71,7 +71,7 @@ describe('createCustomNotification', () => {
     expect(notification.data).toEqual({ screen: 'exercises', exerciseCount: '20' });
   });
 
-  it('refuses a value without a key and a repeated key', () => {
+  it('should reject the payload when a key is missing or repeated', () => {
     expect(
       issueCodesOf(() =>
         createCustomNotification({
@@ -88,13 +88,13 @@ describe('createCustomNotification', () => {
 });
 
 describe('createTemplatedNotification', () => {
-  it('needs only a valid recipient and a type', () => {
+  it('should accept the notification when it has a valid recipient and a type', () => {
     expect(
       createTemplatedNotification({ userId: USER_ID, type: 'weeklyReport', data: [] }),
     ).toEqual({ userId: USER_ID, type: 'weeklyReport', data: null });
   });
 
-  it('checks the recipient and the payload the same way', () => {
+  it('should reject the notification when the recipient or payload is invalid', () => {
     expect(
       issueCodesOf(() =>
         createTemplatedNotification({

@@ -20,12 +20,12 @@ function food(servingSizeGrams: number, nameUz = 'Palov'): Food {
 }
 
 describe('Food', () => {
-  it('prefers the Uzbek name in lists', () => {
+  it('should show the Uzbek name when it is filled in', () => {
     expect(food(200).displayName).toBe('Palov');
     expect(food(200, '').displayName).toBe('Plov');
   });
 
-  it('normalises the nutrition to 100 grams', () => {
+  it('should normalise the nutrition to 100 grams when the serving weight is known', () => {
     expect(food(200).per100Grams).toEqual({
       calories: 170,
       proteinGrams: 8.5,
@@ -34,7 +34,7 @@ describe('Food', () => {
     });
   });
 
-  it('has nothing to normalise when the serving weight is unknown', () => {
+  it('should have nothing to normalise when the serving weight is unknown', () => {
     expect(food(0).per100Grams).toBeNull();
   });
 });

@@ -1,0 +1,24 @@
+@if (coverage().activeStyles.length === 0) {
+  <p-message severity="error">
+    Bu tur uchun faol shablon yo‘q — yuborish muvaffaqiyatsiz bo‘ladi.
+    <a [routerLink]="templatesPath()" class="font-medium underline">Shablon qo‘shing</a>.
+  </p-message>
+} @else if (!coverage().reachesEveryone) {
+  <p-message severity="warn">
+    Faqat {{ styleLabels(coverage().activeStyles) }} uslubi uchun shablon bor. Boshqa uslubni
+    tanlagan foydalanuvchiga professional shablon kerak, u esa yo‘q.
+  </p-message>
+} @else {
+  <p-message severity="info">
+    Foydalanuvchining uslubi va tiliga mos shablon tanlanadi. Faol uslublar:
+    {{ styleLabels(coverage().activeStyles) }}.
+  </p-message>
+}
+
+@if (preview(); as template) {
+  <div class="border-surface-200 dark:border-surface-700 rounded-lg border p-4">
+    <div class="text-muted-color mb-2 text-xs uppercase">Namuna (professional, o‘zbekcha)</div>
+    <div class="font-medium">{{ template.displayTitle }}</div>
+    <div class="mt-1 whitespace-pre-line">{{ template.displayBody }}</div>
+  </div>
+}

@@ -7,13 +7,13 @@ import { ValidationError } from '@shared/models/errors/validation.error';
 import { toErrorMessage } from './error-message';
 
 describe('toErrorMessage', () => {
-  it('prefers the wording we have for a known backend code', () => {
+  it('should use our wording when the backend code is known', () => {
     const error = new BusinessRuleError('Invalid credentials', 'Authentication.InvalidCredentials');
 
     expect(toErrorMessage(error)).toBe("Login yoki parol noto'g'ri.");
   });
 
-  it('lists what the validator complained about', () => {
+  it('should list every issue when validation fails', () => {
     const error = new ValidationError('invalid', [
       { code: 'Name.Empty', message: 'Nom kiritilmagan.' },
       { code: 'Name.TooLong', message: 'Nom juda uzun.' },
@@ -22,20 +22,20 @@ describe('toErrorMessage', () => {
     expect(toErrorMessage(error)).toBe('Nom kiritilmagan. Nom juda uzun.');
   });
 
-  it('has wording for every error type we map', () => {
+  it('should have wording when any mapped error type occurs', () => {
     expect(toErrorMessage(new InvalidCredentialsError())).toContain("noto'g'ri");
     expect(toErrorMessage(new AccessDeniedError())).toContain('ruxsat');
     expect(toErrorMessage(new NotFoundError('gone', 'Exercise.NotFound'))).toContain('topilmadi');
     expect(toErrorMessage(new ConflictError('exists', 'Food.Duplicate'))).toContain('mavjud');
   });
 
-  it('falls back to the backend text of an unknown rule', () => {
+  it('should show the backend text when a business rule is unknown', () => {
     expect(toErrorMessage(new BusinessRuleError('Plan is locked.', 'Plan.Locked'))).toBe(
       'Plan is locked.',
     );
   });
 
-  it('treats anything that is not a domain error as a connection problem', () => {
+  it('should report a connection problem when the error is not a domain error', () => {
     expect(toErrorMessage(new Error('boom'))).toContain("Serverga ulanib bo'lmadi");
   });
 });

@@ -1,11 +1,11 @@
 import { toPage, toPagedQuery } from './paging.mapper';
 
 describe('toPagedQuery', () => {
-  it('sends the row window alone when nothing is sorted', () => {
+  it('should send only the row window when nothing is sorted', () => {
     expect(toPagedQuery({ first: 25, rows: 25 })).toEqual({ First: 25, Rows: 25 });
   });
 
-  it('translates the sort direction the way the backend expects', () => {
+  it('should translate the sort direction when a column is sorted', () => {
     expect(toPagedQuery({ first: 0, rows: 10, sortField: 'name', sortDirection: 'asc' })).toEqual({
       First: 0,
       Rows: 10,
@@ -20,7 +20,7 @@ describe('toPagedQuery', () => {
     });
   });
 
-  it('names the sort column the way the backend whitelists it', () => {
+  it('should use the snake_case column name when sorting', () => {
     const sortBy = (sortField: string) =>
       toPagedQuery({ first: 0, rows: 10, sortField, sortDirection: 'asc' }).SortField;
 
@@ -32,13 +32,13 @@ describe('toPagedQuery', () => {
 });
 
 describe('toPage', () => {
-  it('maps every item and keeps the total', () => {
+  it('should map every item and keep the total when a page arrives', () => {
     const page = toPage({ data: [{ id: '1' }, { id: '2' }], totalCount: 7 }, (dto) => dto.id);
 
     expect(page).toEqual({ items: ['1', '2'], totalCount: 7 });
   });
 
-  it('survives an empty answer', () => {
+  it('should return an empty page when the answer is empty', () => {
     expect(toPage({}, (dto: { id: string }) => dto.id)).toEqual({ items: [], totalCount: 0 });
   });
 });

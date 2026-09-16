@@ -11,7 +11,7 @@ import {
 const USER_ID = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
 
 describe('notification enum maps', () => {
-  it('maps every domain value', () => {
+  it('should map every value when converting enums both ways', () => {
     for (const value of NOTIFICATION_TYPES) {
       expect(notificationTypes.toDomain(notificationTypes.toApi(value))).toBe(value);
     }
@@ -22,7 +22,7 @@ describe('notification enum maps', () => {
 });
 
 describe('notification mapper', () => {
-  it('maps a template response, dates included', () => {
+  it('should build the template with dates when a response arrives', () => {
     const template = toNotificationTemplate({
       id: '1',
       type: NotificationType.DpEarned,
@@ -44,14 +44,14 @@ describe('notification mapper', () => {
     expect(template.updatedAt.toISOString()).toBe('2026-09-02T09:00:00.000Z');
   });
 
-  it('leaves the payload out when there is none', () => {
+  it('should leave the payload out when there is none', () => {
     expect(toSendTemplatedRequest({ userId: USER_ID, type: 'weeklyReport', data: null })).toEqual({
       userId: USER_ID,
       type: NotificationType.WeeklyReport,
     });
   });
 
-  it('sends the payload as a plain map', () => {
+  it('should send the payload as a plain map when there is one', () => {
     const request = toSendCustomRequest({
       userId: USER_ID,
       type: 'workoutReminder',

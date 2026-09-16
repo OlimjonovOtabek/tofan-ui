@@ -19,7 +19,7 @@ describe('ClipboardService', () => {
     vi.unstubAllGlobals();
   });
 
-  it('copies and says what was copied', async () => {
+  it('should confirm what was copied when the browser allows copying', async () => {
     writeText.mockResolvedValue(undefined);
 
     await TestBed.inject(ClipboardService).copy('abc', 'Fayl ID');
@@ -28,7 +28,7 @@ describe('ClipboardService', () => {
     expect(notifications.success).toHaveBeenCalledWith('Fayl ID nusxalandi.');
   });
 
-  it('shows the text when the browser refuses to copy', async () => {
+  it('should show the text when the browser refuses to copy', async () => {
     writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError'));
 
     await TestBed.inject(ClipboardService).copy('abc', 'Fayl ID');

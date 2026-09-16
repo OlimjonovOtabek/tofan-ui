@@ -10,7 +10,7 @@ function tokenWith(claims: Record<string, unknown>): string {
 }
 
 describe('auth mapper', () => {
-  it('derives both expiry dates from the token lifetimes', () => {
+  it('should derive both expiry dates when mapping the token lifetimes', () => {
     const issuedAt = new Date('2026-01-01T12:00:00Z');
 
     const session = toAuthSession(
@@ -30,7 +30,7 @@ describe('auth mapper', () => {
     expect(session.refreshExpiresAt?.toISOString()).toBe('2026-01-01T14:00:00.000Z');
   });
 
-  it('reads the profile from the Keycloak claims of the access token', () => {
+  it('should read the profile when the access token carries Keycloak claims', () => {
     const token = tokenWith({
       sub: '7',
       preferred_username: 'admin',
@@ -46,7 +46,7 @@ describe('auth mapper', () => {
     expect(user.isAdmin()).toBe(true);
   });
 
-  it('falls back to the username and no roles when claims are missing', () => {
+  it('should fall back to the username and no roles when claims are missing', () => {
     const user = toUserProfile(
       new AuthSession(tokenWith({ preferred_username: 'admin' }), new Date('2030-01-01')),
     );
@@ -55,7 +55,7 @@ describe('auth mapper', () => {
     expect(user.isAdmin()).toBe(false);
   });
 
-  it('survives a token that is not a JWT at all', () => {
+  it('should return an empty profile when the token is not a JWT', () => {
     const user = toUserProfile(new AuthSession('not-a-token', new Date('2030-01-01')));
 
     expect(user.username).toBe('');

@@ -25,7 +25,7 @@ function template(
 }
 
 describe('templateCoverage', () => {
-  it('reaches everyone once the fallback style has an active template', () => {
+  it('should reach everyone when the fallback style has an active template', () => {
     const coverage = templateCoverage(
       [template('workoutReminder', 'aggressive'), template('workoutReminder', 'professional')],
       'workoutReminder',
@@ -37,13 +37,13 @@ describe('templateCoverage', () => {
     });
   });
 
-  it('does not reach trainees of other styles without the fallback', () => {
+  it('should not reach other styles when the fallback template is missing', () => {
     expect(
       templateCoverage([template('workoutReminder', 'soft')], 'workoutReminder').reachesEveryone,
     ).toBe(false);
   });
 
-  it('ignores inactive templates and other types', () => {
+  it('should ignore templates when they are inactive or of another type', () => {
     expect(
       templateCoverage(
         [

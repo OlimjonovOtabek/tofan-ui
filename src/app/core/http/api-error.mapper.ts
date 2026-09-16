@@ -22,7 +22,10 @@ export function toDomainError(error: unknown): DomainError {
   if (!(error instanceof HttpErrorResponse)) {
     return new ServiceUnavailableError();
   }
+  return fromHttpError(error);
+}
 
+function fromHttpError(error: HttpErrorResponse): DomainError {
   const problem = toProblemDetails(error.error);
   const code = problem.title ?? '';
   const message = problem.detail ?? error.message;

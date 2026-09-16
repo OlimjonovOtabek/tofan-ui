@@ -31,6 +31,7 @@ Dependency rules:
 - core and shared never import features
 - features never import other features (relative imports inside a feature)
 - components → store → service → `core/http/ApiClient`; components never call a service that does HTTP
+  (exception: `shared/components/file-upload` uses `FileUploadService`)
 - only `app.config.ts` reads `environments/`
 
 ## Identity boundary
@@ -48,7 +49,7 @@ do not migrate to PrimeNG, never add `primeng`, `@primeuix/*`, `primeicons` (Pri
 - Standalone, OnPush (default in v22), `inject()`
 - Services `@Injectable({ providedIn: 'root' })`; stores `@Injectable()` provided by the page
 - `input()` / `output()` / `model()`, `@if` / `@for` / `@switch`
-- Signal Forms for new forms
+- Signal Forms for new forms (existing forms are still Reactive Forms)
 - Optimus UI only in components, pages, shared/components, core/layout; server-side paging for tables
 - Hand-written DTOs + mappers in `features/<x>/services/`; errors handled by error class or backend `code`,
   never by message text

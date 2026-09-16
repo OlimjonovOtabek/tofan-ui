@@ -21,16 +21,7 @@ export interface NotificationTemplateDraft {
 export function createNotificationTemplateDraft(
   draft: NotificationTemplateDraft,
 ): NotificationTemplateDraft {
-  const trimmed: NotificationTemplateDraft = {
-    ...draft,
-    title: draft.title.trim(),
-    titleUz: draft.titleUz.trim(),
-    titleRu: draft.titleRu.trim(),
-    body: draft.body.trim(),
-    bodyUz: draft.bodyUz.trim(),
-    bodyRu: draft.bodyRu.trim(),
-  };
-
+  const trimmed = trimTexts(draft);
   const issues = [
     ...textIssues('Title', trimmed.title, NOTIFICATION_TITLE_MAX_LENGTH),
     ...textIssues('TitleUz', trimmed.titleUz, NOTIFICATION_TITLE_MAX_LENGTH),
@@ -43,6 +34,18 @@ export function createNotificationTemplateDraft(
     throw new ValidationError('The template cannot be saved as it is.', issues);
   }
   return trimmed;
+}
+
+function trimTexts(draft: NotificationTemplateDraft): NotificationTemplateDraft {
+  return {
+    ...draft,
+    title: draft.title.trim(),
+    titleUz: draft.titleUz.trim(),
+    titleRu: draft.titleRu.trim(),
+    body: draft.body.trim(),
+    bodyUz: draft.bodyUz.trim(),
+    bodyRu: draft.bodyRu.trim(),
+  };
 }
 
 export function textIssues(field: string, value: string, maxLength: number): ValidationIssue[] {

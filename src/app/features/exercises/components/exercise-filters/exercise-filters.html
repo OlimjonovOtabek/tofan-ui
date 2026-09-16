@@ -1,0 +1,79 @@
+<form [formGroup]="form" class="mb-4 flex flex-wrap items-end gap-3">
+  <div class="flex min-w-56 flex-1 flex-col gap-1">
+    <label for="search" class="text-muted-color text-sm">Qidirish</label>
+    <input pInputText id="search" type="search" formControlName="search" placeholder="Mashq nomi" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterMuscleGroup" class="text-muted-color text-sm">Mushak guruhi</label>
+    <p-select
+      inputId="filterMuscleGroup"
+      formControlName="muscleGroup"
+      [options]="muscleGroupOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterEquipment" class="text-muted-color text-sm">Jihoz</label>
+    <p-select
+      inputId="filterEquipment"
+      formControlName="equipmentType"
+      [options]="equipmentTypeOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterGender" class="text-muted-color text-sm">Jins</label>
+    <p-select
+      inputId="filterGender"
+      formControlName="gender"
+      [options]="genderOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterPlace" class="text-muted-color text-sm">Joyi</label>
+    <p-select
+      inputId="filterPlace"
+      formControlName="isHomeExercise"
+      [options]="placeOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterActivity" class="text-muted-color text-sm">Holati</label>
+    <p-select
+      inputId="filterActivity"
+      formControlName="isActive"
+      [options]="activityOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <p-button
+    label="Tozalash"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</form>

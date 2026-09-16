@@ -1,7 +1,7 @@
 import { formatFileSize } from './file-size';
 
 describe('formatFileSize', () => {
-  it('picks the largest unit that keeps the number readable', () => {
+  it('should pick the largest readable unit when formatting a size', () => {
     expect(formatFileSize(0)).toBe('0 B');
     expect(formatFileSize(512)).toBe('512 B');
     expect(formatFileSize(1536)).toBe('1.5 KB');

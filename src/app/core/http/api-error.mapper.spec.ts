@@ -14,7 +14,7 @@ function problem(status: number, body: unknown): HttpErrorResponse {
 }
 
 describe('toDomainError', () => {
-  it('maps a rejected business rule, keeping the backend code', () => {
+  it('should keep the backend code when a business rule is rejected', () => {
     const error = toDomainError(
       problem(400, {
         title: 'Authentication.InvalidCredentials',
@@ -27,7 +27,7 @@ describe('toDomainError', () => {
     expect(error.message).toBe('The provided credentials are invalid.');
   });
 
-  it('collects the issues of a validation failure', () => {
+  it('should collect the issues when validation fails', () => {
     const error = toDomainError(
       problem(400, {
         title: 'General.Validation',
@@ -42,7 +42,7 @@ describe('toDomainError', () => {
     ]);
   });
 
-  it('maps the remaining statuses', () => {
+  it('should map each status when the backend answers with an error', () => {
     expect(toDomainError(problem(401, null))).toBeInstanceOf(SessionExpiredError);
     expect(toDomainError(problem(403, null))).toBeInstanceOf(AccessDeniedError);
     expect(toDomainError(problem(404, { title: 'Exercise.NotFound' }))).toBeInstanceOf(
@@ -52,11 +52,11 @@ describe('toDomainError', () => {
     expect(toDomainError(problem(500, null))).toBeInstanceOf(ServiceUnavailableError);
   });
 
-  it('treats an unreachable backend as a service failure', () => {
+  it('should report a service failure when the backend is unreachable', () => {
     expect(toDomainError(new Error('offline'))).toBeInstanceOf(ServiceUnavailableError);
   });
 
-  it('passes a domain error through untouched', () => {
+  it('should pass the error through when it is already a domain error', () => {
     const original = new NotFoundError('gone', 'Exercise.NotFound');
 
     expect(toDomainError(original)).toBe(original);
@@ -64,7 +64,7 @@ describe('toDomainError', () => {
 });
 
 describe('toDomainErrorFromApiError', () => {
-  it('maps the error type of a failed envelope', () => {
+  it('should map the error type when a result envelope failed', () => {
     expect(
       toDomainErrorFromApiError({
         code: 'Exercise.NotFound',

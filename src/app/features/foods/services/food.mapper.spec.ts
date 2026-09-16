@@ -22,7 +22,7 @@ const draft: FoodDraft = {
 };
 
 describe('food enum maps', () => {
-  it('maps every domain value the catalog offers', () => {
+  it('should map every catalog value when converting enums both ways', () => {
     for (const value of SERVING_UNITS) {
       expect(servingUnits.toDomain(servingUnits.toApi(value))).toBe(value);
     }
@@ -33,7 +33,7 @@ describe('food enum maps', () => {
 });
 
 describe('food mapper', () => {
-  it('maps a response into the entity', () => {
+  it('should build the entity when a response arrives', () => {
     const food = toFood({
       id: '7',
       name: 'Greek yogurt',
@@ -61,7 +61,7 @@ describe('food mapper', () => {
     expect(food.fiberGrams).toBeNull();
   });
 
-  it('leaves the optional fields out of a create request', () => {
+  it('should leave the optional fields out when they are empty', () => {
     const request = toCreateFoodRequest(draft);
 
     expect(request).not.toHaveProperty('barcode');
@@ -70,7 +70,7 @@ describe('food mapper', () => {
     expect(request.servingUnit).toBe(ServingUnit.Piece);
   });
 
-  it('sends the optional fields when they are filled in', () => {
+  it('should send the optional fields when they are filled in', () => {
     const request = toCreateFoodRequest({ ...draft, barcode: '123', fiberGrams: 2 });
 
     expect(request.barcode).toBe('123');

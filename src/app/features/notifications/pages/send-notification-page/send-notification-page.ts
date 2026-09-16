@@ -3,22 +3,21 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormArray,
-  FormControl,
   FormGroup,
   NonNullableFormBuilder,
   ReactiveFormsModule,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import {
   NOTIFICATION_BODY_MAX_LENGTH,
   NOTIFICATION_TITLE_MAX_LENGTH,
   NotificationType,
-  TrainerStyle,
 } from '../../models/notification-attributes';
 import {
+  CustomNotificationInput,
   NotificationDataEntry,
+  TemplatedNotificationInput,
   createCustomNotification,
   createTemplatedNotification,
 } from '../../models/outgoing-notification';
@@ -26,24 +25,28 @@ import { isUuid } from '@shared/utils/identifiers';
 import {
   NOTIFICATION_TYPE_LABELS,
   NOTIFICATION_TYPE_OPTIONS,
-  TRAINER_STYLE_LABELS,
 } from '../../models/notification-labels';
+import {
+  DataEntryControls,
+  NotificationDataEntries,
+} from '../../components/notification-data-entries/notification-data-entries';
+import { TemplateCoverageHint } from '../../components/template-coverage-hint/template-coverage-hint';
 import { NotificationSendStore } from '../../notification-send.store';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { AppPaths } from '@core/config/app-paths';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
-import { Message } from '@openng/optimus-ui/message';
 import { Select } from '@openng/optimus-ui/select';
 import { SelectButton } from '@openng/optimus-ui/selectbutton';
 import { Textarea } from '@openng/optimus-ui/textarea';
 
 type SendMode = 'templated' | 'custom';
 
-interface DataEntryControls {
-  key: FormControl<string>;
-  value: FormControl<string>;
+interface OutgoingDraft {
+  readonly mode: SendMode;
+  readonly custom: CustomNotificationInput;
+  readonly templated: TemplatedNotificationInput;
 }
 
 const MODE_OPTIONS: { value: SendMode; label: string }[] = [
@@ -60,10 +63,10 @@ function uuidValidator(control: AbstractControl<string>): ValidationErrors | nul
   selector: 'app-send-notification-page',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
+    NotificationDataEntries,
+    TemplateCoverageHint,
     Button,
     InputText,
-    Message,
     Select,
     SelectButton,
     Textarea,
@@ -121,23 +124,6 @@ export class SendNotificationPage {
     return this.form.controls.data;
   }
 
-  protected styleLabels(styles: readonly TrainerStyle[]): string {
-    return styles.map((style) => TRAINER_STYLE_LABELS[style]).join(', ');
-  }
-
-  protected addDataEntry(): void {
-    this.dataEntries.push(
-      this.formBuilder.group({
-        key: this.formBuilder.control(''),
-        value: this.formBuilder.control(''),
-      }),
-    );
-  }
-
-  protected removeDataEntry(index: number): void {
-    this.dataEntries.removeAt(index);
-  }
-
   protected isInvalid(control: 'userId' | 'title' | 'body'): boolean {
     const field = this.form.controls[control];
     return field.invalid && field.touched;
@@ -149,24 +135,34 @@ export class SendNotificationPage {
   }
 
   protected async send(): Promise<void> {
+    const outgoing = this.readOutgoing();
+    if (outgoing === null || !(await this.confirmSending(outgoing.templated))) {
+      return;
+    }
+
+    const sent =
+      outgoing.mode === 'custom'
+        ? await this.store.sendCustom(outgoing.custom)
+        : await this.store.sendTemplated(outgoing.templated);
+
+    if (sent) {
+      this.form.controls.title.reset('');
+      this.form.controls.body.reset('');
+    }
+  }
+
+  private readOutgoing(): OutgoingDraft | null {
     this.form.markAllAsTouched();
     const value = this.form.getRawValue();
     const customTextMissing =
       value.mode === 'custom' && (value.title.trim() === '' || value.body.trim() === '');
     if (this.form.invalid || customTextMissing) {
-      return;
+      return null;
     }
 
     const data: NotificationDataEntry[] = value.data;
-    const custom = {
-      userId: value.userId,
-      type: value.type,
-      title: value.title,
-      body: value.body,
-      data,
-    };
     const templated = { userId: value.userId, type: value.type, data };
-
+    const custom = { ...templated, title: value.title, body: value.body };
     try {
       if (value.mode === 'custom') {
         createCustomNotification(custom);
@@ -175,27 +171,16 @@ export class SendNotificationPage {
       }
     } catch (error) {
       this.notifications.error(error);
-      return;
+      return null;
     }
+    return { mode: value.mode, custom, templated };
+  }
 
-    const typeLabel = NOTIFICATION_TYPE_LABELS[value.type];
-    const confirmed = await this.confirmations.confirm(
-      `"${typeLabel}" turidagi push ${value.userId} foydalanuvchisining qurilmalariga hozir ` +
-        'yuboriladi. Uni qaytarib olib bo‘lmaydi.',
+  private confirmSending({ userId, type }: TemplatedNotificationInput): Promise<boolean> {
+    return this.confirmations.confirm(
+      `"${NOTIFICATION_TYPE_LABELS[type]}" turidagi push ${userId} foydalanuvchisining ` +
+        'qurilmalariga hozir yuboriladi. Uni qaytarib olib bo‘lmaydi.',
       'Yuborishni tasdiqlang',
     );
-    if (!confirmed) {
-      return;
-    }
-
-    const sent =
-      value.mode === 'custom'
-        ? await this.store.sendCustom(custom)
-        : await this.store.sendTemplated(templated);
-
-    if (sent) {
-      this.form.controls.title.reset('');
-      this.form.controls.body.reset('');
-    }
   }
 }

@@ -30,27 +30,27 @@ function issueCodesOf(changes: Partial<FoodDraft>): string[] {
 }
 
 describe('createFoodDraft', () => {
-  it('trims the text a user typed', () => {
+  it('should trim the text when the user typed surrounding spaces', () => {
     const prepared = createFoodDraft({ ...draft, name: ' Plov ', barcode: ' 4780016470016 ' });
 
     expect(prepared.name).toBe('Plov');
     expect(prepared.barcode).toBe('4780016470016');
   });
 
-  it('treats a blank barcode as none', () => {
+  it('should drop the barcode when it is blank', () => {
     expect(createFoodDraft({ ...draft, barcode: '  ' }).barcode).toBeNull();
   });
 
-  it('names every language that is missing', () => {
+  it('should name every missing language when names are blank', () => {
     expect(issueCodesOf({ name: '', nameRu: ' ' })).toEqual(['Name.Empty', 'NameRu.Empty']);
   });
 
-  it('refuses a serving that cannot be converted to grams', () => {
+  it('should reject the draft when the serving cannot be converted to grams', () => {
     expect(issueCodesOf({ servingSize: 0 })).toEqual(['ServingSize.NotPositive']);
     expect(issueCodesOf({ servingSizeGrams: -5 })).toEqual(['ServingSizeGrams.NotPositive']);
   });
 
-  it('refuses negative nutrition', () => {
+  it('should reject the draft when nutrition is negative', () => {
     expect(issueCodesOf({ caloriesPerServing: -1 })).toEqual(['CaloriesPerServing.Negative']);
     expect(issueCodesOf({ proteinGrams: -1, fatGrams: -2 })).toEqual([
       'ProteinGrams.Negative',
@@ -59,7 +59,7 @@ describe('createFoodDraft', () => {
     expect(issueCodesOf({ fiberGrams: -1 })).toEqual(['FiberGrams.Negative']);
   });
 
-  it('accepts a food without fiber data', () => {
+  it('should accept the draft when fiber is unknown', () => {
     expect(createFoodDraft({ ...draft, fiberGrams: null }).fiberGrams).toBeNull();
   });
 });
