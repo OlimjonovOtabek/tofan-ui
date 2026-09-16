@@ -13,7 +13,7 @@ export const SERVING_UNIT_LABELS: Record<ServingUnit, string> = {
   piece: 'dona',
   slice: 'bo‘lak',
   cup: 'stakan',
-  tablespoon: "osh qoshiq",
+  tablespoon: 'osh qoshiq',
   teaspoon: 'choy qoshiq',
 };
 

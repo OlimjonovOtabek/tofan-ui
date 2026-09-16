@@ -61,7 +61,6 @@ export class ExercisesPage {
   protected readonly activityOptions = ACTIVITY_OPTIONS;
   protected readonly placeOptions = PLACE_OPTIONS;
 
-
   protected readonly filterForm = inject(NonNullableFormBuilder).group({
     search: [''],
     muscleGroup: [null as ExerciseFilter['muscleGroup'] | null],

@@ -47,7 +47,8 @@ src/app/
 │   ├── routing/             # AppPaths, guard'lar, title strategy
 │   └── shared/              # Umumiy bloklar: komponentlar, toast/confirm, xato matnlari
 ├── di/               # Composition root: portlarni adapterlarga bog'lash
-├── app.config.ts
+├── routes/           # Modul route'lari: provayderlar shu yerda, sahifa bilan birga lazy yuklanadi
+├── app.config.ts     # Faqat ilova qobig'i: HTTP, auth, UI
 └── app.routes.ts
 ```
 
@@ -56,7 +57,7 @@ src/app/
 ```
 presentation ──> application ──> domain
 infrastructure ────────────────> domain
-di/, app.config.ts ──> hammasi (composition root)
+di/, routes/, app.config.ts, app.routes.ts ──> hammasi (composition root)
 ```
 
 Bu qoida `eslint.config.js` dagi `no-restricted-imports` orqali **majburiy**: masalan, `domain`
@@ -99,9 +100,12 @@ xato beradi.
 3. **Application**: `application/users/get-users.use-case.ts` — constructor'da `UserRepository`.
 4. **Infrastructure**: `infrastructure/users/http-user.repository.ts` (generatsiya qilingan `Api`
    orqali) + `user.mapper.ts`.
-5. **DI**: `di/users.providers.ts` → `provideUsers()` va uni `app.config.ts` ga qo'shing.
+5. **DI**: `di/users.providers.ts` → `provideUsers()`. Uni `app.config.ts` ga **qo'shmang**:
+   `routes/users.routes.ts` dagi route'ning `providers` ga qo'ying va `app.routes.ts` da
+   `loadChildren` bilan ulang. Shunda modul adapterlari va generatsiya qilingan funksiyalar
+   boshlang'ich bundle'ga tushmaydi.
 6. **Presentation**: `presentation/users/users.store.ts`, `presentation/pages/users/users-page.ts`,
-   route'ni `app.routes.ts` ga, menyu bandini `presentation/layout/menu/app-menu.ts` ga qo'shing.
+   menyu bandini `presentation/layout/menu/app-menu.ts` ga qo'shing.
 7. Use case va mapper uchun unit test yozing.
 
 ## OpenAPI

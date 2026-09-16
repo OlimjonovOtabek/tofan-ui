@@ -31,7 +31,10 @@
   </ng-template>
 
   <ng-template #body let-item>
-    <ng-container [ngTemplateOutlet]="rowTemplate()" [ngTemplateOutletContext]="{ $implicit: item }" />
+    <ng-container
+      [ngTemplateOutlet]="rowTemplate()"
+      [ngTemplateOutletContext]="{ $implicit: item }"
+    />
   </ng-template>
 
   <ng-template #emptymessage>

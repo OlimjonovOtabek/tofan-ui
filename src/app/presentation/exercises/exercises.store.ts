@@ -7,7 +7,13 @@ import { UpdateExerciseUseCase } from '@application/exercises/update-exercise.us
 import { Exercise } from '@domain/exercises/entities/exercise';
 import { ExerciseDraft } from '@domain/exercises/exercise-draft';
 import { ExerciseFilter } from '@domain/exercises/repositories/exercise.repository';
-import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@domain/shared/paging/page';
+import {
+  DEFAULT_PAGE_SIZE,
+  Page,
+  PageRequest,
+  emptyPage,
+  firstPage,
+} from '@domain/shared/paging/page';
 import { NotificationService } from '@presentation/shared/feedback/notification.service';
 
 /** View state of the exercise catalog: one page of the list plus the filters that produced it. */

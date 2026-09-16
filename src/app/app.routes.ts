@@ -17,16 +17,12 @@ export const routes: Routes = [
           import('@presentation/pages/dashboard/dashboard-page').then((m) => m.DashboardPage),
       },
       {
-        path: 'foods',
-        title: 'Ovqatlar katalogi',
-        loadComponent: () =>
-          import('@presentation/pages/foods/foods-page').then((m) => m.FoodsPage),
+        path: 'exercises',
+        loadChildren: () => import('./routes/exercises.routes').then((m) => m.EXERCISE_ROUTES),
       },
       {
-        path: 'exercises',
-        title: 'Mashqlar katalogi',
-        loadComponent: () =>
-          import('@presentation/pages/exercises/exercises-page').then((m) => m.ExercisesPage),
+        path: 'foods',
+        loadChildren: () => import('./routes/foods.routes').then((m) => m.FOOD_ROUTES),
       },
     ],
   },

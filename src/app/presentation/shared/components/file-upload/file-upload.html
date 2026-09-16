@@ -6,7 +6,9 @@
   @if (uploading()) {
     <p-progressbar [value]="progress()" />
   } @else if (fileId(); as id) {
-    <div class="border-surface-200 dark:border-surface-700 flex items-center gap-2 rounded border p-2">
+    <div
+      class="border-surface-200 dark:border-surface-700 flex items-center gap-2 rounded border p-2"
+    >
       <i class="pi pi-paperclip text-muted-color"></i>
       <span class="flex-1 truncate">{{ fileName() ?? id }}</span>
       <p-button
