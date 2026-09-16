@@ -60,13 +60,13 @@ domenda. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB 
 
 Backend endpoint'lari tayyor.
 
-| Bo'lim                    | Imkoniyatlar                                                | Endpoint'lar                                                                |
-| ------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
-| ~~Mashqlar katalogi~~     | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~ | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~     |
-| ~~Ovqatlar katalogi~~     | ~~Qidirish, shtrix-kod bo'yicha topish, CRUD~~              | ~~`diet/foods`, `diet/foods/barcode/{barcode}`~~                            |
-| Bildirishnomalar          | Shablonlar CRUD, maxsus yoki shablon asosida push yuborish  | `notification-templates`, `notifications/custom`, `notifications/templated` |
-| Media fayllar             | Yuklangan fayllar ro'yxati, ko'rish, o'chirish              | `files`, `files/{id}/content`                                               |
-| Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)        | `user-sessions`, `user-sessions/{id}`                                       |
+| Bo'lim                    | Imkoniyatlar                                                   | Endpoint'lar                                                                    |
+| ------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| ~~Mashqlar katalogi~~     | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~    | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~         |
+| ~~Ovqatlar katalogi~~     | ~~Qidirish, shtrix-kod bo'yicha topish, CRUD~~                 | ~~`diet/foods`, `diet/foods/barcode/{barcode}`~~                                |
+| ~~Bildirishnomalar~~      | ~~Shablonlar CRUD, maxsus yoki shablon asosida push yuborish~~ | ~~`notification-templates`, `notifications/custom`, `notifications/templated`~~ |
+| Media fayllar             | Yuklangan fayllar ro'yxati, ko'rish, o'chirish                 | `files`, `files/{id}/content`                                                   |
+| Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)           | `user-sessions`, `user-sessions/{id}`                                           |
 
 Tartib: mashqlar → ovqatlar → bildirishnomalar → media → sessiyalar.
 
@@ -79,8 +79,24 @@ uchun sahifani backend'siz ham sinash mumkin.
 **Ovqatlar katalogi bajarildi (2026-09-16).** `/foods` sahifasi: qidirish (nom va shtrix-kod
 bo'yicha), shtrix-kod bo'yicha topish — topilsa tahrirlash oynasi, topilmasa shtrix-kodi
 to'ldirilgan qo'shish oynasi, CRUD, kaloriyani 100 g ga keltirib ko'rsatish. Backend ro'yxatida
-faqat `Search` filtri bor (manba yoki faollik bo'yicha filtr yo'q). Keyingisi — bildirishnomalar
-(`notification-templates`, `notifications/custom`, `notifications/templated`).
+faqat `Search` filtri bor (manba yoki faollik bo'yicha filtr yo'q).
+
+**Bildirishnomalar bajarildi (2026-09-16).**
+
+- `/notifications/templates` — shablonlar CRUD: tur × murabbiy uslubi, sarlavha va matn uch tilda.
+  Backend bir tur va uslub uchun bitta faol shablonga ruxsat beradi (409 → tushunarli xabar).
+- `/notifications/send` — shablon asosida yoki maxsus matn bilan push, ixtiyoriy kalit–qiymat
+  ma'lumotlari bilan, yuborishdan oldin tasdiqlash. Shablon rejimida qaysi uslublar qamrab
+  olingani ko'rsatiladi: backend foydalanuvchi uslubidagi shablonni, bo'lmasa professionalini
+  oladi — professional yo'q bo'lsa ogohlantirish chiqadi.
+- **Cheklov:** yuborish bitta `userId` ga, foydalanuvchilar ro'yxati esa yo'q (2-bosqich). ID ni
+  hozircha qo'lda kiritish kerak. Ommaviy yuborish endpoint'i ham yo'q.
+- Push xatolari (qurilma yo'q, foydalanuvchi o'chirgan, Firebase sozlanmagan) o'zbekcha ko'rsatiladi.
+
+Yo'l-yo'lakay topilgan xato: jadval saralashi backend'ga yetib bormagan — backend `SortField` ni
+snake_case ustun nomi sifatida kutadi va noma'lum qiymatni jimgina `id` ga almashtiradi. Tuzatildi.
+
+Keyingisi — media fayllar (`files`), keyin foydalanuvchi sessiyalari (`user-sessions`).
 
 ---
 

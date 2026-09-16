@@ -1,0 +1,69 @@
+<div class="card">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+        Bildirishnoma shablonlari
+      </h1>
+      <span class="text-muted-color text-sm">
+        Jami {{ store.totalCount() }} shablon. Foydalanuvchiga uning murabbiy uslubidagi shablon
+        yuboriladi, u bo‘lmasa — professional uslubdagisi.
+      </span>
+    </div>
+    <p-button label="Shablon qo'shish" icon="pi pi-plus" (onClick)="add()" />
+  </div>
+
+  <app-data-table
+    [columns]="columns"
+    [items]="store.templates()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [first]="store.first()"
+    emptyMessage="Hali shablon yo'q."
+    (pageChange)="loadPage($event)"
+  >
+    <ng-template #row let-template>
+      <tr>
+        <td class="whitespace-nowrap">{{ typeLabel(template) }}</td>
+        <td class="whitespace-nowrap">{{ styleLabel(template) }}</td>
+        <td>
+          <div class="font-medium">{{ template.displayTitle }}</div>
+          <div class="text-muted-color line-clamp-2 text-sm">{{ template.displayBody }}</div>
+        </td>
+        <td>
+          <p-tag
+            [value]="template.isActive ? 'Faol' : 'Faol emas'"
+            [severity]="template.isActive ? 'success' : 'secondary'"
+          />
+        </td>
+        <td class="text-muted-color whitespace-nowrap text-sm">
+          {{ template.updatedAt.toLocaleDateString('uz-UZ') }}
+        </td>
+        <td class="text-right whitespace-nowrap">
+          <p-button
+            icon="pi pi-pencil"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="Tahrirlash"
+            (onClick)="edit(template)"
+          />
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="O'chirish"
+            (onClick)="remove(template)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-notification-template-form-dialog
+  [(visible)]="dialogVisible"
+  [template]="editedTemplate()"
+  [saving]="store.saving()"
+  (save)="saveDraft($event)"
+/>

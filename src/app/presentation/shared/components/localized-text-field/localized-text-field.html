@@ -3,24 +3,56 @@
 
   @for (language of languages; track language.control) {
     <div class="flex flex-col gap-1">
-      <div class="flex items-center gap-2">
+      <div class="flex gap-2" [class.items-center]="!multiline()">
         <span
-          class="bg-surface-100 dark:bg-surface-800 text-muted-color w-10 rounded py-2 text-center text-xs font-semibold"
+          class="bg-surface-100 dark:bg-surface-800 text-muted-color w-10 shrink-0 self-start rounded py-2 text-center text-xs font-semibold"
         >
           {{ language.code }}
         </span>
-        <input
-          pInputText
-          type="text"
-          class="flex-1"
-          [id]="'localized-' + language.control"
-          [formControlName]="language.control"
-          [placeholder]="label() + ' (' + language.hint + ')'"
-          [invalid]="isInvalid(language.control)"
-        />
+        @if (multiline()) {
+          <textarea
+            pTextarea
+            rows="3"
+            class="flex-1"
+            [autoResize]="true"
+            [id]="inputId(language.control)"
+            [formControlName]="language.control"
+            [placeholder]="label() + ' (' + language.hint + ')'"
+            [invalid]="isInvalid(language.control)"
+          ></textarea>
+        } @else {
+          <input
+            pInputText
+            type="text"
+            class="flex-1"
+            [id]="inputId(language.control)"
+            [formControlName]="language.control"
+            [placeholder]="label() + ' (' + language.hint + ')'"
+            [invalid]="isInvalid(language.control)"
+          />
+        }
       </div>
-      @if (isInvalid(language.control)) {
-        <small class="text-red-500">{{ label() }} ({{ language.hint }}) kiritilishi shart</small>
+      @if (isInvalid(language.control) || maxLength() !== null) {
+        <div class="flex justify-between gap-2 pl-12 text-sm">
+          <small class="text-red-500">
+            @if (isInvalid(language.control)) {
+              @if (isTooLong(language.control)) {
+                {{ label() }} ({{ language.hint }}) {{ maxLength() }} belgidan oshmasin
+              } @else {
+                {{ label() }} ({{ language.hint }}) kiritilishi shart
+              }
+            }
+          </small>
+          @if (maxLength(); as limit) {
+            <small
+              class="shrink-0"
+              [class.text-red-500]="lengthOf(language.control) > limit"
+              [class.text-muted-color]="lengthOf(language.control) <= limit"
+            >
+              {{ lengthOf(language.control) }} / {{ limit }}
+            </small>
+          }
+        </div>
       }
     </div>
   }

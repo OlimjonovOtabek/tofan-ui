@@ -1,0 +1,57 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="title()"
+  [saving]="saving()"
+  width="44rem"
+  (save)="submit()"
+>
+  <div [formGroup]="form" class="flex flex-col gap-4">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="flex flex-col gap-1">
+        <label for="templateType" class="font-medium">Turi</label>
+        <p-select
+          inputId="templateType"
+          formControlName="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="templateStyle" class="font-medium">Murabbiy uslubi</label>
+        <p-select
+          inputId="templateStyle"
+          formControlName="trainerStyle"
+          [options]="styleOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+    </div>
+
+    <app-localized-text-field
+      [group]="titles"
+      label="Sarlavha"
+      idPrefix="template-title"
+      [maxLength]="titleMaxLength"
+    />
+
+    <app-localized-text-field
+      [group]="bodies"
+      label="Matn"
+      idPrefix="template-body"
+      [multiline]="true"
+      [maxLength]="bodyMaxLength"
+    />
+
+    <div class="flex items-center gap-2">
+      <p-toggleswitch inputId="templateActive" formControlName="isActive" />
+      <label for="templateActive">Faol</label>
+    </div>
+    <small class="text-muted-color -mt-2">
+      Bir tur va uslub uchun faqat bitta faol shablon bo‘lishi mumkin.
+    </small>
+  </div>
+</app-form-dialog>

@@ -1,0 +1,181 @@
+<div class="card">
+  <div class="mb-6">
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Push yuborish</h1>
+    <span class="text-muted-color text-sm">
+      Bitta foydalanuvchining barcha faol qurilmalariga yuboriladi. Natija bildirishnoma tarixida
+      saqlanadi — yuborilmasa ham.
+    </span>
+  </div>
+
+  <form [formGroup]="form" class="flex max-w-3xl flex-col gap-5" (ngSubmit)="send()" novalidate>
+    <p-selectbutton
+      formControlName="mode"
+      [options]="modeOptions"
+      optionLabel="label"
+      optionValue="value"
+      [allowEmpty]="false"
+      aria-label="Yuborish usuli"
+    />
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div class="flex flex-col gap-1">
+        <label for="userId" class="font-medium">Foydalanuvchi ID</label>
+        <input
+          pInputText
+          id="userId"
+          type="text"
+          formControlName="userId"
+          placeholder="3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          autocomplete="off"
+          [invalid]="isInvalid('userId')"
+        />
+        @if (isInvalid('userId')) {
+          <small class="text-red-500">
+            {{
+              form.controls.userId.hasError('required')
+                ? 'Foydalanuvchi ID kiritilishi shart'
+                : 'ID UUID ko‘rinishida bo‘lishi kerak'
+            }}
+          </small>
+        } @else {
+          <small class="text-muted-color">
+            Foydalanuvchilar ro‘yxati hali yo‘q — ID ni sessiyalar yoki ma’lumotlar bazasidan oling.
+          </small>
+        }
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="type" class="font-medium">Turi</label>
+        <p-select
+          inputId="type"
+          formControlName="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+    </div>
+
+    @if (mode() === 'templated') {
+      @if (store.templatesLoaded()) {
+        @if (coverage().activeStyles.length === 0) {
+          <p-message severity="error">
+            Bu tur uchun faol shablon yo‘q — yuborish muvaffaqiyatsiz bo‘ladi.
+            <a [routerLink]="templatesPath" class="font-medium underline">Shablon qo‘shing</a>.
+          </p-message>
+        } @else if (!coverage().reachesEveryone) {
+          <p-message severity="warn">
+            Faqat {{ styleLabels(coverage().activeStyles) }} uslubi uchun shablon bor. Boshqa
+            uslubni tanlagan foydalanuvchiga professional shablon kerak, u esa yo‘q.
+          </p-message>
+        } @else {
+          <p-message severity="info">
+            Foydalanuvchining uslubi va tiliga mos shablon tanlanadi. Faol uslublar:
+            {{ styleLabels(coverage().activeStyles) }}.
+          </p-message>
+        }
+
+        @if (preview(); as template) {
+          <div class="border-surface-200 dark:border-surface-700 rounded-lg border p-4">
+            <div class="text-muted-color mb-2 text-xs uppercase">
+              Namuna (professional, o‘zbekcha)
+            </div>
+            <div class="font-medium">{{ template.displayTitle }}</div>
+            <div class="mt-1 whitespace-pre-line">{{ template.displayBody }}</div>
+          </div>
+        }
+      }
+    } @else {
+      <div class="flex flex-col gap-1">
+        <div class="flex justify-between">
+          <label for="title" class="font-medium">Sarlavha</label>
+          <small [class.text-red-500]="titleLength() > titleMaxLength" class="text-muted-color">
+            {{ titleLength() }} / {{ titleMaxLength }}
+          </small>
+        </div>
+        <input
+          pInputText
+          id="title"
+          type="text"
+          formControlName="title"
+          [invalid]="isInvalid('title') || isMissing('title')"
+        />
+        @if (isMissing('title')) {
+          <small class="text-red-500">Sarlavha kiritilishi shart</small>
+        }
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <div class="flex justify-between">
+          <label for="body" class="font-medium">Matn</label>
+          <small [class.text-red-500]="bodyLength() > bodyMaxLength" class="text-muted-color">
+            {{ bodyLength() }} / {{ bodyMaxLength }}
+          </small>
+        </div>
+        <textarea
+          pTextarea
+          id="body"
+          rows="4"
+          formControlName="body"
+          [autoResize]="true"
+          [invalid]="isInvalid('body') || isMissing('body')"
+        ></textarea>
+        @if (isMissing('body')) {
+          <small class="text-red-500">Matn kiritilishi shart</small>
+        }
+      </div>
+    }
+
+    <div class="flex flex-col gap-2" formArrayName="data">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="font-medium">Qo‘shimcha ma’lumot (ixtiyoriy)</span>
+          <div class="text-muted-color text-sm">
+            Ilova uchun kalit–qiymat juftliklari, masalan ekran nomi.
+          </div>
+        </div>
+        <p-button
+          label="Qator qo'shish"
+          icon="pi pi-plus"
+          severity="secondary"
+          [text]="true"
+          (onClick)="addDataEntry()"
+        />
+      </div>
+
+      @for (entry of dataEntries.controls; track entry; let index = $index) {
+        <div class="flex items-center gap-2" [formGroupName]="index">
+          <input
+            pInputText
+            type="text"
+            class="flex-1"
+            formControlName="key"
+            placeholder="Kalit"
+            [attr.aria-label]="'Kalit ' + (index + 1)"
+          />
+          <input
+            pInputText
+            type="text"
+            class="flex-1"
+            formControlName="value"
+            placeholder="Qiymat"
+            [attr.aria-label]="'Qiymat ' + (index + 1)"
+          />
+          <p-button
+            icon="pi pi-times"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="Qatorni olib tashlash"
+            (onClick)="removeDataEntry(index)"
+          />
+        </div>
+      }
+    </div>
+
+    <div>
+      <p-button type="submit" label="Yuborish" icon="pi pi-send" [loading]="store.sending()" />
+    </div>
+  </form>
+</div>

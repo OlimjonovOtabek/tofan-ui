@@ -16,4 +16,15 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
       { label: 'Ovqatlar', icon: 'pi pi-fw pi-apple', routerLink: [AppPaths.foods] },
     ],
   },
+  {
+    label: 'Bildirishnomalar',
+    items: [
+      {
+        label: 'Shablonlar',
+        icon: 'pi pi-fw pi-file-edit',
+        routerLink: [AppPaths.notificationTemplates],
+      },
+      { label: 'Push yuborish', icon: 'pi pi-fw pi-send', routerLink: [AppPaths.sendNotification] },
+    ],
+  },
 ];

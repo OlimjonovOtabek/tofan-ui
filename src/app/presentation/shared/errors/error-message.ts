@@ -12,6 +12,21 @@ const MESSAGES_BY_CODE: Record<string, string> = {
   'Authentication.InvalidCredentials': "Login yoki parol noto'g'ri.",
   'Authentication.InvalidRefreshToken': 'Sessiya tugadi. Qaytadan kiring.',
   'IdentityProvider.UserNotFound': 'Bunday foydalanuvchi topilmadi.',
+  'NotificationTemplate.Conflict':
+    'Bu tur va uslub uchun faol shablon allaqachon bor. Avval uni faolsizlantiring.',
+  'NotificationTemplate.NoActiveTemplate':
+    'Bu tur uchun foydalanuvchi uslubiga mos faol shablon topilmadi.',
+  'NotificationPreference.Disabled':
+    "Foydalanuvchi bu turdagi bildirishnomalarni o'chirib qo'ygan.",
+  'PushNotification.NoActiveDevice': "Foydalanuvchining push qabul qiladigan faol qurilmasi yo'q.",
+  'PushNotification.DispatchFailed': 'Push xizmati bildirishnomani yetkaza olmadi.',
+  'PushNotification.Disabled': "Bu muhitda push bildirishnomalar o'chirilgan.",
+  'PushNotification.ConfigurationInvalid':
+    'Push xizmati sozlanmagan (Firebase kalitlari yo‘q). Administratorga murojaat qiling.',
+  'UserId.Empty': 'Foydalanuvchi ID kiritilishi shart.',
+  'UserId.Invalid': 'Foydalanuvchi ID UUID ko‘rinishida bo‘lishi kerak.',
+  'Data.KeyEmpty': 'Qo‘shimcha ma’lumotdagi har bir qiymatning kaliti bo‘lishi kerak.',
+  'Data.KeyDuplicate': 'Qo‘shimcha ma’lumotda kalitlar takrorlanmasligi kerak.',
 };
 
 /** Single place that turns any error into text a user can act on. */
@@ -37,7 +52,7 @@ export function toErrorMessage(error: unknown): string {
   if (error instanceof ValidationError) {
     return error.issues.length === 0
       ? "Ma'lumotlar to'g'ri to'ldirilmagan."
-      : error.issues.map((issue) => issue.message).join(' ');
+      : error.issues.map((issue) => MESSAGES_BY_CODE[issue.code] ?? issue.message).join(' ');
   }
   if (error instanceof NotFoundError) {
     return "Ma'lumot topilmadi — u o'chirilgan bo'lishi mumkin.";
