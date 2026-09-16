@@ -13,14 +13,15 @@ Development rejimida `useMockApi: true` — backend'siz ishlaydi. Kirish: **admi
 
 Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 
-| Buyruq                 | Vazifasi                                        |
-| ---------------------- | ----------------------------------------------- |
-| `npm start`            | Dev server                                      |
-| `npm run build`        | Production build (`dist/tofan-ui/browser`)      |
-| `npm test`             | Unit testlar (Vitest)                           |
-| `npm run lint`         | ESLint + arxitektura qatlamlari qoidalari       |
-| `npm run format`       | Prettier                                        |
-| `npm run api:generate` | OpenAPI spec'dan HTTP client generatsiya qilish |
+| Buyruq                 | Vazifasi                                                   |
+| ---------------------- | ---------------------------------------------------------- |
+| `npm start`            | Dev server                                                 |
+| `npm run build`        | Production build (`dist/tofan-ui/browser`)                 |
+| `npm test`             | Unit testlar (Vitest)                                      |
+| `npm run lint`         | ESLint + arxitektura qatlamlari qoidalari                  |
+| `npm run format`       | Prettier                                                   |
+| `npm run api:update`   | Backend Swagger'idan `openapi/tofan-api.json` ni yangilash |
+| `npm run api:generate` | OpenAPI spec'dan HTTP client generatsiya qilish            |
 
 ## Arxitektura (Clean Architecture)
 
@@ -35,11 +36,12 @@ src/app/
 ├── application/      # Use case'lar. Faqat domain'ga bog'liq, Angular YO'Q
 │   └── auth/                # LoginUseCase, LogoutUseCase, IsAuthenticatedUseCase ...
 ├── infrastructure/   # Adapterlar: portlarning konkret implementatsiyasi
-│   ├── api/generated/       # ng-openapi-gen natijasi — QO'LDA O'ZGARTIRILMAYDI
-│   ├── auth/                # HttpAuthRepository, FakeAuthRepository, mapper, localStorage
+│   ├── api/                 # ApiClient (Result konverti), xatolik mapper'i
+│   │   └── generated/       # ng-openapi-gen natijasi — QO'LDA O'ZGARTIRILMAYDI
+│   ├── auth/                # HttpAuthRepository, FakeAuthRepository, JWT mapper, localStorage
 │   └── http/                # authTokenInterceptor
 ├── presentation/     # UI: sahifalar, Sakai layout, store'lar, guard'lar
-│   ├── auth/                # AuthStore (signal), unauthorizedInterceptor
+│   ├── auth/                # AuthStore (signal), sessionInterceptor (401 → refresh → qayta urinish)
 │   ├── layout/              # Sakai: topbar, sidebar, menyu, tema konfiguratori
 │   ├── pages/               # Route'lanadigan sahifalar
 │   ├── routing/             # AppPaths, guard'lar, title strategy
@@ -99,20 +101,54 @@ xato beradi.
 
 ## OpenAPI
 
-- Konfiguratsiya: `ng-openapi-gen.json`. Natija: `src/app/infrastructure/api/generated/`
-  (git'ga commit qilinadi, Prettier/ESLint uni e'tiborsiz qoldiradi).
-- `openapi/tofan-api.yaml` — hozircha **namuna** (faqat `/auth/login`, `/auth/me`). Haqiqiy
-  backend kontrakti bilan almashtiring.
-- Base URL `src/environments/environment*.ts` dagi `apiBaseUrl` dan olinadi.
-- `authTokenInterceptor` Bearer tokenni faqat `apiBaseUrl` ga ketayotgan so'rovlarga qo'shadi;
-  401 javobida foydalanuvchi avtomatik login sahifasiga qaytariladi.
+Kontrakt backend Swagger'idan olinadi va ikki bosqichda yangilanadi:
+
+```bash
+npm run api:update      # backend: http://localhost:5179/swagger/v1/swagger.json
+npm run api:update -- https://api.157.90.117.20.sslip.io/swagger/v1/swagger.json   # stend
+npm run api:generate    # openapi/tofan-api.json -> src/app/infrastructure/api/generated/
+```
+
+- `scripts/openapi-update.mjs` Swashbuckle chiqargan spec'ni tozalaydi: uzun CLR nomlari
+  (`Tofan.Common.Domain.Result<ExerciseResponse>`) → `ResultOfExerciseResponse`, minimal API'larda
+  yo'q `operationId` → `postExercisesByIdActivate`, `nullable` bo'lmagan maydonlar → `required`
+  (aks holda generator hamma maydonni optional qilib qo'yadi).
+- `openapi/tofan-api.json` va `src/app/infrastructure/api/generated/` git'ga commit qilinadi;
+  generatsiya natijasi qo'lda tahrirlanmaydi (Prettier/ESLint uni e'tiborsiz qoldiradi).
+
+### Javob konverti va xatoliklar
+
+Backend har bir yozuv amalini `Result` / `Result<T>` ichiga o'raydi, xatolikni esa RFC 7807
+`problem+json` ko'rinishida qaytaradi (`title` — xato kodi, `detail` — matn).
+
+- `ApiClient` (`infrastructure/api/api-client.ts`) konvertni ochadi va chaqiruvchiga faqat `data`
+  ni beradi; `PagedList` kabi javoblar o'zgarishsiz o'tadi.
+- Har qanday xatolik domain xatosiga aylanadi: `ValidationError`, `NotFoundError`,
+  `ConflictError`, `BusinessRuleError` (kod bilan), `AccessDeniedError`, `SessionExpiredError`,
+  `ServiceUnavailableError`. Presentation shu turlarga qarab xabar ko'rsatadi.
+
+### Sessiya
+
+- `POST auth/login` → Keycloak tokenlari; foydalanuvchi ma'lumoti access token claim'laridan
+  o'qiladi (`sub`, `preferred_username`, `name`, `realm_access.roles`) — `/auth/me` endpoint'i yo'q.
+- Panelga faqat `admin` realm roli bo'lganlar kiradi: rol bo'lmasa sessiya bekor qilinadi
+  (`auth/logout`), guard esa `/auth/access-denied` ga yo'naltiradi.
+- `authTokenInterceptor` Bearer tokenni faqat `apiBaseUrl` ga ketayotgan so'rovlarga qo'yadi.
+  401 javobida `sessionInterceptor` bir marta `auth/refresh` qiladi va so'rovni qaytadan yuboradi;
+  yangilash ham muvaffaqiyatsiz bo'lsa — login sahifasi. Parallel so'rovlar bitta yangilashni
+  bo'lishadi (`RenewSessionUseCase`).
 
 ## Muhitlar
 
-| Fayl                          | `apiBaseUrl`                | `useMockApi` |
-| ----------------------------- | --------------------------- | ------------ |
-| `environment.development.ts`  | `http://localhost:8080/api` | `true`       |
-| `environment.ts` (production) | `/api`                      | `false`      |
+| Fayl                          | `apiBaseUrl` | `useMockApi` |
+| ----------------------------- | ------------ | ------------ |
+| `environment.development.ts`  | `/api`       | `true`       |
+| `environment.ts` (production) | `/api`       | `false`      |
+
+Dev serverda `/api` `proxy.conf.json` orqali backend'ga uzatiladi (`http://localhost:5179`,
+prefiks olib tashlanadi). Shu sabab brauzerda CORS muammosi yo'q. Haqiqiy backend bilan ishlash
+uchun `environment.development.ts` da `useMockApi: false` qiling; stendga ulanish uchun
+`proxy.conf.json` dagi `target` ni stend manziliga o'zgartiring.
 
 ## UI kutubxonasi: Optimus UI
 

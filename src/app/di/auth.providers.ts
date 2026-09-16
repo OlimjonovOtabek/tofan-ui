@@ -3,6 +3,7 @@ import { GetCurrentUserUseCase } from '@application/auth/get-current-user.use-ca
 import { IsAuthenticatedUseCase } from '@application/auth/is-authenticated.use-case';
 import { LoginUseCase } from '@application/auth/login.use-case';
 import { LogoutUseCase } from '@application/auth/logout.use-case';
+import { RenewSessionUseCase } from '@application/auth/renew-session.use-case';
 import { AuthRepository } from '@domain/auth/repositories/auth.repository';
 import { SessionRepository } from '@domain/auth/repositories/session.repository';
 import { FakeAuthRepository } from '@infrastructure/auth/fake-auth.repository';
@@ -22,14 +23,22 @@ export function provideAuth({ useMockApi }: AuthProvidersOptions): EnvironmentPr
       provide: LoginUseCase,
       useFactory: () => new LoginUseCase(inject(AuthRepository), inject(SessionRepository)),
     },
-    { provide: LogoutUseCase, useFactory: () => new LogoutUseCase(inject(SessionRepository)) },
+    {
+      provide: LogoutUseCase,
+      useFactory: () => new LogoutUseCase(inject(AuthRepository), inject(SessionRepository)),
+    },
+    {
+      provide: RenewSessionUseCase,
+      useFactory: () => new RenewSessionUseCase(inject(AuthRepository), inject(SessionRepository)),
+    },
     {
       provide: IsAuthenticatedUseCase,
       useFactory: () => new IsAuthenticatedUseCase(inject(SessionRepository)),
     },
     {
       provide: GetCurrentUserUseCase,
-      useFactory: () => new GetCurrentUserUseCase(inject(AuthRepository)),
+      useFactory: () =>
+        new GetCurrentUserUseCase(inject(AuthRepository), inject(SessionRepository)),
     },
   ]);
 }

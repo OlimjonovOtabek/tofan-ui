@@ -1,3 +1,5 @@
+import { Roles } from '../roles';
+
 export class UserProfile {
   constructor(
     readonly id: string,
@@ -8,5 +10,10 @@ export class UserProfile {
 
   hasRole(role: string): boolean {
     return this.roles.includes(role);
+  }
+
+  /** Only admins may use the panel; every admin endpoint requires this realm role. */
+  isAdmin(): boolean {
+    return this.hasRole(Roles.admin);
   }
 }

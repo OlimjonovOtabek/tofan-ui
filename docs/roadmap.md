@@ -23,19 +23,29 @@
 
 Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 
-| #   | Ish                                                                                                   | Nima uchun                                                          |
-| --- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 0.1 | OpenAPI'ni backend Swagger'idan generatsiya qilish, `openapi/tofan-api.yaml` namunasini olib tashlash | Hozirgi spec to'qima                                                |
-| 0.2 | `Result<T>` javob konvertini (`isSuccess`, `data`, `error`) infrastructure qatlamida ochish           | Backend har javobni o'raydi; `error` domain xatolariga map qilinadi |
-| 0.3 | Haqiqiy auth: `POST auth/login`, `auth/refresh`, `auth/logout` (Keycloak tokenlari)                   | Hozir soxta login                                                   |
-| 0.4 | `admin` rolini tekshirish (`realm_access.roles`); rol yo'q bo'lsa "Ruxsat yo'q" sahifasi              | Oddiy foydalanuvchi ham login qila oladi                            |
-| 0.5 | Token yangilash: 401 → bir marta refresh → so'rovni qayta yuborish                                    | Sessiya tushib qolmasligi uchun                                     |
-| 0.6 | Umumiy UI bloklari: server-side paging'li jadval, forma dialogi, o'chirishni tasdiqlash, toast        | Har modulda qayta ishlatiladi                                       |
-| 0.7 | Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)                                           | Katalog ma'lumotlari uch tilda                                      |
-| 0.8 | Fayl yuklash (`POST /files`, 220 MB gacha video, progress bilan)                                      | Mashq videolari                                                     |
-| 0.9 | Deploy: Docker + nginx; backend stack'iga `Cors__AllowedOrigins__0` = panel domeni                    | Production'ga chiqish                                               |
+| #       | Ish                                                                                          | Nima uchun                                                              |
+| ------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| ~~0.1~~ | ~~OpenAPI'ni backend Swagger'idan generatsiya qilish, namunani olib tashlash~~               | ~~Hozirgi spec to'qima~~                                                |
+| ~~0.2~~ | ~~`Result<T>` javob konvertini infrastructure qatlamida ochish~~                             | ~~Backend har javobni o'raydi; `error` domain xatolariga map qilinadi~~ |
+| ~~0.3~~ | ~~Haqiqiy auth: `POST auth/login`, `auth/refresh`, `auth/logout` (Keycloak tokenlari)~~      | ~~Hozir soxta login~~                                                   |
+| ~~0.4~~ | ~~`admin` rolini tekshirish (`realm_access.roles`); rol yo'q bo'lsa "Ruxsat yo'q" sahifasi~~ | ~~Oddiy foydalanuvchi ham login qila oladi~~                            |
+| ~~0.5~~ | ~~Token yangilash: 401 → bir marta refresh → so'rovni qayta yuborish~~                       | ~~Sessiya tushib qolmasligi uchun~~                                     |
+| 0.6     | Umumiy UI bloklari: jadval, forma dialogi, o'chirishni tasdiqlash, toast                     | Har modulda qayta ishlatiladi                                           |
+| 0.7     | Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)                                  | Katalog ma'lumotlari uch tilda                                          |
+| 0.8     | Fayl yuklash (`POST /files`, 220 MB gacha video, progress bilan)                             | Mashq videolari                                                         |
+| 0.9     | Deploy: Docker + nginx; backend stack'iga `Cors__AllowedOrigins__0` = panel domeni           | Production'ga chiqish                                                   |
 
 `/auth/me` endpoint'i yo'q — foydalanuvchi ismi va roli token claim'laridan olinadi.
+
+**0.1–0.5 bajarildi (2026-09-16).** Tafsilotlar — [README](../README.md#openapi). Qisqacha:
+
+- Spec `scripts/openapi-update.mjs` orqali backend Swagger'idan olinadi (151 endpoint, 213 schema);
+  `npm run api:update` + `npm run api:generate`.
+- Dev serverda `/api` → backend proxy (`proxy.conf.json`), shuning uchun CORS kerak emas.
+  Stend (`api.157.90.117.20.sslip.io`) hozir `http://localhost:4200` ga CORS bermaydi.
+- Haqiqiy login/refresh/logout ulandi, `admin` roli tekshiriladi, 401 → bitta refresh → qayta
+  urinish. `useMockApi: true` bo'lgani uchun standart holatda hamon soxta login ishlaydi.
+- Tekshirilmagan qism: haqiqiy `admin` akkaunti bilan uchdan-uchiga login (parol kerak).
 
 ---
 

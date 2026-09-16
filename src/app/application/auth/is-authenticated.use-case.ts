@@ -4,7 +4,6 @@ export class IsAuthenticatedUseCase {
   constructor(private readonly sessionRepository: SessionRepository) {}
 
   execute(now: Date = new Date()): boolean {
-    const session = this.sessionRepository.get();
-    return session !== null && !session.isExpired(now);
+    return this.sessionRepository.get()?.isUsable(now) ?? false;
   }
 }

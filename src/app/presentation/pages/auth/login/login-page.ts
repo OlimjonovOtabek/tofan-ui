@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { toAuthErrorMessage } from '@presentation/auth/auth-error-message';
+import { toErrorMessage } from '@presentation/shared/errors/error-message';
 import { AuthStore } from '@presentation/auth/auth.store';
 import { FloatingThemeSwitcher } from '@presentation/layout/components/floating-theme-switcher/floating-theme-switcher';
 import { AppPaths } from '@presentation/routing/app-paths';
@@ -43,7 +43,7 @@ export class LoginPage {
       await this.authStore.login(username, password);
       await this.router.navigateByUrl(this.safeReturnUrl());
     } catch (error) {
-      this.errorMessage.set(toAuthErrorMessage(error));
+      this.errorMessage.set(toErrorMessage(error));
     } finally {
       this.isSubmitting.set(false);
     }

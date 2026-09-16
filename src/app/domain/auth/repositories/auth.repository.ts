@@ -10,5 +10,12 @@ export abstract class AuthRepository {
   /** @throws InvalidCredentialsError when the credentials are rejected. */
   abstract login(credentials: Credentials): Promise<AuthSession>;
 
-  abstract getCurrentUser(): Promise<UserProfile>;
+  /** @throws SessionExpiredError when the refresh token is no longer accepted. */
+  abstract renew(session: AuthSession): Promise<AuthSession>;
+
+  /** Revokes the session at the identity provider. Never throws. */
+  abstract revoke(session: AuthSession): Promise<void>;
+
+  /** Who the session belongs to. Read from the token itself, so no call goes out. */
+  abstract readProfile(session: AuthSession): UserProfile;
 }

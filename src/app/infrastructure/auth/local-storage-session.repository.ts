@@ -13,6 +13,7 @@ interface StoredSession {
   accessToken: string;
   refreshToken: string | null;
   expiresAt: string;
+  refreshExpiresAt: string | null;
 }
 
 @Injectable()
@@ -31,7 +32,12 @@ export class LocalStorageSessionRepository implements SessionRepository {
       return null;
     }
 
-    return new AuthSession(stored.accessToken, new Date(stored.expiresAt), stored.refreshToken);
+    return new AuthSession(
+      stored.accessToken,
+      new Date(stored.expiresAt),
+      stored.refreshToken,
+      stored.refreshExpiresAt === null ? null : new Date(stored.refreshExpiresAt),
+    );
   }
 
   save(session: AuthSession): void {
@@ -39,6 +45,7 @@ export class LocalStorageSessionRepository implements SessionRepository {
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
       expiresAt: session.expiresAt.toISOString(),
+      refreshExpiresAt: session.refreshExpiresAt?.toISOString() ?? null,
     };
     this.storage.setItem(STORAGE_KEY, JSON.stringify(stored));
   }
@@ -64,8 +71,16 @@ function isStoredSession(value: unknown): value is StoredSession {
   const candidate = value as Record<string, unknown>;
   return (
     typeof candidate['accessToken'] === 'string' &&
-    typeof candidate['expiresAt'] === 'string' &&
-    !Number.isNaN(Date.parse(candidate['expiresAt'])) &&
-    (candidate['refreshToken'] === null || typeof candidate['refreshToken'] === 'string')
+    isDateString(candidate['expiresAt']) &&
+    isNullOr(candidate['refreshToken'], (token) => typeof token === 'string') &&
+    isNullOr(candidate['refreshExpiresAt'], isDateString)
   );
+}
+
+function isDateString(value: unknown): boolean {
+  return typeof value === 'string' && !Number.isNaN(Date.parse(value));
+}
+
+function isNullOr(value: unknown, isValid: (value: unknown) => boolean): boolean {
+  return value === null || value === undefined || isValid(value);
 }
