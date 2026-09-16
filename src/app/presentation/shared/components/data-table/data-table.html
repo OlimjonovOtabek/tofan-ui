@@ -1,0 +1,44 @@
+<p-table
+  [value]="value()"
+  [lazy]="true"
+  [loading]="loading()"
+  [paginator]="true"
+  [rows]="pageSize()"
+  [first]="first()"
+  [totalRecords]="totalCount()"
+  [rowsPerPageOptions]="rowsPerPageOptions"
+  [dataKey]="dataKey()"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="{first}-{last} / jami {totalRecords}"
+  [rowHover]="true"
+  (onLazyLoad)="onLazyLoad($event)"
+>
+  <ng-template #header>
+    <tr>
+      @for (column of columns(); track column.field) {
+        <th
+          [style.width]="column.width"
+          [pSortableColumn]="column.sortable ? column.field : ''"
+          [pSortableColumnDisabled]="!column.sortable"
+        >
+          {{ column.header }}
+          @if (column.sortable) {
+            <p-sortIcon [field]="column.field" />
+          }
+        </th>
+      }
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-item>
+    <ng-container [ngTemplateOutlet]="rowTemplate()" [ngTemplateOutletContext]="{ $implicit: item }" />
+  </ng-template>
+
+  <ng-template #emptymessage>
+    <tr>
+      <td [attr.colspan]="columns().length" class="text-muted-color py-8 text-center">
+        {{ emptyMessage() }}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

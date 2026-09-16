@@ -8,6 +8,7 @@ import { TitleStrategy } from '@angular/router';
 import Aura from '@openng/optimus-ui-themes/aura';
 import { ThemeService } from '@presentation/layout/theme/theme.service';
 import { AppTitleStrategy } from '@presentation/routing/app-title.strategy';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 import { provideOptimus } from '@openng/optimus-ui/config';
 
 export function provideUi(): EnvironmentProviders {
@@ -19,5 +20,7 @@ export function provideUi(): EnvironmentProviders {
       inject(ThemeService);
     }),
     { provide: TitleStrategy, useClass: AppTitleStrategy },
+    MessageService,
+    ConfirmationService,
   ]);
 }

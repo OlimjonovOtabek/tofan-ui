@@ -45,7 +45,7 @@ src/app/
 │   ├── layout/              # Sakai: topbar, sidebar, menyu, tema konfiguratori
 │   ├── pages/               # Route'lanadigan sahifalar
 │   ├── routing/             # AppPaths, guard'lar, title strategy
-│   └── shared/components/   # Qayta ishlatiladigan komponentlar
+│   └── shared/              # Umumiy bloklar: komponentlar, toast/confirm, xato matnlari
 ├── di/               # Composition root: portlarni adapterlarga bog'lash
 ├── app.config.ts
 └── app.routes.ts
@@ -137,6 +137,49 @@ Backend har bir yozuv amalini `Result` / `Result<T>` ichiga o'raydi, xatolikni e
   401 javobida `sessionInterceptor` bir marta `auth/refresh` qiladi va so'rovni qaytadan yuboradi;
   yangilash ham muvaffaqiyatsiz bo'lsa — login sahifasi. Parallel so'rovlar bitta yangilashni
   bo'lishadi (`RenewSessionUseCase`).
+
+## Umumiy UI bloklari
+
+Har bir modulda qayta ishlatiladigan qismlar `presentation/shared/` da:
+
+| Blok                              | Nima qiladi                                                                                        |
+| --------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `components/data-table`           | Server tomonda sahifalanadigan jadval: `(pageChange)` → `PageRequest`, qatorni chaqiruvchi chizadi |
+| `components/form-dialog`          | Forma uchun modal: sarlavha, Saqlash/Bekor qilish, `saving` holati                                 |
+| `components/localized-text-field` | `name` / `nameUz` / `nameRu` uchligi bitta maydon sifatida                                         |
+| `components/file-upload`          | Fayl tanlash + progress; natijasi — `fileId`                                                       |
+| `feedback/notification.service`   | Toast: `success(...)`, `error(error)` (xato matni avtomatik tanlanadi)                             |
+| `feedback/confirmation.service`   | `confirmDelete(nom)` → `Promise<boolean>`                                                          |
+| `errors/error-message`            | Har qanday xatoni o'zbekcha matnga aylantiradi (backend kodlari lug'ati bilan)                     |
+
+Jadval bilan sahifa quyidagicha yoziladi:
+
+```html
+<app-data-table
+  [columns]="columns"
+  [items]="page().items"
+  [totalCount]="page().totalCount"
+  [loading]="loading()"
+  (pageChange)="load($event)"
+>
+  <ng-template #row let-exercise>
+    <tr>
+      <td>{{ exercise.name }}</td>
+    </tr>
+  </ng-template>
+</app-data-table>
+```
+
+Sahifalash shartnomasi domenda: `PageRequest` (`first`, `rows`, `sortField`, `sortDirection`) va
+`Page<T>`; ularni backend query parametrlariga `infrastructure/api/paging.mapper.ts` o'tkazadi.
+
+### Fayl yuklash
+
+`POST /files` multipart; progress uchun generatsiya qilingan funksiya emas, to'g'ridan-to'g'ri
+`HttpClient` ishlatiladi. Hajm va kengaytma cheklovlari domenda backend qoidalari bilan bir xil
+(`domain/storage/file-upload-rules.ts`): mashq videosi 200 MB (`.mp4 .m4v .mov .webm`), hujjat
+20 MB (`.pdf`), rasm 10 MB (`.jpg .jpeg .png .webp`). `files/{id}/content` anonim, shuning uchun
+`img` / `video` teglarida to'g'ridan-to'g'ri ishlaydi.
 
 ## Muhitlar
 

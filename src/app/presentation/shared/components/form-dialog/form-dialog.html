@@ -1,0 +1,32 @@
+<p-dialog
+  [header]="header()"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  [modal]="true"
+  [draggable]="false"
+  [dismissableMask]="!saving()"
+  [closable]="!saving()"
+  [style]="{ width: width() }"
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  <form class="flex flex-col gap-4 pt-1" (ngSubmit)="save.emit()">
+    <ng-content />
+  </form>
+
+  <ng-template #footer>
+    <p-button
+      label="Bekor qilish"
+      severity="secondary"
+      [text]="true"
+      [disabled]="saving()"
+      (onClick)="close()"
+    />
+    <p-button
+      [label]="saveLabel()"
+      icon="pi pi-check"
+      [loading]="saving()"
+      [disabled]="saveDisabled()"
+      (onClick)="save.emit()"
+    />
+  </ng-template>
+</p-dialog>

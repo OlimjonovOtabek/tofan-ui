@@ -30,9 +30,9 @@ Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 | ~~0.3~~ | ~~Haqiqiy auth: `POST auth/login`, `auth/refresh`, `auth/logout` (Keycloak tokenlari)~~      | ~~Hozir soxta login~~                                                   |
 | ~~0.4~~ | ~~`admin` rolini tekshirish (`realm_access.roles`); rol yo'q bo'lsa "Ruxsat yo'q" sahifasi~~ | ~~Oddiy foydalanuvchi ham login qila oladi~~                            |
 | ~~0.5~~ | ~~Token yangilash: 401 → bir marta refresh → so'rovni qayta yuborish~~                       | ~~Sessiya tushib qolmasligi uchun~~                                     |
-| 0.6     | Umumiy UI bloklari: jadval, forma dialogi, o'chirishni tasdiqlash, toast                     | Har modulda qayta ishlatiladi                                           |
-| 0.7     | Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)                                  | Katalog ma'lumotlari uch tilda                                          |
-| 0.8     | Fayl yuklash (`POST /files`, 220 MB gacha video, progress bilan)                             | Mashq videolari                                                         |
+| ~~0.6~~ | ~~Umumiy UI bloklari: jadval, forma dialogi, o'chirishni tasdiqlash, toast~~                 | ~~Har modulda qayta ishlatiladi~~                                       |
+| ~~0.7~~ | ~~Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)~~                              | ~~Katalog ma'lumotlari uch tilda~~                                      |
+| ~~0.8~~ | ~~Fayl yuklash (`POST /files`, progress bilan)~~                                             | ~~Mashq videolari~~                                                     |
 | 0.9     | Deploy: Docker + nginx; backend stack'iga `Cors__AllowedOrigins__0` = panel domeni           | Production'ga chiqish                                                   |
 
 `/auth/me` endpoint'i yo'q — foydalanuvchi ismi va roli token claim'laridan olinadi.
@@ -46,6 +46,13 @@ Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 - Haqiqiy login/refresh/logout ulandi, `admin` roli tekshiriladi, 401 → bitta refresh → qayta
   urinish. `useMockApi: true` bo'lgani uchun standart holatda hamon soxta login ishlaydi.
 - Tekshirilmagan qism: haqiqiy `admin` akkaunti bilan uchdan-uchiga login (parol kerak).
+
+**0.6-0.8 bajarildi (2026-09-16).** Umumiy bloklar `presentation/shared/` da, ro'yxati —
+[README](../README.md#umumiy-ui-bloklari). Sahifalash shartnomasi (`PageRequest`, `Page<T>`)
+domenda. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB (reja'dagi
+220 MB — butun so'rov limiti, faylniki 200 MB).
+
+0-bosqichdan qolgani: **0.9 — deploy (Docker + nginx, backend'da `Cors__AllowedOrigins`)**.
 
 ---
 
