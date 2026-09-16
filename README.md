@@ -87,6 +87,10 @@ xato beradi.
 
 ## Yangi feature qo'shish (masalan, "Foydalanuvchilar")
 
+> Tayyor namuna — **Mashqlar katalogi**: `domain/exercises/`, `application/exercises/`,
+> `infrastructure/exercises/`, `di/exercises.providers.ts`, `presentation/exercises/` va
+> `presentation/pages/exercises/`. Yangi katalog modulini shundan ko'chirib boshlash qulay.
+
 1. **OpenAPI**: backend spec'ini `openapi/` ga qo'ying (yoki `ng-openapi-gen.json` dagi `input` ni
    backend URL'iga yo'naltiring) va `npm run api:generate`.
 2. **Domain**: `domain/users/entities/user.ts`, `domain/users/repositories/user.repository.ts`

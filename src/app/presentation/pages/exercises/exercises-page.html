@@ -1,0 +1,161 @@
+<div class="card">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+        Mashqlar katalogi
+      </h1>
+      <span class="text-muted-color text-sm">Jami {{ store.totalCount() }} mashq</span>
+    </div>
+    <p-button label="Mashq qo'shish" icon="pi pi-plus" (onClick)="add()" />
+  </div>
+
+  <form [formGroup]="filterForm" class="mb-4 flex flex-wrap items-end gap-3">
+    <div class="flex min-w-56 flex-1 flex-col gap-1">
+      <label for="search" class="text-muted-color text-sm">Qidirish</label>
+      <input
+        pInputText
+        id="search"
+        type="search"
+        formControlName="search"
+        placeholder="Mashq nomi"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="filterMuscleGroup" class="text-muted-color text-sm">Mushak guruhi</label>
+      <p-select
+        inputId="filterMuscleGroup"
+        formControlName="muscleGroup"
+        [options]="muscleGroupOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Hammasi"
+        [showClear]="true"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="filterEquipment" class="text-muted-color text-sm">Jihoz</label>
+      <p-select
+        inputId="filterEquipment"
+        formControlName="equipmentType"
+        [options]="equipmentTypeOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Hammasi"
+        [showClear]="true"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="filterGender" class="text-muted-color text-sm">Jins</label>
+      <p-select
+        inputId="filterGender"
+        formControlName="gender"
+        [options]="genderOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Hammasi"
+        [showClear]="true"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="filterPlace" class="text-muted-color text-sm">Joyi</label>
+      <p-select
+        inputId="filterPlace"
+        formControlName="isHomeExercise"
+        [options]="placeOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Hammasi"
+        [showClear]="true"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="filterActivity" class="text-muted-color text-sm">Holati</label>
+      <p-select
+        inputId="filterActivity"
+        formControlName="isActive"
+        [options]="activityOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Hammasi"
+        [showClear]="true"
+      />
+    </div>
+
+    <p-button
+      label="Tozalash"
+      icon="pi pi-filter-slash"
+      severity="secondary"
+      [text]="true"
+      (onClick)="resetFilters()"
+    />
+  </form>
+
+  <app-data-table
+    [columns]="columns"
+    [items]="store.exercises()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [first]="store.first()"
+    emptyMessage="Bu shartlarga mos mashq topilmadi."
+    (pageChange)="loadPage($event)"
+  >
+    <ng-template #row let-exercise>
+      <tr>
+        <td>
+          <div class="font-medium">{{ exercise.displayName }}</div>
+          <div class="text-muted-color text-sm">{{ exercise.name }}</div>
+        </td>
+        <td>{{ muscleGroupLabel(exercise) }}</td>
+        <td>{{ equipmentTypeLabel(exercise) }}</td>
+        <td>{{ difficultyLabel(exercise) }}</td>
+        <td>
+          <p-tag
+            [value]="exercise.isActive ? 'Faol' : 'Faol emas'"
+            [severity]="exercise.isActive ? 'success' : 'secondary'"
+          />
+        </td>
+        <td class="text-right whitespace-nowrap">
+          @if (exercise.hasVideo()) {
+            <i class="pi pi-video text-muted-color mr-2" title="Video yuklangan"></i>
+          }
+          <p-button
+            icon="pi pi-pencil"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="Tahrirlash"
+            (onClick)="edit(exercise)"
+          />
+          <p-button
+            [icon]="exercise.isActive ? 'pi pi-eye-slash' : 'pi pi-check'"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="exercise.isActive ? 'Faolsizlantirish' : 'Faollashtirish'"
+            (onClick)="store.toggleActivation(exercise)"
+          />
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="O'chirish"
+            (onClick)="remove(exercise)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-exercise-form-dialog
+  [(visible)]="dialogVisible"
+  [exercise]="editedExercise()"
+  [saving]="store.saving()"
+  (save)="saveDraft($event)"
+/>

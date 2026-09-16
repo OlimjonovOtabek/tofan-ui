@@ -60,15 +60,21 @@ domenda. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB 
 
 Backend endpoint'lari tayyor.
 
-| Bo'lim                    | Imkoniyatlar                                                                             | Endpoint'lar                                                                |
-| ------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Mashqlar katalogi         | Ro'yxat va filtr (mushak guruhi, jihoz, qiyinlik), CRUD, faollashtirish/o'chirish, video | `exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`         |
-| Ovqatlar katalogi         | Qidirish, shtrix-kod bo'yicha topish, CRUD                                               | `diet/foods`, `diet/foods/barcode/{barcode}`                                |
-| Bildirishnomalar          | Shablonlar CRUD, maxsus yoki shablon asosida push yuborish                               | `notification-templates`, `notifications/custom`, `notifications/templated` |
-| Media fayllar             | Yuklangan fayllar ro'yxati, ko'rish, o'chirish                                           | `files`, `files/{id}/content`                                               |
-| Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)                                     | `user-sessions`, `user-sessions/{id}`                                       |
+| Bo'lim                    | Imkoniyatlar                                                | Endpoint'lar                                                                |
+| ------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
+| ~~Mashqlar katalogi~~     | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~ | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~     |
+| Ovqatlar katalogi         | Qidirish, shtrix-kod bo'yicha topish, CRUD                  | `diet/foods`, `diet/foods/barcode/{barcode}`                                |
+| Bildirishnomalar          | Shablonlar CRUD, maxsus yoki shablon asosida push yuborish  | `notification-templates`, `notifications/custom`, `notifications/templated` |
+| Media fayllar             | Yuklangan fayllar ro'yxati, ko'rish, o'chirish              | `files`, `files/{id}/content`                                               |
+| Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)        | `user-sessions`, `user-sessions/{id}`                                       |
 
 Tartib: mashqlar → ovqatlar → bildirishnomalar → media → sessiyalar.
+
+**Mashqlar katalogi bajarildi (2026-09-16).** `/exercises` sahifasi: server tomonda sahifalanadigan
+ro'yxat, qidirish va 5 filtr (mushak guruhi, jihoz, jins, joyi, holati), qo'shish/tahrirlash
+dialogi (uch tilli nom, video yuklash), faollashtirish/o'chirib qo'yish va o'chirish (tasdiqlash
+bilan). Mock rejimda uchta namuna mashq bilan to'liq ishlaydi (`FakeExerciseRepository`), shuning
+uchun sahifani backend'siz ham sinash mumkin. Keyingisi — ovqatlar katalogi (`diet/foods`).
 
 ---
 

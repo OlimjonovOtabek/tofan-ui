@@ -9,4 +9,10 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
       { label: 'Boshqaruv paneli', icon: 'pi pi-fw pi-home', routerLink: [AppPaths.dashboard] },
     ],
   },
+  {
+    label: 'Katalog',
+    items: [
+      { label: 'Mashqlar', icon: 'pi pi-fw pi-list-check', routerLink: [AppPaths.exercises] },
+    ],
+  },
 ];

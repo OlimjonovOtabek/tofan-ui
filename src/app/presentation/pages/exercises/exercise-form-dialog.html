@@ -1,0 +1,103 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="title()"
+  [saving]="saving()"
+  width="40rem"
+  (save)="submit()"
+>
+  <div [formGroup]="form" class="flex flex-col gap-4">
+    <app-localized-text-field [group]="names" label="Nomi" />
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="flex flex-col gap-1">
+        <label for="muscleGroup" class="font-medium">Mushak guruhi</label>
+        <p-select
+          inputId="muscleGroup"
+          formControlName="muscleGroup"
+          [options]="muscleGroupOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="equipmentType" class="font-medium">Jihoz</label>
+        <p-select
+          inputId="equipmentType"
+          formControlName="equipmentType"
+          [options]="equipmentTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="difficulty" class="font-medium">Qiyinlik</label>
+        <p-select
+          inputId="difficulty"
+          formControlName="difficulty"
+          [options]="difficultyOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="type" class="font-medium">Turi</label>
+        <p-select
+          inputId="type"
+          formControlName="type"
+          [options]="typeOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="gender" class="font-medium">Jins</label>
+        <p-select
+          inputId="gender"
+          formControlName="gender"
+          [options]="genderOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-6">
+      <div class="flex items-center gap-2">
+        <p-toggleswitch inputId="isCompound" formControlName="isCompound" />
+        <label for="isCompound">Ko'p bo'g'imli</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <p-toggleswitch inputId="isHomeExercise" formControlName="isHomeExercise" />
+        <label for="isHomeExercise">Uyda bajarish mumkin</label>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="instructions" class="font-medium">Bajarish tartibi</label>
+      <textarea
+        pTextarea
+        id="instructions"
+        formControlName="instructions"
+        rows="3"
+        [autoResize]="true"
+        placeholder="Mashq qanday bajariladi"
+      ></textarea>
+    </div>
+
+    <app-file-upload
+      category="exerciseVideo"
+      label="Video"
+      [(fileId)]="videoFileId"
+      [(fileName)]="videoFileName"
+    />
+  </div>
+</app-form-dialog>

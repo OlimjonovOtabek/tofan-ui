@@ -16,6 +16,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('@presentation/pages/dashboard/dashboard-page').then((m) => m.DashboardPage),
       },
+      {
+        path: 'exercises',
+        title: 'Mashqlar katalogi',
+        loadComponent: () =>
+          import('@presentation/pages/exercises/exercises-page').then((m) => m.ExercisesPage),
+      },
     ],
   },
   {
