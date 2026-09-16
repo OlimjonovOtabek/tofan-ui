@@ -1,0 +1,146 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="title()"
+  [saving]="saving()"
+  width="42rem"
+  (save)="submit()"
+>
+  <div [formGroup]="form" class="flex flex-col gap-4">
+    <app-localized-text-field [group]="names" label="Nomi" />
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="flex flex-col gap-1">
+        <label for="source" class="font-medium">Manba</label>
+        <p-select
+          inputId="source"
+          formControlName="source"
+          [options]="sourceOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="barcode" class="font-medium">Shtrix-kod</label>
+        <input
+          pInputText
+          id="barcode"
+          type="text"
+          formControlName="barcode"
+          placeholder="Masalan, 4780016470016"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div class="flex flex-col gap-1">
+        <label for="servingUnit" class="font-medium">Porsiya birligi</label>
+        <p-select
+          inputId="servingUnit"
+          formControlName="servingUnit"
+          [options]="servingUnitOptions"
+          optionLabel="label"
+          optionValue="value"
+          [fluid]="true"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="servingSize" class="font-medium">Porsiya hajmi</label>
+        <p-inputnumber
+          inputId="servingSize"
+          formControlName="servingSize"
+          [min]="0.01"
+          [maxFractionDigits]="2"
+          [fluid]="true"
+          [invalid]="isInvalid('servingSize')"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="servingSizeGrams" class="font-medium">Porsiya vazni (g)</label>
+        <p-inputnumber
+          inputId="servingSizeGrams"
+          formControlName="servingSizeGrams"
+          [min]="0.01"
+          [maxFractionDigits]="2"
+          [fluid]="true"
+          [invalid]="isInvalid('servingSizeGrams')"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="text-surface-900 dark:text-surface-0 mb-2 font-medium">
+        Bir porsiyadagi ozuqa
+      </div>
+      <div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
+        <div class="flex flex-col gap-1">
+          <label for="caloriesPerServing" class="text-muted-color text-sm">Kaloriya</label>
+          <p-inputnumber
+            inputId="caloriesPerServing"
+            formControlName="caloriesPerServing"
+            [min]="0"
+            [fluid]="true"
+            [invalid]="isInvalid('caloriesPerServing')"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="proteinGrams" class="text-muted-color text-sm">Oqsil (g)</label>
+          <p-inputnumber
+            inputId="proteinGrams"
+            formControlName="proteinGrams"
+            [min]="0"
+            [maxFractionDigits]="1"
+            [fluid]="true"
+            [invalid]="isInvalid('proteinGrams')"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="carbsGrams" class="text-muted-color text-sm">Uglevod (g)</label>
+          <p-inputnumber
+            inputId="carbsGrams"
+            formControlName="carbsGrams"
+            [min]="0"
+            [maxFractionDigits]="1"
+            [fluid]="true"
+            [invalid]="isInvalid('carbsGrams')"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="fatGrams" class="text-muted-color text-sm">Yog' (g)</label>
+          <p-inputnumber
+            inputId="fatGrams"
+            formControlName="fatGrams"
+            [min]="0"
+            [maxFractionDigits]="1"
+            [fluid]="true"
+            [invalid]="isInvalid('fatGrams')"
+          />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="fiberGrams" class="text-muted-color text-sm">Tolalar (g)</label>
+          <p-inputnumber
+            inputId="fiberGrams"
+            formControlName="fiberGrams"
+            [min]="0"
+            [maxFractionDigits]="1"
+            [fluid]="true"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-6">
+      <div class="flex items-center gap-2">
+        <p-toggleswitch inputId="isVerified" formControlName="isVerified" />
+        <label for="isVerified">Tasdiqlangan</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <p-toggleswitch inputId="isActive" formControlName="isActive" />
+        <label for="isActive">Faol</label>
+      </div>
+    </div>
+  </div>
+</app-form-dialog>

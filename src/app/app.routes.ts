@@ -17,6 +17,12 @@ export const routes: Routes = [
           import('@presentation/pages/dashboard/dashboard-page').then((m) => m.DashboardPage),
       },
       {
+        path: 'foods',
+        title: 'Ovqatlar katalogi',
+        loadComponent: () =>
+          import('@presentation/pages/foods/foods-page').then((m) => m.FoodsPage),
+      },
+      {
         path: 'exercises',
         title: 'Mashqlar katalogi',
         loadComponent: () =>

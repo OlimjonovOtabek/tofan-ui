@@ -12,8 +12,8 @@ import {
   ExerciseType,
   MuscleGroup,
 } from '@infrastructure/api/generated';
+import { EnumMap } from '@infrastructure/api/enum-map';
 import {
-  EnumMap,
   difficulties,
   equipmentTypes,
   exerciseTypes,

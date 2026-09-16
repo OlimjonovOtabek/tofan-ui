@@ -7,6 +7,7 @@ import {
   MuscleGroup,
 } from '@domain/exercises/exercise-attributes';
 import { ExerciseDraft } from '@domain/exercises/exercise-draft';
+import { enumMap } from '@infrastructure/api/enum-map';
 import {
   CreateExerciseRequest,
   EquipmentType as ApiEquipmentType,
@@ -17,10 +18,6 @@ import {
   MuscleGroup as ApiMuscleGroup,
 } from '@infrastructure/api/generated';
 
-/**
- * Domain values are the camelCase spelling of the backend enum members (`fullBody` -> `FullBody`),
- * so the member name is the mapping: no order or number is hard-coded on this side.
- */
 export const muscleGroups = enumMap<MuscleGroup, ApiMuscleGroup>(ApiMuscleGroup);
 export const equipmentTypes = enumMap<EquipmentType, ApiEquipmentType>(ApiEquipmentType);
 export const difficulties = enumMap<ExerciseDifficulty, ApiExerciseDifficulty>(ApiExerciseDifficulty);
@@ -61,38 +58,4 @@ export function toCreateExerciseRequest(draft: ExerciseDraft): CreateExerciseReq
     ...(draft.instructions === null ? {} : { instructions: draft.instructions }),
     ...(draft.videoFileId === null ? {} : { videoFileId: draft.videoFileId }),
   };
-}
-
-export interface EnumMap<TDomain extends string, TApi extends number> {
-  toApi(value: TDomain): TApi;
-  toDomain(value: TApi): TDomain;
-}
-
-function enumMap<TDomain extends string, TApi extends number>(
-  apiEnum: Record<string, unknown>,
-): EnumMap<TDomain, TApi> {
-  return {
-    toApi: (value) => {
-      const member = apiEnum[capitalize(value)];
-      if (typeof member !== 'number') {
-        throw new Error(`The API enum has no member for '${value}'. Regenerate the API client.`);
-      }
-      return member as TApi;
-    },
-    toDomain: (value) => {
-      const name = apiEnum[value];
-      if (typeof name !== 'string') {
-        throw new Error(`The API returned the unknown enum value ${value}.`);
-      }
-      return uncapitalize(name) as TDomain;
-    },
-  };
-}
-
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
-function uncapitalize(value: string): string {
-  return value.charAt(0).toLowerCase() + value.slice(1);
 }

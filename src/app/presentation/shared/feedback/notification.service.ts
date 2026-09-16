@@ -19,6 +19,16 @@ export class NotificationService {
     });
   }
 
+  /** Neutral news: something was looked up and the answer changes what the admin does next. */
+  info(detail: string): void {
+    this.messageService.add({
+      severity: 'info',
+      summary: "Ma'lumot",
+      detail,
+      life: ERROR_LIFETIME_MS,
+    });
+  }
+
   /** Shows the user-facing wording of any error, domain or otherwise. */
   error(error: unknown): void {
     this.messageService.add({

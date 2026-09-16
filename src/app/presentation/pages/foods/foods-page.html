@@ -1,0 +1,108 @@
+<div class="card">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+        Ovqatlar katalogi
+      </h1>
+      <span class="text-muted-color text-sm">Jami {{ store.totalCount() }} ovqat</span>
+    </div>
+    <p-button label="Ovqat qo'shish" icon="pi pi-plus" (onClick)="add()" />
+  </div>
+
+  <div class="mb-4 flex flex-wrap items-end gap-3">
+    <div class="flex min-w-56 flex-1 flex-col gap-1">
+      <label for="search" class="text-muted-color text-sm">Qidirish</label>
+      <input
+        pInputText
+        id="search"
+        type="search"
+        [formControl]="searchControl"
+        placeholder="Ovqat nomi yoki shtrix-kod"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="barcode" class="text-muted-color text-sm">Shtrix-kod bo'yicha topish</label>
+      <div class="flex gap-2">
+        <input
+          pInputText
+          id="barcode"
+          type="text"
+          [formControl]="barcodeControl"
+          placeholder="4780016470016"
+          (keydown.enter)="searchBarcode()"
+        />
+        <p-button
+          icon="pi pi-barcode"
+          label="Topish"
+          severity="secondary"
+          [loading]="store.searchingBarcode()"
+          (onClick)="searchBarcode()"
+        />
+      </div>
+    </div>
+  </div>
+
+  <app-data-table
+    [columns]="columns"
+    [items]="store.foods()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [first]="store.first()"
+    emptyMessage="Bu shartlarga mos ovqat topilmadi."
+    (pageChange)="loadPage($event)"
+  >
+    <ng-template #row let-food>
+      <tr>
+        <td>
+          <div class="font-medium">{{ food.displayName }}</div>
+          <div class="text-muted-color text-sm">
+            {{ food.name }}
+            @if (food.hasBarcode()) {
+              · {{ food.barcode }}
+            }
+          </div>
+        </td>
+        <td class="whitespace-nowrap">{{ servingLabel(food) }}</td>
+        <td class="whitespace-nowrap">{{ caloriesLabel(food) }}</td>
+        <td class="whitespace-nowrap">{{ macrosLabel(food) }}</td>
+        <td>{{ sourceLabel(food) }}</td>
+        <td class="whitespace-nowrap">
+          <p-tag
+            [value]="food.isActive ? 'Faol' : 'Faol emas'"
+            [severity]="food.isActive ? 'success' : 'secondary'"
+          />
+          @if (food.isVerified) {
+            <p-tag value="Tasdiqlangan" severity="info" styleClass="ml-1" />
+          }
+        </td>
+        <td class="text-right whitespace-nowrap">
+          <p-button
+            icon="pi pi-pencil"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="Tahrirlash"
+            (onClick)="edit(food)"
+          />
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="O'chirish"
+            (onClick)="remove(food)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-food-form-dialog
+  [(visible)]="dialogVisible"
+  [food]="editedFood()"
+  [barcode]="prefilledBarcode()"
+  [saving]="store.saving()"
+  (save)="saveDraft($event)"
+/>

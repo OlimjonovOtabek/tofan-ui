@@ -10,6 +10,7 @@ import {
   MUSCLE_GROUPS,
   MuscleGroup,
 } from '@domain/exercises/exercise-attributes';
+import { toSelectOptions } from '@presentation/shared/forms/select-option';
 
 /** Uzbek wording for the catalog classifiers; the domain keeps the values language-free. */
 export const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
@@ -65,21 +66,8 @@ export const GENDER_LABELS: Record<ExerciseGender, string> = {
   female: 'Ayol',
 };
 
-export interface SelectOption<TValue> {
-  readonly value: TValue;
-  readonly label: string;
-}
-
-/** Optimus UI's select takes a mutable array, so the options are handed over as one. */
-function toOptions<TValue extends string>(
-  values: readonly TValue[],
-  labels: Record<TValue, string>,
-): SelectOption<TValue>[] {
-  return values.map((value) => ({ value, label: labels[value] }));
-}
-
-export const MUSCLE_GROUP_OPTIONS = toOptions(MUSCLE_GROUPS, MUSCLE_GROUP_LABELS);
-export const EQUIPMENT_TYPE_OPTIONS = toOptions(EQUIPMENT_TYPES, EQUIPMENT_TYPE_LABELS);
-export const DIFFICULTY_OPTIONS = toOptions(EXERCISE_DIFFICULTIES, DIFFICULTY_LABELS);
-export const EXERCISE_TYPE_OPTIONS = toOptions(EXERCISE_TYPES, EXERCISE_TYPE_LABELS);
-export const GENDER_OPTIONS = toOptions(EXERCISE_GENDERS, GENDER_LABELS);
+export const MUSCLE_GROUP_OPTIONS = toSelectOptions(MUSCLE_GROUPS, MUSCLE_GROUP_LABELS);
+export const EQUIPMENT_TYPE_OPTIONS = toSelectOptions(EQUIPMENT_TYPES, EQUIPMENT_TYPE_LABELS);
+export const DIFFICULTY_OPTIONS = toSelectOptions(EXERCISE_DIFFICULTIES, DIFFICULTY_LABELS);
+export const EXERCISE_TYPE_OPTIONS = toSelectOptions(EXERCISE_TYPES, EXERCISE_TYPE_LABELS);
+export const GENDER_OPTIONS = toSelectOptions(EXERCISE_GENDERS, GENDER_LABELS);

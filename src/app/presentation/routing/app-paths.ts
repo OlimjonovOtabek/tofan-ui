@@ -2,6 +2,7 @@
 export const AppPaths = {
   dashboard: '/',
   exercises: '/exercises',
+  foods: '/foods',
   login: '/auth/login',
   accessDenied: '/auth/access-denied',
   error: '/auth/error',

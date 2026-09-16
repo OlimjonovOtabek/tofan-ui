@@ -63,7 +63,7 @@ Backend endpoint'lari tayyor.
 | Bo'lim                    | Imkoniyatlar                                                | Endpoint'lar                                                                |
 | ------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------- |
 | ~~Mashqlar katalogi~~     | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~ | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~     |
-| Ovqatlar katalogi         | Qidirish, shtrix-kod bo'yicha topish, CRUD                  | `diet/foods`, `diet/foods/barcode/{barcode}`                                |
+| ~~Ovqatlar katalogi~~     | ~~Qidirish, shtrix-kod bo'yicha topish, CRUD~~              | ~~`diet/foods`, `diet/foods/barcode/{barcode}`~~                            |
 | Bildirishnomalar          | Shablonlar CRUD, maxsus yoki shablon asosida push yuborish  | `notification-templates`, `notifications/custom`, `notifications/templated` |
 | Media fayllar             | Yuklangan fayllar ro'yxati, ko'rish, o'chirish              | `files`, `files/{id}/content`                                               |
 | Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)        | `user-sessions`, `user-sessions/{id}`                                       |
@@ -74,7 +74,13 @@ Tartib: mashqlar → ovqatlar → bildirishnomalar → media → sessiyalar.
 ro'yxat, qidirish va 5 filtr (mushak guruhi, jihoz, jins, joyi, holati), qo'shish/tahrirlash
 dialogi (uch tilli nom, video yuklash), faollashtirish/o'chirib qo'yish va o'chirish (tasdiqlash
 bilan). Mock rejimda uchta namuna mashq bilan to'liq ishlaydi (`FakeExerciseRepository`), shuning
-uchun sahifani backend'siz ham sinash mumkin. Keyingisi — ovqatlar katalogi (`diet/foods`).
+uchun sahifani backend'siz ham sinash mumkin.
+
+**Ovqatlar katalogi bajarildi (2026-09-16).** `/foods` sahifasi: qidirish (nom va shtrix-kod
+bo'yicha), shtrix-kod bo'yicha topish — topilsa tahrirlash oynasi, topilmasa shtrix-kodi
+to'ldirilgan qo'shish oynasi, CRUD, kaloriyani 100 g ga keltirib ko'rsatish. Backend ro'yxatida
+faqat `Search` filtri bor (manba yoki faollik bo'yicha filtr yo'q). Keyingisi — bildirishnomalar
+(`notification-templates`, `notifications/custom`, `notifications/templated`).
 
 ---
 
