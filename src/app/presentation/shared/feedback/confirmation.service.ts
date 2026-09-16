@@ -6,10 +6,12 @@ import { ConfirmationService } from '@openng/optimus-ui/api';
 export class ConfirmDialogService {
   private readonly confirmationService = inject(ConfirmationService);
 
-  confirmDelete(subject: string): Promise<boolean> {
+  /** `warning` is put in front of the question when deleting has consequences elsewhere. */
+  confirmDelete(subject: string, warning?: string): Promise<boolean> {
+    const question = `"${subject}" o'chirilsinmi? Buni qaytarib bo'lmaydi.`;
     return this.ask({
       header: "O'chirishni tasdiqlang",
-      message: `"${subject}" o'chirilsinmi? Buni qaytarib bo'lmaydi.`,
+      message: warning === undefined ? question : `${warning} ${question}`,
       icon: 'pi pi-trash',
       acceptLabel: "O'chirish",
       acceptButtonStyleClass: 'p-button-danger',

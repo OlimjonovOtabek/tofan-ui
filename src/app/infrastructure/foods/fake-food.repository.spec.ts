@@ -36,9 +36,9 @@ describe('FakeFoodRepository', () => {
     await expect(repository.list({ search: 'yogurt' }, firstPage())).resolves.toMatchObject({
       totalCount: 1,
     });
-    await expect(
-      repository.list({ search: '4780016470016' }, firstPage()),
-    ).resolves.toMatchObject({ totalCount: 1 });
+    await expect(repository.list({ search: '4780016470016' }, firstPage())).resolves.toMatchObject({
+      totalCount: 1,
+    });
   });
 
   it('finds a food by its barcode and answers null for an unknown one', async () => {

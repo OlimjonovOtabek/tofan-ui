@@ -3,6 +3,7 @@ export const AppPaths = {
   dashboard: '/',
   exercises: '/exercises',
   foods: '/foods',
+  media: '/media',
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',
   login: '/auth/login',

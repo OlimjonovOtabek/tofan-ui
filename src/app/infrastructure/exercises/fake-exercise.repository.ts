@@ -10,6 +10,9 @@ import { Page, PageRequest } from '@domain/shared/paging/page';
 
 const NETWORK_DELAY_MS = 250;
 
+/** Shared with the fake file store, so the media page can show a video that is in use. */
+export const FAKE_SQUAT_VIDEO_ID = '44444444-4444-4444-4444-444444444444';
+
 const SEED: readonly Exercise[] = [
   new Exercise(
     '11111111-1111-1111-1111-111111111111',
@@ -25,6 +28,7 @@ const SEED: readonly Exercise[] = [
     false,
     true,
     'Yelka kengligida turib, tizzani 90 darajaga bukib pasaying.',
+    FAKE_SQUAT_VIDEO_ID,
   ),
   new Exercise(
     '22222222-2222-2222-2222-222222222222',

@@ -6,14 +6,21 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { Page, PageRequest } from '@domain/shared/paging/page';
 import { StoredFile } from '@domain/storage/entities/stored-file';
 import { FileRepository, FileUploadRequest } from '@domain/storage/repositories/file.repository';
 import { ApiClient } from '@infrastructure/api/api-client';
 import { toDomainError } from '@infrastructure/api/api-error.mapper';
 import { unwrapResult } from '@infrastructure/api/result-envelope';
-import { ApiConfiguration, deleteFilesById, getFilesById } from '@infrastructure/api/generated';
+import { toPage, toPagedQuery } from '@infrastructure/api/paging.mapper';
+import {
+  ApiConfiguration,
+  deleteFilesById,
+  getFiles,
+  getFilesById,
+} from '@infrastructure/api/generated';
 import { filter, lastValueFrom, tap } from 'rxjs';
-import { toApiFileCategory, toStoredFile } from './file.mapper';
+import { fileCategories, toStoredFile } from './file.mapper';
 
 const PERCENT = 100;
 
@@ -30,7 +37,7 @@ export class HttpFileRepository implements FileRepository {
   async upload({ file, category, caption, onProgress }: FileUploadRequest): Promise<string> {
     const form = new FormData();
     form.append('file', file, file.name);
-    form.append('category', String(toApiFileCategory(category)));
+    form.append('category', String(fileCategories.toApi(category)));
     if (caption !== undefined) {
       form.append('caption', caption);
     }
@@ -50,6 +57,10 @@ export class HttpFileRepository implements FileRepository {
     } catch (error) {
       throw toDomainError(error);
     }
+  }
+
+  async list(page: PageRequest): Promise<Page<StoredFile>> {
+    return toPage(await this.apiClient.invoke(getFiles, toPagedQuery(page)), toStoredFile);
   }
 
   async getById(id: string): Promise<StoredFile> {

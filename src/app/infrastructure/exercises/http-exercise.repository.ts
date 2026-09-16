@@ -62,9 +62,7 @@ export class HttpExerciseRepository implements ExerciseRepository {
 /** Only the filters the admin actually set are sent, so the backend applies its own defaults. */
 function toFilterQuery(filter: ExerciseFilter): Record<string, string | number | boolean> {
   return {
-    ...(filter.search === undefined || filter.search.length === 0
-      ? {}
-      : { Search: filter.search }),
+    ...(filter.search === undefined || filter.search.length === 0 ? {} : { Search: filter.search }),
     ...(filter.muscleGroup === undefined
       ? {}
       : { MuscleGroup: muscleGroups.toApi(filter.muscleGroup) }),

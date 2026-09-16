@@ -65,7 +65,7 @@ Backend endpoint'lari tayyor.
 | ~~Mashqlar katalogi~~     | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~    | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~         |
 | ~~Ovqatlar katalogi~~     | ~~Qidirish, shtrix-kod bo'yicha topish, CRUD~~                 | ~~`diet/foods`, `diet/foods/barcode/{barcode}`~~                                |
 | ~~Bildirishnomalar~~      | ~~Shablonlar CRUD, maxsus yoki shablon asosida push yuborish~~ | ~~`notification-templates`, `notifications/custom`, `notifications/templated`~~ |
-| Media fayllar             | Yuklangan fayllar ro'yxati, ko'rish, o'chirish                 | `files`, `files/{id}/content`                                                   |
+| ~~Media fayllar~~         | ~~Yuklangan fayllar ro'yxati, ko'rish, o'chirish~~             | ~~`files`, `files/{id}/content`~~                                               |
 | Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)           | `user-sessions`, `user-sessions/{id}`                                           |
 
 Tartib: mashqlar → ovqatlar → bildirishnomalar → media → sessiyalar.
@@ -96,7 +96,15 @@ faqat `Search` filtri bor (manba yoki faollik bo'yicha filtr yo'q).
 Yo'l-yo'lakay topilgan xato: jadval saralashi backend'ga yetib bormagan — backend `SortField` ni
 snake_case ustun nomi sifatida kutadi va noma'lum qiymatni jimgina `id` ga almashtiradi. Tuzatildi.
 
-Keyingisi — media fayllar (`files`), keyin foydalanuvchi sessiyalari (`user-sessions`).
+**Media fayllar bajarildi (2026-09-16).** `/media` sahifasi: barcha yuklangan fayllar (eng yangisi
+birinchi, nom/hajm/sana bo'yicha saralash), rasm va video ko'rish, fayl ID ni nusxalash, o'chirish.
+O'chirishdan oldin mashqlar katalogi tekshiriladi: fayl biror mashqning videosi bo'lsa, tasdiqlash
+oynasida shu mashqlar nomi bilan ogohlantiriladi (backend buni tekshirmaydi). Backend'da kategoriya
+yoki nom bo'yicha filtr yo'q, shuning uchun sahifada ham yo'q. Yuklash bu sahifada emas — fayllar
+o'zi tegishli formadan (masalan, mashq videosi) yuklanadi, aks holda hech narsaga bog'lanmagan
+fayllar paydo bo'ladi.
+
+Keyingisi — foydalanuvchi sessiyalari (`user-sessions`).
 
 ---
 
@@ -130,12 +138,13 @@ shaxsiy mobil funksiyalari. Kerak bo'lsa keyinchalik faqat ko'rish rejimida, sup
 
 Admin panel ochilgach bu bandlar yanada muhim bo'ladi:
 
-| Band | Muammo                                                                                                    |
-| ---- | --------------------------------------------------------------------------------------------------------- |
-| 1.9  | Access token 90 kun yashaydi; `admin` rolli bitta token tashqariga chiqqan (2026-11-26 gacha amal qiladi) |
-| 1.4  | Keycloak'da brute force himoyasi va parol siyosati yo'q                                                   |
-| 1.8  | Portainer va pgAdmin internetga ochiq                                                                     |
-| 1.2  | Swagger production'da ochiq                                                                               |
+| Band | Muammo                                                                                                                                                                                                                                                          |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.9  | Access token 90 kun yashaydi; `admin` rolli bitta token tashqariga chiqqan (2026-11-26 gacha amal qiladi)                                                                                                                                                       |
+| 1.4  | Keycloak'da brute force himoyasi va parol siyosati yo'q                                                                                                                                                                                                         |
+| 1.8  | Portainer va pgAdmin internetga ochiq                                                                                                                                                                                                                           |
+| 1.2  | Swagger production'da ochiq                                                                                                                                                                                                                                     |
+| —    | `GET /files` va `DELETE /files/{id}` faqat autentifikatsiya so'raydi, admin rolini emas, egasini ham tekshirmaydi: istalgan mobil foydalanuvchi barcha fayllarni ko'ra va o'chira oladi. `Policies.Admin` yoki egasini tekshirish kerak (2026-09-16 da topildi) |
 
 Backend `CLAUDE.md` da frontend hali "Angular 20 + PrimeNG" deb yozilgan — Angular 22 + Optimus UI
 ga yangilash kerak.

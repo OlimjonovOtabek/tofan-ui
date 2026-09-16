@@ -12,6 +12,7 @@ export interface DataTableColumn {
   readonly width?: string;
 }
 
+const ASCENDING = 1;
 const DESCENDING = -1;
 const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
 
@@ -33,6 +34,9 @@ export class DataTable<TItem> {
   readonly first = input(0);
   readonly emptyMessage = input("Ma'lumot topilmadi.");
   readonly dataKey = input('id');
+  /** Sort applied to the first load, until the admin clicks a header. */
+  readonly defaultSortField = input<string | undefined>(undefined);
+  readonly defaultSortDirection = input<SortDirection>('asc');
 
   readonly pageChange = output<PageRequest>();
 
@@ -40,6 +44,9 @@ export class DataTable<TItem> {
   /** Optimus UI types the table value as a mutable array; the data itself is never mutated. */
   protected readonly value = computed(() => this.items() as TItem[]);
   protected readonly rowsPerPageOptions = ROWS_PER_PAGE_OPTIONS;
+  protected readonly defaultSortOrder = computed(() =>
+    this.defaultSortDirection() === 'desc' ? DESCENDING : ASCENDING,
+  );
 
   protected onLazyLoad(event: TableLazyLoadEvent): void {
     this.pageChange.emit({

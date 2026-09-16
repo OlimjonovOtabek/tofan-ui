@@ -1,3 +1,4 @@
+import { Page, PageRequest } from '@domain/shared/paging/page';
 import { FileCategory } from '../file-category';
 import { StoredFile } from '../entities/stored-file';
 
@@ -11,6 +12,9 @@ export interface FileUploadRequest {
 }
 
 export abstract class FileRepository {
+  /** Every stored file, whoever uploaded it; the backend has no owner or category filter. */
+  abstract list(page: PageRequest): Promise<Page<StoredFile>>;
+
   /** @returns id of the stored file. */
   abstract upload(request: FileUploadRequest): Promise<string>;
 

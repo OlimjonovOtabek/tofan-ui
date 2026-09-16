@@ -1,0 +1,143 @@
+<div class="card">
+  <div class="mb-4">
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Media fayllar</h1>
+    <span class="text-muted-color text-sm">
+      Jami {{ store.totalCount() }} fayl — panel va mobil ilova orqali yuklanganlarning hammasi.
+      O‘chirishdan oldin fayl mashqlarda ishlatilgan-ishlatilmagani tekshiriladi.
+    </span>
+  </div>
+
+  <app-data-table
+    [columns]="columns"
+    [items]="store.files()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [first]="store.first()"
+    defaultSortField="createdOnUtc"
+    defaultSortDirection="desc"
+    emptyMessage="Hali yuklangan fayl yo'q."
+    (pageChange)="loadPage($event)"
+  >
+    <ng-template #row let-file>
+      <tr>
+        <td>
+          @if (file.isImage() && contentUrl(file)) {
+            <img
+              [src]="contentUrl(file)"
+              [alt]="file.displayName"
+              class="border-surface h-10 w-14 rounded border object-cover"
+              loading="lazy"
+            />
+          } @else {
+            <div
+              class="bg-surface-100 dark:bg-surface-800 flex h-10 w-14 items-center justify-center rounded"
+            >
+              <i class="pi text-muted-color text-lg" [class]="iconOf(file)"></i>
+            </div>
+          }
+        </td>
+        <td>
+          <div class="font-medium break-words">{{ file.displayName }}</div>
+          <div class="text-muted-color text-sm">{{ file.contentType }}</div>
+        </td>
+        <td class="whitespace-nowrap">{{ categoryLabel(file) }}</td>
+        <td class="whitespace-nowrap">{{ sizeLabel(file) }}</td>
+        <td class="text-muted-color whitespace-nowrap text-sm">{{ uploadedLabel(file) }}</td>
+        <td class="text-right whitespace-nowrap">
+          <p-button
+            icon="pi pi-eye"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="Ko'rish"
+            (onClick)="preview(file)"
+          />
+          <p-button
+            icon="pi pi-copy"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="ID ni nusxalash"
+            (onClick)="copyId(file)"
+          />
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            ariaLabel="O'chirish"
+            [loading]="store.checkingUsagesOf() === file.id"
+            (onClick)="remove(file)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<p-dialog
+  [header]="previewed()?.displayName ?? ''"
+  [visible]="previewed() !== null"
+  (visibleChange)="$event || closePreview()"
+  [modal]="true"
+  [draggable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: '48rem' }"
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  @if (previewed(); as file) {
+    <div class="flex flex-col gap-4">
+      @if (previewFailed() || !contentUrl(file)) {
+        <div class="bg-surface-100 dark:bg-surface-800 text-muted-color rounded p-8 text-center">
+          <i class="pi mb-2 block text-3xl" [class]="iconOf(file)"></i>
+          Faylni bu yerda ko‘rsatib bo‘lmadi.
+        </div>
+      } @else if (file.isImage()) {
+        <img
+          [src]="contentUrl(file)"
+          [alt]="file.displayName"
+          class="mx-auto max-h-[60vh] rounded"
+          (error)="previewFailed.set(true)"
+        />
+      } @else if (file.isVideo()) {
+        <!-- Admin-uploaded exercise demos have no speech, so there is no caption track to add. -->
+        <video
+          [src]="contentUrl(file)"
+          controls
+          preload="metadata"
+          class="max-h-[60vh] w-full rounded bg-black"
+          (error)="previewFailed.set(true)"
+        ></video>
+      } @else {
+        <div class="bg-surface-100 dark:bg-surface-800 text-muted-color rounded p-8 text-center">
+          <i class="pi mb-2 block text-3xl" [class]="iconOf(file)"></i>
+          Bu turdagi faylni oldindan ko‘rish yo‘q — yangi oynada oching.
+        </div>
+      }
+
+      <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+        <dt class="text-muted-color">ID</dt>
+        <dd class="m-0 font-mono break-all">{{ file.id }}</dd>
+        <dt class="text-muted-color">Turi</dt>
+        <dd class="m-0">{{ categoryLabel(file) }} · {{ file.contentType }}</dd>
+        <dt class="text-muted-color">Hajmi</dt>
+        <dd class="m-0">{{ sizeLabel(file) }}</dd>
+        <dt class="text-muted-color">Yuklangan</dt>
+        <dd class="m-0">{{ uploadedLabel(file) }}</dd>
+      </dl>
+
+      @if (contentUrl(file)) {
+        <div>
+          <a
+            [href]="contentUrl(file)"
+            target="_blank"
+            rel="noopener"
+            class="text-primary inline-flex items-center gap-2 font-medium"
+          >
+            <i class="pi pi-external-link"></i> Yangi oynada ochish
+          </a>
+        </div>
+      }
+    </div>
+  }
+</p-dialog>

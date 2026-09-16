@@ -25,6 +25,10 @@ export const routes: Routes = [
         loadChildren: () => import('./routes/foods.routes').then((m) => m.FOOD_ROUTES),
       },
       {
+        path: 'media',
+        loadChildren: () => import('./routes/media.routes').then((m) => m.MEDIA_ROUTES),
+      },
+      {
         path: 'notifications',
         loadChildren: () =>
           import('./routes/notifications.routes').then((m) => m.NOTIFICATION_ROUTES),

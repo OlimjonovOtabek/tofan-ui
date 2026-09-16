@@ -20,7 +20,9 @@ import {
 
 export const muscleGroups = enumMap<MuscleGroup, ApiMuscleGroup>(ApiMuscleGroup);
 export const equipmentTypes = enumMap<EquipmentType, ApiEquipmentType>(ApiEquipmentType);
-export const difficulties = enumMap<ExerciseDifficulty, ApiExerciseDifficulty>(ApiExerciseDifficulty);
+export const difficulties = enumMap<ExerciseDifficulty, ApiExerciseDifficulty>(
+  ApiExerciseDifficulty,
+);
 export const exerciseTypes = enumMap<ExerciseType, ApiExerciseType>(ApiExerciseType);
 export const genders = enumMap<ExerciseGender, ApiExerciseGender>(ApiExerciseGender);
 
