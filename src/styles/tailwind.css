@@ -13,10 +13,6 @@
   --breakpoint-2xl: 1920px;
 }
 
-/*
-  Tailwind v4 changed the default border color to `currentcolor`.
-  Keep the v3 behaviour that the Sakai markup relies on.
-*/
 @layer base {
   *,
   ::after,

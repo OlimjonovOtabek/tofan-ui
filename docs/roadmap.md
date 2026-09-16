@@ -14,8 +14,8 @@
   (mobil ilova).
 - Foydalanuvchilar ro'yxati va statistika endpoint'lari **yo'q**. `User`, `Progress`, `Shop`,
   `Payment`, `Gamification`, `AI` modullari hozircha bo'sh.
-- tofan-ui: Angular 22 + Optimus UI + Sakai layout, Clean Architecture. Login hozircha soxta
-  (`useMockApi`), OpenAPI spec — namuna.
+- tofan-ui: Angular 22 + Optimus UI + Sakai layout, standart feature tuzilmasi (`core`, `features`,
+  `shared`). 2026-09-17 dan mock rejim va OpenAPI generatsiyasi yo'q.
 
 ---
 
@@ -37,19 +37,19 @@ Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 
 `/auth/me` endpoint'i yo'q — foydalanuvchi ismi va roli token claim'laridan olinadi.
 
-**0.1–0.5 bajarildi (2026-09-16).** Tafsilotlar — [README](../README.md#openapi). Qisqacha:
+**0.1–0.5 bajarildi (2026-09-16).** Tafsilotlar — [README](../README.md#backend-bilan-aloqa). Qisqacha:
 
-- Spec `scripts/openapi-update.mjs` orqali backend Swagger'idan olinadi (151 endpoint, 213 schema);
-  `npm run api:update` + `npm run api:generate`.
+- Spec `scripts/openapi-update.mjs` orqali backend Swagger'idan olinardi. 2026-09-17 dan OpenAPI
+  generatsiyasi olib tashlangan: DTO'lar qo'lda yoziladi (README → "Backend bilan aloqa").
 - Dev serverda `/api` → backend proxy (`proxy.conf.json`), shuning uchun CORS kerak emas.
   Stend (`api.157.90.117.20.sslip.io`) hozir `http://localhost:4200` ga CORS bermaydi.
 - Haqiqiy login/refresh/logout ulandi, `admin` roli tekshiriladi, 401 → bitta refresh → qayta
-  urinish. `useMockApi: true` bo'lgani uchun standart holatda hamon soxta login ishlaydi.
+  urinish.
 - Tekshirilmagan qism: haqiqiy `admin` akkaunti bilan uchdan-uchiga login (parol kerak).
 
-**0.6-0.8 bajarildi (2026-09-16).** Umumiy bloklar `presentation/shared/` da, ro'yxati —
+**0.6-0.8 bajarildi (2026-09-16).** Umumiy bloklar `shared/components/` da, ro'yxati —
 [README](../README.md#umumiy-ui-bloklari). Sahifalash shartnomasi (`PageRequest`, `Page<T>`)
-domenda. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB (reja'dagi
+`shared/models/page.ts` da. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB (reja'dagi
 220 MB — butun so'rov limiti, faylniki 200 MB).
 
 0-bosqichdan qolgani: **0.9 — deploy (Docker + nginx, backend'da `Cors__AllowedOrigins`)**.
@@ -73,8 +73,7 @@ Tartib: mashqlar → ovqatlar → bildirishnomalar → media → sessiyalar.
 **Mashqlar katalogi bajarildi (2026-09-16).** `/exercises` sahifasi: server tomonda sahifalanadigan
 ro'yxat, qidirish va 5 filtr (mushak guruhi, jihoz, jins, joyi, holati), qo'shish/tahrirlash
 dialogi (uch tilli nom, video yuklash), faollashtirish/o'chirib qo'yish va o'chirish (tasdiqlash
-bilan). Mock rejimda uchta namuna mashq bilan to'liq ishlaydi (`FakeExerciseRepository`), shuning
-uchun sahifani backend'siz ham sinash mumkin.
+bilan).
 
 **Ovqatlar katalogi bajarildi (2026-09-16).** `/foods` sahifasi: qidirish (nom va shtrix-kod
 bo'yicha), shtrix-kod bo'yicha topish — topilsa tahrirlash oynasi, topilmasa shtrix-kodi
@@ -158,8 +157,8 @@ Admin panel ochilgach bu bandlar yanada muhim bo'ladi:
 | 1.2  | Swagger production'da ochiq                                                                                                                                                                                                                                     |
 | —    | `GET /files` va `DELETE /files/{id}` faqat autentifikatsiya so'raydi, admin rolini emas, egasini ham tekshirmaydi: istalgan mobil foydalanuvchi barcha fayllarni ko'ra va o'chira oladi. `Policies.Admin` yoki egasini tekshirish kerak (2026-09-16 da topildi) |
 
-Backend `CLAUDE.md` da frontend hali "Angular 20 + PrimeNG" deb yozilgan — Angular 22 + Optimus UI
-ga yangilash kerak.
+Backend `CLAUDE.md` da frontend stack eskirgan yozilgan (Angular 20 va boshqa UI kutubxona) — uni
+Angular 22 + Optimus UI ga yangilash kerak.
 
 ---
 

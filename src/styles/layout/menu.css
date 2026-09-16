@@ -89,7 +89,6 @@
   border-radius: var(--content-border-radius);
 }
 
-/* Each nesting level of the submenu is indented a bit more. */
 .layout-menu ul ul li a {
   margin-left: 1rem;
 }

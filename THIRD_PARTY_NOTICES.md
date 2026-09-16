@@ -18,9 +18,9 @@ to plain CSS and the components were rewritten. Adapted files:
 
 - `src/styles/layout/*.css`
 - `src/styles/tailwind.css`
-- `src/app/presentation/layout/**` — topbar, sidebar, menu, theme configurator, layout and theme services
-- `src/app/presentation/shared/components/logo/**` — placeholder logo artwork
-- `src/app/presentation/shared/components/status-card/**`, `src/app/presentation/pages/auth/login/**` — page markup
+- `src/app/core/layout/**` — topbar, sidebar, menu, theme configurator, layout and theme services
+- `src/app/shared/components/logo/**` — placeholder logo artwork
+- `src/app/shared/components/status-card/**`, `src/app/features/auth/login-page/**` — page markup
 
 ```
 The MIT License (MIT)

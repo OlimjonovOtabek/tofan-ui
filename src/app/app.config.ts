@@ -1,15 +1,10 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 import { environment } from '@environments/environment';
-import { routes } from './app.routes';
-import { provideAuth } from './di/auth.providers';
-import { provideHttp } from './di/http.providers';
-import { provideUi } from './di/ui.providers';
+import { routes } from './routes/app.routes';
+import { provideHttp } from '@core/http/http.providers';
+import { provideUi } from '@core/config/ui.providers';
 
-/**
- * Composition root: the only place where all layers are wired together. Feature modules are wired
- * in their lazy route files under `routes/`, so their adapters stay out of the initial bundle.
- */
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -19,7 +14,6 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
     ),
     provideHttp(environment.apiBaseUrl),
-    provideAuth({ useMockApi: environment.useMockApi }),
     provideUi(),
   ],
 };
