@@ -4,7 +4,7 @@ import { StoredFile } from '@domain/storage/entities/stored-file';
 import { FileUsage } from '@domain/storage/file-usage';
 import { DataTable, DataTableColumn } from '@presentation/shared/components/data-table/data-table';
 import { ConfirmDialogService } from '@presentation/shared/feedback/confirmation.service';
-import { NotificationService } from '@presentation/shared/feedback/notification.service';
+import { ClipboardService } from '@presentation/shared/feedback/clipboard.service';
 import { formatFileSize } from '@presentation/shared/formatting/file-size';
 import { FILE_CATEGORY_LABELS } from '@presentation/storage/file-labels';
 import { MediaStore } from '@presentation/storage/media.store';
@@ -19,7 +19,7 @@ import { Dialog } from '@openng/optimus-ui/dialog';
 })
 export class MediaPage {
   private readonly confirmations = inject(ConfirmDialogService);
-  private readonly notifications = inject(NotificationService);
+  private readonly clipboard = inject(ClipboardService);
 
   protected readonly store = inject(MediaStore);
 
@@ -80,13 +80,8 @@ export class MediaPage {
   }
 
   /** The id is what other forms and support requests refer to (e.g. an exercise's video). */
-  protected async copyId(file: StoredFile): Promise<void> {
-    try {
-      await navigator.clipboard.writeText(file.id);
-      this.notifications.success('Fayl ID nusxalandi.');
-    } catch {
-      this.notifications.info(`Nusxalab bo'lmadi. Fayl ID: ${file.id}`);
-    }
+  protected copyId(file: StoredFile): Promise<void> {
+    return this.clipboard.copy(file.id, 'Fayl ID');
   }
 
   protected async remove(file: StoredFile): Promise<void> {

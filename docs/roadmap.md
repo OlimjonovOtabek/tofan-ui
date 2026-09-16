@@ -60,13 +60,13 @@ domenda. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB 
 
 Backend endpoint'lari tayyor.
 
-| Bo'lim                    | Imkoniyatlar                                                   | Endpoint'lar                                                                    |
-| ------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| ~~Mashqlar katalogi~~     | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~    | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~         |
-| ~~Ovqatlar katalogi~~     | ~~Qidirish, shtrix-kod bo'yicha topish, CRUD~~                 | ~~`diet/foods`, `diet/foods/barcode/{barcode}`~~                                |
-| ~~Bildirishnomalar~~      | ~~Shablonlar CRUD, maxsus yoki shablon asosida push yuborish~~ | ~~`notification-templates`, `notifications/custom`, `notifications/templated`~~ |
-| ~~Media fayllar~~         | ~~Yuklangan fayllar ro'yxati, ko'rish, o'chirish~~             | ~~`files`, `files/{id}/content`~~                                               |
-| Foydalanuvchi sessiyalari | Kim, qachon, qaysi qurilmadan kirgan (faqat ko'rish)           | `user-sessions`, `user-sessions/{id}`                                           |
+| Bo'lim                        | Imkoniyatlar                                                   | Endpoint'lar                                                                    |
+| ----------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| ~~Mashqlar katalogi~~         | ~~Ro'yxat va filtr, CRUD, faollashtirish/o'chirish, video~~    | ~~`exercises` CRUD, `exercises/{id}/activate`, `/deactivate`, `files`~~         |
+| ~~Ovqatlar katalogi~~         | ~~Qidirish, shtrix-kod bo'yicha topish, CRUD~~                 | ~~`diet/foods`, `diet/foods/barcode/{barcode}`~~                                |
+| ~~Bildirishnomalar~~          | ~~Shablonlar CRUD, maxsus yoki shablon asosida push yuborish~~ | ~~`notification-templates`, `notifications/custom`, `notifications/templated`~~ |
+| ~~Media fayllar~~             | ~~Yuklangan fayllar ro'yxati, ko'rish, o'chirish~~             | ~~`files`, `files/{id}/content`~~                                               |
+| ~~Foydalanuvchi sessiyalari~~ | ~~Kim, qachon kirgan (faqat ko'rish)~~                         | ~~`user-sessions`~~                                                             |
 
 Tartib: mashqlar → ovqatlar → bildirishnomalar → media → sessiyalar.
 
@@ -104,7 +104,19 @@ yoki nom bo'yicha filtr yo'q, shuning uchun sahifada ham yo'q. Yuklash bu sahifa
 o'zi tegishli formadan (masalan, mashq videosi) yuklanadi, aks holda hech narsaga bog'lanmagan
 fayllar paydo bo'ladi.
 
-Keyingisi — foydalanuvchi sessiyalari (`user-sessions`).
+**Kirishlar jurnali bajarildi (2026-09-16).** `/user-sessions` sahifasi (rejadagi "sessiyalar"):
+foydalanuvchi ID, kirgan vaqti, token muddati va holat; ID ni nusxalash va shu foydalanuvchiga
+push yuborish havolasi (`/notifications/send?userId=…` ID ni to'ldiradi). Rejadan farqlar:
+
+- **Qurilma ma'lumoti yo'q.** `main`da trusted device oqimi olib tashlangan, sessiya yozuvida faqat
+  `userId`, kirish va token tugash vaqti, bekor qilinganlik bor. Foydalanuvchi ismi ham yo'q.
+- **Bu faol sessiyalar ro'yxati emas.** Yozuv login/register paytida yaratiladi; refresh yangi
+  yozuv qo'shmaydi, oddiy logout yozuvni o'zgartirmaydi (faqat Keycloak'da tugatadi), faqat
+  `logout-all` `isRevoked` qiladi va buni autentifikatsiyada hech narsa tekshirmaydi. Shuning uchun
+  holatlar "muddati tugamagan / tugagan / hamma joydan chiqilgan" deb yozilgan, "faol" emas.
+- Backend'da foydalanuvchi bo'yicha filtr yo'q.
+
+**1-bosqich tugadi.** Qolgan ishlar backend'ga bog'liq (2-bosqich) yoki deploy (0.9).
 
 ---
 

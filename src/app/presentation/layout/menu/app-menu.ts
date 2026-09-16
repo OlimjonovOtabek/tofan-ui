@@ -18,6 +18,16 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
     ],
   },
   {
+    label: 'Foydalanuvchilar',
+    items: [
+      {
+        label: 'Kirishlar jurnali',
+        icon: 'pi pi-fw pi-history',
+        routerLink: [AppPaths.userSessions],
+      },
+    ],
+  },
+  {
     label: 'Bildirishnomalar',
     items: [
       {

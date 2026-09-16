@@ -29,6 +29,11 @@ export const routes: Routes = [
         loadChildren: () => import('./routes/media.routes').then((m) => m.MEDIA_ROUTES),
       },
       {
+        path: 'user-sessions',
+        loadChildren: () =>
+          import('./routes/user-sessions.routes').then((m) => m.USER_SESSION_ROUTES),
+      },
+      {
         path: 'notifications',
         loadChildren: () =>
           import('./routes/notifications.routes').then((m) => m.NOTIFICATION_ROUTES),

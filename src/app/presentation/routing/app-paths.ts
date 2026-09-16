@@ -4,6 +4,7 @@ export const AppPaths = {
   exercises: '/exercises',
   foods: '/foods',
   media: '/media',
+  userSessions: '/user-sessions',
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',
   login: '/auth/login',

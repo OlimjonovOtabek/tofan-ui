@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -104,8 +104,18 @@ export class SendNotificationPage {
   protected readonly coverage = computed(() => this.store.coverage(this.type()));
   protected readonly preview = computed(() => this.store.fallbackTemplate(this.type()));
 
+  /** Bound from `?userId=`, which the login journal links with. */
+  readonly userId = input<string>();
+
   constructor() {
     void this.store.loadTemplates();
+
+    effect(() => {
+      const userId = this.userId();
+      if (userId !== undefined) {
+        untracked(() => this.form.controls.userId.setValue(userId));
+      }
+    });
   }
 
   protected get dataEntries(): FormArray<FormGroup<DataEntryControls>> {
