@@ -11,6 +11,11 @@ export interface PagedQuery {
 const ASCENDING = 1;
 const DESCENDING = -1;
 
+/**
+ * The sort field is a response property name (`nameUz`). The backend matches it against the
+ * snake_case columns of that response (`name_uz`) and silently sorts by `id` when nothing matches,
+ * so a camelCase name would look accepted and never sort.
+ */
 export function toPagedQuery(request: PageRequest): PagedQuery {
   return {
     First: request.first,
@@ -18,10 +23,14 @@ export function toPagedQuery(request: PageRequest): PagedQuery {
     ...(request.sortField === undefined
       ? {}
       : {
-          SortField: request.sortField,
+          SortField: toSnakeCase(request.sortField),
           SortOrder: request.sortDirection === 'desc' ? DESCENDING : ASCENDING,
         }),
   };
+}
+
+function toSnakeCase(field: string): string {
+  return field.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
 /** Turns a backend `PagedList<TDto>` into a domain page of entities. */

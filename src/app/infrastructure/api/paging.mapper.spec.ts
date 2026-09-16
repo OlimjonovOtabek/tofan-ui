@@ -19,6 +19,16 @@ describe('toPagedQuery', () => {
       SortOrder: -1,
     });
   });
+
+  it('names the sort column the way the backend whitelists it', () => {
+    const sortBy = (sortField: string) =>
+      toPagedQuery({ first: 0, rows: 10, sortField, sortDirection: 'asc' }).SortField;
+
+    expect(sortBy('nameUz')).toBe('name_uz');
+    expect(sortBy('caloriesPerServing')).toBe('calories_per_serving');
+    expect(sortBy('updatedOnUtc')).toBe('updated_on_utc');
+    expect(sortBy('type')).toBe('type');
+  });
 });
 
 describe('toPage', () => {
