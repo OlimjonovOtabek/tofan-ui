@@ -20,7 +20,7 @@ to plain CSS and the components were rewritten. Adapted files:
 - `src/styles/tailwind.css`
 - `src/app/core/layout/**` — topbar, sidebar, menu, theme configurator, layout and theme services
 - `src/app/shared/components/logo/**` — placeholder logo artwork
-- `src/app/shared/components/status-card/**`, `src/app/features/auth/login-page/**` — page markup
+- `src/app/shared/components/status-card/**`, `src/app/features/auth/pages/login-page/**` — page markup
 
 ```
 The MIT License (MIT)

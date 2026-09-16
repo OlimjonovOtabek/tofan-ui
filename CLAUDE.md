@@ -69,7 +69,9 @@ src/app/
 ```
 
 Current features: `dashboard`, `auth` (login, access denied, error pages), `exercises`, `foods`,
-`media`, `user-sessions`, `notifications`, `not-found`.
+`media`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
+its routed components in `pages/` and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only
+uses `loadChildren`.
 
 ### 3.1 Dependency direction
 
@@ -130,7 +132,7 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
 - Forms: Signal Forms (`form()`, `[formField]`) for all new forms. Every existing form is still
   Reactive Forms (login, filters, the three form dialogs, send notification); migrate a form when
   it is reworked, not in passing.
-- Routing: lazy `loadComponent` / `loadChildren`, functional guards, `withComponentInputBinding()`.
+- Routing: lazy `loadChildren` per feature, functional guards, `withComponentInputBinding()`.
 - No `any`, in any form: annotations, `as any`, `any[]`, rest parameters, `$any()` in templates, or an
   `any` leaking from a library (`JSON.parse`, untyped APIs). Type it or use `unknown` and narrow.
   ESLint enforces it with type-aware rules (`no-explicit-any`, `no-unsafe-*`, `template/no-any`).

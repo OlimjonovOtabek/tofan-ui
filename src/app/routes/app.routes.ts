@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Layout } from '@core/layout/components/layout/layout';
 import { authGuard } from '@core/auth/auth.guard';
-import { guestGuard } from '@core/auth/guest.guard';
 
 export const routes: Routes = [
   {
@@ -12,9 +11,9 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        title: 'Boshqaruv paneli',
-        loadComponent: () =>
-          import('@features/dashboard/dashboard-page').then((m) => m.DashboardPage),
+        pathMatch: 'full',
+        loadChildren: () =>
+          import('@features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
       },
       {
         path: 'exercises',
@@ -43,34 +42,12 @@ export const routes: Routes = [
   },
   {
     path: 'auth',
-    children: [
-      {
-        path: 'login',
-        title: 'Kirish',
-        canActivate: [guestGuard],
-        loadComponent: () =>
-          import('@features/auth/login-page/login-page').then((m) => m.LoginPage),
-      },
-      {
-        path: 'access-denied',
-        title: "Ruxsat yo'q",
-        loadComponent: () =>
-          import('@features/auth/access-denied-page/access-denied-page').then(
-            (m) => m.AccessDeniedPage,
-          ),
-      },
-      {
-        path: 'error',
-        title: 'Xatolik',
-        loadComponent: () =>
-          import('@features/auth/error-page/error-page').then((m) => m.ErrorPage),
-      },
-    ],
+    loadChildren: () => import('@features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   {
     path: 'not-found',
-    title: 'Sahifa topilmadi',
-    loadComponent: () => import('@features/not-found/not-found-page').then((m) => m.NotFoundPage),
+    loadChildren: () =>
+      import('@features/not-found/not-found.routes').then((m) => m.NOT_FOUND_ROUTES),
   },
   { path: '**', redirectTo: 'not-found' },
 ];

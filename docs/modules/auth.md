@@ -13,9 +13,9 @@ lives in `core/auth`; this feature only holds the pages.
 ## Screens
 | Route | Page | Access |
 |---|---|---|
-| `/auth/login` | `login-page` | `guestGuard` (redirects to `/` when a session exists) |
-| `/auth/access-denied` | `access-denied-page` | open |
-| `/auth/error` | `error-page` | open |
+| `/auth/login` | `pages/login-page` | `guestGuard` (redirects to `/` when a session exists) |
+| `/auth/access-denied` | `pages/access-denied-page` | open |
+| `/auth/error` | `pages/error-page` | open |
 
 ## Structure notes
 - `AuthStore.login` rejects accounts without the `admin` realm role and revokes their fresh session.
