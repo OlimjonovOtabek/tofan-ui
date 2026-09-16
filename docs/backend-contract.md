@@ -6,6 +6,7 @@ any service code. DTOs are hand-written; when the backend changes, compare them 
 staging Swagger.
 
 ## Base
+
 - Base URL token: `API_BASE_URL` (`core/http/api-base-url.ts`), from `environment.apiBaseUrl`.
   Development uses `/api`, proxied to the backend by `proxy.conf.json`.
 - Routes have no `/api` prefix on the backend itself: `GET /exercises`, `POST /files`.
@@ -14,29 +15,43 @@ staging Swagger.
 - JSON is camelCase. Enums travel as integers (see "Enums").
 
 ## Paging
+
 Request query parameters (`PagingRequest<T>` in `Tofan.Common.Application.Paging`):
+
 ```
 First=<row offset>&Rows=<page size, 1..1000, default 10>&SortField=<snake_case column>&SortOrder=1|-1
 ```
+
 - Offset based, not page based: page 3 of 25 rows is `First=50&Rows=25`.
 - `SortField` must be the **snake_case** name of a property of the response DTO (`name_uz`,
   `created_on_utc`). Anything else is silently replaced by `id`. `core/http/paging.mapper.ts` converts camelCase.
 
 Response shape (`PagedList<T>`), returned as is, not wrapped in `Result`:
+
 ```json
 { "data": [], "totalCount": 0 }
 ```
 
 ## Success envelope
+
 Commands and single-item queries return `Result` / `Result<T>` with status 200:
+
 ```json
-{ "isSuccess": true, "isFailure": false, "error": { "code": "", "message": "", "type": 0 }, "data": {} }
+{
+  "isSuccess": true,
+  "isFailure": false,
+  "error": { "code": "", "message": "", "type": 0 },
+  "data": {}
+}
 ```
+
 `Result` without data has no `data` property. `core/http/ApiClient` unwraps `data`; a failed envelope
 with status 200 is not expected but is mapped to an error class as well.
 
 ## Errors
+
 Failures are RFC 7807 ProblemDetails built by `ApiResults.Problem`:
+
 ```json
 {
   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
@@ -46,63 +61,70 @@ Failures are RFC 7807 ProblemDetails built by `ApiResults.Problem`:
   "errors": [{ "code": "NotEmptyValidator", "message": "'Title' must not be empty.", "type": 2 }]
 }
 ```
-| Backend `ErrorType` | Status |
-|---|---|
-| Validation | 400 (`title` = `General.Validation`, `errors` present) |
-| Problem | 400 |
-| NotFound | 404 |
-| Conflict | 409 |
-| Failure / unhandled exception | 500 (`title` is the exception message) |
+
+| Backend `ErrorType`           | Status                                                 |
+| ----------------------------- | ------------------------------------------------------ |
+| Validation                    | 400 (`title` = `General.Validation`, `errors` present) |
+| Problem                       | 400                                                    |
+| NotFound                      | 404                                                    |
+| Conflict                      | 409                                                    |
+| Failure / unhandled exception | 500 (`title` is the exception message)                 |
 
 Unique-constraint races answer 409 with `title` `Conflict.DuplicateKey`.
 
 Frontend mapping (`core/http/api-error.mapper.ts`) turns failures into error classes from
 `shared/models/errors`, each with the backend `code` and `message`:
 
-| Status / envelope type | Class |
-|---|---|
+| Status / envelope type           | Class                                        |
+| -------------------------------- | -------------------------------------------- |
 | 400 with `errors` / `Validation` | `ValidationError` (`issues`: code + message) |
-| 400 without `errors` / `Problem` | `BusinessRuleError` |
-| 401 | `SessionExpiredError` (`core/auth`) |
-| 403 | `AccessDeniedError` |
-| 404 / `NotFound` | `NotFoundError` |
-| 409 / `Conflict` | `ConflictError` |
-| network failure, 5xx / `Failure` | `ServiceUnavailableError` |
+| 400 without `errors` / `Problem` | `BusinessRuleError`                          |
+| 401                              | `SessionExpiredError` (`core/auth`)          |
+| 403                              | `AccessDeniedError`                          |
+| 404 / `NotFound`                 | `NotFoundError`                              |
+| 409 / `Conflict`                 | `ConflictError`                              |
+| network failure, 5xx / `Failure` | `ServiceUnavailableError`                    |
 
-**Trap:** validation issues carry the FluentValidation *validator* code (`NotEmptyValidator`),
+**Trap:** validation issues carry the FluentValidation _validator_ code (`NotEmptyValidator`),
 not the property name, so they cannot be attached to a form field. Show them as a list.
 
 ## Enums
+
 Integers with `x-enumNames` in the spec. Models use camelCase string unions whose members are
 the enum names (`FullBody` -> `fullBody`); DTO files declare a TS `enum` and mappers convert by name
 with `shared/utils/enum-map.ts`. Some enums start at 1 (`ExerciseType`, `ExerciseDifficulty`), some at 0
 (`MuscleGroup`), so never map by index.
 
 ## Error codes by feature
-User-facing text for backend codes lives in `core/feedback/error-message.ts`.
 
-| Feature | Codes |
-|---|---|
-| exercises | Exercise.NotFound |
-| foods | Food.NotFound |
-| notifications | NotificationTemplate.Conflict, NotificationTemplate.NoActiveTemplate, NotificationPreference.Disabled, PushNotification.NoActiveDevice, PushNotification.DispatchFailed, PushNotification.Disabled, PushNotification.ConfigurationInvalid |
-| media, file upload | StoredFile.NotFound, StoredFile.Empty, StoredFile.UnsupportedContent, StoredFile.TooLarge |
+User-facing text comes from `core/feedback/error-message.ts`: first a per-code message
+(`MESSAGES_BY_CODE`), otherwise a generic message per error class.
+
+| Feature                 | Codes                                                                                                                                                                                                                                                                                                     | How they are shown                                                                                            |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| auth                    | Authentication.InvalidCredentials, Authentication.InvalidRefreshToken, IdentityProvider.UserNotFound                                                                                                                                                                                                      | per-code message                                                                                              |
+| notifications           | NotificationTemplate.Conflict, NotificationTemplate.NoActiveTemplate, NotificationPreference.Disabled, PushNotification.NoActiveDevice, PushNotification.DispatchFailed, PushNotification.Disabled, PushNotification.ConfigurationInvalid, UserId.Empty, UserId.Invalid, Data.KeyEmpty, Data.KeyDuplicate | per-code message                                                                                              |
+| exercises, foods, media | Exercise.NotFound, Food.NotFound, StoredFile.NotFound                                                                                                                                                                                                                                                     | generic `NotFoundError` message                                                                               |
+| file upload             | StoredFile.Empty, StoredFile.UnsupportedContent, StoredFile.TooLarge                                                                                                                                                                                                                                      | thrown before the request by `shared/utils/file-upload-rules.ts` as `BusinessRuleError`; its message is shown |
 
 ## Identity administration
+
 User, role and permission management goes through backend endpoints only (planned shape:
 `GET/POST /admin/users`, `GET/PUT/DELETE /admin/users/{id}`). They do not exist yet (roadmap phase 2).
 The panel never calls Keycloak's `/admin/realms/{realm}/...`; the backend reaches Keycloak through
 `IIdentityProviderClient` / `KeycloakAdminClient` in its Auth module.
 
 ## Permissions
+
 The backend has one authorization policy.
 
-| Backend | Frontend |
-|---|---|
+| Backend                                                                | Frontend                                                        |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------- |
 | `Policies.Admin` = `"AdminOnly"`, requires Keycloak realm role `admin` | `authGuard` checks `AuthStore.isAdmin()` (`core/auth/roles.ts`) |
 
 Several endpoints the panel reads only require authentication (`/files`, `/exercises` GET,
 `/diet/foods` GET); see `docs/deferred.md`.
 
 ## Endpoints per feature
+
 One section per feature in `docs/modules/<feature>.md`.

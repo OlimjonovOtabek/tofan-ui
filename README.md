@@ -14,13 +14,13 @@ standart `http://localhost:5179`). Kirish uchun backend'da `admin` realm roli bo
 
 Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 
-| Buyruq           | Vazifasi                                                     |
-| ---------------- | ------------------------------------------------------------ |
-| `npm start`      | Dev server                                                   |
-| `npm run build`  | Production build (`dist/tofan-ui/browser`)                   |
-| `npm test`       | Unit testlar (Vitest)                                        |
-| `npm run lint`   | ESLint + feature chegaralari + izohsizlik tekshiruvi         |
-| `npm run format` | Prettier                                                     |
+| Buyruq           | Vazifasi                                             |
+| ---------------- | ---------------------------------------------------- |
+| `npm start`      | Dev server                                           |
+| `npm run build`  | Production build (`dist/tofan-ui/browser`)           |
+| `npm test`       | Unit testlar (Vitest)                                |
+| `npm run lint`   | ESLint + feature chegaralari + izohsizlik tekshiruvi |
+| `npm run format` | Prettier                                             |
 
 ## Arxitektura
 
@@ -128,14 +128,14 @@ Backend har bir yozuv amalini `Result` / `Result<T>` ichiga o'raydi, xatolikni e
 
 Har bir feature'da qayta ishlatiladigan qismlar `shared/` va `core/feedback/` da:
 
-| Blok                              | Nima qiladi                                                                                        |
-| --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `components/data-table`           | Server tomonda sahifalanadigan jadval: `(pageChange)` → `PageRequest`, qatorni chaqiruvchi chizadi |
-| `components/form-dialog`          | Forma uchun modal: sarlavha, Saqlash/Bekor qilish, `saving` holati                                 |
-| `components/localized-text-field` | `name` / `nameUz` / `nameRu` uchligi bitta maydon sifatida                                         |
-| `components/file-upload`          | Fayl tanlash + progress; natijasi — `fileId`                                                       |
-| `core/feedback/notification.service`   | Toast: `success(...)`, `error(error)` (xato matni avtomatik tanlanadi)                             |
-| `core/feedback/confirmation.service`   | `confirmDelete(nom)` → `Promise<boolean>`                                                          |
+| Blok                                     | Nima qiladi                                                                                        |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `shared/components/data-table`           | Server tomonda sahifalanadigan jadval: `(pageChange)` → `PageRequest`, qatorni chaqiruvchi chizadi |
+| `shared/components/form-dialog`          | Forma uchun modal: sarlavha, Saqlash/Bekor qilish, `saving` holati                                 |
+| `shared/components/localized-text-field` | `name` / `nameUz` / `nameRu` uchligi bitta maydon sifatida                                         |
+| `shared/components/file-upload`          | Fayl tanlash + progress; natijasi — `fileId`                                                       |
+| `core/feedback/notification.service`     | Toast: `success(...)`, `error(error)` (xato matni avtomatik tanlanadi)                             |
+| `core/feedback/confirmation.service`     | `confirmDelete(nom)` → `Promise<boolean>`                                                          |
 | `core/feedback/error-message`            | Har qanday xatoni o'zbekcha matnga aylantiradi (backend kodlari lug'ati bilan)                     |
 
 Jadval bilan sahifa quyidagicha yoziladi:
@@ -156,13 +156,13 @@ Jadval bilan sahifa quyidagicha yoziladi:
 </app-data-table>
 ```
 
-Sahifalash shartnomasi domenda: `PageRequest` (`first`, `rows`, `sortField`, `sortDirection`) va
+Sahifalash shartnomasi `shared/models/page.ts` da: `PageRequest` (`first`, `rows`, `sortField`, `sortDirection`) va
 `Page<T>`; ularni backend query parametrlariga `core/http/paging.mapper.ts` o'tkazadi.
 
 ### Fayl yuklash
 
 `POST /files` multipart; progress uchun `ApiClient` emas, to'g'ridan-to'g'ri `HttpClient`
-ishlatiladi. Hajm va kengaytma cheklovlari domenda backend qoidalari bilan bir xil
+ishlatiladi. Hajm va kengaytma cheklovlari backend qoidalari bilan bir xil
 (`shared/utils/file-upload-rules.ts`): mashq videosi 200 MB (`.mp4 .m4v .mov .webm`), hujjat
 20 MB (`.pdf`), rasm 10 MB (`.jpg .jpeg .png .webp`). `files/{id}/content` anonim, shuning uchun
 `img` / `video` teglarida to'g'ridan-to'g'ri ishlaydi.
