@@ -19,7 +19,7 @@ Stack:
 - Signals first; RxJS only where streams are genuinely needed
 - Keycloak tokens obtained through the backend (`POST /auth/login`, `/auth/refresh`, `/auth/logout`),
   kept in `core/auth`
-- Vitest (`ng test`), ESLint (`ng lint`), Prettier
+- Vitest (`ng test`), ESLint (`ng lint`), Sheriff (`sheriff verify`, module boundaries), Prettier
 
 ## 2. Commands
 
@@ -27,8 +27,9 @@ Stack:
 npm start             # ng serve, /api is proxied to the backend (proxy.conf.json)
 npm run build         # ng build (must pass before finishing a task)
 npm test              # ng test (Vitest)
-npm run lint          # ng lint + lint:comments (must pass before finishing a task)
+npm run lint          # ng lint + lint:comments + lint:boundaries (must pass before finishing a task)
 npm run lint:comments # fails on any comment in any project file
+npm run lint:boundaries # sheriff verify: fails on an import that breaks the table in 3.1
 npx ng g component src/app/features/<feature>/components/<name>
 ```
 
@@ -80,14 +81,19 @@ uses `loadChildren`.
 | core | shared | features |
 | shared | core (http, feedback) | features |
 | features/<x> | core, shared, its own files (relative imports) | other features |
-| routes | features (lazy `import()`), core guards | — |
+| routes | features (lazy `import()`), `core/auth` guards, `core/layout` shell | shared |
 
-- Features **never** import other features (ESLint `no-restricted-imports` on `@features/*`).
+- The table is enforced by Sheriff (`sheriff.config.ts`, run by `npm run lint:boundaries`). It follows the
+  real file an import resolves to, so relative imports (`../../foods/...`) are caught too. Sheriff walks
+  the app from `src/main.ts`, so spec files are not checked by it; ESLint `no-restricted-imports` still
+  rejects `@features/*` imports in `core/`, `shared/` and `features/` (specs included) and shows it in the editor.
+  Sheriff runs as a CLI only: `@softarc/eslint-plugin-sheriff` does not support ESLint 10 yet.
+- Features **never** import other features.
   Inside a feature use relative imports; across folders use `@core/*`, `@shared/*`, `@features/*`.
   If two features need the same code, move it to `shared/` (or `core/` if it is an app singleton).
   A feature may call a backend endpoint that "belongs" to another screen through its own service and DTO
   (example: `media` reads `GET /exercises` to find videos in use).
-- Only `app.config.ts` reads `environments/`.
+- Only `app.config.ts` reads `environments/` (Sheriff: the root module is not importable from any tag).
 - Each feature must stay removable: deleting `features/<x>` must break only its route entry and menu item.
 
 ### 3.2 Where things go

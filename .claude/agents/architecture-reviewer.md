@@ -19,11 +19,12 @@ You never edit files. You report.
    - `grep -rn "from '@openng" src/app/features/*/models src/app/features/*/services` (must be empty)
    - `grep -rnE "domain/|application/|infrastructure/|presentation/|data-access/|use-case|Repository\b" src/app` (old layers must not come back)
    - `grep -rnE "@Input\(|@Output\(|\*ngIf|\*ngFor|: any\b|as any\b|\$any\(|@ts-ignore|::ng-deep|/admin/realms" src/app`
-   - `npm run lint` fails on every `any` and on cross-feature `@features/*` imports; never accept an `eslint-disable`
+   - `npm run lint` fails on every `any` and on any import that breaks CLAUDE.md 3.1 (Sheriff, `sheriff.config.ts`);
+     never accept an `eslint-disable` or a loosened `depRules` entry
 4. Check SOLID and clean code: file length, function length, naming, magic values, dead code.
 5. Check tests exist for new stores, mappers, guards and model rules.
-6. Run `npm run lint` and report failures. It runs ESLint and `scripts/check-no-comments.mjs`: a single
-   comment anywhere (TS, HTML, CSS, JSON, dotfiles) is blocking.
+6. Run `npm run lint` and report failures. It runs ESLint, `scripts/check-no-comments.mjs` (a single
+   comment anywhere is blocking) and `sheriff verify` (every dependency rule violation is blocking).
 
 ## Output format
 ```

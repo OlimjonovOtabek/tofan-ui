@@ -10,7 +10,8 @@ which returns Keycloak tokens. Backend: separate .NET 10 modular monolith.
 
 ## Commands
 - `npm start` — dev server; `/api` is proxied to the backend (no mock backend)
-- `npm run lint` — must pass (ESLint + `lint:comments`, which rejects any comment in any project file)
+- `npm run lint` — must pass (ESLint + `lint:comments`, which rejects any comment in any project file,
+  + `lint:boundaries`, Sheriff checking the folder dependency rules in `sheriff.config.ts`)
 - `npm test` — Vitest, must pass
 - `npm run build` — must pass
 

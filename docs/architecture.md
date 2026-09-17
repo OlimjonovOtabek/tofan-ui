@@ -26,7 +26,8 @@ DTOs and mappers keep backend shapes out of components, so a contract change tou
 Features stay independent and removable. When two features need the same thing, it moves to
 `shared/` or `core/`. When a feature needs data from an endpoint another screen also uses, it calls
 that endpoint through its own service with only the fields it needs (`media` reads `GET /exercises`).
-ESLint rejects `@features/*` imports inside `core/`, `shared/` and `features/`.
+Sheriff (`sheriff.config.ts`) enforces the folder dependency rules on the resolved file of every import;
+ESLint additionally rejects `@features/*` imports inside `core/`, `shared/` and `features/`, specs included.
 
 ## Why shared components over raw Optimus UI copies
 - One place to fix behaviour for every table/dialog.
@@ -44,4 +45,6 @@ ESLint rejects `@features/*` imports inside `core/`, `shared/` and `features/`.
 | 2026-09-17 | Standard Angular structure (`core`, `features`, `shared`, `routes`) | Clean Architecture layers, repository abstractions, use-case classes, `di/` folder | It is a UI project; the layers only forwarded calls and made screens hard to follow |
 | 2026-09-17 | No mock backend | Fake repositories switched by `environment.useMockApi` | Fakes had to mirror every backend rule and drifted; development runs against the real backend through `proxy.conf.json` |
 | 2026-09-17 | Screen-based feature names (`exercises`, `foods`, `media`, `user-sessions`, `notifications`) | Backend module names (`workouts`, `diet`, `storage`, `users`) | Matches the menu the admin sees |
+| 2026-09-17 | Sheriff as a CLI (`sheriff verify` in `npm run lint`) | `@softarc/eslint-plugin-sheriff`; ESLint `no-restricted-imports` alone | ESLint patterns miss relative imports and most of the dependency table; the Sheriff ESLint plugin only supports ESLint 8 and 9 while the project runs ESLint 10 |
+| 2026-09-17 | `status-card` lives in `core/layout` | `shared/components` | It is a full-screen shell page with the theme switcher and a link to the dashboard; shared may not import `core/layout` or `core/config` |
 | 2026-09-17 | File upload in `shared/components/file-upload` with its own `FileUploadService` | A `media` feature imported by forms | Several forms upload files; features may not import each other |

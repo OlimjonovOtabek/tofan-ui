@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StatusCard } from '@shared/components/status-card/status-card';
+import { StatusCard } from '@core/layout/components/status-card/status-card';
 
 @Component({
   selector: 'app-not-found-page',

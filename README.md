@@ -19,7 +19,7 @@ Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 | `npm start`      | Dev server                                           |
 | `npm run build`  | Production build (`dist/tofan-ui/browser`)           |
 | `npm test`       | Unit testlar (Vitest)                                |
-| `npm run lint`   | ESLint + feature chegaralari + izohsizlik tekshiruvi |
+| `npm run lint`   | ESLint + izohsizlik tekshiruvi + Sheriff (papkalar orasidagi bog'liqlik) |
 | `npm run format` | Prettier                                             |
 
 ## Arxitektura
@@ -66,8 +66,11 @@ core, shared ──X──> features
 features/a   ──X──> features/b
 ```
 
-`eslint.config.js` buni **majburiy** qiladi: `core/`, `shared/` yoki boshqa feature ichida
-`@features/*` import qilinsa `npm run lint` xato beradi. Feature ichida nisbiy importlar ishlatiladi.
+Buni [Sheriff](https://github.com/softarc-consulting/sheriff) **majburiy** qiladi: qoidalar
+`sheriff.config.ts` da, tekshiruv `npm run lint:boundaries` (`npm run lint` ichida). Sheriff importni
+haqiqiy fayl yo'li bo'yicha tekshiradi, shuning uchun `../../foods/...` kabi nisbiy importlar ham ushlanadi.
+Sheriff `src/main.ts` dan boshlab yuradi va test fayllarini ko'rmaydi; ularda `@features/*` importini
+`eslint.config.js` dagi `no-restricted-imports` ushlaydi. Feature ichida nisbiy importlar ishlatiladi.
 
 ### Kelishuvlar
 
