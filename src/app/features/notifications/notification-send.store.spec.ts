@@ -91,14 +91,27 @@ describe('NotificationSendStore', () => {
     expect(store.fallbackTemplate('waterReminder')).toBeNull();
   });
 
-  it('should keep templates unloaded and show the error when the list fails', async () => {
+  it('should keep templates unloaded and expose the error when the list fails', async () => {
     vi.mocked(templatesService.list).mockRejectedValue(new Error('offline'));
     const store = createStore();
 
     await store.loadTemplates();
 
     expect(store.templatesLoaded()).toBe(false);
-    expect(notifications.error).toHaveBeenCalled();
+    expect(store.templatesLoading()).toBe(false);
+    expect(store.templatesError()).not.toBeNull();
+    expect(notifications.error).not.toHaveBeenCalled();
+  });
+
+  it('should clear the error when loading the templates again succeeds', async () => {
+    vi.mocked(templatesService.list).mockRejectedValueOnce(new Error('offline'));
+    const store = createStore();
+    await store.loadTemplates();
+
+    await store.loadTemplates();
+
+    expect(store.templatesError()).toBeNull();
+    expect(store.templatesLoaded()).toBe(true);
   });
 
   it('should send a trimmed custom notification and confirm the delivery', async () => {

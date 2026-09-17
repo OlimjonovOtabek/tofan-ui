@@ -14,13 +14,13 @@ standart `http://localhost:5179`). Kirish uchun backend'da `admin` realm roli bo
 
 Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 
-| Buyruq           | Vazifasi                                             |
-| ---------------- | ---------------------------------------------------- |
-| `npm start`      | Dev server                                           |
-| `npm run build`  | Production build (`dist/tofan-ui/browser`)           |
-| `npm test`       | Unit testlar (Vitest)                                |
+| Buyruq           | Vazifasi                                                                 |
+| ---------------- | ------------------------------------------------------------------------ |
+| `npm start`      | Dev server                                                               |
+| `npm run build`  | Production build (`dist/tofan-ui/browser`)                               |
+| `npm test`       | Unit testlar (Vitest)                                                    |
 | `npm run lint`   | ESLint + izohsizlik tekshiruvi + Sheriff (papkalar orasidagi bog'liqlik) |
-| `npm run format` | Prettier                                             |
+| `npm run format` | Prettier                                                                 |
 
 ## Arxitektura
 
@@ -131,15 +131,15 @@ Backend har bir yozuv amalini `Result` / `Result<T>` ichiga o'raydi, xatolikni e
 
 Har bir feature'da qayta ishlatiladigan qismlar `shared/` va `core/feedback/` da:
 
-| Blok                                     | Nima qiladi                                                                                        |
-| ---------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `shared/components/data-table`           | Server tomonda sahifalanadigan jadval: `(pageChange)` → `PageRequest`, qatorni chaqiruvchi chizadi |
-| `shared/components/form-dialog`          | Forma uchun modal: sarlavha, Saqlash/Bekor qilish, `saving` holati                                 |
-| `shared/components/localized-text-field` | `name` / `nameUz` / `nameRu` uchligi bitta maydon sifatida                                         |
-| `shared/components/file-upload`          | Fayl tanlash + progress; natijasi — `fileId`                                                       |
-| `core/feedback/notification.service`     | Toast: `success(...)`, `error(error)` (xato matni avtomatik tanlanadi)                             |
-| `core/feedback/confirmation.service`     | `confirmDelete(nom)` → `Promise<boolean>`                                                          |
-| `core/feedback/error-message`            | Har qanday xatoni o'zbekcha matnga aylantiradi (backend kodlari lug'ati bilan)                     |
+| Blok                                     | Nima qiladi                                                                                                                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `shared/components/data-table`           | Server tomonda sahifalanadigan jadval: `(pageChange)` → `PageRequest`, qatorni chaqiruvchi chizadi; `[loading]`, `emptyMessage`, xato uchun `[error]` va `(retry)` |
+| `shared/components/form-dialog`          | Forma uchun modal: sarlavha, Saqlash/Bekor qilish, `saving` holati                                                                                                 |
+| `shared/components/localized-text-field` | `name` / `nameUz` / `nameRu` uchligi bitta maydon sifatida                                                                                                         |
+| `shared/components/file-upload`          | Fayl tanlash + progress; natijasi — `fileId`                                                                                                                       |
+| `core/feedback/notification.service`     | Toast: `success(...)`, `error(error)` (xato matni avtomatik tanlanadi)                                                                                             |
+| `core/feedback/confirmation.service`     | `confirmDelete(nom)` → `Promise<boolean>`                                                                                                                          |
+| `core/feedback/error-message`            | Har qanday xatoni o'zbekcha matnga aylantiradi (backend kodlari lug'ati bilan)                                                                                     |
 
 Jadval bilan sahifa quyidagicha yoziladi:
 
@@ -149,7 +149,9 @@ Jadval bilan sahifa quyidagicha yoziladi:
   [items]="page().items"
   [totalCount]="page().totalCount"
   [loading]="loading()"
+  [error]="loadError()"
   (pageChange)="load($event)"
+  (retry)="load()"
 >
   <ng-template #row let-exercise>
     <tr>

@@ -22,14 +22,17 @@ export class ExercisesStore {
   readonly exercises = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
     this.loading.set(true);
+    this.loadError.set(null);
     try {
       this.page.set(await this.exercisesService.list(this.filter(), request));
     } catch (error) {
-      this.notifications.error(error);
+      this.page.set(emptyPage<Exercise>());
+      this.loadError.set(toErrorMessage(error));
     } finally {
       this.loading.set(false);
     }
@@ -37,6 +40,9 @@ export class ExercisesStore {
 }
 ```
 
+- Reads: a failed load clears the old rows and sets `loadError` (text from `toErrorMessage`); it does
+  not raise a toast. The page shows it inline and offers a retry, so a failure never looks like an
+  empty list.
 - Writes: apply model rules (`createExerciseDraft(draft)`), call the service, notify via
-  `core/feedback`, reload.
+  `core/feedback` (toast), reload.
 - No HttpClient, no Optimus UI. Navigation stays in the page.

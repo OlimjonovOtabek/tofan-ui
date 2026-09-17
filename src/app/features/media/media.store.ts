@@ -4,6 +4,7 @@ import { StoredFile } from './models/stored-file';
 import { FileUsage } from './models/file-usage';
 import { toExerciseVideoUsage } from './services/stored-file.mapper';
 import { MediaService } from './services/media.service';
+import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
 const EXERCISE_BATCH_SIZE = 1000;
@@ -19,16 +20,19 @@ export class MediaStore {
   readonly files = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
   readonly first = computed(() => this.currentRequest().first);
   readonly checkingUsagesOf = signal<string | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
     this.loading.set(true);
+    this.loadError.set(null);
     try {
       this.page.set(await this.mediaService.list(request));
     } catch (error) {
-      this.notifications.error(error);
+      this.page.set(emptyPage<StoredFile>());
+      this.loadError.set(toErrorMessage(error));
     } finally {
       this.loading.set(false);
     }

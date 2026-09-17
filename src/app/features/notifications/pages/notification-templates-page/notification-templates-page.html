@@ -5,8 +5,8 @@
         Bildirishnoma shablonlari
       </h1>
       <span class="text-muted-color text-sm">
-        Jami {{ store.totalCount() }} shablon. Foydalanuvchiga uning murabbiy uslubidagi shablon
-        yuboriladi, u bo‘lmasa — professional uslubdagisi.
+        Jami {{ store.loadError() === null ? store.totalCount() : '—' }} shablon. Foydalanuvchiga
+        uning murabbiy uslubidagi shablon yuboriladi, u bo‘lmasa — professional uslubdagisi.
       </span>
     </div>
     <p-button label="Shablon qo'shish" icon="pi pi-plus" (onClick)="add()" />
@@ -17,9 +17,11 @@
     [items]="store.templates()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
+    [error]="store.loadError()"
     [first]="store.first()"
     emptyMessage="Hali shablon yo'q."
     (pageChange)="loadPage($event)"
+    (retry)="store.load()"
   >
     <ng-template #row let-template>
       <tr>

@@ -24,7 +24,10 @@ paths:
 
 ## Template rules
 - `@for (x of items(); track x.id)` — always track by a stable id, never `$index` for entities.
-- Every async screen has loading, empty and error states.
+- Every async screen has loading, empty and error states. Lists: `app-data-table` with
+  `[loading]="store.loading()"`, `emptyMessage`, `[error]="store.loadError()"` and
+  `(retry)="store.load()"`; a header count shows `—` while `loadError` is set. Other reads
+  (for example templates on the send page) show a loading line and an inline warning with a retry.
 - Prefer `computed()` over method calls in templates.
 - `@let` for repeated signal reads inside a block.
 - Accessible: every icon-only button has `aria-label`; form fields have labels.

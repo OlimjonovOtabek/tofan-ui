@@ -4,10 +4,10 @@
       Kirishlar jurnali
     </h1>
     <p class="text-muted-color m-0 mt-1 max-w-3xl text-sm">
-      Jami {{ store.totalCount() }} ta kirish. Har bir yozuv — login yoki ro‘yxatdan o‘tish paytida
-      berilgan token. Oddiy chiqish yozuvni o‘zgartirmaydi, shuning uchun "muddati tugamagan" degani
-      foydalanuvchi hozir ilovada ekanini anglatmaydi. "Hamma joydan chiqilgan" — foydalanuvchi
-      barcha qurilmalardan chiqishni tanlagan.
+      Jami {{ store.loadError() === null ? store.totalCount() : '—' }} ta kirish. Har bir yozuv —
+      login yoki ro‘yxatdan o‘tish paytida berilgan token. Oddiy chiqish yozuvni o‘zgartirmaydi,
+      shuning uchun "muddati tugamagan" degani foydalanuvchi hozir ilovada ekanini anglatmaydi.
+      "Hamma joydan chiqilgan" — foydalanuvchi barcha qurilmalardan chiqishni tanlagan.
     </p>
   </div>
 
@@ -16,11 +16,13 @@
     [items]="store.sessions()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
+    [error]="store.loadError()"
     [first]="store.first()"
     defaultSortField="createdOnUtc"
     defaultSortDirection="desc"
     emptyMessage="Hali kirishlar yo'q."
     (pageChange)="loadPage($event)"
+    (retry)="store.load()"
   >
     <ng-template #row let-session>
       <tr>

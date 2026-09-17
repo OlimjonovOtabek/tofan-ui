@@ -4,6 +4,7 @@ import { ExerciseDraft, createExerciseDraft } from './models/exercise-draft';
 import { ExerciseFilter } from './models/exercise-filter';
 import { ExercisesService } from './services/exercises.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
+import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class ExercisesStore {
   readonly exercises = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
   readonly saving = signal(false);
   readonly filter = this.currentFilter.asReadonly();
   readonly first = computed(() => this.currentRequest().first);
@@ -25,10 +27,12 @@ export class ExercisesStore {
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
     this.loading.set(true);
+    this.loadError.set(null);
     try {
       this.page.set(await this.exercisesService.list(this.currentFilter(), request));
     } catch (error) {
-      this.notifications.error(error);
+      this.page.set(emptyPage<Exercise>());
+      this.loadError.set(toErrorMessage(error));
     } finally {
       this.loading.set(false);
     }

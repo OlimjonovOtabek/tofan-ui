@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { NotificationService } from '@core/feedback/notification.service';
 import { UserSession } from './models/user-session';
 import { UserSessionsService } from './services/user-sessions.service';
 import { UserSessionsStore } from './user-sessions.store';
@@ -14,22 +13,16 @@ const session = new UserSession(
 
 describe('UserSessionsStore', () => {
   let service: Pick<UserSessionsService, 'list'>;
-  let notifications: Pick<NotificationService, 'error'>;
 
   function createStore(): UserSessionsStore {
     TestBed.configureTestingModule({
-      providers: [
-        UserSessionsStore,
-        { provide: UserSessionsService, useValue: service },
-        { provide: NotificationService, useValue: notifications },
-      ],
+      providers: [UserSessionsStore, { provide: UserSessionsService, useValue: service }],
     });
     return TestBed.inject(UserSessionsStore);
   }
 
   beforeEach(() => {
     service = { list: vi.fn().mockResolvedValue({ items: [session], totalCount: 1 }) };
-    notifications = { error: vi.fn() };
   });
 
   it('should expose the page when the service answers', async () => {
@@ -43,14 +36,15 @@ describe('UserSessionsStore', () => {
     expect(store.loading()).toBe(false);
   });
 
-  it('should show the error and keep the list empty when loading fails', async () => {
-    vi.mocked(service.list).mockRejectedValue(new Error('offline'));
+  it('should expose the error and drop the old rows when a reload fails', async () => {
     const store = createStore();
+    await store.load();
+    vi.mocked(service.list).mockRejectedValue(new Error('offline'));
 
     await store.load();
 
+    expect(store.loadError()).not.toBeNull();
     expect(store.sessions()).toEqual([]);
-    expect(notifications.error).toHaveBeenCalled();
     expect(store.loading()).toBe(false);
   });
 });

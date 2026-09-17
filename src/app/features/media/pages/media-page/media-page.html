@@ -2,8 +2,9 @@
   <div class="mb-4">
     <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Media fayllar</h1>
     <span class="text-muted-color text-sm">
-      Jami {{ store.totalCount() }} fayl — panel va mobil ilova orqali yuklanganlarning hammasi.
-      O‘chirishdan oldin fayl mashqlarda ishlatilgan-ishlatilmagani tekshiriladi.
+      Jami {{ store.loadError() === null ? store.totalCount() : '—' }} fayl — panel va mobil ilova
+      orqali yuklanganlarning hammasi. O‘chirishdan oldin fayl mashqlarda ishlatilgan-ishlatilmagani
+      tekshiriladi.
     </span>
   </div>
 
@@ -12,11 +13,13 @@
     [items]="store.files()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
+    [error]="store.loadError()"
     [first]="store.first()"
     defaultSortField="createdOnUtc"
     defaultSortDirection="desc"
     emptyMessage="Hali yuklangan fayl yo'q."
     (pageChange)="loadPage($event)"
+    (retry)="store.load()"
   >
     <ng-template #row let-file>
       <tr>

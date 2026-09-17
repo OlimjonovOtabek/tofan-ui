@@ -75,15 +75,29 @@ describe('ExercisesStore', () => {
     expect(store.loading()).toBe(false);
   });
 
-  it('should show the error and stop loading when the list fails', async () => {
-    const failure = new NotFoundError('gone', 'Exercise.NotFound');
-    vi.mocked(service.list).mockRejectedValue(failure);
+  it('should expose the error and drop the old rows when a reload fails', async () => {
     const store = createStore();
+    await store.load();
+    vi.mocked(service.list).mockRejectedValue(new NotFoundError('gone', 'Exercise.NotFound'));
+
+    await store.applyFilter({ search: 'squat' });
+
+    expect(store.loadError()).toContain('topilmadi');
+    expect(store.exercises()).toEqual([]);
+    expect(store.totalCount()).toBe(0);
+    expect(store.loading()).toBe(false);
+    expect(notifications.error).not.toHaveBeenCalled();
+  });
+
+  it('should clear the error when a retry succeeds', async () => {
+    vi.mocked(service.list).mockRejectedValueOnce(new Error('offline'));
+    const store = createStore();
+    await store.load();
 
     await store.load();
 
-    expect(notifications.error).toHaveBeenCalledWith(failure);
-    expect(store.loading()).toBe(false);
+    expect(store.loadError()).toBeNull();
+    expect(store.exercises()).toEqual([exercise(true)]);
   });
 
   it('should go back to the first page when a filter is applied', async () => {

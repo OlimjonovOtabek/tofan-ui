@@ -10,6 +10,7 @@ import {
 import { PushNotificationsService } from './services/push-notifications.service';
 import { NotificationTemplatesService } from './services/notification-templates.service';
 import { TemplateCoverage, templateCoverage } from './models/template-coverage';
+import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
 const ALL_TEMPLATES = { first: 0, rows: 1000 };
@@ -23,14 +24,20 @@ export class NotificationSendStore {
   private readonly templates = signal<readonly NotificationTemplate[]>([]);
 
   readonly templatesLoaded = signal(false);
+  readonly templatesLoading = signal(false);
+  readonly templatesError = signal<string | null>(null);
   readonly sending = signal(false);
 
   async loadTemplates(): Promise<void> {
+    this.templatesLoading.set(true);
+    this.templatesError.set(null);
     try {
       this.templates.set((await this.templatesService.list(ALL_TEMPLATES)).items);
       this.templatesLoaded.set(true);
     } catch (error) {
-      this.notifications.error(error);
+      this.templatesError.set(toErrorMessage(error));
+    } finally {
+      this.templatesLoading.set(false);
     }
   }
 

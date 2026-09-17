@@ -69,6 +69,18 @@ describe('NotificationTemplatesStore', () => {
     expect(service.list).toHaveBeenCalledWith({ first: 0, rows: 10 });
   });
 
+  it('should expose the error and drop the old rows when a reload fails', async () => {
+    const store = createStore();
+    await store.load();
+    vi.mocked(service.list).mockRejectedValue(new Error('offline'));
+
+    await store.load();
+
+    expect(store.loadError()).not.toBeNull();
+    expect(store.templates()).toEqual([]);
+    expect(store.loading()).toBe(false);
+  });
+
   it('should create a trimmed template when no id is given', async () => {
     const store = createStore();
 

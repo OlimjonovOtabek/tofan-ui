@@ -2,6 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, TemplateRef, computed, contentChild, input, output } from '@angular/core';
 import { DEFAULT_PAGE_SIZE, PageRequest, SortDirection } from '@shared/models/page';
 import { TableLazyLoadEvent } from '@openng/optimus-ui/types/table';
+import { Button } from '@openng/optimus-ui/button';
 import { TableModule } from '@openng/optimus-ui/table';
 
 export interface DataTableColumn {
@@ -17,7 +18,7 @@ const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
 
 @Component({
   selector: 'app-data-table',
-  imports: [TableModule, NgTemplateOutlet],
+  imports: [TableModule, NgTemplateOutlet, Button],
   templateUrl: './data-table.html',
 })
 export class DataTable<TItem> {
@@ -28,11 +29,13 @@ export class DataTable<TItem> {
   readonly pageSize = input(DEFAULT_PAGE_SIZE);
   readonly first = input(0);
   readonly emptyMessage = input("Ma'lumot topilmadi.");
+  readonly error = input<string | null>(null);
   readonly dataKey = input('id');
   readonly defaultSortField = input<string | undefined>(undefined);
   readonly defaultSortDirection = input<SortDirection>('asc');
 
   readonly pageChange = output<PageRequest>();
+  readonly retry = output();
 
   protected readonly rowTemplate = contentChild.required<TemplateRef<{ $implicit: TItem }>>('row');
   protected readonly value = computed(() => this.items() as TItem[]);

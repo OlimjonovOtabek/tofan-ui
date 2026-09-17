@@ -41,8 +41,23 @@
 
   <ng-template #emptymessage>
     <tr>
-      <td [attr.colspan]="columns().length" class="text-muted-color py-8 text-center">
-        {{ emptyMessage() }}
+      <td [attr.colspan]="columns().length" class="py-8 text-center">
+        @if (error(); as message) {
+          <div class="flex flex-col items-center gap-3" role="alert">
+            <span class="text-red-500">
+              <i class="pi pi-exclamation-triangle mr-2" aria-hidden="true"></i>{{ message }}
+            </span>
+            <p-button
+              label="Qayta urinish"
+              icon="pi pi-refresh"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="retry.emit()"
+            />
+          </div>
+        } @else {
+          <span class="text-muted-color">{{ emptyMessage() }}</span>
+        }
       </td>
     </tr>
   </ng-template>

@@ -21,12 +21,13 @@ describe('MediaStore', () => {
   );
 
   let listExerciseVideos: ReturnType<typeof vi.fn>;
+  let list: ReturnType<typeof vi.fn>;
 
   function createStore(): MediaStore {
     TestBed.configureTestingModule({
       providers: [
         MediaStore,
-        { provide: MediaService, useValue: { listExerciseVideos } },
+        { provide: MediaService, useValue: { listExerciseVideos, list } },
         { provide: NotificationService, useValue: { error: vi.fn(), success: vi.fn() } },
       ],
     });
@@ -35,6 +36,19 @@ describe('MediaStore', () => {
 
   beforeEach(() => {
     listExerciseVideos = vi.fn();
+    list = vi.fn().mockResolvedValue({ items: [video], totalCount: 1 });
+  });
+
+  it('should expose the error and drop the old rows when a reload fails', async () => {
+    const store = createStore();
+    await store.load();
+    list.mockRejectedValue(new Error('offline'));
+
+    await store.load();
+
+    expect(store.loadError()).not.toBeNull();
+    expect(store.files()).toEqual([]);
+    expect(store.loading()).toBe(false);
   });
 
   it('should name the exercises when their video is the file', async () => {

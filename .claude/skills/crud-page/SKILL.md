@@ -16,7 +16,7 @@ Reference implementation: `src/app/features/exercises`.
 
 1. **models** — model, filter, draft with `create<Model>Draft` validation (+ spec), labels.
 2. **services** — DTOs, mapper (+ spec), `<feature>.service.ts` methods on `ApiClient`.
-3. **store** — `<feature>.store.ts`: page and filter signals, `load()`, `applyFilter()`, `save()`,
+3. **store** — `<feature>.store.ts`: page and filter signals, `loading`, `loadError`, `load()`, `applyFilter()`, `save()`,
    `remove()` / `toggleActivation()`; notify through `core/feedback`. Spec with a mocked service.
 4. **components** — `<model>-form-dialog`: `shared/components/form-dialog`, Signal Forms, emits `save`.
 5. **pages** — `<feature>-page`: provides the store, `app-data-table` with lazy paging, filters,
@@ -25,7 +25,7 @@ Reference implementation: `src/app/features/exercises`.
 7. **verify** — `npm run lint && npm test && npm run build`, then delegate to `architecture-reviewer`.
 
 ## Quality bar
-- Loading, empty and error states.
+- Loading, empty and error states: `app-data-table` gets `[loading]`, `emptyMessage`, `[error]` and `(retry)`.
 - Page resets to the first page on filter change.
 - No client-side filtering or paging.
 - User-facing text in Uzbek constants (no i18n library).

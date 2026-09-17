@@ -4,7 +4,9 @@
       <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
         Ovqatlar katalogi
       </h1>
-      <span class="text-muted-color text-sm">Jami {{ store.totalCount() }} ovqat</span>
+      <span class="text-muted-color text-sm"
+        >Jami {{ store.loadError() === null ? store.totalCount() : '—' }} ovqat</span
+      >
     </div>
     <p-button label="Ovqat qo'shish" icon="pi pi-plus" (onClick)="add()" />
   </div>
@@ -48,9 +50,11 @@
     [items]="store.foods()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
+    [error]="store.loadError()"
     [first]="store.first()"
     emptyMessage="Bu shartlarga mos ovqat topilmadi."
     (pageChange)="loadPage($event)"
+    (retry)="store.load()"
   >
     <ng-template #row let-food>
       <tr>

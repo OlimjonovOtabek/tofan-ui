@@ -4,7 +4,9 @@
       <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
         Mashqlar katalogi
       </h1>
-      <span class="text-muted-color text-sm">Jami {{ store.totalCount() }} mashq</span>
+      <span class="text-muted-color text-sm"
+        >Jami {{ store.loadError() === null ? store.totalCount() : '—' }} mashq</span
+      >
     </div>
     <p-button label="Mashq qo'shish" icon="pi pi-plus" (onClick)="add()" />
   </div>
@@ -16,9 +18,11 @@
     [items]="store.exercises()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
+    [error]="store.loadError()"
     [first]="store.first()"
     emptyMessage="Bu shartlarga mos mashq topilmadi."
     (pageChange)="loadPage($event)"
+    (retry)="store.load()"
   >
     <ng-template #row let-exercise>
       <tr>

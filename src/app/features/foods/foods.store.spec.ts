@@ -76,6 +76,18 @@ describe('FoodsStore', () => {
     expect(store.totalCount()).toBe(1);
   });
 
+  it('should expose the error and drop the old rows when a reload fails', async () => {
+    const store = createStore();
+    await store.load();
+    vi.mocked(service.list).mockRejectedValue(new Error('offline'));
+
+    await store.load();
+
+    expect(store.loadError()).not.toBeNull();
+    expect(store.foods()).toEqual([]);
+    expect(store.loading()).toBe(false);
+  });
+
   it('should go back to the first page when a filter is applied', async () => {
     const store = createStore();
     await store.load({ first: 50, rows: 25 });

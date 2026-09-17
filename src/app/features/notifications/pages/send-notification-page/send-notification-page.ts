@@ -37,6 +37,7 @@ import { NotificationService } from '@core/feedback/notification.service';
 import { AppPaths } from '@core/config/app-paths';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
+import { Message } from '@openng/optimus-ui/message';
 import { Select } from '@openng/optimus-ui/select';
 import { SelectButton } from '@openng/optimus-ui/selectbutton';
 import { Textarea } from '@openng/optimus-ui/textarea';
@@ -67,6 +68,7 @@ function uuidValidator(control: AbstractControl<string>): ValidationErrors | nul
     TemplateCoverageHint,
     Button,
     InputText,
+    Message,
     Select,
     SelectButton,
     Textarea,

@@ -58,7 +58,25 @@
     </div>
 
     @if (mode() === 'templated') {
-      @if (store.templatesLoaded()) {
+      @if (store.templatesLoading()) {
+        <span class="text-muted-color text-sm">
+          <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i>Shablonlar yuklanmoqda…
+        </span>
+      } @else if (store.templatesError(); as message) {
+        <p-message severity="warn">
+          <div class="flex flex-wrap items-center gap-3">
+            <span>Shablonlarni yuklab bo‘lmadi, qamrovni tekshirib bo‘lmaydi: {{ message }}</span>
+            <p-button
+              label="Qayta urinish"
+              icon="pi pi-refresh"
+              severity="secondary"
+              size="small"
+              [outlined]="true"
+              (onClick)="store.loadTemplates()"
+            />
+          </div>
+        </p-message>
+      } @else if (store.templatesLoaded()) {
         <app-template-coverage-hint
           [coverage]="coverage()"
           [preview]="preview()"

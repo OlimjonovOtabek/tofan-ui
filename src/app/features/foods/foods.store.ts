@@ -5,6 +5,7 @@ import { FoodDraft, createFoodDraft } from './models/food-draft';
 import { FoodFilter } from './models/food-filter';
 import { FoodsService } from './services/foods.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
+import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
 @Injectable()
@@ -19,6 +20,7 @@ export class FoodsStore {
   readonly foods = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
   readonly saving = signal(false);
   readonly searchingBarcode = signal(false);
   readonly first = computed(() => this.currentRequest().first);
@@ -26,10 +28,12 @@ export class FoodsStore {
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
     this.loading.set(true);
+    this.loadError.set(null);
     try {
       this.page.set(await this.foodsService.list(this.currentFilter(), request));
     } catch (error) {
-      this.notifications.error(error);
+      this.page.set(emptyPage<Food>());
+      this.loadError.set(toErrorMessage(error));
     } finally {
       this.loading.set(false);
     }
