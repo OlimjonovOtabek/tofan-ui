@@ -78,8 +78,8 @@ uses `loadChildren`.
 
 | Folder | May import | Must NOT import |
 |---|---|---|
-| core | shared | features |
-| shared | core (http, feedback) | features |
+| core | other `core/` folders, shared | features |
+| shared | other `shared/` folders, `core/http`, `core/feedback` | features, other `core/` folders |
 | features/<x> | core, shared, its own files (relative imports) | other features |
 | routes | features (lazy `import()`), `core/auth` guards, `core/layout` shell | shared |
 

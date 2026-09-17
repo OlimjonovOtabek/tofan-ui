@@ -13,7 +13,9 @@ paths:
 - No `inject()` of stores, HTTP services or Router (exception: `shared/components/file-upload`
   uses `FileUploadService` because uploading is its whole purpose).
 - Pure rendering: derive with `computed()`, never mutate inputs.
-- Name by what it shows: `ExerciseFormDialog`, `DataTable`, `StatusCard`.
+- Name by what it shows: `ExerciseFormDialog`, `DataTable`, `LocalizedTextField`.
+- A full-screen shell page (theme switcher, links to app paths) belongs to `core/layout/components/`
+  (example: `StatusCard`), not to `shared/components/`.
 
 ## Pages (`features/<x>/pages/<name>-page/`)
 - Provide and inject the store, pass signals down, handle outputs by calling store methods.
