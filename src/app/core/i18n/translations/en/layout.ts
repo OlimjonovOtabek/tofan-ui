@@ -1,2 +1,2 @@
-export const layoutEn = {
-};
+export const layoutEn = { topbar: {},
+  menu: {"main":"Main","dashboard":"Dashboard","catalog":"Catalog","exercises":"Exercises","foods":"Foods","media":"Media files","users":"Users","soldiers":"Soldiers","accounts":"Accounts","userSessions":"Sign-in log","notifications":"Notifications","templates":"Templates","sendPush":"Send Push"} };

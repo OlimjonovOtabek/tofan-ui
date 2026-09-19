@@ -32,17 +32,13 @@ export class LocaleStore {
       if (stored && LOCALES.includes(stored as AppLocale)) {
         return stored as AppLocale;
       }
-    } catch {
-      // Ignore private window storage access errors
-    }
+    } catch (e) { console.warn(e); }
     return DEFAULT_LOCALE;
   }
 
   private saveLocale(locale: AppLocale): void {
     try {
       localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-    } catch {
-      // Ignore private window storage access errors
-    }
+    } catch (e) { console.warn(e); }
   }
 }

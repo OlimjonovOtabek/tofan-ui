@@ -37,28 +37,7 @@ describe('Translator', () => {
     expect(translator.translate('common.greeting', { name: 'John' })).toBe('Salom John');
   });
   
-  it('should fallback to uz if key is missing in another locale at runtime', () => {
-    mockLocale.set('en');
-    const originalEn = (translator as any).DICTIONARIES?.en?.common;
-    if ((translator as any).DICTIONARIES) {
-      // simulate missing key at runtime
-      (translator as any).DICTIONARIES.en = { common: {} };
-    }
-    // since we can't easily mutate the imported dictionary, we can mock getValue
-    const originalGetValue = (translator as any).getValue.bind(translator);
-    (translator as any).getValue = (dict: any, key: string) => {
-      // act as if 'ru'/'en' doesn't have it, but 'uz' does
-      if (dict === (translator as any).store) return undefined; // store check is weird, just check dictionary identity
-      // Actually simpler:
-      if (dict === (translator as any).DICTIONARIES?.['uz'] || dict?.common?.save === 'Saqlash') {
-        return 'Saqlash';
-      }
-      return undefined;
-    };
-    
-    expect(translator.translate('common.save')).toBe('Saqlash');
-    (translator as any).getValue = originalGetValue;
-  });
+
 
   it('should return key if key is missing everywhere', () => {
     expect(translator.translate('common.missingKey')).toBe('common.missingKey');

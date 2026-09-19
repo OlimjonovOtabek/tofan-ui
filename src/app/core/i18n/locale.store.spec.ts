@@ -35,7 +35,7 @@ describe('LocaleStore', () => {
   it('should update locale and save to localStorage on change', () => {
     store.setLocale('en');
     expect(store.locale()).toBe('en');
-    TestBed.flushEffects(); // to run the effect
+    TestBed.flushEffects();
     expect(localStorage.getItem('tofan_locale')).toBe('en');
     expect(document.documentElement.lang).toBe('en');
   });

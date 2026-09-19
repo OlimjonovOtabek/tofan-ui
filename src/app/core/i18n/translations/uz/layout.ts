@@ -1,2 +1,2 @@
-export const layoutUz = {
-};
+export const layoutUz = { topbar: {},
+  menu: {"main":"Asosiy","dashboard":"Boshqaruv paneli","catalog":"Katalog","exercises":"Mashqlar","foods":"Ovqatlar","media":"Media fayllar","users":"Foydalanuvchilar","soldiers":"Soldierlar","accounts":"Hisoblar","userSessions":"Kirishlar jurnali","notifications":"Bildirishnomalar","templates":"Shablonlar","sendPush":"Push yuborish"} };

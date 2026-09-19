@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LocaleStore } from './locale.store';
 import { TranslationKey, TranslationParams, Dictionary } from './dictionary';
 import { dictionaryUz } from './translations/uz';
@@ -38,10 +38,10 @@ export class Translator {
 
   private getValue(dict: Dictionary, key: string): string | undefined {
     const parts = key.split('.');
-    let current: any = dict;
+    let current: unknown = dict;
     for (const part of parts) {
       if (current && typeof current === 'object' && part in current) {
-        current = current[part];
+        current = (current as Record<string, unknown>)[part];
       } else {
         return undefined;
       }

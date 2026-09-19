@@ -1,6 +1,6 @@
 @if (isVisible()) {
   @if (root()) {
-    <div class="layout-menuitem-root-text">{{ item().label }}</div>
+    <div class="layout-menuitem-root-text">{{ item().label | t }}</div>
   }
 
   @if (isRouteLink()) {
@@ -16,7 +16,7 @@
       (click)="onClick($event)"
     >
       <i class="layout-menuitem-icon" [class]="item().icon"></i>
-      <span class="layout-menuitem-text">{{ item().label }}</span>
+      <span class="layout-menuitem-text">{{ item().label | t }}</span>
     </a>
   } @else {
     <a
@@ -28,7 +28,7 @@
       (click)="onClick($event)"
     >
       <i class="layout-menuitem-icon" [class]="item().icon"></i>
-      <span class="layout-menuitem-text">{{ item().label }}</span>
+      <span class="layout-menuitem-text">{{ item().label | t }}</span>
       @if (hasChildren()) {
         <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
       }

@@ -5,11 +5,12 @@ import { dictionaryUz } from './translations/uz';
 import { dictionaryRu } from './translations/ru';
 import { dictionaryEn } from './translations/en';
 import { AppLocale } from './locale';
+import { Translation } from '@openng/optimus-ui/api';
 
-const OPTIMUS_TRANSLATIONS: Record<AppLocale, any> = {
-  uz: dictionaryUz.optimus,
-  ru: dictionaryRu.optimus,
-  en: dictionaryEn.optimus
+const OPTIMUS_TRANSLATIONS: Record<AppLocale, Translation> = {
+  uz: dictionaryUz.optimus as Translation,
+  ru: dictionaryRu.optimus as Translation,
+  en: dictionaryEn.optimus as Translation
 };
 
 @Injectable({ providedIn: 'root' })

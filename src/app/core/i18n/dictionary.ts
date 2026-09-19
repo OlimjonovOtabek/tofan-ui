@@ -1,8 +1,6 @@
 import { dictionaryUz } from './translations/uz';
 
 export type Dictionary = typeof dictionaryUz;
-
-// Recursive type for translation keys like 'common.save' or 'auth.login.title'
 type Join<K, P> = K extends string | number ?
     P extends string | number ?
     `${K}${"" extends P ? "" : "."}${P}`

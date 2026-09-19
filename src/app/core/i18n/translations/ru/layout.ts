@@ -1,2 +1,2 @@
-export const layoutRu = {
-};
+export const layoutRu = { topbar: {},
+  menu: {"main":"Главная","dashboard":"Панель управления","catalog":"Каталог","exercises":"Упражнения","foods":"Питание","media":"Медиафайлы","users":"Пользователи","soldiers":"Солдаты","accounts":"Аккаунты","userSessions":"Журнал входов","notifications":"Уведомления","templates":"Шаблоны","sendPush":"Отправить Push"} };

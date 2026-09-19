@@ -3,6 +3,7 @@ import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/rou
 import { Ripple } from '@openng/optimus-ui/ripple';
 import { LayoutService } from '@core/layout/layout.service';
 import { LayoutMenuItem } from '@core/layout/menu/layout-menu-item';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 const EXACT_ROUTE_MATCH: IsActiveMatchOptions = {
   paths: 'exact',
@@ -13,7 +14,7 @@ const EXACT_ROUTE_MATCH: IsActiveMatchOptions = {
 
 @Component({
   selector: '[app-sidebar-menu-item]',
-  imports: [RouterLink, RouterLinkActive, Ripple],
+  imports: [RouterLink, RouterLinkActive, Ripple, TranslatePipe],
   templateUrl: './sidebar-menu-item.html',
   styleUrl: './sidebar-menu-item.css',
   host: {

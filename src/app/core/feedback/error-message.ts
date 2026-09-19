@@ -8,41 +8,35 @@ import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { ValidationError } from '@shared/models/errors/validation.error';
 
 const MESSAGES_BY_CODE: Record<string, string> = {
-  'Authentication.InvalidCredentials': "Login yoki parol noto'g'ri.",
-  'Authentication.InvalidRefreshToken': 'Sessiya tugadi. Qaytadan kiring.',
-  'IdentityProvider.UserNotFound': 'Bunday foydalanuvchi topilmadi.',
-  'NotificationTemplate.Conflict':
-    'Bu tur va uslub uchun faol shablon allaqachon bor. Avval uni faolsizlantiring.',
-  'NotificationTemplate.NoActiveTemplate':
-    'Bu tur uchun foydalanuvchi uslubiga mos faol shablon topilmadi.',
-  'NotificationPreference.Disabled':
-    "Foydalanuvchi bu turdagi bildirishnomalarni o'chirib qo'ygan.",
-  'PushNotification.NoActiveDevice': "Foydalanuvchining push qabul qiladigan faol qurilmasi yo'q.",
-  'PushNotification.DispatchFailed': 'Push xizmati bildirishnomani yetkaza olmadi.',
-  'PushNotification.Disabled': "Bu muhitda push bildirishnomalar o'chirilgan.",
-  'PushNotification.ConfigurationInvalid':
-    'Push xizmati sozlanmagan (Firebase kalitlari yo‘q). Administratorga murojaat qiling.',
-  'UserId.Empty': 'Foydalanuvchi ID kiritilishi shart.',
-  'UserId.Invalid': 'Foydalanuvchi ID UUID ko‘rinishida bo‘lishi kerak.',
-  'Data.KeyEmpty': 'Qo‘shimcha ma’lumotdagi har bir qiymatning kaliti bo‘lishi kerak.',
-  'Data.KeyDuplicate': 'Qo‘shimcha ma’lumotda kalitlar takrorlanmasligi kerak.',
-  'StoredFile.InUse':
-    'Fayl mashq videosi sifatida ishlatilmoqda. Avval uni mashqdan olib tashlang.',
-  'StoredFile.NotFound': 'Fayl topilmadi — u allaqachon o‘chirilgan bo‘lishi mumkin.',
-  'StoredFile.Empty': 'Tanlangan fayl bo‘sh.',
-  'StoredFile.UnsupportedContent': 'Bu fayl turi tanlangan kategoriya uchun qabul qilinmaydi.',
-  'StoredFile.TooLarge': 'Fayl bu kategoriya uchun ruxsat etilgan hajmdan katta.',
-  'User.NotFound': 'Hisob topilmadi — u Keycloak’dan o‘chirilgan bo‘lishi mumkin.',
-  'User.AlreadyBlocked': 'Hisob allaqachon bloklangan.',
-  'User.NotBlocked': 'Hisob bloklanmagan.',
-  'User.CannotBlockSelf': 'O‘z hisobingizni bloklay olmaysiz.',
-  GetUsersQuery:
-    'Hisoblarni Keycloak’dan o‘qib bo‘lmadi. Rol filtri tanlangan bo‘lsa, u hozircha ishlamasligi mumkin (Keycloak sozlamasi kerak).',
+  'Authentication.InvalidCredentials': 'errors.backend.Authentication.InvalidCredentials',
+  'Authentication.InvalidRefreshToken': 'errors.backend.Authentication.InvalidRefreshToken',
+  'IdentityProvider.UserNotFound': 'errors.backend.IdentityProvider.UserNotFound',
+  'NotificationTemplate.Conflict': 'errors.backend.NotificationTemplate.Conflict',
+  'NotificationTemplate.NoActiveTemplate': 'errors.backend.NotificationTemplate.NoActiveTemplate',
+  'NotificationPreference.Disabled': 'errors.backend.NotificationPreference.Disabled',
+  'PushNotification.NoActiveDevice': 'errors.backend.PushNotification.NoActiveDevice',
+  'PushNotification.DispatchFailed': 'errors.backend.PushNotification.DispatchFailed',
+  'PushNotification.Disabled': 'errors.backend.PushNotification.Disabled',
+  'PushNotification.ConfigurationInvalid': 'errors.backend.PushNotification.ConfigurationInvalid',
+  'UserId.Empty': 'errors.backend.UserId.Empty',
+  'UserId.Invalid': 'errors.backend.UserId.Invalid',
+  'Data.KeyEmpty': 'errors.backend.Data.KeyEmpty',
+  'Data.KeyDuplicate': 'errors.backend.Data.KeyDuplicate',
+  'StoredFile.InUse': 'errors.backend.StoredFile.InUse',
+  'StoredFile.NotFound': 'errors.backend.StoredFile.NotFound',
+  'StoredFile.Empty': 'errors.backend.StoredFile.Empty',
+  'StoredFile.UnsupportedContent': 'errors.backend.StoredFile.UnsupportedContent',
+  'StoredFile.TooLarge': 'errors.backend.StoredFile.TooLarge',
+  'User.NotFound': 'errors.backend.User.NotFound',
+  'User.AlreadyBlocked': 'errors.backend.User.AlreadyBlocked',
+  'User.NotBlocked': 'errors.backend.User.NotBlocked',
+  'User.CannotBlockSelf': 'errors.backend.User.CannotBlockSelf',
+  GetUsersQuery: 'errors.backend.GetUsersQuery',
 };
 
 export function toErrorMessage(error: unknown): string {
   if (!(error instanceof DomainError)) {
-    return "Serverga ulanib bo'lmadi. Keyinroq qayta urinib ko'ring.";
+    return 'errors.classes.network';
   }
 
   return MESSAGES_BY_CODE[error.code] ?? messageForErrorClass(error);
@@ -50,31 +44,31 @@ export function toErrorMessage(error: unknown): string {
 
 function messageForErrorClass(error: DomainError): string {
   if (error instanceof InvalidCredentialsError) {
-    return "Login yoki parol noto'g'ri.";
+    return 'errors.classes.invalidCredentials';
   }
   if (error instanceof SessionExpiredError) {
-    return 'Sessiya tugadi. Qaytadan kiring.';
+    return 'errors.classes.sessionExpired';
   }
   if (error instanceof AccessDeniedError) {
-    return "Bu amal uchun ruxsatingiz yo'q.";
+    return 'errors.classes.accessDenied';
   }
   if (error instanceof ValidationError) {
     return validationMessage(error);
   }
   if (error instanceof NotFoundError) {
-    return "Ma'lumot topilmadi — u o'chirilgan bo'lishi mumkin.";
+    return 'errors.classes.notFound';
   }
   if (error instanceof ConflictError) {
-    return "Bunday ma'lumot allaqachon mavjud.";
+    return 'errors.classes.conflict';
   }
   if (error instanceof BusinessRuleError && error.message.length > 0) {
     return error.message;
   }
-  return "Amalni bajarib bo'lmadi. Keyinroq qayta urinib ko'ring.";
+  return 'errors.classes.generic';
 }
 
 function validationMessage(error: ValidationError): string {
   return error.issues.length === 0
-    ? "Ma'lumotlar to'g'ri to'ldirilmagan."
+    ? 'errors.classes.validationFallback'
     : error.issues.map((issue) => MESSAGES_BY_CODE[issue.code] ?? issue.message).join(' ');
 }

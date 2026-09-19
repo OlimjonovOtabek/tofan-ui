@@ -7,44 +7,45 @@ import { ValidationError } from '@shared/models/errors/validation.error';
 import { toErrorMessage } from './error-message';
 
 describe('toErrorMessage', () => {
-  it('should use our wording when the backend code is known', () => {
-    const error = new BusinessRuleError('Invalid credentials', 'Authentication.InvalidCredentials');
-
-    expect(toErrorMessage(error)).toBe("Login yoki parol noto'g'ri.");
+  it('should format backend codes from dictionary', () => {
+    const error = new InvalidCredentialsError();
+    expect(toErrorMessage(error)).toBe('errors.classes.invalidCredentials');
   });
 
-  it('should explain an upload rejection in Uzbek when the file breaks an upload rule', () => {
-    const error = new BusinessRuleError(
-      'The file type is not accepted for this file category.',
-      'StoredFile.UnsupportedContent',
-    );
-
-    expect(toErrorMessage(error)).toBe('Bu fayl turi tanlangan kategoriya uchun qabul qilinmaydi.');
+  it('should fallback to error class message for unknown code', () => {
+    const error = new NotFoundError('gone', 'Unknown.Code');
+    expect(toErrorMessage(error)).toBe('errors.classes.notFound');
   });
 
-  it('should list every issue when validation fails', () => {
+  it('should format ValidationError correctly', () => {
     const error = new ValidationError('invalid', [
-      { code: 'Name.Empty', message: 'Nom kiritilmagan.' },
-      { code: 'Name.TooLong', message: 'Nom juda uzun.' },
+      { code: 'StoredFile.UnsupportedContent', message: 'fallback' },
     ]);
+    expect(toErrorMessage(error)).toBe('errors.backend.StoredFile.UnsupportedContent');
+  });
 
+  it('should map standard errors to generic fallback', () => {
+    const error = new ValidationError('invalid', [
+      { code: 'Unknown.Code', message: 'Nom kiritilmagan.' },
+      { code: 'Unknown.Code2', message: 'Nom juda uzun.' },
+    ]);
     expect(toErrorMessage(error)).toBe('Nom kiritilmagan. Nom juda uzun.');
   });
 
-  it('should have wording when any mapped error type occurs', () => {
-    expect(toErrorMessage(new InvalidCredentialsError())).toContain("noto'g'ri");
-    expect(toErrorMessage(new AccessDeniedError())).toContain('ruxsat');
-    expect(toErrorMessage(new NotFoundError('gone', 'Exercise.NotFound'))).toContain('topilmadi');
-    expect(toErrorMessage(new ConflictError('exists', 'Food.Duplicate'))).toContain('mavjud');
+  it('should map specific error classes', () => {
+    expect(toErrorMessage(new InvalidCredentialsError())).toBe('errors.classes.invalidCredentials');
+    expect(toErrorMessage(new AccessDeniedError())).toBe('errors.classes.accessDenied');
+    expect(toErrorMessage(new NotFoundError('gone', 'Exercise.NotFound'))).toBe('errors.classes.notFound');
+    expect(toErrorMessage(new ConflictError('exists', 'Food.Duplicate'))).toBe('errors.classes.conflict');
   });
 
-  it('should show the backend text when a business rule is unknown', () => {
-    expect(toErrorMessage(new BusinessRuleError('Plan is locked.', 'Plan.Locked'))).toBe(
-      'Plan is locked.',
+  it('should map BusinessRuleError to its message', () => {
+    expect(toErrorMessage(new BusinessRuleError('errors.backend.Plan.Locked', 'Plan.Locked'))).toBe(
+      'errors.backend.Plan.Locked',
     );
   });
 
-  it('should report a connection problem when the error is not a domain error', () => {
-    expect(toErrorMessage(new Error('boom'))).toContain("Serverga ulanib bo'lmadi");
+  it('should map non-DomainError to network message', () => {
+    expect(toErrorMessage(new Error('boom'))).toBe('errors.classes.network');
   });
 });
