@@ -1,0 +1,11 @@
+.git
+.angular
+.claude
+.vscode
+node_modules
+dist
+coverage
+docs
+Dockerfile
+.dockerignore
+*.md

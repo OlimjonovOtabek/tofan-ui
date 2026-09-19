@@ -18,7 +18,9 @@ const HASH_FILES = new Set([
   '.prettierignore',
   '.dockerignore',
   '.npmrc',
+  'Dockerfile',
 ]);
+const HASH_EXTENSIONS = new Set(['.template', '.inc', '.conf']);
 const SKIPPED_EXTENSIONS = new Set([
   '.md',
   '.png',
@@ -45,7 +47,7 @@ export function findComments(path, text) {
   if (JSON_FILES.has(extension) || JSON_FILES.has(basename(path))) {
     return findDelimitedComments(text, { lineComments: true });
   }
-  if (HASH_FILES.has(basename(path))) {
+  if (HASH_FILES.has(basename(path)) || HASH_EXTENSIONS.has(extension)) {
     return findMatches(text, /^[ \t]*#.*$/gm);
   }
   return [];

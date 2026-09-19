@@ -33,7 +33,7 @@ Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 | ~~0.6~~ | ~~Umumiy UI bloklari: jadval, forma dialogi, o'chirishni tasdiqlash, toast~~                 | ~~Har modulda qayta ishlatiladi~~                                       |
 | ~~0.7~~ | ~~Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)~~                              | ~~Katalog ma'lumotlari uch tilda~~                                      |
 | ~~0.8~~ | ~~Fayl yuklash (`POST /files`, progress bilan)~~                                             | ~~Mashq videolari~~                                                     |
-| 0.9     | Deploy: Docker + nginx; backend stack'iga `Cors__AllowedOrigins__0` = panel domeni           | Production'ga chiqish                                                   |
+| 0.9     | Deploy: Docker + nginx, `/api` panel nginx'i orqali (CORS kerak emas)                        | Production'ga chiqish                                                   |
 
 `/auth/me` endpoint'i yo'q — foydalanuvchi ismi va roli token claim'laridan olinadi.
 
@@ -52,7 +52,15 @@ Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 `shared/models/page.ts` da. Fayl cheklovlari backend `FileUploadRules` bilan bir xil: video 200 MB (reja'dagi
 220 MB — butun so'rov limiti, faylniki 200 MB).
 
-0-bosqichdan qolgani: **0.9 — deploy (Docker + nginx, backend'da `Cors__AllowedOrigins`)**.
+**0.9 tayyorlandi (2026-09-17), serverga hali chiqarilmagan.** `Dockerfile` (Node 24 build →
+`nginx:1.29-alpine`), `nginx/default.conf.template`: SPA fallback, `index.html` keshlanmaydi, hash'li
+assetlar bir yil, `/api/*` → `tofan-api:8080` (prefiks olib tashlanadi, 220 MB gacha yuklash).
+Panel va API bitta domenda ko'rinadi, shuning uchun backend'da `Cors__AllowedOrigins` o'zgartirilmaydi.
+Image lokal yig'ilib, soxta API konteyneri bilan tekshirildi. Server qadamlari —
+[deployment.md](deployment.md).
+
+0-bosqichdan qolgani: **image'ni Docker Hub'ga yuklash va serverda `admin.*` domeni bilan ishga
+tushirish** (server va Docker Hub'ga kirish kerak).
 
 ---
 
@@ -121,13 +129,50 @@ push yuborish havolasi (`/notifications/send?userId=…` ID ni to'ldiradi). Reja
 
 ## 2-bosqich — Avval backend'da endpoint kerak
 
-| Bo'lim                                                                | Backend'da nima qilinishi kerak                                                                           |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Foydalanuvchilar: ro'yxat, profil, vazn/maqsad tarixi, bloklash       | Soldier endpoint'lari faqat `me` uchun, `User` moduli bo'sh. Admin list/detail + Keycloak orqali bloklash |
-| Dashboard: ro'yxatdan o'tganlar, faol foydalanuvchilar, mashg'ulotlar | Analitika query'lari (`Progress` moduli bo'sh)                                                            |
-| Mashg'ulot shablonlari                                                | Shablonlar C# kodida (`WorkoutPlanTemplates*.cs`) — bazaga ko'chirish va admin CRUD                       |
-| Bildirishnoma statistikasi (yuborildi / o'qildi)                      | `notification-deliveries` hozir faqat foydalanuvchining o'zi uchun                                        |
-| Admin harakatlari jurnali (audit log)                                 | Yangi                                                                                                     |
+Backend'ga beriladigan aniq endpoint ro'yxati: [backend-requests.md](backend-requests.md).
+
+### Foydalanuvchi = hisob + soldier (2026-09-18 qarori)
+
+Backend'da foydalanuvchi ikki modulda: **hisob** (Auth, Keycloak — username, email, telefon,
+`enabled`, rollar, sessiyalar) va **soldier** (Soldier moduli — ism, jins, tana, maqsad, vazn;
+onboarding'da paydo bo'ladi). Umumiy kalit — `userId` (Keycloak `sub`). Kelajakda ikkalasi alohida
+servis bo'ladi, shuning uchun:
+
+- Panelda ikkita alohida feature: `features/soldiers` va `features/accounts`. Har biri faqat o'z
+  modulining endpoint'ini chaqiradi, bir-birini import qilmaydi.
+- Birlashtirilgan javob so'ralmaydi, panel ham ma'lumotni birlashtirmaydi. Kartochkalar bir-biriga
+  `userId` bo'yicha havola beradi (`/soldiers/:userId` ↔ `/accounts/:userId`).
+- **Soldierlar** — asosiy ro'yxat (ism, maqsad, vazn bo'yicha qidirish). **Hisoblar** — hamma
+  akkauntlar, onboarding tugatmaganlar va adminlar ham; bloklash, sessiyalar shu yerda.
+- Soldier kartochkasi `404 Profile.NotFound` qaytarsa — "Onboarding tugatilmagan" holati.
+- Push yuborish va kirishlar jurnalidagi `userId` soldier kartochkasiga havola bo'ladi.
+
+### Menyu (reja)
+
+| Guruh | Band | Holat |
+| --- | --- | --- |
+| Asosiy | Boshqaruv paneli | backend 2.1–2.2 kerak |
+| Katalog | Mashqlar, Ovqatlar, Media fayllar | ✅ |
+| Katalog | Mashg'ulot shablonlari | backend P3 kerak |
+| Foydalanuvchilar | Soldierlar | backend 1.1–1.3 kerak |
+| Foydalanuvchilar | Hisoblar | ro'yxat va kartochka backend'da lokal tayyor (0.2), bloklash 1.5 kerak |
+| Foydalanuvchilar | Kirishlar jurnali | ✅ (foydalanuvchi filtri — 0.3) |
+| Bildirishnomalar | Shablonlar, Push yuborish | ✅ |
+| Bildirishnomalar | Yuborilganlar jurnali | backend P2 kerak |
+
+### Tartib
+
+| # | Ish (panel) | Backend'dan kerak |
+| --- | --- | --- |
+| 2.1 | Hisoblar: ro'yxat (qidiruv, faollik, rol) va kartochka | 0.2 — `admin-users-read` ni `main` ga qo'shish va deploy |
+| 2.2 | Soldierlar: ro'yxat va kartochka, vazn grafigi, "Hisob" havolasi | 1.1–1.3 |
+| 2.3 | Hisob kartochkasida sessiyalar, bloklash, hamma joydan chiqarish | 0.3, 1.4, 1.5 |
+| 2.4 | Push yuborishda foydalanuvchini ro'yxatdan tanlash (ID qo'lda emas) | 1.1 |
+| 2.5 | Dashboard | 2.1–2.2 |
+| 2.6 | Yuborilganlar jurnali, ommaviy push | P2 bildirishnomalar |
+| 2.7 | Mashg'ulot shablonlari | P3 |
+
+Audit jurnali rejadan olib tashlandi (2026-09-18: hozir kerak emas).
 
 ---
 

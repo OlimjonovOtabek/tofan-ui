@@ -183,6 +183,12 @@ Dev serverda `/api` `proxy.conf.json` orqali backend'ga uzatiladi (`http://local
 prefiks olib tashlanadi). Shu sabab brauzerda CORS muammosi yo'q. Stendga ulanish uchun
 `proxy.conf.json` dagi `target` ni stend manziliga o'zgartiring.
 
+## Deploy
+
+`Dockerfile` panelni yig'adi va `nginx` da beradi; `/api` shu nginx orqali `tofan-api:8080` ga
+uzatiladi, shuning uchun production'da ham CORS kerak emas. Server qadamlari (Swarm stack, tashqi
+nginx, sertifikat): [docs/deployment.md](docs/deployment.md).
+
 ## UI kutubxonasi: Optimus UI
 
 UI komponentlari — [Optimus UI](https://optimus.openng.org) (`@openng/optimus-ui`). Bu PrimeNG 21
