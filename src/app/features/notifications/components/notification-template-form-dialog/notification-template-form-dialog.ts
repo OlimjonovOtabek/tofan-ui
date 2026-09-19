@@ -1,4 +1,16 @@
-import { Component, effect, inject, input, model, output, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  untracked,
+} from '@angular/core';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationTemplate } from '../../models/notification-template';
 import {
@@ -19,11 +31,19 @@ import { ToggleSwitch } from '@openng/optimus-ui/toggleswitch';
 
 @Component({
   selector: 'app-notification-template-form-dialog',
-  imports: [ReactiveFormsModule, FormDialog, LocalizedTextField, Select, ToggleSwitch],
+  imports: [
+    ReactiveFormsModule,
+    FormDialog,
+    LocalizedTextField,
+    Select,
+    ToggleSwitch,
+    TranslatePipe,
+  ],
   templateUrl: './notification-template-form-dialog.html',
 })
 export class NotificationTemplateFormDialog {
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly translator = inject(Translator);
 
   readonly visible = model.required<boolean>();
   readonly template = input<NotificationTemplate | null>(null);
@@ -31,8 +51,10 @@ export class NotificationTemplateFormDialog {
 
   readonly save = output<NotificationTemplateDraft>();
 
-  protected readonly typeOptions = NOTIFICATION_TYPE_OPTIONS;
-  protected readonly styleOptions = TRAINER_STYLE_OPTIONS;
+  protected readonly typeOptions = computed(() =>
+    this.translator.options(NOTIFICATION_TYPE_OPTIONS),
+  );
+  protected readonly styleOptions = computed(() => this.translator.options(TRAINER_STYLE_OPTIONS));
   protected readonly titleMaxLength = NOTIFICATION_TITLE_MAX_LENGTH;
   protected readonly bodyMaxLength = NOTIFICATION_BODY_MAX_LENGTH;
 
@@ -62,8 +84,10 @@ export class NotificationTemplateFormDialog {
     });
   }
 
-  protected title(): string {
-    return this.template() === null ? "Shablon qo'shish" : 'Shablonni tahrirlash';
+  protected title(): TranslationKey {
+    return this.template() === null
+      ? 'notifications.form.addTitle'
+      : 'notifications.form.editTitle';
   }
 
   protected submit(): void {
@@ -91,14 +115,14 @@ export class NotificationTemplateFormDialog {
       type: template?.type ?? 'workoutReminder',
       trainerStyle: template?.trainerStyle ?? 'professional',
       titles: {
-        name: template?.title ?? '',
-        nameUz: template?.titleUz ?? '',
-        nameRu: template?.titleRu ?? '',
+        name: template?.titles.en ?? '',
+        nameUz: template?.titles.uz ?? '',
+        nameRu: template?.titles.ru ?? '',
       },
       bodies: {
-        name: template?.body ?? '',
-        nameUz: template?.bodyUz ?? '',
-        nameRu: template?.bodyRu ?? '',
+        name: template?.bodies.en ?? '',
+        nameUz: template?.bodies.uz ?? '',
+        nameRu: template?.bodies.ru ?? '',
       },
       isActive: template?.isActive ?? true,
     });

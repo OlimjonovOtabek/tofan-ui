@@ -1,3 +1,4 @@
+import { AppLocale } from '@core/i18n/locale';
 import { toSoldierFactSections } from './soldier-facts';
 import { toJoinedPeriod } from './soldier-filter';
 import { SoldierProfile, ageOn, weightLeftKg } from './soldier-profile';
@@ -39,8 +40,8 @@ const profile: SoldierProfile = {
   updatedAt: null,
 };
 
-function factValue(label: string): string | undefined {
-  return toSoldierFactSections(profile, new Date('2026-09-19T00:00:00Z'))
+function factValue(label: string, locale: AppLocale = 'uz'): string | undefined {
+  return toSoldierFactSections(profile, new Date('2026-09-19T00:00:00Z'), locale)
     .flatMap((section) => section.facts)
     .find((fact) => fact.label === label)?.value;
 }
@@ -62,6 +63,11 @@ describe('soldier rules', () => {
     expect(factValue('Mashg‘ulot kunlari')).toBe('Dushanba, Juma, Yakshanba');
     expect(factValue('Yog‘ foizi')).toBe('—');
     expect(factValue('Maqsadgacha')).toBe('-6.4 kg');
+  });
+
+  it('should describe the facts in the locale when it is not Uzbek', () => {
+    expect(factValue('Training days', 'en')).toBe('Monday, Friday, Sunday');
+    expect(factValue('Рост', 'ru')).toBe('180 см');
   });
 
   it('should make the last day inclusive when a joined period is picked', () => {

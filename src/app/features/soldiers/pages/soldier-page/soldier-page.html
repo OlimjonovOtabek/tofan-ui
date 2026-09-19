@@ -3,15 +3,15 @@
     [routerLink]="soldiersPath"
     class="text-muted-color mb-4 inline-flex items-center gap-2 text-sm"
   >
-    <i class="pi pi-arrow-left"></i> Soldierlar
+    <i class="pi pi-arrow-left"></i> {{ 'soldiers.card.back' | t }}
   </a>
 
   @if (store.loadError(); as error) {
     <p-message severity="error">
       <div class="flex flex-wrap items-center gap-3">
-        <span>{{ error }}</span>
+        <span>{{ error | message }}</span>
         <p-button
-          label="Qayta urinish"
+          [label]="'common.actions.retry' | t"
           icon="pi pi-refresh"
           severity="secondary"
           [outlined]="true"
@@ -23,9 +23,9 @@
   } @else if (store.notOnboarded()) {
     <p-message severity="info">
       <div class="flex flex-wrap items-center gap-3">
-        <span>Onboarding tugatilmagan: bu hisobning soldier profili hali yo‘q.</span>
+        <span>{{ 'soldiers.card.notOnboarded' | t }}</span>
         <a [routerLink]="[accountsPath, userId()]" class="text-primary font-medium">
-          Hisob kartochkasi
+          {{ 'soldiers.card.accountCard' | t }}
         </a>
       </div>
     </p-message>
@@ -50,7 +50,7 @@
           [outlined]="true"
         >
           <i class="pi pi-id-card" pButtonIcon></i>
-          <span pButtonLabel>Hisob</span>
+          <span pButtonLabel>{{ 'soldiers.card.account' | t }}</span>
         </a>
         <a
           pButton
@@ -60,7 +60,7 @@
           [outlined]="true"
         >
           <i class="pi pi-send" pButtonIcon></i>
-          <span pButtonLabel>Push yuborish</span>
+          <span pButtonLabel>{{ 'soldiers.card.sendPush' | t }}</span>
         </a>
       </div>
     </div>
@@ -83,7 +83,9 @@
 
     <section>
       <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <div class="text-lg font-semibold" role="heading" aria-level="2">Vazn tarixi</div>
+        <div class="text-lg font-semibold" role="heading" aria-level="2">
+          {{ 'soldiers.card.weightHistory' | t }}
+        </div>
         @if (changeLabel(); as change) {
           <span class="text-muted-color text-sm">{{ change }}</span>
         }
@@ -92,14 +94,16 @@
 
       @if (store.latestWeights().length > 0) {
         <div class="text-muted-color mt-6 mb-2 text-sm font-medium" role="heading" aria-level="3">
-          Oxirgi yozuvlar
+          {{ 'soldiers.card.latestEntries' | t }}
         </div>
         <table class="w-full text-sm">
           <tbody>
             @for (entry of store.latestWeights(); track entry.id) {
               <tr class="border-surface border-b">
                 <td class="py-2 whitespace-nowrap">{{ loggedLabel(entry) }}</td>
-                <td class="py-2 font-medium">{{ entry.weightKg }} kg</td>
+                <td class="py-2 font-medium">
+                  {{ 'soldiers.units.kg' | t: { value: entry.weightKg } }}
+                </td>
                 <td class="text-muted-color py-2">{{ sourceLabel(entry) }}</td>
                 <td class="text-muted-color py-2">{{ entry.note ?? '' }}</td>
               </tr>
@@ -109,6 +113,8 @@
       }
     </section>
   } @else if (store.loading()) {
-    <p class="text-muted-color m-0"><i class="pi pi-spin pi-spinner mr-2"></i>Yuklanmoqda…</p>
+    <p class="text-muted-color m-0">
+      <i class="pi pi-spin pi-spinner mr-2"></i>{{ 'soldiers.card.loading' | t }}
+    </p>
   }
 </div>

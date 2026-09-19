@@ -5,12 +5,14 @@ import { FileUploadService } from './file-upload.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { Button } from '@openng/optimus-ui/button';
 import { ProgressBar } from '@openng/optimus-ui/progressbar';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 const BYTES_IN_MEGABYTE = 1024 * 1024;
+let nextInputId = 0;
 
 @Component({
   selector: 'app-file-upload',
-  imports: [Button, ProgressBar],
+  imports: [Button, ProgressBar, TranslatePipe],
   templateUrl: './file-upload.html',
 })
 export class FileUpload {
@@ -18,10 +20,11 @@ export class FileUpload {
   private readonly notifications = inject(NotificationService);
 
   readonly category = input.required<FileCategory>();
-  readonly label = input('Fayl');
+  readonly label = input<string | null>(null);
   readonly fileId = model<string | null>(null);
   readonly fileName = model<string | null>(null);
 
+  protected readonly inputId = `file-upload-${nextInputId++}`;
   protected readonly uploading = signal(false);
   protected readonly progress = signal(0);
 
@@ -29,8 +32,8 @@ export class FileUpload {
     return allowedExtensions(this.category()).join(',');
   }
 
-  protected maxSizeLabel(): string {
-    return `${Math.round(maxUploadSize(this.category()) / BYTES_IN_MEGABYTE)} MB gacha`;
+  protected maxSize(): string {
+    return `${Math.round(maxUploadSize(this.category()) / BYTES_IN_MEGABYTE)} MB`;
   }
 
   protected async choose(event: Event): Promise<void> {
@@ -51,7 +54,7 @@ export class FileUpload {
       });
       this.fileId.set(id);
       this.fileName.set(file.name);
-      this.notifications.success('Fayl yuklandi.');
+      this.notifications.success('common.file.uploaded');
     } catch (error) {
       this.notifications.error(error);
     } finally {

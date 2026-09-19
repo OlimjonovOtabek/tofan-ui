@@ -1,7 +1,7 @@
 <button
   type="button"
   class="layout-topbar-action"
-  [attr.aria-label]="darkModeToggleLabel()"
+  [attr.aria-label]="darkModeToggleLabel() | t"
   (click)="layoutService.toggleDarkTheme()"
 >
   <i
@@ -15,7 +15,7 @@
   <button
     type="button"
     class="layout-topbar-action layout-topbar-action-highlight"
-    aria-label="Mavzu sozlamalari"
+    [attr.aria-label]="'layout.topbar.themeSettings' | t"
     pStyleClass="@next"
     enterFromClass="hidden"
     enterActiveClass="animate-scalein"

@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, untracked } from '@angular/core';
+import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PageRequest } from '@shared/models/page';
 import { isUuid } from '@shared/utils/identifiers';
@@ -9,33 +9,50 @@ import { ClipboardService } from '@core/feedback/clipboard.service';
 import { UserSessionsStore } from '../../user-sessions.store';
 import { Button } from '@openng/optimus-ui/button';
 import { Tag } from '@openng/optimus-ui/tag';
+import { formatDateTime } from '@core/i18n/date-format';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { LocaleStore } from '@core/i18n/locale.store';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
 
 type TagSeverity = 'info' | 'secondary' | 'warn';
 
-const STATUS_VIEW: Record<UserSessionStatus, { label: string; severity: TagSeverity }> = {
-  unexpired: { label: 'Muddati tugamagan', severity: 'info' },
-  expired: { label: 'Muddati tugagan', severity: 'secondary' },
-  revokedEverywhere: { label: 'Hamma joydan chiqilgan', severity: 'warn' },
+const STATUS_VIEW: Record<UserSessionStatus, { label: TranslationKey; severity: TagSeverity }> = {
+  unexpired: { label: 'userSessions.status.unexpired', severity: 'info' },
+  expired: { label: 'userSessions.status.expired', severity: 'secondary' },
+  revokedEverywhere: { label: 'userSessions.status.revokedEverywhere', severity: 'warn' },
 };
 
 @Component({
   selector: 'app-user-sessions-page',
-  imports: [DataTable, RouterLink, Button, Tag],
+  imports: [DataTable, RouterLink, Button, Tag, TranslatePipe],
   providers: [UserSessionsStore],
   templateUrl: './user-sessions-page.html',
 })
 export class UserSessionsPage {
   private readonly clipboard = inject(ClipboardService);
+  private readonly translator = inject(Translator);
+  private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(UserSessionsStore);
 
-  protected readonly columns: readonly DataTableColumn[] = [
-    { field: 'userId', header: 'Foydalanuvchi ID' },
-    { field: 'createdOnUtc', header: 'Kirgan vaqti', sortable: true, width: '12rem' },
-    { field: 'expiresOnUtc', header: 'Token muddati', sortable: true, width: '12rem' },
-    { field: 'status', header: 'Holati', width: '13rem' },
+  protected readonly columns = computed<readonly DataTableColumn[]>(() => [
+    { field: 'userId', header: this.text('userSessions.columns.userId') },
+    {
+      field: 'createdOnUtc',
+      header: this.text('userSessions.columns.loggedIn'),
+      sortable: true,
+      width: '12rem',
+    },
+    {
+      field: 'expiresOnUtc',
+      header: this.text('userSessions.columns.expires'),
+      sortable: true,
+      width: '12rem',
+    },
+    { field: 'status', header: this.text('userSessions.columns.status'), width: '13rem' },
     { field: 'actions', header: '', width: '11rem' },
-  ];
+  ]);
 
   protected readonly sendNotificationPath = AppPaths.sendNotification;
   protected readonly userSessionsPath = AppPaths.userSessions;
@@ -51,7 +68,7 @@ export class UserSessionsPage {
   }
 
   protected statusLabel(session: UserSession): string {
-    return STATUS_VIEW[session.status()].label;
+    return this.text(STATUS_VIEW[session.status()].label);
   }
 
   protected statusSeverity(session: UserSession): TagSeverity {
@@ -59,18 +76,26 @@ export class UserSessionsPage {
   }
 
   protected dateLabel(date: Date): string {
-    return date.toLocaleString('uz-UZ', { dateStyle: 'short', timeStyle: 'short' });
+    return formatDateTime(date, this.localeStore.locale());
   }
 
   protected revokedHint(session: UserSession): string | null {
-    return session.revokedAt === null ? null : `Chiqilgan: ${this.dateLabel(session.revokedAt)}`;
+    return session.revokedAt === null
+      ? null
+      : this.translator.translate('userSessions.revokedAt', {
+          date: this.dateLabel(session.revokedAt),
+        });
   }
 
   protected copyUserId(session: UserSession): Promise<void> {
-    return this.clipboard.copy(session.userId, 'Foydalanuvchi ID');
+    return this.clipboard.copy(session.userId, 'userSessions.userId');
   }
 
   protected loadPage(request: PageRequest): void {
     void this.store.load(request);
+  }
+
+  private text(key: TranslationKey): string {
+    return this.translator.translate(key);
   }
 }

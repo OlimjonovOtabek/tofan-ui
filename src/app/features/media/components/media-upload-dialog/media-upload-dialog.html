@@ -1,27 +1,64 @@
 <app-form-dialog
   [(visible)]="visible"
-  header="Fayl yuklash"
-  saveLabel="Yuklash"
+  [header]="'media.upload.title' | t"
+  [saveLabel]="'media.upload.submit' | t"
   [saving]="uploading()"
   [saveDisabled]="cannotUpload()"
   (save)="submit()"
 >
   <div [formGroup]="form" class="flex flex-col gap-4">
     <div class="flex flex-col gap-1">
-      <label for="uploadCategory" class="font-medium">Fayl turi</label>
+      <label for="uploadCategory" class="font-medium">{{ 'media.upload.category' | t }}</label>
       <p-select
         inputId="uploadCategory"
         formControlName="category"
-        [options]="categoryOptions"
+        [options]="categoryOptions()"
         optionLabel="label"
         optionValue="value"
-        placeholder="Tanlang"
+        [placeholder]="'media.upload.categoryPlaceholder' | t"
         [fluid]="true"
       />
     </div>
 
+    @if (asksForExercise()) {
+      <div class="flex flex-col gap-1">
+        <label for="uploadExercise" class="font-medium">{{ 'media.upload.exercise' | t }}</label>
+        @if (exercisesError(); as error) {
+          <p-message severity="warn">
+            <div class="flex flex-wrap items-center gap-3">
+              <span>{{ 'media.upload.exercisesFailed' | t: { error: (error | message) } }}</span>
+              <button
+                type="button"
+                class="text-primary font-medium"
+                (click)="retryExercises.emit()"
+              >
+                {{ 'common.actions.retry' | t }}
+              </button>
+            </div>
+          </p-message>
+        } @else {
+          <p-select
+            inputId="uploadExercise"
+            formControlName="exerciseId"
+            [options]="exerciseOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            filterBy="label"
+            [resetFilterOnHide]="true"
+            [loading]="exercisesLoading()"
+            [placeholder]="'media.upload.exercisePlaceholder' | t"
+            [emptyMessage]="'media.upload.noExercisesLeft' | t"
+            [emptyFilterMessage]="'media.upload.noExerciseFound' | t"
+            [fluid]="true"
+          />
+          <small class="text-muted-color">{{ 'media.upload.exerciseHint' | t }}</small>
+        }
+      </div>
+    }
+
     <div class="flex flex-col gap-2">
-      <span class="font-medium">Fayl</span>
+      <span class="font-medium">{{ 'media.upload.file' | t }}</span>
       <div class="flex flex-wrap items-center gap-3">
         <input
           type="file"
@@ -38,7 +75,7 @@
           [class.cursor-pointer]="category() !== null && !uploading()"
         >
           <i class="pi pi-upload mr-2"></i>
-          {{ file() === null ? 'Fayl tanlash' : 'Boshqa fayl' }}
+          {{ (file() === null ? 'media.upload.chooseFile' : 'media.upload.chooseAnotherFile') | t }}
         </label>
         @if (fileLabel(); as label) {
           <span class="break-all">
@@ -46,17 +83,23 @@
           </span>
         }
       </div>
-      <small class="text-muted-color">{{ limitHint() }}</small>
+      <small class="text-muted-color">
+        @if (maxSize(); as size) {
+          {{ 'media.upload.limit' | t: { extensions: accept(), size } }}
+        } @else {
+          {{ 'media.upload.pickCategoryFirst' | t }}
+        }
+      </small>
     </div>
 
     <div class="flex flex-col gap-1">
-      <label for="uploadCaption" class="font-medium">Izoh (ixtiyoriy)</label>
+      <label for="uploadCaption" class="font-medium">{{ 'media.upload.caption' | t }}</label>
       <textarea
         pTextarea
         id="uploadCaption"
         formControlName="caption"
         rows="2"
-        placeholder="Ro‘yxatda fayl nomi o‘rniga ko‘rsatiladi"
+        [placeholder]="'media.upload.captionPlaceholder' | t"
       ></textarea>
       <small class="text-muted-color" [class.text-red-500]="captionCount() > captionMaxLength">
         {{ captionCount() }} / {{ captionMaxLength }}

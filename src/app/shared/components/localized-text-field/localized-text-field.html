@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-2" [formGroup]="group()">
-  <span class="text-surface-900 dark:text-surface-0 font-medium">{{ label() }}</span>
+  <span class="text-surface-900 dark:text-surface-0 font-medium">{{ labelText() }}</span>
 
   @for (language of languages; track language.control) {
     <div class="flex flex-col gap-1">
@@ -17,7 +17,7 @@
             [autoResize]="true"
             [id]="inputId(language.control)"
             [formControlName]="language.control"
-            [placeholder]="label() + ' (' + language.hint + ')'"
+            [placeholder]="labelText() + ' (' + (language.hint | t) + ')'"
             [invalid]="isInvalid(language.control)"
           ></textarea>
         } @else {
@@ -27,7 +27,7 @@
             class="flex-1"
             [id]="inputId(language.control)"
             [formControlName]="language.control"
-            [placeholder]="label() + ' (' + language.hint + ')'"
+            [placeholder]="labelText() + ' (' + (language.hint | t) + ')'"
             [invalid]="isInvalid(language.control)"
           />
         }
@@ -37,9 +37,15 @@
           <small class="text-red-500">
             @if (isInvalid(language.control)) {
               @if (isTooLong(language.control)) {
-                {{ label() }} ({{ language.hint }}) {{ maxLength() }} belgidan oshmasin
+                {{
+                  'common.localizedText.tooLong'
+                    | t: { label: labelText(), hint: (language.hint | t), max: maxLength() ?? 0 }
+                }}
               } @else {
-                {{ label() }} ({{ language.hint }}) kiritilishi shart
+                {{
+                  'common.localizedText.required'
+                    | t: { label: labelText(), hint: (language.hint | t) }
+                }}
               }
             }
           </small>

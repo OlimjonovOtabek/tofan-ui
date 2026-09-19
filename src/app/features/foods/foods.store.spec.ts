@@ -26,9 +26,7 @@ const draft: FoodDraft = {
 
 const plov = new Food(
   '1',
-  'Plov',
-  'Palov',
-  'Плов',
+  { en: 'Plov', uz: 'Palov', ru: 'Плов' },
   'system',
   'grams',
   100,

@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2">
-  <label class="text-surface-900 dark:text-surface-0 font-medium" [attr.for]="'file-' + label()">
-    {{ label() }}
+  <label class="text-surface-900 dark:text-surface-0 font-medium" [attr.for]="inputId">
+    {{ label() ?? ('common.file.label' | t) }}
   </label>
 
   @if (uploading()) {
@@ -16,7 +16,7 @@
         severity="danger"
         [text]="true"
         [rounded]="true"
-        ariaLabel="Faylni olib tashlash"
+        [ariaLabel]="'common.file.remove' | t"
         (onClick)="detach()"
       />
     </div>
@@ -25,19 +25,17 @@
       <input
         type="file"
         class="hidden"
-        [id]="'file-' + label()"
+        [id]="inputId"
         [accept]="accept()"
         (change)="choose($event)"
       />
-      <label
-        [attr.for]="'file-' + label()"
-        class="p-button p-button-outlined cursor-pointer"
-        tabindex="0"
-      >
+      <label [attr.for]="inputId" class="p-button p-button-outlined cursor-pointer" tabindex="0">
         <i class="pi pi-upload mr-2"></i>
-        Fayl tanlash
+        {{ 'common.file.choose' | t }}
       </label>
-      <small class="text-muted-color">{{ accept() }} · {{ maxSizeLabel() }}</small>
+      <small class="text-muted-color"
+        >{{ accept() }} · {{ 'common.file.upTo' | t: { size: maxSize() } }}</small
+      >
     </div>
   }
 </div>

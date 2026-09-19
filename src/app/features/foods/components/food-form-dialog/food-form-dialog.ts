@@ -1,4 +1,13 @@
-import { Component, effect, inject, input, model, output, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  untracked,
+} from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Food } from '../../models/food';
 import { FoodSource, ServingUnit } from '../../models/food-attributes';
@@ -13,6 +22,8 @@ import { InputNumber } from '@openng/optimus-ui/inputnumber';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { Select } from '@openng/optimus-ui/select';
 import { ToggleSwitch } from '@openng/optimus-ui/toggleswitch';
+import { Translator } from '@core/i18n/translator';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-food-form-dialog',
@@ -24,11 +35,13 @@ import { ToggleSwitch } from '@openng/optimus-ui/toggleswitch';
     InputText,
     Select,
     ToggleSwitch,
+    TranslatePipe,
   ],
   templateUrl: './food-form-dialog.html',
 })
 export class FoodFormDialog {
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly translator = inject(Translator);
 
   readonly visible = model.required<boolean>();
   readonly food = input<Food | null>(null);
@@ -37,8 +50,10 @@ export class FoodFormDialog {
 
   readonly save = output<FoodDraft>();
 
-  protected readonly sourceOptions = FOOD_SOURCE_OPTIONS;
-  protected readonly servingUnitOptions = SERVING_UNIT_OPTIONS;
+  protected readonly sourceOptions = computed(() => this.translator.options(FOOD_SOURCE_OPTIONS));
+  protected readonly servingUnitOptions = computed(() =>
+    this.translator.options(SERVING_UNIT_OPTIONS),
+  );
 
   protected readonly names = createLocalizedTextGroup(this.formBuilder);
   protected readonly form = this.formBuilder.group({
@@ -66,7 +81,9 @@ export class FoodFormDialog {
   }
 
   protected title(): string {
-    return this.food() === null ? "Ovqat qo'shish" : 'Ovqatni tahrirlash';
+    return this.food() === null
+      ? this.translator.translate('foods.form.addTitle')
+      : this.translator.translate('foods.form.editTitle');
   }
 
   protected submit(): void {
@@ -103,9 +120,9 @@ export class FoodFormDialog {
   private reset(food: Food | null): void {
     this.form.reset({
       names: {
-        name: food?.name ?? '',
-        nameUz: food?.nameUz ?? '',
-        nameRu: food?.nameRu ?? '',
+        name: food?.names.en ?? '',
+        nameUz: food?.names.uz ?? '',
+        nameRu: food?.names.ru ?? '',
       },
       source: food?.source ?? 'system',
       barcode: food?.barcode ?? this.barcode() ?? '',

@@ -12,10 +12,11 @@ export const config: SheriffConfig = {
     },
   },
   depRules: {
+    noTag: anyTag,
     root: ['type:core', 'type:routes'],
     'core:*': anyTag,
-    'type:core': ['type:core', 'type:shared'],
-    'type:shared': ['type:shared', 'core:http', 'core:feedback'],
+    'type:core': ['type:core', 'type:shared', 'noTag'],
+    'type:shared': ['type:shared', 'core:http', 'core:feedback', 'core:i18n'],
     'type:feature': ['type:core', 'type:shared'],
     'type:routes': ['type:feature', 'core:auth', 'core:layout'],
   },

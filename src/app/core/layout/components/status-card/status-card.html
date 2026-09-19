@@ -21,11 +21,11 @@
       <h1
         class="text-surface-900 dark:text-surface-0 font-bold text-4xl lg:text-5xl mb-2 text-center"
       >
-        {{ title() }}
+        {{ title() | t }}
       </h1>
-      <span class="text-muted-color mb-8 text-center">{{ message() }}</span>
+      <span class="text-muted-color mb-8 text-center">{{ message() | t }}</span>
       <p-button
-        label="Bosh sahifaga qaytish"
+        [label]="'common.actions.backHome' | t"
         [routerLink]="dashboardPath"
         [severity]="style().buttonSeverity"
       />

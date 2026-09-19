@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Button } from '@openng/optimus-ui/button';
@@ -11,32 +11,42 @@ import {
   GENDER_OPTIONS,
   MUSCLE_GROUP_OPTIONS,
 } from '../../models/exercise-labels';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { Translator } from '@core/i18n/translator';
+import { SelectOption } from '@shared/models/select-option';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 const SEARCH_DEBOUNCE_MS = 400;
 
-const ACTIVITY_OPTIONS = [
-  { value: true, label: 'Faol' },
-  { value: false, label: 'Faol emas' },
+const ACTIVITY_OPTIONS: SelectOption<boolean, TranslationKey>[] = [
+  { value: true, label: 'exercises.filters.active' },
+  { value: false, label: 'exercises.filters.inactive' },
 ];
 
-const PLACE_OPTIONS = [
-  { value: true, label: 'Uyda' },
-  { value: false, label: 'Zalda' },
+const PLACE_OPTIONS: SelectOption<boolean, TranslationKey>[] = [
+  { value: true, label: 'exercises.filters.home' },
+  { value: false, label: 'exercises.filters.gym' },
 ];
 
 @Component({
   selector: 'app-exercise-filters',
-  imports: [ReactiveFormsModule, Button, InputText, Select],
+  imports: [ReactiveFormsModule, Button, InputText, Select, TranslatePipe],
   templateUrl: './exercise-filters.html',
 })
 export class ExerciseFilters {
+  private readonly translator = inject(Translator);
+
   readonly filterChange = output<ExerciseFilter>();
 
-  protected readonly muscleGroupOptions = MUSCLE_GROUP_OPTIONS;
-  protected readonly equipmentTypeOptions = EQUIPMENT_TYPE_OPTIONS;
-  protected readonly genderOptions = GENDER_OPTIONS;
-  protected readonly activityOptions = ACTIVITY_OPTIONS;
-  protected readonly placeOptions = PLACE_OPTIONS;
+  protected readonly muscleGroupOptions = computed(() =>
+    this.translator.options(MUSCLE_GROUP_OPTIONS),
+  );
+  protected readonly equipmentTypeOptions = computed(() =>
+    this.translator.options(EQUIPMENT_TYPE_OPTIONS),
+  );
+  protected readonly genderOptions = computed(() => this.translator.options(GENDER_OPTIONS));
+  protected readonly activityOptions = computed(() => this.translator.options(ACTIVITY_OPTIONS));
+  protected readonly placeOptions = computed(() => this.translator.options(PLACE_OPTIONS));
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     search: [''],

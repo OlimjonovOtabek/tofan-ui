@@ -1,5 +1,4 @@
 <app-floating-theme-switcher />
-
 <div
   class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden"
 >
@@ -14,35 +13,35 @@
         <div class="text-center mb-8">
           <app-logo class="mb-8 h-24 mx-auto" />
           <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
-            Tofan boshqaruv paneli
+            {{ 'auth.login.title' | t }}
           </div>
-          <span class="text-muted-color font-medium">Davom etish uchun tizimga kiring</span>
+          <span class="text-muted-color font-medium">{{ 'auth.login.subtitle' | t }}</span>
         </div>
 
         <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col" novalidate>
           @if (errorMessage(); as message) {
-            <p-message severity="error" styleClass="mb-6">{{ message }}</p-message>
+            <p-message severity="error" styleClass="mb-6">{{ message | message }}</p-message>
           }
 
           <label
             for="username"
             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2"
           >
-            Login
+            {{ 'auth.login.usernameLabel' | t }}
           </label>
           <input
             pInputText
             id="username"
             type="text"
             autocomplete="username"
-            placeholder="Loginingiz"
+            [placeholder]="'auth.login.usernamePlaceholder' | t"
             class="w-full md:w-120"
             formControlName="username"
             [invalid]="isInvalid('username')"
           />
           <small class="text-red-500 min-h-6 mt-1">
             @if (isInvalid('username')) {
-              Login kiritilishi shart
+              {{ 'auth.login.usernameRequired' | t }}
             }
           </small>
 
@@ -50,12 +49,12 @@
             for="password"
             class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-2"
           >
-            Parol
+            {{ 'auth.login.passwordLabel' | t }}
           </label>
           <p-password
             inputId="password"
             formControlName="password"
-            placeholder="Parolingiz"
+            [placeholder]="'auth.login.passwordPlaceholder' | t"
             autocomplete="current-password"
             [toggleMask]="true"
             [fluid]="true"
@@ -64,11 +63,16 @@
           />
           <small class="text-red-500 min-h-6 mt-1 mb-6">
             @if (isInvalid('password')) {
-              Parol kiritilishi shart
+              {{ 'auth.login.passwordRequired' | t }}
             }
           </small>
 
-          <p-button type="submit" label="Kirish" styleClass="w-full" [loading]="isSubmitting()" />
+          <p-button
+            type="submit"
+            [label]="'auth.login.submit' | t"
+            styleClass="w-full"
+            [loading]="isSubmitting()"
+          />
         </form>
       </div>
     </div>

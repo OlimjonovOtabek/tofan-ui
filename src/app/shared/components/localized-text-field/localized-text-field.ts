@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,6 +8,9 @@ import {
 } from '@angular/forms';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { Textarea } from '@openng/optimus-ui/textarea';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
 
 export interface LocalizedTextControls {
   name: FormControl<string>;
@@ -15,7 +18,7 @@ export interface LocalizedTextControls {
   nameRu: FormControl<string>;
 }
 
-export interface LocalizedText {
+export interface LocalizedTextValue {
   name: string;
   nameUz: string;
   nameRu: string;
@@ -27,7 +30,7 @@ export interface LocalizedTextOptions {
 
 export function createLocalizedTextGroup(
   formBuilder: NonNullableFormBuilder,
-  value: Partial<LocalizedText> = {},
+  value: Partial<LocalizedTextValue> = {},
   { maxLength }: LocalizedTextOptions = {},
 ): FormGroup<LocalizedTextControls> {
   const validators =
@@ -42,24 +45,33 @@ export function createLocalizedTextGroup(
 }
 
 const LANGUAGES = [
-  { control: 'name', code: 'EN', hint: 'asosiy' },
-  { control: 'nameUz', code: 'UZ', hint: "o'zbekcha" },
-  { control: 'nameRu', code: 'RU', hint: 'ruscha' },
-] as const;
+  { control: 'name', code: 'EN', hint: 'common.localizedText.hints.en' },
+  { control: 'nameUz', code: 'UZ', hint: 'common.localizedText.hints.uz' },
+  { control: 'nameRu', code: 'RU', hint: 'common.localizedText.hints.ru' },
+] as const satisfies readonly {
+  control: keyof LocalizedTextControls;
+  code: string;
+  hint: TranslationKey;
+}[];
 
 @Component({
   selector: 'app-localized-text-field',
-  imports: [ReactiveFormsModule, InputText, Textarea],
+  imports: [ReactiveFormsModule, InputText, Textarea, TranslatePipe],
   templateUrl: './localized-text-field.html',
 })
 export class LocalizedTextField {
   readonly group = input.required<FormGroup<LocalizedTextControls>>();
-  readonly label = input('Nomi');
+  private readonly translator = inject(Translator);
+
+  readonly label = input<string | null>(null);
   readonly idPrefix = input('localized');
   readonly multiline = input(false);
   readonly maxLength = input<number | null>(null);
 
   protected readonly languages = LANGUAGES;
+  protected readonly labelText = computed(
+    () => this.label() ?? this.translator.translate('common.localizedText.label'),
+  );
 
   protected inputId(control: keyof LocalizedTextControls): string {
     return `${this.idPrefix()}-${control}`;

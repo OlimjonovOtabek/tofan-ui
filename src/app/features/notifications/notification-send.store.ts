@@ -72,7 +72,7 @@ export class NotificationSendStore {
     this.sending.set(true);
     try {
       const deliveryId = await dispatch();
-      this.notifications.success(`Bildirishnoma yuborildi (yetkazish: ${deliveryId}).`);
+      this.notifications.success('notifications.send.sent', { deliveryId });
       return true;
     } catch (error) {
       this.notifications.error(error);

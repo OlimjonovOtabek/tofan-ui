@@ -1,4 +1,14 @@
-import { Component, effect, inject, input, model, output, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Exercise } from '../../models/exercise';
 import {
@@ -25,6 +35,8 @@ import {
 import { Select } from '@openng/optimus-ui/select';
 import { Textarea } from '@openng/optimus-ui/textarea';
 import { ToggleSwitch } from '@openng/optimus-ui/toggleswitch';
+import { Translator } from '@core/i18n/translator';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-exercise-form-dialog',
@@ -36,11 +48,13 @@ import { ToggleSwitch } from '@openng/optimus-ui/toggleswitch';
     Select,
     Textarea,
     ToggleSwitch,
+    TranslatePipe,
   ],
   templateUrl: './exercise-form-dialog.html',
 })
 export class ExerciseFormDialog {
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly translator = inject(Translator);
 
   readonly visible = model.required<boolean>();
   readonly exercise = input<Exercise | null>(null);
@@ -48,11 +62,17 @@ export class ExerciseFormDialog {
 
   readonly save = output<ExerciseDraft>();
 
-  protected readonly muscleGroupOptions = MUSCLE_GROUP_OPTIONS;
-  protected readonly equipmentTypeOptions = EQUIPMENT_TYPE_OPTIONS;
-  protected readonly difficultyOptions = DIFFICULTY_OPTIONS;
-  protected readonly typeOptions = EXERCISE_TYPE_OPTIONS;
-  protected readonly genderOptions = GENDER_OPTIONS;
+  protected readonly muscleGroupOptions = computed(() =>
+    this.translator.options(MUSCLE_GROUP_OPTIONS),
+  );
+  protected readonly equipmentTypeOptions = computed(() =>
+    this.translator.options(EQUIPMENT_TYPE_OPTIONS),
+  );
+  protected readonly difficultyOptions = computed(() =>
+    this.translator.options(DIFFICULTY_OPTIONS),
+  );
+  protected readonly typeOptions = computed(() => this.translator.options(EXERCISE_TYPE_OPTIONS));
+  protected readonly genderOptions = computed(() => this.translator.options(GENDER_OPTIONS));
 
   protected readonly names = createLocalizedTextGroup(this.formBuilder);
   protected readonly form = this.formBuilder.group({
@@ -78,7 +98,9 @@ export class ExerciseFormDialog {
   }
 
   protected title(): string {
-    return this.exercise() === null ? "Mashq qo'shish" : 'Mashqni tahrirlash';
+    return this.exercise() === null
+      ? this.translator.translate('exercises.form.addTitle')
+      : this.translator.translate('exercises.form.editTitle');
   }
 
   protected submit(): void {
@@ -107,9 +129,9 @@ export class ExerciseFormDialog {
   private reset(exercise: Exercise | null): void {
     this.form.reset({
       names: {
-        name: exercise?.name ?? '',
-        nameUz: exercise?.nameUz ?? '',
-        nameRu: exercise?.nameRu ?? '',
+        name: exercise?.names.en ?? '',
+        nameUz: exercise?.names.uz ?? '',
+        nameRu: exercise?.names.ru ?? '',
       },
       muscleGroup: exercise?.muscleGroup ?? 'chest',
       equipmentType: exercise?.equipmentType ?? 'bodyweight',
@@ -121,6 +143,10 @@ export class ExerciseFormDialog {
       instructions: exercise?.instructions ?? '',
     });
     this.videoFileId.set(exercise?.videoFileId ?? null);
-    this.videoFileName.set(exercise?.hasVideo() === true ? 'Yuklangan video' : null);
+    this.videoFileName.set(
+      exercise?.hasVideo() === true
+        ? this.translator.translate('exercises.form.uploadedVideo')
+        : null,
+    );
   }
 }

@@ -1,3 +1,7 @@
+import { formatCalendarDate } from '@core/i18n/date-format';
+import { TranslationKey, TranslationParams } from '@core/i18n/dictionary';
+import { AppLocale } from '@core/i18n/locale';
+import { translate } from '@core/i18n/translate';
 import { WEEK_DAYS, WeekDay } from './soldier-attributes';
 import {
   ACTIVITY_LEVEL_LABELS,
@@ -7,6 +11,7 @@ import {
   GOAL_PACE_LABELS,
   TRAINER_STYLE_LABELS,
   WEEK_DAY_LABELS,
+  workoutPlaceLabel,
 } from './soldier-labels';
 import { SoldierProfile, ageOn, roundToTenth, weightLeftKg } from './soldier-profile';
 
@@ -20,114 +25,149 @@ export interface SoldierFactSection {
   readonly facts: readonly SoldierFact[];
 }
 
+type UnitKey = 'cm' | 'kg' | 'percent' | 'days' | 'weeks';
+
 export const MISSING_VALUE = '—';
 
 const MONDAY_FIRST: readonly WeekDay[] = [...WEEK_DAYS.slice(1), 0];
 
-export function toSoldierFactSections(profile: SoldierProfile, now: Date): SoldierFactSection[] {
+export function toSoldierFactSections(
+  profile: SoldierProfile,
+  now: Date,
+  locale: AppLocale,
+): SoldierFactSection[] {
+  const facts = new FactWriter(locale);
   return [
-    { title: 'Shaxsiy', facts: personalFacts(profile, now) },
-    { title: 'Tana', facts: bodyFacts(profile) },
-    { title: 'Maqsad va mashg‘ulot', facts: goalFacts(profile) },
-    { title: 'Sozlamalar', facts: settingFacts(profile) },
+    facts.section('soldiers.facts.sections.personal', personalFacts(facts, profile, now)),
+    facts.section('soldiers.facts.sections.body', bodyFacts(facts, profile)),
+    facts.section('soldiers.facts.sections.goal', goalFacts(facts, profile)),
+    facts.section('soldiers.facts.sections.settings', settingFacts(facts, profile)),
   ];
 }
 
-function personalFacts(profile: SoldierProfile, now: Date): SoldierFact[] {
+function personalFacts(facts: FactWriter, profile: SoldierProfile, now: Date): SoldierFact[] {
+  const birthDate = facts.text('soldiers.units.age', {
+    date: formatCalendarDate(profile.dateOfBirth, facts.locale),
+    age: ageOn(profile.dateOfBirth, now),
+  });
   return [
-    {
-      label: 'Tug‘ilgan sana',
-      value: `${dateLabel(profile.dateOfBirth)} (${ageOn(profile.dateOfBirth, now)} yosh)`,
-    },
-    { label: 'Jinsi', value: GENDER_LABELS[profile.gender] },
-    { label: 'Davlat', value: profile.countryCode },
-    { label: 'Vaqt zonasi', value: profile.timeZone },
+    facts.fact('soldiers.facts.birthDate', birthDate),
+    facts.fact('soldiers.facts.gender', facts.text(GENDER_LABELS[profile.gender])),
+    facts.fact('soldiers.facts.country', profile.countryCode),
+    facts.fact('soldiers.facts.timeZone', profile.timeZone),
   ];
 }
 
-function bodyFacts(profile: SoldierProfile): SoldierFact[] {
+function bodyFacts(facts: FactWriter, profile: SoldierProfile): SoldierFact[] {
   return [
-    { label: 'Bo‘yi', value: withUnit(profile.heightCm, 'sm') },
-    { label: 'Boshlang‘ich vazn', value: withUnit(profile.startingWeightKg, 'kg') },
-    { label: 'Hozirgi vazn', value: withUnit(profile.currentWeightKg, 'kg') },
-    { label: 'Maqsad vazn', value: withUnit(profile.targetWeightKg, 'kg') },
-    { label: 'Maqsadgacha', value: signedKg(weightLeftKg(profile)) },
-    { label: 'Yog‘ foizi', value: withUnit(profile.bodyFatPercent, '%') },
-    { label: 'BMI', value: withUnit(profile.bmi, '') },
+    facts.fact('soldiers.facts.height', facts.unit(profile.heightCm, 'cm')),
+    facts.fact('soldiers.facts.startingWeight', facts.unit(profile.startingWeightKg, 'kg')),
+    facts.fact('soldiers.facts.currentWeight', facts.unit(profile.currentWeightKg, 'kg')),
+    facts.fact('soldiers.facts.targetWeight', facts.unit(profile.targetWeightKg, 'kg')),
+    facts.fact('soldiers.facts.weightLeft', facts.signedKg(weightLeftKg(profile))),
+    facts.fact('soldiers.facts.bodyFat', facts.unit(profile.bodyFatPercent, 'percent')),
+    facts.fact('soldiers.facts.bmi', facts.number(profile.bmi)),
   ];
 }
 
-function goalFacts(profile: SoldierProfile): SoldierFact[] {
+function goalFacts(facts: FactWriter, profile: SoldierProfile): SoldierFact[] {
   return [
-    { label: 'Maqsad', value: labelOf(profile.goal, FITNESS_GOAL_LABELS) },
-    { label: 'Sur’at', value: labelOf(profile.goalPace, GOAL_PACE_LABELS) },
-    { label: 'Tajriba', value: labelOf(profile.experienceLevel, EXPERIENCE_LEVEL_LABELS) },
-    { label: 'Faollik', value: labelOf(profile.activityLevel, ACTIVITY_LEVEL_LABELS) },
-    { label: 'Joyi', value: workoutPlace(profile.isHomeWorkout) },
-    { label: 'Haftada', value: withUnit(profile.workoutDaysPerWeek, 'kun') },
-    { label: 'Mashg‘ulot kunlari', value: trainingDaysLabel(profile.trainingDays) },
-    { label: 'Maqsad davri', value: goalPeriod(profile.goalStartDate, profile.goalTargetDate) },
-    { label: 'Maqsadgacha taxminan', value: withUnit(profile.estimatedWeeksToGoal, 'hafta') },
-    { label: 'Rejani avto-moslash', value: yesNo(profile.autoAdjustPlanEnabled) },
+    facts.fact('soldiers.facts.goal', facts.label(profile.goal, FITNESS_GOAL_LABELS)),
+    facts.fact('soldiers.facts.pace', facts.label(profile.goalPace, GOAL_PACE_LABELS)),
+    facts.fact(
+      'soldiers.facts.experience',
+      facts.label(profile.experienceLevel, EXPERIENCE_LEVEL_LABELS),
+    ),
+    facts.fact(
+      'soldiers.facts.activity',
+      facts.label(profile.activityLevel, ACTIVITY_LEVEL_LABELS),
+    ),
+    facts.fact('soldiers.facts.place', facts.workoutPlace(profile.isHomeWorkout)),
+    facts.fact('soldiers.facts.perWeek', facts.unit(profile.workoutDaysPerWeek, 'days')),
+    facts.fact('soldiers.facts.trainingDays', facts.trainingDays(profile.trainingDays)),
+    facts.fact(
+      'soldiers.facts.goalPeriod',
+      facts.period(profile.goalStartDate, profile.goalTargetDate),
+    ),
+    facts.fact('soldiers.facts.weeksToGoal', facts.unit(profile.estimatedWeeksToGoal, 'weeks')),
+    facts.fact('soldiers.facts.autoAdjust', facts.onOff(profile.autoAdjustPlanEnabled)),
   ];
 }
 
-function settingFacts(profile: SoldierProfile): SoldierFact[] {
+function settingFacts(facts: FactWriter, profile: SoldierProfile): SoldierFact[] {
   return [
-    { label: 'Murabbiy uslubi', value: labelOf(profile.trainerStyle, TRAINER_STYLE_LABELS) },
-    { label: 'Til', value: profile.languageCode ?? MISSING_VALUE },
-    { label: 'Valyuta', value: profile.currencyCode ?? MISSING_VALUE },
+    facts.fact(
+      'soldiers.facts.trainerStyle',
+      facts.label(profile.trainerStyle, TRAINER_STYLE_LABELS),
+    ),
+    facts.fact('soldiers.facts.language', profile.languageCode ?? MISSING_VALUE),
+    facts.fact('soldiers.facts.currency', profile.currencyCode ?? MISSING_VALUE),
   ];
 }
 
-export function dateLabel(date: Date): string {
-  return date.toLocaleDateString('uz-UZ', { dateStyle: 'short', timeZone: 'UTC' });
-}
+class FactWriter {
+  constructor(readonly locale: AppLocale) {}
 
-function withUnit(value: number | null, unit: string): string {
-  return value === null ? MISSING_VALUE : `${roundToTenth(value)} ${unit}`.trim();
-}
-
-function signedKg(value: number | null): string {
-  if (value === null) {
-    return MISSING_VALUE;
+  section(title: TranslationKey, facts: readonly SoldierFact[]): SoldierFactSection {
+    return { title: this.text(title), facts };
   }
-  return value > 0 ? `+${value} kg` : `${value} kg`;
-}
 
-function labelOf<TValue extends string>(
-  value: TValue | null,
-  labels: Record<TValue, string>,
-): string {
-  return value === null ? MISSING_VALUE : labels[value];
-}
-
-function workoutPlace(isHomeWorkout: boolean | null): string {
-  if (isHomeWorkout === null) {
-    return MISSING_VALUE;
+  fact(label: TranslationKey, value: string): SoldierFact {
+    return { label: this.text(label), value };
   }
-  return isHomeWorkout ? 'Uyda' : 'Zalda';
-}
 
-function yesNo(value: boolean | null): string {
-  if (value === null) {
-    return MISSING_VALUE;
+  text(key: TranslationKey, params?: TranslationParams): string {
+    return translate(this.locale, key, params);
   }
-  return value ? 'Yoqilgan' : 'O‘chirilgan';
-}
 
-function trainingDaysLabel(days: readonly WeekDay[]): string {
-  const ordered = MONDAY_FIRST.filter((day) => days.includes(day));
-  return ordered.length === 0
-    ? MISSING_VALUE
-    : ordered.map((day) => WEEK_DAY_LABELS[day]).join(', ');
-}
-
-function goalPeriod(start: Date | null, target: Date | null): string {
-  if (start === null && target === null) {
-    return MISSING_VALUE;
+  unit(value: number | null, unit: UnitKey): string {
+    return value === null
+      ? MISSING_VALUE
+      : this.text(`soldiers.units.${unit}`, { value: roundToTenth(value) });
   }
-  const from = start === null ? MISSING_VALUE : dateLabel(start);
-  const to = target === null ? MISSING_VALUE : dateLabel(target);
-  return `${from} → ${to}`;
+
+  number(value: number | null): string {
+    return value === null ? MISSING_VALUE : String(roundToTenth(value));
+  }
+
+  signedKg(value: number | null): string {
+    if (value === null) {
+      return MISSING_VALUE;
+    }
+    return this.text('soldiers.units.kg', { value: value > 0 ? `+${value}` : value });
+  }
+
+  label<TValue extends string>(
+    value: TValue | null,
+    labels: Record<TValue, TranslationKey>,
+  ): string {
+    return value === null ? MISSING_VALUE : this.text(labels[value]);
+  }
+
+  workoutPlace(isHomeWorkout: boolean | null): string {
+    return isHomeWorkout === null ? MISSING_VALUE : this.text(workoutPlaceLabel(isHomeWorkout));
+  }
+
+  onOff(value: boolean | null): string {
+    if (value === null) {
+      return MISSING_VALUE;
+    }
+    return this.text(value ? 'soldiers.facts.enabled' : 'soldiers.facts.disabled');
+  }
+
+  trainingDays(days: readonly WeekDay[]): string {
+    const ordered = MONDAY_FIRST.filter((day) => days.includes(day));
+    return ordered.length === 0
+      ? MISSING_VALUE
+      : ordered.map((day) => this.text(WEEK_DAY_LABELS[day])).join(', ');
+  }
+
+  period(start: Date | null, target: Date | null): string {
+    if (start === null && target === null) {
+      return MISSING_VALUE;
+    }
+    const from = start === null ? MISSING_VALUE : formatCalendarDate(start, this.locale);
+    const to = target === null ? MISSING_VALUE : formatCalendarDate(target, this.locale);
+    return `${from} → ${to}`;
+  }
 }

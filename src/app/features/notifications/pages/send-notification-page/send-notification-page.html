@@ -1,25 +1,26 @@
 <div class="card">
   <div class="mb-6">
-    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Push yuborish</h1>
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+      {{ 'notifications.send.title' | t }}
+    </h1>
     <span class="text-muted-color text-sm">
-      Bitta foydalanuvchining barcha faol qurilmalariga yuboriladi. Natija bildirishnoma tarixida
-      saqlanadi — yuborilmasa ham.
+      {{ 'notifications.send.summary' | t }}
     </span>
   </div>
 
   <form [formGroup]="form" class="flex max-w-3xl flex-col gap-5" (ngSubmit)="send()" novalidate>
     <p-selectbutton
       formControlName="mode"
-      [options]="modeOptions"
+      [options]="modeOptions()"
       optionLabel="label"
       optionValue="value"
       [allowEmpty]="false"
-      aria-label="Yuborish usuli"
+      [attr.aria-label]="'notifications.send.mode' | t"
     />
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
       <div class="flex flex-col gap-1">
-        <label for="userId" class="font-medium">Foydalanuvchi ID</label>
+        <label for="userId" class="font-medium">{{ 'notifications.send.userId' | t }}</label>
         <input
           pInputText
           id="userId"
@@ -33,23 +34,23 @@
           <small class="text-red-500">
             {{
               form.controls.userId.hasError('required')
-                ? 'Foydalanuvchi ID kiritilishi shart'
-                : 'ID UUID ko‘rinishida bo‘lishi kerak'
+                ? ('notifications.send.userIdRequired' | t)
+                : ('notifications.send.userIdInvalid' | t)
             }}
           </small>
         } @else {
           <small class="text-muted-color">
-            Foydalanuvchilar ro‘yxati hali yo‘q — ID ni sessiyalar yoki ma’lumotlar bazasidan oling.
+            {{ 'notifications.send.userIdHint' | t }}
           </small>
         }
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="type" class="font-medium">Turi</label>
+        <label for="type" class="font-medium">{{ 'notifications.send.type' | t }}</label>
         <p-select
           inputId="type"
           formControlName="type"
-          [options]="typeOptions"
+          [options]="typeOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -60,14 +61,17 @@
     @if (mode() === 'templated') {
       @if (store.templatesLoading()) {
         <span class="text-muted-color text-sm">
-          <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i>Shablonlar yuklanmoqda…
+          <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i
+          >{{ 'notifications.send.templatesLoading' | t }}
         </span>
       } @else if (store.templatesError(); as message) {
         <p-message severity="warn">
           <div class="flex flex-wrap items-center gap-3">
-            <span>Shablonlarni yuklab bo‘lmadi, qamrovni tekshirib bo‘lmaydi: {{ message }}</span>
+            <span>{{
+              'notifications.send.templatesFailed' | t: { error: (message | message) }
+            }}</span>
             <p-button
-              label="Qayta urinish"
+              [label]="'common.actions.retry' | t"
               icon="pi pi-refresh"
               severity="secondary"
               size="small"
@@ -86,7 +90,7 @@
     } @else {
       <div class="flex flex-col gap-1">
         <div class="flex justify-between">
-          <label for="title" class="font-medium">Sarlavha</label>
+          <label for="title" class="font-medium">{{ 'notifications.send.titleLabel' | t }}</label>
           <small [class.text-red-500]="titleLength() > titleMaxLength" class="text-muted-color">
             {{ titleLength() }} / {{ titleMaxLength }}
           </small>
@@ -99,13 +103,13 @@
           [invalid]="isInvalid('title') || isMissing('title')"
         />
         @if (isMissing('title')) {
-          <small class="text-red-500">Sarlavha kiritilishi shart</small>
+          <small class="text-red-500">{{ 'notifications.send.titleRequired' | t }}</small>
         }
       </div>
 
       <div class="flex flex-col gap-1">
         <div class="flex justify-between">
-          <label for="body" class="font-medium">Matn</label>
+          <label for="body" class="font-medium">{{ 'notifications.send.body' | t }}</label>
           <small [class.text-red-500]="bodyLength() > bodyMaxLength" class="text-muted-color">
             {{ bodyLength() }} / {{ bodyMaxLength }}
           </small>
@@ -119,7 +123,7 @@
           [invalid]="isInvalid('body') || isMissing('body')"
         ></textarea>
         @if (isMissing('body')) {
-          <small class="text-red-500">Matn kiritilishi shart</small>
+          <small class="text-red-500">{{ 'notifications.send.bodyRequired' | t }}</small>
         }
       </div>
     }
@@ -127,7 +131,12 @@
     <app-notification-data-entries [entries]="dataEntries" />
 
     <div>
-      <p-button type="submit" label="Yuborish" icon="pi pi-send" [loading]="store.sending()" />
+      <p-button
+        type="submit"
+        [label]="'notifications.send.submit' | t"
+        icon="pi pi-send"
+        [loading]="store.sending()"
+      />
     </div>
   </form>
 </div>

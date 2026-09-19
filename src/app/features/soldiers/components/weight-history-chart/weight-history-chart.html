@@ -3,7 +3,7 @@
     [attr.viewBox]="'0 0 ' + area.width + ' ' + area.height"
     class="h-auto w-full"
     role="img"
-    aria-label="Vazn o‘zgarishi grafigi"
+    [attr.aria-label]="'soldiers.chart.label' | t"
   >
     <g class="text-surface-300 dark:text-surface-600">
       <line
@@ -57,7 +57,7 @@
           stroke="currentColor"
           stroke-dasharray="6 4"
         >
-          <title>Maqsad: {{ targetKg() }} kg</title>
+          <title>{{ 'soldiers.chart.target' | t: { value: targetKg() ?? '' } }}</title>
         </line>
       </g>
     }
@@ -72,5 +72,5 @@
     </g>
   </svg>
 } @else {
-  <p class="text-muted-color m-0 text-sm">Vazn yozuvlari yo‘q.</p>
+  <p class="text-muted-color m-0 text-sm">{{ 'soldiers.chart.empty' | t }}</p>
 }

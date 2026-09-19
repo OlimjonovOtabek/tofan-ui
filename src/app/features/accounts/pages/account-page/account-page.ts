@@ -3,29 +3,38 @@ import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
 import { ClipboardService } from '@core/feedback/clipboard.service';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
-import {
-  Button,
-  ButtonDirective,
-  ButtonIcon,
-  ButtonLabel,
-} from '@openng/optimus-ui/button';
+import { formatDateTime } from '@core/i18n/date-format';
+import { LocaleStore } from '@core/i18n/locale.store';
+import { MessagePipe } from '@core/i18n/message.pipe';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
+import { Button, ButtonDirective, ButtonIcon, ButtonLabel } from '@openng/optimus-ui/button';
 import { Message } from '@openng/optimus-ui/message';
 import { Tag } from '@openng/optimus-ui/tag';
 import { AccountStore } from '../../account.store';
 import { Account } from '../../models/account';
 
-const TOKEN_LIFETIME_NOTE =
-  'Foydalanuvchining qo‘lidagi access token muddati tugaguncha API’dan foydalanishi mumkin.';
-
 @Component({
   selector: 'app-account-page',
-  imports: [RouterLink, Button, ButtonDirective, ButtonIcon, ButtonLabel, Message, Tag],
+  imports: [
+    RouterLink,
+    Button,
+    ButtonDirective,
+    ButtonIcon,
+    ButtonLabel,
+    Message,
+    Tag,
+    TranslatePipe,
+    MessagePipe,
+  ],
   providers: [AccountStore],
   templateUrl: './account-page.html',
 })
 export class AccountPage {
   private readonly confirmations = inject(ConfirmDialogService);
   private readonly clipboard = inject(ClipboardService);
+  private readonly translator = inject(Translator);
+  private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(AccountStore);
 
@@ -33,7 +42,6 @@ export class AccountPage {
   protected readonly soldiersPath = AppPaths.soldiers;
   protected readonly userSessionsPath = AppPaths.userSessions;
   protected readonly sendNotificationPath = AppPaths.sendNotification;
-  protected readonly tokenLifetimeNote = TOKEN_LIFETIME_NOTE;
 
   readonly userId = input.required<string>();
 
@@ -45,22 +53,23 @@ export class AccountPage {
   }
 
   protected registeredLabel(account: Account): string {
-    return account.registeredAt.toLocaleString('uz-UZ', {
-      dateStyle: 'short',
-      timeStyle: 'short',
-    });
+    return formatDateTime(account.registeredAt, this.localeStore.locale());
   }
 
   protected copyId(account: Account): Promise<void> {
-    return this.clipboard.copy(account.id, 'Foydalanuvchi ID');
+    return this.clipboard.copy(account.id, 'accounts.card.userId');
   }
 
   protected async block(account: Account): Promise<void> {
-    const adminWarning = this.store.isAdmin() ? 'Diqqat: bu admin hisobi. ' : '';
+    const warning = this.store.isAdmin()
+      ? this.translator.translate('accounts.confirm.adminWarning')
+      : '';
     const confirmed = await this.confirmations.confirm(
-      `${adminWarning}"${account.userName}" bloklansinmi? Akkaunt o‘chiriladi va hamma ` +
-        `sessiyalari yopiladi. ${TOKEN_LIFETIME_NOTE}`,
-      'Hisobni bloklash',
+      {
+        key: 'accounts.confirm.block',
+        params: { warning, name: account.userName, note: this.tokenLifetimeNote() },
+      },
+      'accounts.confirm.blockHeader',
     );
     if (confirmed) {
       await this.store.run('block');
@@ -69,9 +78,8 @@ export class AccountPage {
 
   protected async unblock(account: Account): Promise<void> {
     const confirmed = await this.confirmations.confirm(
-      `"${account.userName}" blokdan chiqarilsinmi? Sessiyalar tiklanmaydi — foydalanuvchi ` +
-        'qaytadan kiradi.',
-      'Blokdan chiqarish',
+      { key: 'accounts.confirm.unblock', params: { name: account.userName } },
+      'accounts.confirm.unblockHeader',
     );
     if (confirmed) {
       await this.store.run('unblock');
@@ -80,12 +88,18 @@ export class AccountPage {
 
   protected async logoutEverywhere(account: Account): Promise<void> {
     const confirmed = await this.confirmations.confirm(
-      `"${account.userName}" hamma qurilmalardan chiqarilsinmi? Hisob holati o‘zgarmaydi. ` +
-        TOKEN_LIFETIME_NOTE,
-      'Hamma joydan chiqarish',
+      {
+        key: 'accounts.confirm.logout',
+        params: { name: account.userName, note: this.tokenLifetimeNote() },
+      },
+      'accounts.confirm.logoutHeader',
     );
     if (confirmed) {
       await this.store.run('logoutEverywhere');
     }
+  }
+
+  private tokenLifetimeNote(): string {
+    return this.translator.translate('accounts.card.tokenLifetime');
   }
 }

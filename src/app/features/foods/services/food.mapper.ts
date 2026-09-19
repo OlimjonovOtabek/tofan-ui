@@ -15,9 +15,7 @@ export const servingUnits = enumMap<ServingUnit, ApiServingUnit>(ApiServingUnit)
 export function toFood(response: FoodResponse): Food {
   return new Food(
     response.id,
-    response.name,
-    response.nameUz,
-    response.nameRu,
+    { en: response.name, uz: response.nameUz, ru: response.nameRu },
     foodSources.toDomain(response.source),
     servingUnits.toDomain(response.servingUnit),
     response.servingSize,

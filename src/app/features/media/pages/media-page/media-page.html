@@ -1,18 +1,18 @@
 <div class="card">
   <div class="mb-4 flex flex-wrap items-start justify-between gap-3">
     <div>
-      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Media fayllar</h1>
-      <span class="text-muted-color text-sm">
-        Jami {{ store.loadError() === null ? store.totalCount() : '—' }} fayl — panel va mobil ilova
-        orqali yuklanganlarning hammasi. Mashq videosi sifatida ishlatilayotgan faylni backend
-        o‘chirishga ruxsat bermaydi.
-      </span>
+      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+        {{ 'media.page.title' | t }}
+      </h1>
+      <span class="text-muted-color text-sm">{{
+        'media.page.total' | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+      }}</span>
     </div>
-    <p-button label="Fayl yuklash" icon="pi pi-upload" (onClick)="openUpload()" />
+    <p-button [label]="'media.page.upload' | t" icon="pi pi-upload" (onClick)="openUpload()" />
   </div>
 
   <app-data-table
-    [columns]="columns"
+    [columns]="columns()"
     [items]="store.files()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
@@ -20,7 +20,7 @@
     [first]="store.first()"
     defaultSortField="createdOnUtc"
     defaultSortDirection="desc"
-    emptyMessage="Hali yuklangan fayl yo'q."
+    [emptyMessage]="'media.page.empty' | t"
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >
@@ -55,7 +55,7 @@
             severity="secondary"
             [text]="true"
             [rounded]="true"
-            ariaLabel="Ko'rish"
+            [ariaLabel]="'common.actions.view' | t"
             (onClick)="preview(file)"
           />
           <p-button
@@ -63,7 +63,7 @@
             severity="secondary"
             [text]="true"
             [rounded]="true"
-            ariaLabel="ID ni nusxalash"
+            [ariaLabel]="'common.actions.copyId' | t"
             (onClick)="copyId(file)"
           />
           <p-button
@@ -71,7 +71,7 @@
             severity="danger"
             [text]="true"
             [rounded]="true"
-            ariaLabel="O'chirish"
+            [ariaLabel]="'common.actions.delete' | t"
             [loading]="store.deletingId() === file.id"
             (onClick)="remove(file)"
           />
@@ -96,7 +96,7 @@
       @if (previewFailed() || !contentUrl(file)) {
         <div class="bg-surface-100 dark:bg-surface-800 text-muted-color rounded p-8 text-center">
           <i class="pi mb-2 block text-3xl" [class]="iconOf(file)"></i>
-          Faylni bu yerda ko‘rsatib bo‘lmadi.
+          {{ 'media.preview.failed' | t }}
         </div>
       } @else if (file.isImage()) {
         <img
@@ -116,18 +116,18 @@
       } @else {
         <div class="bg-surface-100 dark:bg-surface-800 text-muted-color rounded p-8 text-center">
           <i class="pi mb-2 block text-3xl" [class]="iconOf(file)"></i>
-          Bu turdagi faylni oldindan ko‘rish yo‘q — yangi oynada oching.
+          {{ 'media.preview.unsupported' | t }}
         </div>
       }
 
       <dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-        <dt class="text-muted-color">ID</dt>
+        <dt class="text-muted-color">{{ 'media.preview.id' | t }}</dt>
         <dd class="m-0 font-mono break-all">{{ file.id }}</dd>
-        <dt class="text-muted-color">Turi</dt>
+        <dt class="text-muted-color">{{ 'media.preview.type' | t }}</dt>
         <dd class="m-0">{{ categoryLabel(file) }} · {{ file.contentType }}</dd>
-        <dt class="text-muted-color">Hajmi</dt>
+        <dt class="text-muted-color">{{ 'media.preview.size' | t }}</dt>
         <dd class="m-0">{{ sizeLabel(file) }}</dd>
-        <dt class="text-muted-color">Yuklangan</dt>
+        <dt class="text-muted-color">{{ 'media.preview.uploaded' | t }}</dt>
         <dd class="m-0">{{ uploadedLabel(file) }}</dd>
       </dl>
 
@@ -139,7 +139,7 @@
             rel="noopener"
             class="text-primary inline-flex items-center gap-2 font-medium"
           >
-            <i class="pi pi-external-link"></i> Yangi oynada ochish
+            <i class="pi pi-external-link"></i> {{ 'media.preview.openInNewTab' | t }}
           </a>
         </div>
       }
@@ -151,5 +151,9 @@
   [(visible)]="uploadVisible"
   [uploading]="store.uploading()"
   [progress]="store.uploadProgress()"
+  [exerciseChoices]="store.exerciseChoices()"
+  [exercisesLoading]="store.exerciseChoicesLoading()"
+  [exercisesError]="store.exerciseChoicesError()"
+  (retryExercises)="store.loadExerciseChoices()"
   (upload)="uploadFile($event)"
 />

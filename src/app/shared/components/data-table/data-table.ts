@@ -4,6 +4,8 @@ import { DEFAULT_PAGE_SIZE, PageRequest, SortDirection } from '@shared/models/pa
 import { TableLazyLoadEvent } from '@openng/optimus-ui/types/table';
 import { Button } from '@openng/optimus-ui/button';
 import { TableModule } from '@openng/optimus-ui/table';
+import { MessagePipe } from '@core/i18n/message.pipe';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 export interface DataTableColumn {
   readonly field: string;
@@ -18,7 +20,7 @@ const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
 
 @Component({
   selector: 'app-data-table',
-  imports: [TableModule, NgTemplateOutlet, Button],
+  imports: [TableModule, NgTemplateOutlet, Button, TranslatePipe, MessagePipe],
   templateUrl: './data-table.html',
 })
 export class DataTable<TItem> {
@@ -28,7 +30,7 @@ export class DataTable<TItem> {
   readonly loading = input(false);
   readonly pageSize = input(DEFAULT_PAGE_SIZE);
   readonly first = input(0);
-  readonly emptyMessage = input("Ma'lumot topilmadi.");
+  readonly emptyMessage = input<string | null>(null);
   readonly error = input<string | null>(null);
   readonly dataKey = input('id');
   readonly defaultSortField = input<string | undefined>(undefined);

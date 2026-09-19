@@ -3,6 +3,8 @@ import { RouterLink } from '@angular/router';
 import { FloatingThemeSwitcher } from '@core/layout/components/floating-theme-switcher/floating-theme-switcher';
 import { AppPaths } from '@core/config/app-paths';
 import { Button } from '@openng/optimus-ui/button';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 export type StatusCardAccent = 'primary' | 'warn' | 'danger';
 
@@ -32,13 +34,13 @@ const ACCENT_STYLES: Record<StatusCardAccent, AccentStyle> = {
 
 @Component({
   selector: 'app-status-card',
-  imports: [RouterLink, Button, FloatingThemeSwitcher],
+  imports: [RouterLink, Button, FloatingThemeSwitcher, TranslatePipe],
   templateUrl: './status-card.html',
 })
 export class StatusCard {
   readonly icon = input.required<string>();
-  readonly title = input.required<string>();
-  readonly message = input.required<string>();
+  readonly title = input.required<TranslationKey>();
+  readonly message = input.required<TranslationKey>();
   readonly accent = input<StatusCardAccent>('primary');
 
   protected readonly dashboardPath = AppPaths.dashboard;

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { PageRequest } from '@shared/models/page';
 import { StoredFile } from '../../models/stored-file';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
@@ -11,34 +11,51 @@ import { MediaUploadDialog } from '../../components/media-upload-dialog/media-up
 import { MediaUploadDraft } from '../../models/media-upload';
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { formatDateTime } from '@core/i18n/date-format';
+import { LocaleStore } from '@core/i18n/locale.store';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
 
 @Component({
   selector: 'app-media-page',
-  imports: [DataTable, Button, Dialog, MediaUploadDialog],
+  imports: [DataTable, Button, Dialog, MediaUploadDialog, TranslatePipe],
   providers: [MediaStore],
   templateUrl: './media-page.html',
 })
 export class MediaPage {
   private readonly confirmations = inject(ConfirmDialogService);
   private readonly clipboard = inject(ClipboardService);
+  private readonly translator = inject(Translator);
+  private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(MediaStore);
 
-  protected readonly columns: readonly DataTableColumn[] = [
+  protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'preview', header: '', width: '5rem' },
-    { field: 'originalName', header: 'Fayl', sortable: true },
-    { field: 'category', header: 'Turi', width: '11rem' },
-    { field: 'size', header: 'Hajmi', sortable: true, width: '8rem' },
-    { field: 'createdOnUtc', header: 'Yuklangan', sortable: true, width: '11rem' },
+    { field: 'originalName', header: this.header('media.page.columns.file'), sortable: true },
+    { field: 'category', header: this.header('media.page.columns.type'), width: '11rem' },
+    {
+      field: 'size',
+      header: this.header('media.page.columns.size'),
+      sortable: true,
+      width: '8rem',
+    },
+    {
+      field: 'createdOnUtc',
+      header: this.header('media.page.columns.uploaded'),
+      sortable: true,
+      width: '11rem',
+    },
     { field: 'actions', header: '', width: '12rem' },
-  ];
+  ]);
 
   protected readonly previewed = signal<StoredFile | null>(null);
   protected readonly previewFailed = signal(false);
   protected readonly uploadVisible = signal(false);
 
   protected categoryLabel(file: StoredFile): string {
-    return FILE_CATEGORY_LABELS[file.category];
+    return this.translator.translate(FILE_CATEGORY_LABELS[file.category]);
   }
 
   protected sizeLabel(file: StoredFile): string {
@@ -46,7 +63,7 @@ export class MediaPage {
   }
 
   protected uploadedLabel(file: StoredFile): string {
-    return file.createdAt.toLocaleString('uz-UZ', { dateStyle: 'short', timeStyle: 'short' });
+    return formatDateTime(file.createdAt, this.localeStore.locale());
   }
 
   protected iconOf(file: StoredFile): string {
@@ -77,11 +94,12 @@ export class MediaPage {
   }
 
   protected copyId(file: StoredFile): Promise<void> {
-    return this.clipboard.copy(file.id, 'Fayl ID');
+    return this.clipboard.copy(file.id, 'media.page.fileId');
   }
 
   protected openUpload(): void {
     this.uploadVisible.set(true);
+    void this.store.loadExerciseChoices();
   }
 
   protected async uploadFile(draft: MediaUploadDraft): Promise<void> {
@@ -94,5 +112,9 @@ export class MediaPage {
     if (await this.confirmations.confirmDelete(file.displayName)) {
       await this.store.remove(file);
     }
+  }
+
+  private header(key: TranslationKey): string {
+    return this.translator.translate(key);
   }
 }

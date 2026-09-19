@@ -15,14 +15,14 @@
 
   <ng-template #footer>
     <p-button
-      label="Bekor qilish"
+      [label]="'common.actions.cancel' | t"
       severity="secondary"
       [text]="true"
       [disabled]="saving()"
       (onClick)="close()"
     />
     <p-button
-      [label]="saveLabel()"
+      [label]="saveLabel() ?? ('common.actions.save' | t)"
       icon="pi pi-check"
       [loading]="saving()"
       [disabled]="saveDisabled()"

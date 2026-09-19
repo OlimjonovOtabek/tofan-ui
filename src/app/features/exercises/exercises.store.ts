@@ -6,11 +6,14 @@ import { ExercisesService } from './services/exercises.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
+import { LocaleStore } from '@core/i18n/locale.store';
+import { pickLocalized } from '@shared/models/localized-text';
 
 @Injectable()
 export class ExercisesStore {
   private readonly exercisesService = inject(ExercisesService);
   private readonly notifications = inject(NotificationService);
+  private readonly localeStore = inject(LocaleStore);
 
   private readonly page = signal<Page<Exercise>>(emptyPage<Exercise>());
   private readonly currentFilter = signal<ExerciseFilter>({});
@@ -51,7 +54,7 @@ export class ExercisesStore {
       } else {
         await this.exercisesService.update(id, createExerciseDraft(draft));
       }
-      this.notifications.success(id === null ? "Mashq qo'shildi." : 'Mashq saqlandi.');
+      this.notifications.success(id === null ? 'exercises.page.created' : 'exercises.page.saved');
       await this.load();
       return true;
     } catch (error) {
@@ -65,7 +68,7 @@ export class ExercisesStore {
   async remove(exercise: Exercise): Promise<void> {
     try {
       await this.exercisesService.delete(exercise.id);
-      this.notifications.success(`"${exercise.displayName}" o'chirildi.`);
+      this.notifications.success('exercises.page.deleted', { name: this.nameOf(exercise) });
       await this.load();
     } catch (error) {
       this.notifications.error(error);
@@ -76,13 +79,16 @@ export class ExercisesStore {
     try {
       await this.exercisesService.setActive(exercise.id, !exercise.isActive);
       this.notifications.success(
-        exercise.isActive
-          ? `"${exercise.displayName}" o'chirib qo'yildi.`
-          : `"${exercise.displayName}" faollashtirildi.`,
+        exercise.isActive ? 'exercises.page.deactivated' : 'exercises.page.activated',
+        { name: this.nameOf(exercise) },
       );
       await this.load();
     } catch (error) {
       this.notifications.error(error);
     }
+  }
+
+  private nameOf(exercise: Exercise): string {
+    return pickLocalized(exercise.names, this.localeStore.locale());
   }
 }

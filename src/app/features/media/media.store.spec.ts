@@ -6,6 +6,7 @@ import { FileUploadService } from '@shared/components/file-upload/file-upload.se
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { MediaStore } from './media.store';
 import { StoredFile } from './models/stored-file';
+import { ExerciseVideosService } from './services/exercise-videos.service';
 import { MediaService } from './services/media.service';
 
 describe('MediaStore', () => {
@@ -22,6 +23,7 @@ describe('MediaStore', () => {
   let service: Pick<MediaService, 'list' | 'delete'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
   let fileUploadService: Pick<FileUploadService, 'upload'>;
+  let exerciseVideos: Pick<ExerciseVideosService, 'listWithoutVideo' | 'attachVideo'>;
 
   function createStore(): MediaStore {
     TestBed.configureTestingModule({
@@ -30,6 +32,7 @@ describe('MediaStore', () => {
         { provide: MediaService, useValue: service },
         { provide: NotificationService, useValue: notifications },
         { provide: FileUploadService, useValue: fileUploadService },
+        { provide: ExerciseVideosService, useValue: exerciseVideos },
       ],
     });
     return TestBed.inject(MediaStore);
@@ -42,6 +45,14 @@ describe('MediaStore', () => {
     };
     notifications = { success: vi.fn(), error: vi.fn() };
     fileUploadService = { upload: vi.fn().mockResolvedValue('new-file') };
+    exerciseVideos = {
+      listWithoutVideo: vi
+        .fn()
+        .mockResolvedValue([
+          { id: 'e1', names: { en: 'Squat', uz: 'Skvat', ru: 'Присед' }, isActive: true },
+        ]),
+      attachVideo: vi.fn().mockResolvedValue(undefined),
+    };
   });
 
   it('should expose the error and drop the old rows when a reload fails', async () => {
@@ -84,12 +95,18 @@ describe('MediaStore', () => {
     await store.load({ first: 50, rows: 25, sortField: 'createdOnUtc', sortDirection: 'desc' });
     const file = new File(['video'], 'squat.mp4');
 
-    const uploaded = await store.upload({ file, category: 'exerciseVideo', caption: ' Skvat ' });
+    const uploaded = await store.upload({
+      file,
+      category: 'exerciseVideo',
+      exerciseId: 'e1',
+      caption: ' Skvat ',
+    });
 
     expect(uploaded).toBe(true);
     expect(fileUploadService.upload).toHaveBeenCalledWith(
       expect.objectContaining({ file, category: 'exerciseVideo', caption: 'Skvat' }),
     );
+    expect(exerciseVideos.attachVideo).toHaveBeenCalledWith('e1', 'new-file');
     expect(service.list).toHaveBeenLastCalledWith({
       first: 0,
       rows: 25,
@@ -107,6 +124,7 @@ describe('MediaStore', () => {
     const uploaded = await store.upload({
       file: new File(['x'], 'a.pdf'),
       category: 'document',
+      exerciseId: null,
       caption: '',
     });
 
@@ -117,9 +135,52 @@ describe('MediaStore', () => {
   it('should not call the backend when no file was chosen', async () => {
     const store = createStore();
 
-    const uploaded = await store.upload({ file: null, category: 'document', caption: '' });
+    const uploaded = await store.upload({
+      file: null,
+      category: 'document',
+      exerciseId: null,
+      caption: '',
+    });
 
     expect(uploaded).toBe(false);
     expect(fileUploadService.upload).not.toHaveBeenCalled();
+  });
+
+  it('should delete the uploaded file when it cannot be attached to the exercise', async () => {
+    const store = createStore();
+    const taken = new ConflictError('taken', 'Exercise.VideoAlreadyAttached');
+    vi.mocked(exerciseVideos.attachVideo).mockRejectedValue(taken);
+
+    const uploaded = await store.upload({
+      file: new File(['v'], 'squat.mp4'),
+      category: 'exerciseVideo',
+      exerciseId: 'e1',
+      caption: '',
+    });
+
+    expect(uploaded).toBe(false);
+    expect(service.delete).toHaveBeenCalledWith('new-file');
+    expect(notifications.error).toHaveBeenCalledWith(taken);
+  });
+
+  it('should list only the exercises without a video when the dialog asks for them', async () => {
+    const store = createStore();
+
+    await store.loadExerciseChoices();
+
+    expect(store.exerciseChoices()).toEqual([
+      { id: 'e1', names: { en: 'Squat', uz: 'Skvat', ru: 'Присед' }, isActive: true },
+    ]);
+    expect(store.exerciseChoicesLoading()).toBe(false);
+  });
+
+  it('should expose the error when the exercises cannot be read', async () => {
+    vi.mocked(exerciseVideos.listWithoutVideo).mockRejectedValue(new ServiceUnavailableError());
+    const store = createStore();
+
+    await store.loadExerciseChoices();
+
+    expect(store.exerciseChoicesError()).not.toBeNull();
+    expect(store.exerciseChoices()).toEqual([]);
   });
 });

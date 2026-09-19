@@ -69,7 +69,7 @@ describe('exercise mapper', () => {
   it('should build the entity when a response arrives', () => {
     const exercise = toExercise(response);
 
-    expect(exercise.displayName).toBe('Skvat');
+    expect(exercise.names.uz).toBe('Skvat');
     expect(exercise.muscleGroup).toBe('quadriceps');
     expect(exercise.equipmentType).toBe('barbell');
     expect(exercise.difficulty).toBe('intermediate');

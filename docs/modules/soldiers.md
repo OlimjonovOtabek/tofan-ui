@@ -33,6 +33,8 @@ account card or push sending.
   as a dashed line and widens the range when it lies outside the logged weights.
 - Soldier data is read-only in the panel by decision (backend-requests "Kerak emas").
 
+- `toSoldierFactSections(profile, now, locale)` builds the card texts with the pure `translate()` from `core/i18n`, so the model stays free of Angular (2026-09-19, i18n).
+
 ## Traps
 
 - Soldiers without a body or goal profile have `null` goal, experience, weights and place.

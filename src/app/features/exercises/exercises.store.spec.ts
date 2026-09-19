@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
+import { LocaleStore } from '@core/i18n/locale.store';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { ExercisesStore } from './exercises.store';
 import { Exercise } from './models/exercise';
@@ -9,7 +10,7 @@ import { ExercisesService } from './services/exercises.service';
 const draft: ExerciseDraft = {
   name: ' Squat ',
   nameUz: 'Skvat',
-  nameRu: 'Приседание',
+  nameRu: 'Присед',
   muscleGroup: 'quadriceps',
   equipmentType: 'barbell',
   difficulty: 'intermediate',
@@ -24,9 +25,7 @@ const draft: ExerciseDraft = {
 function exercise(isActive: boolean): Exercise {
   return new Exercise(
     '7',
-    'Squat',
-    'Skvat',
-    'Приседание',
+    { en: 'Squat', uz: 'Skvat', ru: 'Присед' },
     'quadriceps',
     'barbell',
     'intermediate',
@@ -54,6 +53,7 @@ describe('ExercisesStore', () => {
   }
 
   beforeEach(() => {
+    localStorage.clear();
     service = {
       list: vi.fn().mockResolvedValue({ items: [exercise(true)], totalCount: 1 }),
       create: vi.fn().mockResolvedValue('7'),
@@ -82,7 +82,7 @@ describe('ExercisesStore', () => {
 
     await store.applyFilter({ search: 'squat' });
 
-    expect(store.loadError()).toContain('topilmadi');
+    expect(store.loadError()).toContain('notFound');
     expect(store.exercises()).toEqual([]);
     expect(store.totalCount()).toBe(0);
     expect(store.loading()).toBe(false);
@@ -153,5 +153,16 @@ describe('ExercisesStore', () => {
     await store.toggleActivation(exercise(true));
 
     expect(service.setActive).toHaveBeenCalledWith('7', false);
+  });
+
+  it('should name the exercise in the chosen language when it confirms a removal', async () => {
+    const store = createStore();
+    TestBed.inject(LocaleStore).setLocale('ru');
+
+    await store.remove(exercise(true));
+
+    expect(notifications.success).toHaveBeenCalledWith('exercises.page.deleted', {
+      name: 'Присед',
+    });
   });
 });

@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 export interface DataEntryControls {
   key: FormControl<string>;
@@ -16,7 +17,7 @@ export interface DataEntryControls {
 
 @Component({
   selector: 'app-notification-data-entries',
-  imports: [ReactiveFormsModule, Button, InputText],
+  imports: [ReactiveFormsModule, Button, InputText, TranslatePipe],
   templateUrl: './notification-data-entries.html',
 })
 export class NotificationDataEntries {

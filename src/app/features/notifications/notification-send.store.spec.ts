@@ -27,12 +27,8 @@ function template(
     `${type}-${style}`,
     type,
     style,
-    't',
-    't',
-    't',
-    'b',
-    'b',
-    'b',
+    { en: 't', uz: 't', ru: 't' },
+    { en: 'b', uz: 'b', ru: 'b' },
     isActive,
     now,
     now,
@@ -122,7 +118,9 @@ describe('NotificationSendStore', () => {
     expect(pushService.sendCustom).toHaveBeenCalledWith(
       expect.objectContaining({ title: 'Salom' }),
     );
-    expect(notifications.success).toHaveBeenCalledWith(expect.stringContaining('delivery-1'));
+    expect(notifications.success).toHaveBeenCalledWith('notifications.send.sent', {
+      deliveryId: 'delivery-1',
+    });
     expect(store.sending()).toBe(false);
   });
 

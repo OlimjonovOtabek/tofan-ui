@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-2">
   <div class="flex items-center justify-between">
     <div>
-      <span class="font-medium">Qo‘shimcha ma’lumot (ixtiyoriy)</span>
+      <span class="font-medium">{{ 'notifications.data.title' | t }}</span>
       <div class="text-muted-color text-sm">
-        Ilova uchun kalit–qiymat juftliklari, masalan ekran nomi.
+        {{ 'notifications.data.hint' | t }}
       </div>
     </div>
     <p-button
-      label="Qator qo'shish"
+      [label]="'notifications.data.addRow' | t"
       icon="pi pi-plus"
       severity="secondary"
       [text]="true"
@@ -22,23 +22,23 @@
         type="text"
         class="flex-1"
         formControlName="key"
-        placeholder="Kalit"
-        [attr.aria-label]="'Kalit ' + (index + 1)"
+        [placeholder]="'notifications.data.key' | t"
+        [attr.aria-label]="'notifications.data.keyLabel' | t: { index: index + 1 }"
       />
       <input
         pInputText
         type="text"
         class="flex-1"
         formControlName="value"
-        placeholder="Qiymat"
-        [attr.aria-label]="'Qiymat ' + (index + 1)"
+        [placeholder]="'notifications.data.value' | t"
+        [attr.aria-label]="'notifications.data.valueLabel' | t: { index: index + 1 }"
       />
       <p-button
         icon="pi pi-times"
         severity="secondary"
         [text]="true"
         [rounded]="true"
-        ariaLabel="Qatorni olib tashlash"
+        [ariaLabel]="'notifications.data.removeRow' | t"
         (onClick)="remove(index)"
       />
     </div>

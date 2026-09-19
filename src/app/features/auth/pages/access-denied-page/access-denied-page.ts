@@ -8,8 +8,8 @@ import { StatusCard } from '@core/layout/components/status-card/status-card';
     <app-status-card
       icon="pi-lock"
       accent="warn"
-      title="Ruxsat yo'q"
-      message="Bu sahifani ko'rish uchun huquqingiz yetarli emas. Administratorga murojaat qiling."
+      title="layout.status.accessDeniedTitle"
+      message="layout.status.accessDeniedMessage"
     />
   `,
 })

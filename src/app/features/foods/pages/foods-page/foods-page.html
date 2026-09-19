@@ -2,32 +2,35 @@
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
       <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-        Ovqatlar katalogi
+        {{ 'foods.page.title' | t }}
       </h1>
-      <span class="text-muted-color text-sm"
-        >Jami {{ store.loadError() === null ? store.totalCount() : '—' }} ovqat</span
-      >
+      <span class="text-muted-color text-sm">{{
+        'foods.page.totalCount'
+          | t: { count: store.loadError() === null ? store.totalCount() : '?' }
+      }}</span>
     </div>
-    <p-button label="Ovqat qo'shish" icon="pi pi-plus" (onClick)="add()" />
+    <p-button [label]="'foods.page.add' | t" icon="pi pi-plus" (onClick)="add()" />
   </div>
 
   <div class="mb-4 flex flex-wrap items-end gap-3">
     <app-food-filters (filterChange)="applyFilter($event)" />
 
     <div class="flex flex-col gap-1">
-      <label for="barcode" class="text-muted-color text-sm">Shtrix-kod bo'yicha topish</label>
+      <label for="barcode" class="text-muted-color text-sm">{{
+        'foods.page.searchBarcode' | t
+      }}</label>
       <div class="flex gap-2">
         <input
           pInputText
           id="barcode"
           type="text"
           [formControl]="barcodeControl"
-          placeholder="4780016470016"
+          [placeholder]="'foods.page.searchBarcodePlaceholder' | t"
           (keydown.enter)="searchBarcode()"
         />
         <p-button
           icon="pi pi-barcode"
-          label="Topish"
+          [label]="'foods.page.find' | t"
           severity="secondary"
           [loading]="store.searchingBarcode()"
           (onClick)="searchBarcode()"
@@ -37,24 +40,24 @@
   </div>
 
   <app-data-table
-    [columns]="columns"
+    [columns]="columns()"
     [items]="store.foods()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
     [error]="store.loadError()"
     [first]="store.first()"
-    emptyMessage="Bu shartlarga mos ovqat topilmadi."
+    [emptyMessage]="'foods.page.empty' | t"
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >
     <ng-template #row let-food>
       <tr>
         <td>
-          <div class="font-medium">{{ food.displayName }}</div>
+          <div class="font-medium">{{ foodName(food) }}</div>
           <div class="text-muted-color text-sm">
-            {{ food.name }}
+            {{ foodSubname(food) }}
             @if (food.hasBarcode()) {
-              · {{ food.barcode }}
+              • {{ food.barcode }}
             }
           </div>
         </td>
@@ -64,11 +67,11 @@
         <td>{{ sourceLabel(food) }}</td>
         <td class="whitespace-nowrap">
           <p-tag
-            [value]="food.isActive ? 'Faol' : 'Faol emas'"
+            [value]="food.isActive ? ('foods.filters.active' | t) : ('foods.filters.inactive' | t)"
             [severity]="food.isActive ? 'success' : 'secondary'"
           />
           @if (food.isVerified) {
-            <p-tag value="Tasdiqlangan" severity="info" styleClass="ml-1" />
+            <p-tag [value]="'foods.filters.verified' | t" severity="info" styleClass="ml-1" />
           }
         </td>
         <td class="text-right whitespace-nowrap">
@@ -77,7 +80,7 @@
             severity="secondary"
             [text]="true"
             [rounded]="true"
-            ariaLabel="Tahrirlash"
+            [ariaLabel]="'foods.page.actions.edit' | t"
             (onClick)="edit(food)"
           />
           <p-button
@@ -85,7 +88,7 @@
             severity="danger"
             [text]="true"
             [rounded]="true"
-            ariaLabel="O'chirish"
+            [ariaLabel]="'foods.page.actions.delete' | t"
             (onClick)="remove(food)"
           />
         </td>

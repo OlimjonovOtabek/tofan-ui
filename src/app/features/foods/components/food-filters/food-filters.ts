@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Button } from '@openng/optimus-ui/button';
@@ -12,21 +12,28 @@ import {
   FOOD_SOURCE_OPTIONS,
   FOOD_VERIFICATION_OPTIONS,
 } from '../../models/food-labels';
+import { Translator } from '@core/i18n/translator';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 const SEARCH_DEBOUNCE_MS = 400;
 
 @Component({
   selector: 'app-food-filters',
-  imports: [ReactiveFormsModule, Button, InputText, Select],
+  imports: [ReactiveFormsModule, Button, InputText, Select, TranslatePipe],
   templateUrl: './food-filters.html',
   host: { class: 'flex min-w-0 flex-1' },
 })
 export class FoodFilters {
+  private readonly translator = inject(Translator);
   readonly filterChange = output<FoodFilter>();
 
-  protected readonly sourceOptions = FOOD_SOURCE_OPTIONS;
-  protected readonly activityOptions = FOOD_ACTIVITY_OPTIONS;
-  protected readonly verificationOptions = FOOD_VERIFICATION_OPTIONS;
+  protected readonly sourceOptions = computed(() => this.translator.options(FOOD_SOURCE_OPTIONS));
+  protected readonly activityOptions = computed(() =>
+    this.translator.options(FOOD_ACTIVITY_OPTIONS),
+  );
+  protected readonly verificationOptions = computed(() =>
+    this.translator.options(FOOD_VERIFICATION_OPTIONS),
+  );
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     search: [''],

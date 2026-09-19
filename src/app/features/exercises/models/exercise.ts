@@ -5,13 +5,12 @@ import {
   ExerciseType,
   MuscleGroup,
 } from './exercise-attributes';
+import { LocalizedText } from '@shared/models/localized-text';
 
 export class Exercise {
   constructor(
     readonly id: string,
-    readonly name: string,
-    readonly nameUz: string,
-    readonly nameRu: string,
+    readonly names: LocalizedText,
     readonly muscleGroup: MuscleGroup,
     readonly equipmentType: EquipmentType,
     readonly difficulty: ExerciseDifficulty,
@@ -23,10 +22,6 @@ export class Exercise {
     readonly instructions: string | null = null,
     readonly videoFileId: string | null = null,
   ) {}
-
-  get displayName(): string {
-    return this.nameUz.length > 0 ? this.nameUz : this.name;
-  }
 
   hasVideo(): boolean {
     return this.videoFileId !== null;

@@ -2,24 +2,26 @@
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
       <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-        Bildirishnoma shablonlari
+        {{ 'notifications.templates.title' | t }}
       </h1>
       <span class="text-muted-color text-sm">
-        Jami {{ store.loadError() === null ? store.totalCount() : '—' }} shablon. Foydalanuvchiga
-        uning murabbiy uslubidagi shablon yuboriladi, u bo‘lmasa — professional uslubdagisi.
+        {{
+          'notifications.templates.summary'
+            | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+        }}
       </span>
     </div>
-    <p-button label="Shablon qo'shish" icon="pi pi-plus" (onClick)="add()" />
+    <p-button [label]="'notifications.templates.add' | t" icon="pi pi-plus" (onClick)="add()" />
   </div>
 
   <app-data-table
-    [columns]="columns"
+    [columns]="columns()"
     [items]="store.templates()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
     [error]="store.loadError()"
     [first]="store.first()"
-    emptyMessage="Hali shablon yo'q."
+    [emptyMessage]="'notifications.templates.empty' | t"
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >
@@ -28,17 +30,22 @@
         <td class="whitespace-nowrap">{{ typeLabel(template) }}</td>
         <td class="whitespace-nowrap">{{ styleLabel(template) }}</td>
         <td>
-          <div class="font-medium">{{ template.displayTitle }}</div>
-          <div class="text-muted-color line-clamp-2 text-sm">{{ template.displayBody }}</div>
+          <div class="font-medium">{{ template.titleIn(locale()) }}</div>
+          <div class="text-muted-color line-clamp-2 text-sm">{{ template.bodyIn(locale()) }}</div>
         </td>
         <td>
           <p-tag
-            [value]="template.isActive ? 'Faol' : 'Faol emas'"
+            [value]="
+              (template.isActive
+                ? 'notifications.templates.active'
+                : 'notifications.templates.inactive'
+              ) | t
+            "
             [severity]="template.isActive ? 'success' : 'secondary'"
           />
         </td>
         <td class="text-muted-color whitespace-nowrap text-sm">
-          {{ template.updatedAt.toLocaleDateString('uz-UZ') }}
+          {{ updatedLabel(template) }}
         </td>
         <td class="text-right whitespace-nowrap">
           <p-button
@@ -46,7 +53,7 @@
             severity="secondary"
             [text]="true"
             [rounded]="true"
-            ariaLabel="Tahrirlash"
+            [ariaLabel]="'common.actions.edit' | t"
             (onClick)="edit(template)"
           />
           <p-button
@@ -54,7 +61,7 @@
             severity="danger"
             [text]="true"
             [rounded]="true"
-            ariaLabel="O'chirish"
+            [ariaLabel]="'common.actions.delete' | t"
             (onClick)="remove(template)"
           />
         </td>

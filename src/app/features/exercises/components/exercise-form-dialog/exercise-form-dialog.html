@@ -6,15 +6,15 @@
   (save)="submit()"
 >
   <div [formGroup]="form" class="flex flex-col gap-4">
-    <app-localized-text-field [group]="names" label="Nomi" />
+    <app-localized-text-field [group]="names" [label]="'exercises.form.name' | t" />
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="flex flex-col gap-1">
-        <label for="muscleGroup" class="font-medium">Mushak guruhi</label>
+        <label for="muscleGroup" class="font-medium">{{ 'exercises.form.muscleGroup' | t }}</label>
         <p-select
           inputId="muscleGroup"
           formControlName="muscleGroup"
-          [options]="muscleGroupOptions"
+          [options]="muscleGroupOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -22,11 +22,11 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="equipmentType" class="font-medium">Jihoz</label>
+        <label for="equipmentType" class="font-medium">{{ 'exercises.form.equipment' | t }}</label>
         <p-select
           inputId="equipmentType"
           formControlName="equipmentType"
-          [options]="equipmentTypeOptions"
+          [options]="equipmentTypeOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -34,11 +34,11 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="difficulty" class="font-medium">Qiyinlik</label>
+        <label for="difficulty" class="font-medium">{{ 'exercises.form.difficulty' | t }}</label>
         <p-select
           inputId="difficulty"
           formControlName="difficulty"
-          [options]="difficultyOptions"
+          [options]="difficultyOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -46,11 +46,11 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="type" class="font-medium">Turi</label>
+        <label for="type" class="font-medium">{{ 'exercises.form.type' | t }}</label>
         <p-select
           inputId="type"
           formControlName="type"
-          [options]="typeOptions"
+          [options]="typeOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -58,11 +58,11 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="gender" class="font-medium">Jins</label>
+        <label for="gender" class="font-medium">{{ 'exercises.form.gender' | t }}</label>
         <p-select
           inputId="gender"
           formControlName="gender"
-          [options]="genderOptions"
+          [options]="genderOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -73,29 +73,29 @@
     <div class="flex flex-wrap gap-6">
       <div class="flex items-center gap-2">
         <p-toggleswitch inputId="isCompound" formControlName="isCompound" />
-        <label for="isCompound">Ko'p bo'g'imli</label>
+        <label for="isCompound">{{ 'exercises.form.isCompound' | t }}</label>
       </div>
       <div class="flex items-center gap-2">
         <p-toggleswitch inputId="isHomeExercise" formControlName="isHomeExercise" />
-        <label for="isHomeExercise">Uyda bajarish mumkin</label>
+        <label for="isHomeExercise">{{ 'exercises.form.isHomeExercise' | t }}</label>
       </div>
     </div>
 
     <div class="flex flex-col gap-1">
-      <label for="instructions" class="font-medium">Bajarish tartibi</label>
+      <label for="instructions" class="font-medium">{{ 'exercises.form.instructions' | t }}</label>
       <textarea
         pTextarea
         id="instructions"
         formControlName="instructions"
         rows="3"
         [autoResize]="true"
-        placeholder="Mashq qanday bajariladi"
+        [placeholder]="'exercises.form.instructionsPlaceholder' | t"
       ></textarea>
     </div>
 
     <app-file-upload
       category="exerciseVideo"
-      label="Video"
+      [label]="'exercises.form.video' | t"
       [(fileId)]="videoFileId"
       [(fileName)]="videoFileName"
     />

@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, computed, inject, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Button } from '@openng/optimus-ui/button';
@@ -6,6 +6,8 @@ import { DatePicker } from '@openng/optimus-ui/datepicker';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { Select } from '@openng/optimus-ui/select';
 import { debounceTime } from 'rxjs';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
 import { ExperienceLevel, FitnessGoal, Gender } from '../../models/soldier-attributes';
 import { SoldierFilter, toJoinedPeriod } from '../../models/soldier-filter';
 import {
@@ -28,16 +30,20 @@ interface SoldierFilterValue {
 
 @Component({
   selector: 'app-soldier-filters',
-  imports: [ReactiveFormsModule, Button, DatePicker, InputText, Select],
+  imports: [ReactiveFormsModule, Button, DatePicker, InputText, Select, TranslatePipe],
   templateUrl: './soldier-filters.html',
 })
 export class SoldierFilters {
+  private readonly translator = inject(Translator);
+
   readonly filterChange = output<SoldierFilter>();
 
-  protected readonly genderOptions = GENDER_OPTIONS;
-  protected readonly goalOptions = FITNESS_GOAL_OPTIONS;
-  protected readonly experienceOptions = EXPERIENCE_LEVEL_OPTIONS;
-  protected readonly placeOptions = WORKOUT_PLACE_OPTIONS;
+  protected readonly genderOptions = computed(() => this.translator.options(GENDER_OPTIONS));
+  protected readonly goalOptions = computed(() => this.translator.options(FITNESS_GOAL_OPTIONS));
+  protected readonly experienceOptions = computed(() =>
+    this.translator.options(EXPERIENCE_LEVEL_OPTIONS),
+  );
+  protected readonly placeOptions = computed(() => this.translator.options(WORKOUT_PLACE_OPTIONS));
   protected readonly today = new Date();
 
   private readonly formBuilder = inject(NonNullableFormBuilder);
