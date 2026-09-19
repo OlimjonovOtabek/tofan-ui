@@ -17,7 +17,7 @@ import { ExerciseFilters } from '../../components/exercise-filters/exercise-filt
 import { ExerciseFormDialog } from '../../components/exercise-form-dialog/exercise-form-dialog';
 import { Translator } from '@core/i18n/translator';
 import { LocaleStore } from '@core/i18n/locale.store';
-import { localizedSortField } from '@shared/models/localized-text';
+import { localizedNameField, pickLocalized } from '@shared/models/localized-text';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 @Component({
@@ -34,11 +34,26 @@ export class ExercisesPage {
   protected readonly store = inject(ExercisesStore);
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
-    { field: localizedSortField(this.localeStore.locale()), header: this.translator.translate('exercises.page.columns.name'), sortable: true },
-    { field: 'muscleGroup', header: this.translator.translate('exercises.page.columns.muscleGroup'), sortable: true },
-    { field: 'equipmentType', header: this.translator.translate('exercises.page.columns.equipment') },
+    {
+      field: localizedNameField(this.localeStore.locale()),
+      header: this.translator.translate('exercises.page.columns.name'),
+      sortable: true,
+    },
+    {
+      field: 'muscleGroup',
+      header: this.translator.translate('exercises.page.columns.muscleGroup'),
+      sortable: true,
+    },
+    {
+      field: 'equipmentType',
+      header: this.translator.translate('exercises.page.columns.equipment'),
+    },
     { field: 'difficulty', header: this.translator.translate('exercises.page.columns.difficulty') },
-    { field: 'isActive', header: this.translator.translate('exercises.page.columns.activity'), width: '9rem' },
+    {
+      field: 'isActive',
+      header: this.translator.translate('exercises.page.columns.activity'),
+      width: '9rem',
+    },
     { field: 'actions', header: '', width: '11rem' },
   ]);
 
@@ -74,8 +89,12 @@ export class ExercisesPage {
     }
   }
 
+  protected localizedName(exercise: Exercise): string {
+    return pickLocalized(exercise.names, this.localeStore.locale());
+  }
+
   protected async remove(exercise: Exercise): Promise<void> {
-    if (await this.confirmations.confirmDelete(exercise.displayName)) {
+    if (await this.confirmations.confirmDelete(this.localizedName(exercise))) {
       await this.store.remove(exercise);
     }
   }

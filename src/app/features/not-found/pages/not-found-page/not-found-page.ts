@@ -7,8 +7,8 @@ import { StatusCard } from '@core/layout/components/status-card/status-card';
   template: `
     <app-status-card
       icon="pi-search"
-      title="404 — Sahifa topilmadi"
-      message="So'ralgan sahifa mavjud emas yoki ko'chirilgan."
+      title="layout.status.notFoundTitle"
+      message="layout.status.notFoundMessage"
     />
   `,
 })

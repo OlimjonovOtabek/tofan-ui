@@ -1,51 +1,24 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { SelectOption } from '@shared/models/select-option';
+import { TranslationKey, TranslationParams } from './dictionary';
 import { LocaleStore } from './locale.store';
-import { TranslationKey, TranslationParams, Dictionary } from './dictionary';
-import { dictionaryUz } from './translations/uz';
-import { dictionaryRu } from './translations/ru';
-import { dictionaryEn } from './translations/en';
-
-const DICTIONARIES = {
-  uz: dictionaryUz,
-  ru: dictionaryRu,
-  en: dictionaryEn
-};
+import { translate, translateMessage } from './translate';
 
 @Injectable({ providedIn: 'root' })
 export class Translator {
-  private readonly store = inject(LocaleStore);
+  private readonly localeStore = inject(LocaleStore);
 
-  translate(key: TranslationKey | string, params?: TranslationParams): string {
-    const locale = this.store.locale();
-    
-    let text = this.getValue(DICTIONARIES[locale], key);
-    if (text === undefined && locale !== 'uz') {
-      text = this.getValue(DICTIONARIES['uz'], key);
-    }
-    if (text === undefined) {
-      return key;
-    }
-    
-    if (params) {
-      return Object.keys(params).reduce(
-        (str, p) => str.replace(new RegExp(`\\{${p}\\}`, 'g'), String(params[p])),
-        text
-      );
-    }
-    
-    return text;
+  translate(key: TranslationKey, params?: TranslationParams): string {
+    return translate(this.localeStore.locale(), key, params);
   }
 
-  private getValue(dict: Dictionary, key: string): string | undefined {
-    const parts = key.split('.');
-    let current: unknown = dict;
-    for (const part of parts) {
-      if (current && typeof current === 'object' && part in current) {
-        current = (current as Record<string, unknown>)[part];
-      } else {
-        return undefined;
-      }
-    }
-    return typeof current === 'string' ? current : undefined;
+  message(keyOrText: string, params?: TranslationParams): string {
+    return translateMessage(this.localeStore.locale(), keyOrText, params);
+  }
+
+  options<TValue>(
+    options: readonly SelectOption<TValue, TranslationKey>[],
+  ): SelectOption<TValue>[] {
+    return options.map(({ value, label }) => ({ value, label: this.translate(label) }));
   }
 }

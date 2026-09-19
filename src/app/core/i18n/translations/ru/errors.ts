@@ -1,38 +1,64 @@
-export const errorsRu = {
-  "backend": {
-    "Authentication.InvalidCredentials": "Неверный логин или пароль.",
-    "Authentication.InvalidRefreshToken": "Сессия истекла. Войдите снова.",
-    "IdentityProvider.UserNotFound": "Пользователь не найден.",
-    "NotificationTemplate.Conflict": "Активный шаблон для этого типа уже существует. Сначала деактивируйте его.",
-    "NotificationTemplate.NoActiveTemplate": "Не найден активный шаблон для этого типа.",
-    "NotificationPreference.Disabled": "Пользователь отключил уведомления этого типа.",
-    "PushNotification.NoActiveDevice": "У пользователя нет активного устройства для получения push-уведомлений.",
-    "PushNotification.DispatchFailed": "Служба push не смогла доставить уведомление.",
-    "PushNotification.Disabled": "Push-уведомления отключены в этой среде.",
-    "PushNotification.ConfigurationInvalid": "Служба push не настроена (отсутствуют ключи Firebase). Обратитесь к администратору.",
-    "UserId.Empty": "Необходимо указать ID пользователя.",
-    "UserId.Invalid": "ID пользователя должен быть в формате UUID.",
-    "Data.KeyEmpty": "Каждое значение должно иметь ключ.",
-    "Data.KeyDuplicate": "Ключи не должны повторяться.",
-    "StoredFile.InUse": "Файл используется. Сначала удалите его из упражнения.",
-    "StoredFile.NotFound": "Файл не найден — возможно, он уже удален.",
-    "StoredFile.Empty": "Выбранный файл пуст.",
-    "StoredFile.UnsupportedContent": "Этот тип файла не поддерживается для выбранной категории.",
-    "StoredFile.TooLarge": "Файл превышает допустимый размер.",
-    "User.NotFound": "Аккаунт не найден — возможно, он удален из Keycloak.",
-    "User.AlreadyBlocked": "Аккаунт уже заблокирован.",
-    "User.NotBlocked": "Аккаунт не заблокирован.",
-    "User.CannotBlockSelf": "Нельзя заблокировать собственный аккаунт.",
-    "GetUsersQuery": "Не удалось прочитать аккаунты. Фильтр ролей может не работать без настройки Keycloak."
+import { Dictionary } from '../../dictionary';
+
+export const ERRORS_RU: Dictionary['errors'] = {
+  backend: {
+    Authentication: {
+      InvalidCredentials: 'Неверный логин или пароль.',
+      InvalidRefreshToken: 'Сессия истекла. Войдите снова.',
+    },
+    IdentityProvider: {
+      UserNotFound: 'Пользователь не найден.',
+    },
+    NotificationTemplate: {
+      Conflict: 'Для этого типа и стиля уже есть активный шаблон. Сначала деактивируйте его.',
+      NoActiveTemplate: 'Для этого типа нет активного шаблона в стиле пользователя.',
+    },
+    NotificationPreference: {
+      Disabled: 'Пользователь отключил уведомления этого типа.',
+    },
+    PushNotification: {
+      NoActiveDevice: 'У пользователя нет активного устройства для push.',
+      DispatchFailed: 'Push-сервис не смог доставить уведомление.',
+      Disabled: 'В этой среде push-уведомления отключены.',
+      ConfigurationInvalid:
+        'Push-сервис не настроен (нет ключей Firebase). Обратитесь к администратору.',
+    },
+    UserId: {
+      Empty: 'Укажите ID пользователя.',
+      Invalid: 'ID пользователя должен быть в формате UUID.',
+    },
+    Data: {
+      KeyEmpty: 'У каждого значения в дополнительных данных должен быть ключ.',
+      KeyDuplicate: 'Ключи в дополнительных данных не должны повторяться.',
+    },
+    StoredFile: {
+      InUse: 'Файл используется как видео упражнения. Сначала отвяжите его от упражнения.',
+      NotFound: 'Файл не найден — возможно, он уже удалён.',
+      Empty: 'Выбранный файл пуст.',
+      UnsupportedContent: 'Этот тип файла не принимается для выбранной категории.',
+      TooLarge: 'Файл больше допустимого размера для этой категории.',
+    },
+    Exercise: {
+      VideoAlreadyAttached:
+        'К этому упражнению уже привязано другое видео. Загруженный файл удалён — обновите список.',
+    },
+    User: {
+      NotFound: 'Аккаунт не найден — возможно, он удалён из Keycloak.',
+      AlreadyBlocked: 'Аккаунт уже заблокирован.',
+      NotBlocked: 'Аккаунт не заблокирован.',
+      CannotBlockSelf: 'Нельзя заблокировать свой аккаунт.',
+    },
+    GetUsersQuery:
+      'Не удалось получить аккаунты из Keycloak. Если выбран фильтр по роли, он пока может не работать (нужна настройка Keycloak).',
   },
-  "classes": {
-    "network": "Не удалось подключиться к серверу. Повторите попытку позже.",
-    "invalidCredentials": "Неверный логин или пароль.",
-    "sessionExpired": "Сессия истекла. Войдите снова.",
-    "accessDenied": "У вас нет доступа для этого действия.",
-    "notFound": "Данные не найдены — возможно, они удалены.",
-    "conflict": "Такие данные уже существуют.",
-    "validationFallback": "Данные заполнены неверно.",
-    "generic": "Не удалось выполнить действие. Повторите попытку позже."
-  }
+  classes: {
+    network: 'Не удалось подключиться к серверу. Попробуйте позже.',
+    invalidCredentials: 'Неверный логин или пароль.',
+    sessionExpired: 'Сессия истекла. Войдите снова.',
+    accessDenied: 'У вас нет прав на это действие.',
+    notFound: 'Данные не найдены — возможно, они удалены.',
+    conflict: 'Такие данные уже существуют.',
+    validationFallback: 'Данные заполнены неверно.',
+    generic: 'Не удалось выполнить действие. Попробуйте позже.',
+  },
 };

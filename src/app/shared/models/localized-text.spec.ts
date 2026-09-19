@@ -1,25 +1,35 @@
-import { pickLocalized } from './localized-text';
+import { localizedNameField, pickLocalized } from './localized-text';
 
 describe('pickLocalized', () => {
   const text = { en: 'Apple', uz: 'Olma', ru: 'Яблоко' };
 
-  it('should return exact match', () => {
+  it('should return the text of the locale when it is filled in', () => {
     expect(pickLocalized(text, 'uz')).toBe('Olma');
     expect(pickLocalized(text, 'ru')).toBe('Яблоко');
+    expect(pickLocalized(text, 'en')).toBe('Apple');
   });
 
-  it('should fallback to uz if current is empty', () => {
-    const partial = { en: 'Apple', uz: 'Olma', ru: '' };
-    expect(pickLocalized(partial, 'ru')).toBe('Olma');
+  it('should fall back to Uzbek when the locale text is blank', () => {
+    expect(pickLocalized({ ...text, ru: '  ' }, 'ru')).toBe('Olma');
   });
 
-  it('should fallback to en if uz is empty', () => {
-    const partial = { en: 'Apple', uz: '', ru: '' };
-    expect(pickLocalized(partial, 'ru')).toBe('Apple');
+  it('should fall back to English when Uzbek is blank too', () => {
+    expect(pickLocalized({ en: 'Apple', uz: '', ru: '' }, 'ru')).toBe('Apple');
   });
 
-  it('should handle null/undefined', () => {
-    expect(pickLocalized(null, 'uz')).toBe('');
-    expect(pickLocalized(undefined, 'uz')).toBe('');
+  it('should fall back to Russian when only Russian is filled in', () => {
+    expect(pickLocalized({ en: '', uz: '', ru: 'Яблоко' }, 'en')).toBe('Яблоко');
+  });
+
+  it('should return an empty string when every language is blank', () => {
+    expect(pickLocalized({ en: '', uz: '', ru: '' }, 'uz')).toBe('');
+  });
+});
+
+describe('localizedNameField', () => {
+  it('should sort by the column of the locale', () => {
+    expect(localizedNameField('en')).toBe('name');
+    expect(localizedNameField('uz')).toBe('nameUz');
+    expect(localizedNameField('ru')).toBe('nameRu');
   });
 });

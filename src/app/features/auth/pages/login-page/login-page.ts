@@ -11,11 +11,21 @@ import { InputText } from '@openng/optimus-ui/inputtext';
 import { Message } from '@openng/optimus-ui/message';
 import { Password } from '@openng/optimus-ui/password';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
-import { LanguageSwitcher } from '@core/layout/components/language-switcher/language-switcher';
+import { MessagePipe } from '@core/i18n/message.pipe';
 
 @Component({
   selector: 'app-login-page',
-  imports: [ReactiveFormsModule, Button, InputText, Password, Message, Logo, FloatingThemeSwitcher, TranslatePipe, LanguageSwitcher],
+  imports: [
+    ReactiveFormsModule,
+    Button,
+    InputText,
+    Password,
+    Message,
+    Logo,
+    FloatingThemeSwitcher,
+    TranslatePipe,
+    MessagePipe,
+  ],
   templateUrl: './login-page.html',
 })
 export class LoginPage {

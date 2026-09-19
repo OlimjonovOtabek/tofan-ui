@@ -1,2 +1,68 @@
-export const accountsRu = {
+import { Dictionary } from '../../dictionary';
+
+export const ACCOUNTS_RU: Dictionary['accounts'] = {
+  status: {
+    active: 'Активен',
+    blocked: 'Заблокирован',
+  },
+  roles: {
+    admin: 'Только админы',
+  },
+  list: {
+    title: 'Аккаунты',
+    total: 'Всего аккаунтов: {count}',
+    empty: 'Аккаунты по этим условиям не найдены.',
+    emailVerified: 'Email подтверждён',
+    columns: {
+      userName: 'Username',
+      email: 'Email',
+      phone: 'Телефон',
+      registered: 'Регистрация',
+      status: 'Статус',
+    },
+  },
+  filters: {
+    search: 'Поиск',
+    searchPlaceholder: 'Username, email, имя или телефон +998…',
+    status: 'Статус',
+    role: 'Роль',
+    all: 'Все',
+    clear: 'Сбросить',
+  },
+  card: {
+    back: 'Аккаунты',
+    you: 'Вы',
+    id: 'ID',
+    userId: 'ID пользователя',
+    email: 'Email',
+    verified: 'Подтверждён',
+    unverified: 'Не подтверждён',
+    phone: 'Телефон',
+    registered: 'Регистрация',
+    roles: 'Роли',
+    regularUser: 'Обычный пользователь',
+    soldierProfile: 'Профиль soldier',
+    signIns: 'Журнал входов',
+    sendPush: 'Отправить push',
+    block: 'Заблокировать',
+    unblock: 'Разблокировать',
+    logoutEverywhere: 'Выйти на всех устройствах',
+    cannotBlockSelf: 'Нельзя заблокировать свой аккаунт.',
+    tokenLifetime: 'Пользователь может обращаться к API, пока не истечёт срок его access-токена.',
+    loading: 'Загрузка…',
+  },
+  confirm: {
+    adminWarning: 'Внимание: это аккаунт администратора.',
+    blockHeader: 'Блокировка аккаунта',
+    block: '{warning} Заблокировать «{name}»? Аккаунт будет отключён, все сессии закрыты. {note}',
+    unblockHeader: 'Разблокировка',
+    unblock: 'Разблокировать «{name}»? Сессии не восстановятся — пользователь войдёт заново.',
+    logoutHeader: 'Выход на всех устройствах',
+    logout: 'Завершить все сессии «{name}»? Статус аккаунта не изменится. {note}',
+  },
+  done: {
+    block: 'Аккаунт заблокирован, сессии закрыты.',
+    unblock: 'Аккаунт разблокирован. Пользователю нужно войти заново.',
+    logoutEverywhere: 'Пользователь вышел на всех устройствах.',
+  },
 };

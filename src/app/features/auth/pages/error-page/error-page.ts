@@ -8,8 +8,8 @@ import { StatusCard } from '@core/layout/components/status-card/status-card';
     <app-status-card
       icon="pi-exclamation-circle"
       accent="danger"
-      title="Xatolik yuz berdi"
-      message="So'rovni bajarib bo'lmadi. Birozdan so'ng qayta urinib ko'ring."
+      title="layout.status.errorTitle"
+      message="layout.status.errorMessage"
     />
   `,
 })

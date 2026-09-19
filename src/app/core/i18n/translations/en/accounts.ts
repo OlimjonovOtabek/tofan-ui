@@ -1,2 +1,68 @@
-export const accountsEn = {
+import { Dictionary } from '../../dictionary';
+
+export const ACCOUNTS_EN: Dictionary['accounts'] = {
+  status: {
+    active: 'Active',
+    blocked: 'Blocked',
+  },
+  roles: {
+    admin: 'Admins only',
+  },
+  list: {
+    title: 'Accounts',
+    total: '{count} accounts in total',
+    empty: 'No accounts match these filters.',
+    emailVerified: 'Email verified',
+    columns: {
+      userName: 'Username',
+      email: 'Email',
+      phone: 'Phone',
+      registered: 'Registered',
+      status: 'Status',
+    },
+  },
+  filters: {
+    search: 'Search',
+    searchPlaceholder: 'Username, email, name or +998… phone',
+    status: 'Status',
+    role: 'Role',
+    all: 'All',
+    clear: 'Clear',
+  },
+  card: {
+    back: 'Accounts',
+    you: 'You',
+    id: 'ID',
+    userId: 'User ID',
+    email: 'Email',
+    verified: 'Verified',
+    unverified: 'Not verified',
+    phone: 'Phone',
+    registered: 'Registered',
+    roles: 'Roles',
+    regularUser: 'Regular user',
+    soldierProfile: 'Soldier profile',
+    signIns: 'Sign-in log',
+    sendPush: 'Send push',
+    block: 'Block',
+    unblock: 'Unblock',
+    logoutEverywhere: 'Sign out everywhere',
+    cannotBlockSelf: 'You cannot block your own account.',
+    tokenLifetime: 'The user can keep calling the API until their access token expires.',
+    loading: 'Loading…',
+  },
+  confirm: {
+    adminWarning: 'Warning: this is an admin account.',
+    blockHeader: 'Block account',
+    block: '{warning} Block "{name}"? The account is disabled and all sessions are closed. {note}',
+    unblockHeader: 'Unblock',
+    unblock: 'Unblock "{name}"? Sessions are not restored — the user signs in again.',
+    logoutHeader: 'Sign out everywhere',
+    logout: 'Sign "{name}" out of every device? The account status does not change. {note}',
+  },
+  done: {
+    block: 'Account blocked, sessions closed.',
+    unblock: 'Account unblocked. The user has to sign in again.',
+    logoutEverywhere: 'The user was signed out of every device.',
+  },
 };

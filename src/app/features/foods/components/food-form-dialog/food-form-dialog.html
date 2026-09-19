@@ -59,7 +59,9 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="servingSizeGrams" class="font-medium">{{ 'foods.form.servingSizeGrams' | t }}</label>
+        <label for="servingSizeGrams" class="font-medium">{{
+          'foods.form.servingSizeGrams' | t
+        }}</label>
         <p-inputnumber
           inputId="servingSizeGrams"
           formControlName="servingSizeGrams"
@@ -72,10 +74,14 @@
     </div>
 
     <div>
-      <div class="text-surface-900 dark:text-surface-0 mb-2 font-medium">{{ 'foods.form.nutrientsPerServing' | t }}</div>
+      <div class="text-surface-900 dark:text-surface-0 mb-2 font-medium">
+        {{ 'foods.form.nutrientsPerServing' | t }}
+      </div>
       <div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <div class="flex flex-col gap-1">
-          <label for="caloriesPerServing" class="text-muted-color text-sm">{{ 'foods.form.calories' | t }}</label>
+          <label for="caloriesPerServing" class="text-muted-color text-sm">{{
+            'foods.form.calories' | t
+          }}</label>
           <p-inputnumber
             inputId="caloriesPerServing"
             formControlName="caloriesPerServing"
@@ -85,7 +91,9 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="proteinGrams" class="text-muted-color text-sm">{{ 'foods.form.protein' | t }}</label>
+          <label for="proteinGrams" class="text-muted-color text-sm">{{
+            'foods.form.protein' | t
+          }}</label>
           <p-inputnumber
             inputId="proteinGrams"
             formControlName="proteinGrams"
@@ -96,7 +104,9 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="carbsGrams" class="text-muted-color text-sm">{{ 'foods.form.carbs' | t }}</label>
+          <label for="carbsGrams" class="text-muted-color text-sm">{{
+            'foods.form.carbs' | t
+          }}</label>
           <p-inputnumber
             inputId="carbsGrams"
             formControlName="carbsGrams"
@@ -118,7 +128,9 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="fiberGrams" class="text-muted-color text-sm">{{ 'foods.form.fiber' | t }}</label>
+          <label for="fiberGrams" class="text-muted-color text-sm">{{
+            'foods.form.fiber' | t
+          }}</label>
           <p-inputnumber
             inputId="fiberGrams"
             formControlName="fiberGrams"

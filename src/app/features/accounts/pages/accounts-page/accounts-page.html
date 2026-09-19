@@ -1,23 +1,23 @@
 <div class="card">
   <div class="mb-4">
-    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Hisoblar</h1>
-    <p class="text-muted-color m-0 mt-1 max-w-3xl text-sm">
-      Jami {{ store.loadError() === null ? store.totalCount() : '—' }} ta hisob — Keycloak’dagi
-      hamma akkauntlar, onboarding’ni tugatmaganlar va adminlar ham. Ism va maqsad soldier
-      kartochkasida. Ro‘yxat doim username bo‘yicha alifbo tartibida.
-    </p>
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+      {{ 'accounts.list.title' | t }}
+    </h1>
+    <span class="text-muted-color text-sm">{{
+      'accounts.list.total' | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+    }}</span>
   </div>
 
   <app-account-filters (filterChange)="applyFilter($event)" />
 
   <app-data-table
-    [columns]="columns"
+    [columns]="columns()"
     [items]="store.accounts()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
     [error]="store.loadError()"
     [first]="store.first()"
-    emptyMessage="Bu shartlarga mos hisob topilmadi."
+    [emptyMessage]="'accounts.list.empty' | t"
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >
@@ -32,7 +32,10 @@
           @if (account.email; as email) {
             {{ email }}
             @if (account.emailVerified) {
-              <i class="pi pi-verified text-primary ml-1" title="Email tasdiqlangan"></i>
+              <i
+                class="pi pi-verified text-primary ml-1"
+                [title]="'accounts.list.emailVerified' | t"
+              ></i>
             }
           } @else {
             <span class="text-muted-color">—</span>
@@ -44,7 +47,7 @@
         </td>
         <td>
           <p-tag
-            [value]="account.isActive ? 'Faol' : 'Bloklangan'"
+            [value]="(account.isActive ? 'accounts.status.active' : 'accounts.status.blocked') | t"
             [severity]="account.isActive ? 'success' : 'danger'"
           />
         </td>

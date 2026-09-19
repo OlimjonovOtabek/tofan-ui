@@ -27,9 +27,13 @@ export class FoodFilters {
   private readonly translator = inject(Translator);
   readonly filterChange = output<FoodFilter>();
 
-  protected readonly sourceOptions = computed(() => FOOD_SOURCE_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly activityOptions = computed(() => FOOD_ACTIVITY_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly verificationOptions = computed(() => FOOD_VERIFICATION_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
+  protected readonly sourceOptions = computed(() => this.translator.options(FOOD_SOURCE_OPTIONS));
+  protected readonly activityOptions = computed(() =>
+    this.translator.options(FOOD_ACTIVITY_OPTIONS),
+  );
+  protected readonly verificationOptions = computed(() =>
+    this.translator.options(FOOD_VERIFICATION_OPTIONS),
+  );
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     search: [''],

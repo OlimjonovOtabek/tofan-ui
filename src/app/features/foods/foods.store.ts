@@ -7,11 +7,14 @@ import { FoodsService } from './services/foods.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
+import { pickLocalized } from '@shared/models/localized-text';
+import { LocaleStore } from '@core/i18n/locale.store';
 
 @Injectable()
 export class FoodsStore {
   private readonly foodsService = inject(FoodsService);
   private readonly notifications = inject(NotificationService);
+  private readonly localeStore = inject(LocaleStore);
 
   private readonly page = signal<Page<Food>>(emptyPage<Food>());
   private readonly currentFilter = signal<FoodFilter>(DEFAULT_FOOD_FILTER);
@@ -64,7 +67,7 @@ export class FoodsStore {
       } else {
         await this.foodsService.update(id, createFoodDraft(draft));
       }
-      this.notifications.success(id === null ? "Ovqat qo'shildi." : 'Ovqat saqlandi.');
+      this.notifications.success(id === null ? 'foods.page.created' : 'foods.page.saved');
       await this.load();
       return true;
     } catch (error) {
@@ -78,7 +81,9 @@ export class FoodsStore {
   async remove(food: Food): Promise<void> {
     try {
       await this.foodsService.delete(food.id);
-      this.notifications.success(`"${food.displayName}" o'chirildi.`);
+      this.notifications.success('foods.page.deleted', {
+        name: pickLocalized(food.names, this.localeStore.locale()),
+      });
       await this.load();
     } catch (error) {
       this.notifications.error(error);

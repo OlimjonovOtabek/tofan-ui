@@ -1,7 +1,8 @@
+import { TranslationKey } from '@core/i18n/dictionary';
 import { FOOD_SOURCES, FoodSource, SERVING_UNITS, ServingUnit } from './food-attributes';
 import { SelectOption, toSelectOptions } from '@shared/models/select-option';
 
-export const SERVING_UNIT_LABELS: Record<ServingUnit, string> = {
+export const SERVING_UNIT_LABELS: Record<ServingUnit, TranslationKey> = {
   grams: 'enums.servingUnit.grams',
   milliliters: 'enums.servingUnit.milliliters',
   piece: 'enums.servingUnit.piece',
@@ -11,7 +12,7 @@ export const SERVING_UNIT_LABELS: Record<ServingUnit, string> = {
   teaspoon: 'enums.servingUnit.teaspoon',
 };
 
-export const FOOD_SOURCE_LABELS: Record<FoodSource, string> = {
+export const FOOD_SOURCE_LABELS: Record<FoodSource, TranslationKey> = {
   system: 'enums.foodSource.system',
   userCustom: 'enums.foodSource.userCustom',
   aiScan: 'enums.foodSource.aiScan',
@@ -21,12 +22,12 @@ export const FOOD_SOURCE_LABELS: Record<FoodSource, string> = {
 export const SERVING_UNIT_OPTIONS = toSelectOptions(SERVING_UNITS, SERVING_UNIT_LABELS);
 export const FOOD_SOURCE_OPTIONS = toSelectOptions(FOOD_SOURCES, FOOD_SOURCE_LABELS);
 
-export const FOOD_ACTIVITY_OPTIONS: SelectOption<boolean>[] = [
+export const FOOD_ACTIVITY_OPTIONS: SelectOption<boolean, TranslationKey>[] = [
   { value: true, label: 'foods.filters.active' },
   { value: false, label: 'foods.filters.inactive' },
 ];
 
-export const FOOD_VERIFICATION_OPTIONS: SelectOption<boolean>[] = [
+export const FOOD_VERIFICATION_OPTIONS: SelectOption<boolean, TranslationKey>[] = [
   { value: true, label: 'foods.filters.verified' },
   { value: false, label: 'foods.filters.unverified' },
 ];

@@ -41,6 +41,11 @@ import { Message } from '@openng/optimus-ui/message';
 import { Select } from '@openng/optimus-ui/select';
 import { SelectButton } from '@openng/optimus-ui/selectbutton';
 import { Textarea } from '@openng/optimus-ui/textarea';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { MessagePipe } from '@core/i18n/message.pipe';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
+import { SelectOption } from '@shared/models/select-option';
 
 type SendMode = 'templated' | 'custom';
 
@@ -50,9 +55,9 @@ interface OutgoingDraft {
   readonly templated: TemplatedNotificationInput;
 }
 
-const MODE_OPTIONS: { value: SendMode; label: string }[] = [
-  { value: 'templated', label: 'Shablon asosida' },
-  { value: 'custom', label: 'Maxsus matn' },
+const MODE_OPTIONS: SelectOption<SendMode, TranslationKey>[] = [
+  { value: 'templated', label: 'notifications.send.templated' },
+  { value: 'custom', label: 'notifications.send.custom' },
 ];
 
 function uuidValidator(control: AbstractControl<string>): ValidationErrors | null {
@@ -72,6 +77,8 @@ function uuidValidator(control: AbstractControl<string>): ValidationErrors | nul
     Select,
     SelectButton,
     Textarea,
+    TranslatePipe,
+    MessagePipe,
   ],
   providers: [NotificationSendStore],
   templateUrl: './send-notification-page.html',
@@ -80,11 +87,14 @@ export class SendNotificationPage {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly confirmations = inject(ConfirmDialogService);
   private readonly notifications = inject(NotificationService);
+  private readonly translator = inject(Translator);
 
   protected readonly store = inject(NotificationSendStore);
 
-  protected readonly modeOptions = MODE_OPTIONS;
-  protected readonly typeOptions = NOTIFICATION_TYPE_OPTIONS;
+  protected readonly modeOptions = computed(() => this.translator.options(MODE_OPTIONS));
+  protected readonly typeOptions = computed(() =>
+    this.translator.options(NOTIFICATION_TYPE_OPTIONS),
+  );
   protected readonly titleMaxLength = NOTIFICATION_TITLE_MAX_LENGTH;
   protected readonly bodyMaxLength = NOTIFICATION_BODY_MAX_LENGTH;
   protected readonly templatesPath = AppPaths.notificationTemplates;
@@ -180,9 +190,11 @@ export class SendNotificationPage {
 
   private confirmSending({ userId, type }: TemplatedNotificationInput): Promise<boolean> {
     return this.confirmations.confirm(
-      `"${NOTIFICATION_TYPE_LABELS[type]}" turidagi push ${userId} foydalanuvchisining ` +
-        'qurilmalariga hozir yuboriladi. Uni qaytarib olib bo‘lmaydi.',
-      'Yuborishni tasdiqlang',
+      {
+        key: 'notifications.send.confirm',
+        params: { type: this.translator.translate(NOTIFICATION_TYPE_LABELS[type]), userId },
+      },
+      'notifications.send.confirmHeader',
     );
   }
 }

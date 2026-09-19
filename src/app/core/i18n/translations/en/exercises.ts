@@ -1,53 +1,60 @@
-export const exercisesEn = {
-  "filters": {
-    "searchLabel": "Search",
-    "searchPlaceholder": "Exercise name",
-    "muscleGroup": "Muscle group",
-    "all": "All",
-    "equipment": "Equipment",
-    "gender": "Gender",
-    "place": "Place",
-    "activity": "Status",
-    "active": "Active",
-    "inactive": "Inactive",
-    "home": "Home",
-    "gym": "Gym",
-    "clear": "Clear"
+import { Dictionary } from '../../dictionary';
+
+export const EXERCISES_EN: Dictionary['exercises'] = {
+  filters: {
+    searchLabel: 'Search',
+    searchPlaceholder: 'Exercise name',
+    muscleGroup: 'Muscle group',
+    all: 'All',
+    equipment: 'Equipment',
+    gender: 'Gender',
+    place: 'Place',
+    activity: 'Status',
+    active: 'Active',
+    inactive: 'Inactive',
+    home: 'Home',
+    gym: 'Gym',
+    clear: 'Clear',
   },
-  "form": {
-    "addTitle": "Add Exercise",
-    "editTitle": "Edit Exercise",
-    "name": "Name",
-    "muscleGroup": "Muscle Group",
-    "equipment": "Equipment",
-    "difficulty": "Difficulty",
-    "type": "Type",
-    "gender": "Gender",
-    "isCompound": "Compound Exercise",
-    "isHomeExercise": "Can be done at home",
-    "instructions": "Instructions",
-    "instructionsPlaceholder": "How to perform the exercise",
-    "video": "Video",
-    "uploadedVideo": "Uploaded Video"
+  form: {
+    addTitle: 'Add Exercise',
+    editTitle: 'Edit Exercise',
+    name: 'Name',
+    muscleGroup: 'Muscle Group',
+    equipment: 'Equipment',
+    difficulty: 'Difficulty',
+    type: 'Type',
+    gender: 'Gender',
+    isCompound: 'Compound Exercise',
+    isHomeExercise: 'Can be done at home',
+    instructions: 'Instructions',
+    instructionsPlaceholder: 'How to perform the exercise',
+    video: 'Video',
+    uploadedVideo: 'Uploaded Video',
   },
-  "page": {
-    "title": "Exercises Catalog",
-    "totalCount": "Total {count} exercises",
-    "add": "Add Exercise",
-    "empty": "No exercises found matching these criteria.",
-    "columns": {
-      "name": "Name",
-      "muscleGroup": "Muscle Group",
-      "equipment": "Equipment",
-      "difficulty": "Difficulty",
-      "activity": "Status"
+  page: {
+    title: 'Exercises Catalog',
+    totalCount: 'Total {count} exercises',
+    add: 'Add Exercise',
+    empty: 'No exercises found matching these criteria.',
+    columns: {
+      name: 'Name',
+      muscleGroup: 'Muscle Group',
+      equipment: 'Equipment',
+      difficulty: 'Difficulty',
+      activity: 'Status',
     },
-    "actions": {
-      "videoUploaded": "Video uploaded",
-      "edit": "Edit",
-      "deactivate": "Deactivate",
-      "activate": "Activate",
-      "delete": "Delete"
-    }
-  }
+    actions: {
+      videoUploaded: 'Video uploaded',
+      edit: 'Edit',
+      deactivate: 'Deactivate',
+      activate: 'Activate',
+      delete: 'Delete',
+    },
+    created: 'Exercise added.',
+    saved: 'Exercise saved.',
+    deleted: '"{name}" deleted.',
+    activated: '"{name}" activated.',
+    deactivated: '"{name}" deactivated.',
+  },
 };

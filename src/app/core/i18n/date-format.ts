@@ -1,19 +1,13 @@
-import { AppLocale, INTL_LOCALE_MAP } from './locale';
+import { AppLocale, INTL_LOCALES } from './locale';
 
-export function formatDate(date: Date, locale: AppLocale, options?: Intl.DateTimeFormatOptions): string {
-  const intlLocale = INTL_LOCALE_MAP[locale];
-  return date.toLocaleDateString(intlLocale, {
-    dateStyle: 'short',
-    ...options
-  });
+export function formatDate(date: Date, locale: AppLocale): string {
+  return date.toLocaleDateString(INTL_LOCALES[locale], { dateStyle: 'short' });
 }
 
-export function formatDateTime(date: Date, locale: AppLocale, options?: Intl.DateTimeFormatOptions): string {
-  const intlLocale = INTL_LOCALE_MAP[locale];
-  
-  return date.toLocaleString(intlLocale, {
-    dateStyle: 'short',
-    timeStyle: 'short',
-    ...options
-  });
+export function formatCalendarDate(date: Date, locale: AppLocale): string {
+  return date.toLocaleDateString(INTL_LOCALES[locale], { dateStyle: 'short', timeZone: 'UTC' });
+}
+
+export function formatDateTime(date: Date, locale: AppLocale): string {
+  return date.toLocaleString(INTL_LOCALES[locale], { dateStyle: 'short', timeStyle: 'short' });
 }

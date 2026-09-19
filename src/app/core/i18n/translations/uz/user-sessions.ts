@@ -1,2 +1,28 @@
-export const userSessionsUz = {
+export const USER_SESSIONS_UZ = {
+  title: 'Kirishlar jurnali',
+  total: 'Jami {count} ta kirish',
+  empty: "Hali kirishlar yo'q.",
+  filterBefore: 'Faqat',
+  filterAfter: 'foydalanuvchining kirishlari',
+  account: 'Hisob',
+  removeFilter: 'Filtrni olib tashlash',
+  userId: 'Foydalanuvchi ID',
+  accountCard: 'Hisob kartochkasi',
+  onlyThisUser: 'Faqat shu foydalanuvchining kirishlari',
+  onlyThisUserShort: 'Faqat shu foydalanuvchi',
+  copyUserId: 'Foydalanuvchi ID ni nusxalash',
+  sendPush: 'Shu foydalanuvchiga push yuborish',
+  sendPushShort: 'Push yuborish',
+  revokedAt: 'Chiqilgan: {date}',
+  columns: {
+    userId: 'Foydalanuvchi ID',
+    loggedIn: 'Kirgan vaqti',
+    expires: 'Token muddati',
+    status: 'Holati',
+  },
+  status: {
+    unexpired: 'Muddati tugamagan',
+    expired: 'Muddati tugagan',
+    revokedEverywhere: 'Hamma joydan chiqilgan',
+  },
 };

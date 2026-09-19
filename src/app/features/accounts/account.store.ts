@@ -3,15 +3,16 @@ import { AuthStore } from '@core/auth/auth.store';
 import { Roles } from '@core/auth/roles';
 import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
+import { TranslationKey } from '@core/i18n/dictionary';
 import { Account } from './models/account';
 import { AccountsService } from './services/accounts.service';
 
 export type AccountAction = 'block' | 'unblock' | 'logoutEverywhere';
 
-const SUCCESS_MESSAGES: Record<AccountAction, string> = {
-  block: 'Hisob bloklandi, sessiyalari yopildi.',
-  unblock: 'Hisob blokdan chiqarildi. Foydalanuvchi qaytadan kirishi kerak.',
-  logoutEverywhere: 'Foydalanuvchi hamma qurilmalardan chiqarildi.',
+const SUCCESS_MESSAGES: Record<AccountAction, TranslationKey> = {
+  block: 'accounts.done.block',
+  unblock: 'accounts.done.unblock',
+  logoutEverywhere: 'accounts.done.logoutEverywhere',
 };
 
 @Injectable()

@@ -1,30 +1,28 @@
 import { Dictionary } from '../../dictionary';
-import { commonEn } from './common';
-import { authEn } from './auth';
-import { exercisesEn } from './exercises';
-import { foodsEn } from './foods';
-import { mediaEn } from './media';
-import { soldiersEn } from './soldiers';
-import { accountsEn } from './accounts';
-import { userSessionsEn } from './user-sessions';
-import { notificationsEn } from './notifications';
-import { enumsEn } from './enums';
-import { errorsEn } from './errors';
-import { layoutEn } from './layout';
-import { optimusEn } from './optimus';
+import { COMMON_EN } from './common';
+import { AUTH_EN } from './auth';
+import { EXERCISES_EN } from './exercises';
+import { FOODS_EN } from './foods';
+import { MEDIA_EN } from './media';
+import { SOLDIERS_EN } from './soldiers';
+import { ACCOUNTS_EN } from './accounts';
+import { USER_SESSIONS_EN } from './user-sessions';
+import { NOTIFICATIONS_EN } from './notifications';
+import { ENUMS_EN } from './enums';
+import { ERRORS_EN } from './errors';
+import { LAYOUT_EN } from './layout';
 
-export const dictionaryEn: Dictionary = {
-  common: commonEn,
-  auth: authEn,
-  exercises: exercisesEn,
-  foods: foodsEn,
-  media: mediaEn,
-  soldiers: soldiersEn,
-  accounts: accountsEn,
-  userSessions: userSessionsEn,
-  notifications: notificationsEn,
-  enums: enumsEn,
-  errors: errorsEn,
-  layout: layoutEn,
-  optimus: optimusEn,
+export const DICTIONARY_EN: Dictionary = {
+  common: COMMON_EN,
+  auth: AUTH_EN,
+  exercises: EXERCISES_EN,
+  foods: FOODS_EN,
+  media: MEDIA_EN,
+  soldiers: SOLDIERS_EN,
+  accounts: ACCOUNTS_EN,
+  userSessions: USER_SESSIONS_EN,
+  notifications: NOTIFICATIONS_EN,
+  enums: ENUMS_EN,
+  errors: ERRORS_EN,
+  layout: LAYOUT_EN,
 };

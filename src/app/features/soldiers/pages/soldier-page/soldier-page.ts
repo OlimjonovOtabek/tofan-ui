@@ -1,14 +1,14 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
-import {
-  Button,
-  ButtonDirective,
-  ButtonIcon,
-  ButtonLabel,
-} from '@openng/optimus-ui/button';
+import { Button, ButtonDirective, ButtonIcon, ButtonLabel } from '@openng/optimus-ui/button';
 import { Message } from '@openng/optimus-ui/message';
 import { Tag } from '@openng/optimus-ui/tag';
+import { formatDateTime } from '@core/i18n/date-format';
+import { LocaleStore } from '@core/i18n/locale.store';
+import { MessagePipe } from '@core/i18n/message.pipe';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { Translator } from '@core/i18n/translator';
 import { WeightHistoryChart } from '../../components/weight-history-chart/weight-history-chart';
 import { FITNESS_GOAL_LABELS, WEIGHT_SOURCE_LABELS } from '../../models/soldier-labels';
 import { WeightEntry } from '../../models/weight-entry';
@@ -25,11 +25,16 @@ import { SoldierStore } from '../../soldier.store';
     Message,
     Tag,
     WeightHistoryChart,
+    TranslatePipe,
+    MessagePipe,
   ],
   providers: [SoldierStore],
   templateUrl: './soldier-page.html',
 })
 export class SoldierPage {
+  private readonly translator = inject(Translator);
+  private readonly localeStore = inject(LocaleStore);
+
   protected readonly store = inject(SoldierStore);
 
   protected readonly soldiersPath = AppPaths.soldiers;
@@ -40,7 +45,7 @@ export class SoldierPage {
 
   protected readonly goalLabel = computed(() => {
     const goal = this.store.profile()?.goal ?? null;
-    return goal === null ? null : FITNESS_GOAL_LABELS[goal];
+    return goal === null ? null : this.translator.translate(FITNESS_GOAL_LABELS[goal]);
   });
 
   protected readonly changeLabel = computed(() => {
@@ -49,7 +54,11 @@ export class SoldierPage {
       return null;
     }
     const sign = change.deltaKg > 0 ? '+' : '';
-    return `${change.firstKg} → ${change.lastKg} kg (${sign}${change.deltaKg} kg)`;
+    return this.translator.translate('soldiers.card.weightChange', {
+      first: change.firstKg,
+      last: change.lastKg,
+      delta: `${sign}${change.deltaKg}`,
+    });
   });
 
   constructor() {
@@ -60,10 +69,10 @@ export class SoldierPage {
   }
 
   protected loggedLabel(entry: WeightEntry): string {
-    return entry.loggedAt.toLocaleString('uz-UZ', { dateStyle: 'short', timeStyle: 'short' });
+    return formatDateTime(entry.loggedAt, this.localeStore.locale());
   }
 
   protected sourceLabel(entry: WeightEntry): string {
-    return WEIGHT_SOURCE_LABELS[entry.source];
+    return this.translator.translate(WEIGHT_SOURCE_LABELS[entry.source]);
   }
 }

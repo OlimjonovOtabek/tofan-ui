@@ -29,9 +29,7 @@ export const genders = enumMap<ExerciseGender, ApiExerciseGender>(ApiExerciseGen
 export function toExercise(response: ExerciseResponse): Exercise {
   return new Exercise(
     response.id,
-    response.name,
-    response.nameUz,
-    response.nameRu,
+    { en: response.name, uz: response.nameUz, ru: response.nameRu },
     muscleGroups.toDomain(response.muscleGroup),
     equipmentTypes.toDomain(response.equipmentType),
     difficulties.toDomain(response.difficulty),

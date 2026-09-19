@@ -1,44 +1,41 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { AppLocale, DEFAULT_LOCALE, LOCALES } from './locale';
+import { DOCUMENT, Injectable, effect, inject, signal } from '@angular/core';
+import { AppLocale, DEFAULT_LOCALE, isAppLocale } from './locale';
 
-const LOCALE_STORAGE_KEY = 'tofan_locale';
+const LOCALE_STORAGE_KEY = 'tofan.locale';
 
 @Injectable({ providedIn: 'root' })
 export class LocaleStore {
   private readonly document = inject(DOCUMENT);
 
-  readonly locale = signal<AppLocale>(this.loadInitialLocale());
-  
-  readonly isUz = computed(() => this.locale() === 'uz');
-  readonly isRu = computed(() => this.locale() === 'ru');
-  readonly isEn = computed(() => this.locale() === 'en');
+  readonly locale = signal<AppLocale>(readStoredLocale());
 
   constructor() {
     effect(() => {
-      const current = this.locale();
-      this.document.documentElement.lang = current;
-      this.saveLocale(current);
+      const locale = this.locale();
+      this.document.documentElement.lang = locale;
+      storeLocale(locale);
     });
   }
 
   setLocale(locale: AppLocale): void {
     this.locale.set(locale);
   }
+}
 
-  private loadInitialLocale(): AppLocale {
-    try {
-      const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-      if (stored && LOCALES.includes(stored as AppLocale)) {
-        return stored as AppLocale;
-      }
-    } catch (e) { console.warn(e); }
+function readStoredLocale(): AppLocale {
+  try {
+    const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
+    return isAppLocale(stored) ? stored : DEFAULT_LOCALE;
+  } catch {
     return DEFAULT_LOCALE;
   }
+}
 
-  private saveLocale(locale: AppLocale): void {
-    try {
-      localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-    } catch (e) { console.warn(e); }
+function storeLocale(locale: AppLocale): boolean {
+  try {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    return true;
+  } catch {
+    return false;
   }
 }

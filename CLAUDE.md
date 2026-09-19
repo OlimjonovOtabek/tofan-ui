@@ -49,7 +49,8 @@ src/app/
     http/                  # ApiClient (HttpClient), API_BASE_URL, Result envelope, error mapping, paging query
     layout/                # shell, sidebar, topbar, menu, theme
     config/                # app paths, title strategy, UI providers
-    feedback/              # toast, confirm, clipboard, error message text
+    feedback/              # toast, confirm, clipboard, error message keys
+    i18n/                  # locale store, translator, t pipe, dictionaries (uz, ru, en), date format
   features/                # one folder per screen group, lazy loaded
     <feature>/
       pages/<name>-page/   # routed components
@@ -70,7 +71,7 @@ src/app/
 ```
 
 Current features: `dashboard`, `auth` (login, access denied, error pages), `exercises`, `foods`,
-`media`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
+`media`, `soldiers`, `accounts`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
 its routed components in `pages/` and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only
 uses `loadChildren`.
 
@@ -79,7 +80,7 @@ uses `loadChildren`.
 | Folder | May import | Must NOT import |
 |---|---|---|
 | core | other `core/` folders, shared | features |
-| shared | other `shared/` folders, `core/http`, `core/feedback` | features, other `core/` folders |
+| shared | other `shared/` folders, `core/http`, `core/feedback`, `core/i18n` | features, other `core/` folders |
 | features/<x> | core, shared, its own files (relative imports) | other features |
 | routes | features (lazy `import()`), `core/auth` guards, `core/layout` shell | shared |
 
@@ -231,6 +232,10 @@ infrastructure concern behind backend abstractions.
   Forbidden names: `Helper`, `Util`, `Manager`, `CommonService`, `DataService`, `data`, `item2`.
 - Functions ≤ 25 lines, components ≤ 200 lines, templates ≤ 150 lines. Extract before exceeding.
 - No magic strings/numbers: constants, enums or union types.
+- No UI text in templates or `.ts` files: every label, message, toast, title and placeholder is a
+  `core/i18n` key in `translations/uz`, `ru` and `en` (`{{ 'media.page.title' | t }}`,
+  `notifications.success('media.page.deleted', { name })`). Keys are typed; a missing translation breaks
+  the build. Rules and traps: `docs/modules/i18n.md`.
 - No dead code, no commented-out code, no `console.log` left behind.
 - `readonly` everywhere possible; `protected` for template-only members; `private` for the rest.
 - Early returns over nested ifs. No clever one-liners.

@@ -35,8 +35,12 @@ describe('toErrorMessage', () => {
   it('should map specific error classes', () => {
     expect(toErrorMessage(new InvalidCredentialsError())).toBe('errors.classes.invalidCredentials');
     expect(toErrorMessage(new AccessDeniedError())).toBe('errors.classes.accessDenied');
-    expect(toErrorMessage(new NotFoundError('gone', 'Exercise.NotFound'))).toBe('errors.classes.notFound');
-    expect(toErrorMessage(new ConflictError('exists', 'Food.Duplicate'))).toBe('errors.classes.conflict');
+    expect(toErrorMessage(new NotFoundError('gone', 'Exercise.NotFound'))).toBe(
+      'errors.classes.notFound',
+    );
+    expect(toErrorMessage(new ConflictError('exists', 'Food.Duplicate'))).toBe(
+      'errors.classes.conflict',
+    );
   });
 
   it('should map BusinessRuleError to its message', () => {

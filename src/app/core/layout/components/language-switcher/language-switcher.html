@@ -1,0 +1,22 @@
+@if (variant() === 'floating') {
+  <p-button
+    type="button"
+    [rounded]="true"
+    severity="secondary"
+    [label]="currentCode()"
+    [ariaLabel]="'layout.topbar.language' | t"
+    (onClick)="menu.toggle($event)"
+  />
+} @else {
+  <button
+    type="button"
+    class="layout-topbar-action"
+    [attr.aria-label]="'layout.topbar.language' | t"
+    [title]="'layout.topbar.language' | t"
+    aria-haspopup="true"
+    (click)="menu.toggle($event)"
+  >
+    <strong class="text-sm">{{ currentCode() }}</strong>
+  </button>
+}
+<p-menu #menu [model]="items()" [popup]="true" appendTo="body" />

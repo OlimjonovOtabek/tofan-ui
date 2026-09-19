@@ -1,4 +1,14 @@
-import { Component, computed, effect, inject, input, model, output, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Exercise } from '../../models/exercise';
 import {
@@ -52,11 +62,17 @@ export class ExerciseFormDialog {
 
   readonly save = output<ExerciseDraft>();
 
-  protected readonly muscleGroupOptions = computed(() => MUSCLE_GROUP_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly equipmentTypeOptions = computed(() => EQUIPMENT_TYPE_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly difficultyOptions = computed(() => DIFFICULTY_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly typeOptions = computed(() => EXERCISE_TYPE_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly genderOptions = computed(() => GENDER_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
+  protected readonly muscleGroupOptions = computed(() =>
+    this.translator.options(MUSCLE_GROUP_OPTIONS),
+  );
+  protected readonly equipmentTypeOptions = computed(() =>
+    this.translator.options(EQUIPMENT_TYPE_OPTIONS),
+  );
+  protected readonly difficultyOptions = computed(() =>
+    this.translator.options(DIFFICULTY_OPTIONS),
+  );
+  protected readonly typeOptions = computed(() => this.translator.options(EXERCISE_TYPE_OPTIONS));
+  protected readonly genderOptions = computed(() => this.translator.options(GENDER_OPTIONS));
 
   protected readonly names = createLocalizedTextGroup(this.formBuilder);
   protected readonly form = this.formBuilder.group({
@@ -82,8 +98,8 @@ export class ExerciseFormDialog {
   }
 
   protected title(): string {
-    return this.exercise() === null 
-      ? this.translator.translate('exercises.form.addTitle') 
+    return this.exercise() === null
+      ? this.translator.translate('exercises.form.addTitle')
       : this.translator.translate('exercises.form.editTitle');
   }
 
@@ -113,9 +129,9 @@ export class ExerciseFormDialog {
   private reset(exercise: Exercise | null): void {
     this.form.reset({
       names: {
-        name: exercise?.name ?? '',
-        nameUz: exercise?.nameUz ?? '',
-        nameRu: exercise?.nameRu ?? '',
+        name: exercise?.names.en ?? '',
+        nameUz: exercise?.names.uz ?? '',
+        nameRu: exercise?.names.ru ?? '',
       },
       muscleGroup: exercise?.muscleGroup ?? 'chest',
       equipmentType: exercise?.equipmentType ?? 'bodyweight',
@@ -127,6 +143,10 @@ export class ExerciseFormDialog {
       instructions: exercise?.instructions ?? '',
     });
     this.videoFileId.set(exercise?.videoFileId ?? null);
-    this.videoFileName.set(exercise?.hasVideo() === true ? this.translator.translate('exercises.form.uploadedVideo') : null);
+    this.videoFileName.set(
+      exercise?.hasVideo() === true
+        ? this.translator.translate('exercises.form.uploadedVideo')
+        : null,
+    );
   }
 }

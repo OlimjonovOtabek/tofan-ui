@@ -16,12 +16,21 @@ import { FoodFilters } from '../../components/food-filters/food-filters';
 import { FoodFormDialog } from '../../components/food-form-dialog/food-form-dialog';
 import { Translator } from '@core/i18n/translator';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
-import { localizedSortField, pickLocalized } from '@shared/models/localized-text';
+import { localizedNameField, pickLocalized } from '@shared/models/localized-text';
 import { LocaleStore } from '@core/i18n/locale.store';
 
 @Component({
   selector: 'app-foods-page',
-  imports: [ReactiveFormsModule, DataTable, FoodFilters, FoodFormDialog, Button, InputText, Tag, TranslatePipe],
+  imports: [
+    ReactiveFormsModule,
+    DataTable,
+    FoodFilters,
+    FoodFormDialog,
+    Button,
+    InputText,
+    Tag,
+    TranslatePipe,
+  ],
   providers: [FoodsStore],
   templateUrl: './foods-page.html',
 })
@@ -35,12 +44,24 @@ export class FoodsPage {
   protected readonly store = inject(FoodsStore);
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
-    { field: localizedSortField(this.localeStore.locale()), header: this.translator.translate('foods.page.columns.name'), sortable: true },
+    {
+      field: localizedNameField(this.localeStore.locale()),
+      header: this.translator.translate('foods.page.columns.name'),
+      sortable: true,
+    },
     { field: 'servingSize', header: this.translator.translate('foods.page.columns.serving') },
-    { field: 'caloriesPerServing', header: this.translator.translate('foods.page.columns.calories'), sortable: true },
+    {
+      field: 'caloriesPerServing',
+      header: this.translator.translate('foods.page.columns.calories'),
+      sortable: true,
+    },
     { field: 'macros', header: this.translator.translate('foods.page.columns.macros') },
     { field: 'source', header: this.translator.translate('foods.page.columns.source') },
-    { field: 'isActive', header: this.translator.translate('foods.page.columns.activity'), width: '11rem' },
+    {
+      field: 'isActive',
+      header: this.translator.translate('foods.page.columns.activity'),
+      width: '11rem',
+    },
     { field: 'actions', header: '', width: '8rem' },
   ]);
 
@@ -100,7 +121,7 @@ export class FoodsPage {
       return;
     }
     if (found === null) {
-      this.notifications.info(this.translator.translate('foods.page.barcodeNotFound', { barcode }));
+      this.notifications.info('foods.page.barcodeNotFound', { barcode });
       this.editedFood.set(null);
       this.prefilledBarcode.set(barcode);
     } else {

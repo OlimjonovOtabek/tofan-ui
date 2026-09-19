@@ -1,11 +1,9 @@
 import { Food } from './food';
 
-function food(servingSizeGrams: number, nameUz = 'Palov'): Food {
+function food(servingSizeGrams: number): Food {
   return new Food(
     '1',
-    'Plov',
-    nameUz,
-    'Плов',
+    { en: 'Plov', uz: 'Palov', ru: 'Плов' },
     'system',
     'piece',
     1,
@@ -20,11 +18,6 @@ function food(servingSizeGrams: number, nameUz = 'Palov'): Food {
 }
 
 describe('Food', () => {
-  it('should show the Uzbek name when it is filled in', () => {
-    expect(food(200).displayName).toBe('Palov');
-    expect(food(200, '').displayName).toBe('Plov');
-  });
-
   it('should normalise the nutrition to 100 grams when the serving weight is known', () => {
     expect(food(200).per100Grams).toEqual({
       calories: 170,

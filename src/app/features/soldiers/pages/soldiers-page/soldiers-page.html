@@ -1,16 +1,17 @@
 <div class="card">
   <div class="mb-4">
-    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Soldierlar</h1>
-    <p class="text-muted-color m-0 mt-1 max-w-3xl text-sm">
-      Jami {{ store.loadError() === null ? store.totalCount() : '—' }} soldier — onboarding’dan
-      o‘tgan foydalanuvchilar. Onboarding’ni tugatmaganlar va adminlar “Hisoblar” bo‘limida.
-    </p>
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+      {{ 'soldiers.list.title' | t }}
+    </h1>
+    <span class="text-muted-color text-sm">{{
+      'soldiers.list.total' | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+    }}</span>
   </div>
 
   <app-soldier-filters (filterChange)="applyFilter($event)" />
 
   <app-data-table
-    [columns]="columns"
+    [columns]="columns()"
     [items]="store.soldiers()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
@@ -19,7 +20,7 @@
     dataKey="userId"
     defaultSortField="createdOnUtc"
     defaultSortDirection="desc"
-    emptyMessage="Bu shartlarga mos soldier topilmadi."
+    [emptyMessage]="'soldiers.list.empty' | t"
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >

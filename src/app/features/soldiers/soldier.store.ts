@@ -1,5 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { toErrorMessage } from '@core/feedback/error-message';
+import { LocaleStore } from '@core/i18n/locale.store';
 import { toSoldierFactSections } from './models/soldier-facts';
 import { SoldierProfile } from './models/soldier-profile';
 import { WeightEntry, weightChange } from './models/weight-entry';
@@ -10,6 +11,7 @@ const LATEST_WEIGHTS_SHOWN = 10;
 @Injectable()
 export class SoldierStore {
   private readonly soldiersService = inject(SoldiersService);
+  private readonly localeStore = inject(LocaleStore);
 
   private readonly currentUserId = signal<string | null>(null);
   private readonly loaded = signal(false);
@@ -28,7 +30,9 @@ export class SoldierStore {
   );
   readonly factSections = computed(() => {
     const profile = this.profile();
-    return profile === null ? [] : toSoldierFactSections(profile, new Date());
+    return profile === null
+      ? []
+      : toSoldierFactSections(profile, new Date(), this.localeStore.locale());
   });
 
   async load(userId: string | null = this.currentUserId()): Promise<void> {

@@ -1,6 +1,8 @@
 <form [formGroup]="form" class="flex min-w-0 flex-1 flex-wrap items-end gap-3">
   <div class="flex min-w-56 flex-1 flex-col gap-1">
-    <label for="search" class="text-muted-color text-sm">{{ 'foods.filters.searchLabel' | t }}</label>
+    <label for="search" class="text-muted-color text-sm">{{
+      'foods.filters.searchLabel' | t
+    }}</label>
     <input
       pInputText
       id="search"
@@ -10,9 +12,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="foodSource" class="text-muted-color text-sm">{{ 'foods.filters.source' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="foodSource" class="text-muted-color text-sm">{{
+      'foods.filters.source' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="foodSource"
       formControlName="source"
       [options]="sourceOptions()"
@@ -23,9 +28,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="foodActivity" class="text-muted-color text-sm">{{ 'foods.filters.activity' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="foodActivity" class="text-muted-color text-sm">{{
+      'foods.filters.activity' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="foodActivity"
       formControlName="isActive"
       [options]="activityOptions()"
@@ -34,9 +42,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="foodVerification" class="text-muted-color text-sm">{{ 'foods.filters.verification' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="foodVerification" class="text-muted-color text-sm">{{
+      'foods.filters.verification' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="foodVerification"
       formControlName="isVerified"
       [options]="verificationOptions()"

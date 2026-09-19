@@ -1,8 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ConfirmDialog } from '@openng/optimus-ui/confirmdialog';
 import { Toast } from '@openng/optimus-ui/toast';
-import { OptimusTranslationService } from './core/i18n/optimus-translation';
 
 @Component({
   imports: [RouterOutlet, Toast, ConfirmDialog],
@@ -13,6 +12,4 @@ import { OptimusTranslationService } from './core/i18n/optimus-translation';
     <p-confirmdialog />
   `,
 })
-export class App {
-  private readonly optimusTranslation = inject(OptimusTranslationService);
-}
+export class App {}

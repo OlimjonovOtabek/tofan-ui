@@ -1,56 +1,61 @@
-export const foodsRu = {
-  "filters": {
-    "searchLabel": "Поиск",
-    "searchPlaceholder": "Название еды или штрих-код",
-    "source": "Источник",
-    "all": "Все",
-    "activity": "Статус",
-    "active": "Активен",
-    "inactive": "Удален",
-    "verification": "Проверка",
-    "verified": "Проверен",
-    "unverified": "Не проверен",
-    "clear": "Очистить"
+import { Dictionary } from '../../dictionary';
+
+export const FOODS_RU: Dictionary['foods'] = {
+  filters: {
+    searchLabel: 'Поиск',
+    searchPlaceholder: 'Название еды или штрих-код',
+    source: 'Источник',
+    all: 'Все',
+    activity: 'Статус',
+    active: 'Активен',
+    inactive: 'Удален',
+    verification: 'Проверка',
+    verified: 'Проверен',
+    unverified: 'Не проверен',
+    clear: 'Очистить',
   },
-  "form": {
-    "addTitle": "Добавить еду",
-    "editTitle": "Редактировать еду",
-    "name": "Название",
-    "source": "Источник",
-    "barcode": "Штрих-код",
-    "barcodePlaceholder": "Например, 4780016470016",
-    "servingUnit": "Единица порции",
-    "servingSize": "Размер порции",
-    "servingSizeGrams": "Вес порции (г)",
-    "nutrientsPerServing": "Пищевая ценность на порцию",
-    "calories": "Калории",
-    "protein": "Белки (г)",
-    "carbs": "Углеводы (г)",
-    "fat": "Жиры (г)",
-    "fiber": "Клетчатка (г)",
-    "isVerified": "Проверен",
-    "isActive": "Активен"
+  form: {
+    addTitle: 'Добавить еду',
+    editTitle: 'Редактировать еду',
+    name: 'Название',
+    source: 'Источник',
+    barcode: 'Штрих-код',
+    barcodePlaceholder: 'Например, 4780016470016',
+    servingUnit: 'Единица порции',
+    servingSize: 'Размер порции',
+    servingSizeGrams: 'Вес порции (г)',
+    nutrientsPerServing: 'Пищевая ценность на порцию',
+    calories: 'Калории',
+    protein: 'Белки (г)',
+    carbs: 'Углеводы (г)',
+    fat: 'Жиры (г)',
+    fiber: 'Клетчатка (г)',
+    isVerified: 'Проверен',
+    isActive: 'Активен',
   },
-  "page": {
-    "title": "Каталог еды",
-    "totalCount": "Всего {count} продуктов",
-    "add": "Добавить еду",
-    "searchBarcode": "Поиск по штрих-коду",
-    "searchBarcodePlaceholder": "4780016470016",
-    "find": "Найти",
-    "barcodeNotFound": "\"{barcode}\" нет в каталоге. Добавьте как новую еду.",
-    "empty": "По этим критериям продуктов не найдено.",
-    "columns": {
-      "name": "Название",
-      "serving": "Порция",
-      "calories": "Калории",
-      "macros": "Б / У / Ж",
-      "source": "Источник",
-      "activity": "Статус"
+  page: {
+    title: 'Каталог еды',
+    totalCount: 'Всего {count} продуктов',
+    add: 'Добавить еду',
+    searchBarcode: 'Поиск по штрих-коду',
+    searchBarcodePlaceholder: '4780016470016',
+    find: 'Найти',
+    barcodeNotFound: '"{barcode}" нет в каталоге. Добавьте как новую еду.',
+    empty: 'По этим критериям продуктов не найдено.',
+    columns: {
+      name: 'Название',
+      serving: 'Порция',
+      calories: 'Калории',
+      macros: 'Б / У / Ж',
+      source: 'Источник',
+      activity: 'Статус',
     },
-    "actions": {
-      "edit": "Редактировать",
-      "delete": "Удалить"
-    }
-  }
+    actions: {
+      edit: 'Редактировать',
+      delete: 'Удалить',
+    },
+    created: 'Продукт добавлен.',
+    saved: 'Продукт сохранён.',
+    deleted: '«{name}» удалён.',
+  },
 };

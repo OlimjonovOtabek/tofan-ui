@@ -40,7 +40,7 @@ describe('notification mapper', () => {
 
     expect(template.type).toBe('dpEarned');
     expect(template.trainerStyle).toBe('aggressive');
-    expect(template.displayTitle).toBe('DP olindi');
+    expect(template.titleIn('uz')).toBe('DP olindi');
     expect(template.updatedAt.toISOString()).toBe('2026-09-02T09:00:00.000Z');
   });
 

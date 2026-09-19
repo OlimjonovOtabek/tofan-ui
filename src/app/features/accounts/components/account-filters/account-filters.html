@@ -1,43 +1,51 @@
 <form [formGroup]="form" class="mb-4 flex flex-wrap items-end gap-3">
   <div class="flex min-w-56 flex-1 flex-col gap-1">
-    <label for="accountSearch" class="text-muted-color text-sm">Qidirish</label>
+    <label for="accountSearch" class="text-muted-color text-sm">{{
+      'accounts.filters.search' | t
+    }}</label>
     <input
       pInputText
       id="accountSearch"
       type="search"
       formControlName="search"
-      placeholder="Username, email, ism yoki +998… telefon"
+      [placeholder]="'accounts.filters.searchPlaceholder' | t"
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="accountStatus" class="text-muted-color text-sm">Holati</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="accountStatus" class="text-muted-color text-sm">{{
+      'accounts.filters.status' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="accountStatus"
       formControlName="isActive"
-      [options]="statusOptions"
+      [options]="statusOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'accounts.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="accountRole" class="text-muted-color text-sm">Rol</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="accountRole" class="text-muted-color text-sm">{{
+      'accounts.filters.role' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="accountRole"
       formControlName="role"
-      [options]="roleOptions"
+      [options]="roleOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'accounts.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
   <p-button
-    label="Tozalash"
+    [label]="'accounts.filters.clear' | t"
     icon="pi pi-filter-slash"
     severity="secondary"
     [text]="true"

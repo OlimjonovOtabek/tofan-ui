@@ -1,3 +1,4 @@
+import { TranslationKey } from '@core/i18n/dictionary';
 import {
   EQUIPMENT_TYPES,
   EXERCISE_DIFFICULTIES,
@@ -12,7 +13,7 @@ import {
 } from './exercise-attributes';
 import { toSelectOptions } from '@shared/models/select-option';
 
-export const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
+export const MUSCLE_GROUP_LABELS: Record<MuscleGroup, TranslationKey> = {
   unknown: 'enums.muscleGroup.unknown',
   chest: 'enums.muscleGroup.chest',
   back: 'enums.muscleGroup.back',
@@ -30,7 +31,7 @@ export const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
   cardio: 'enums.muscleGroup.cardio',
 };
 
-export const EQUIPMENT_TYPE_LABELS: Record<EquipmentType, string> = {
+export const EQUIPMENT_TYPE_LABELS: Record<EquipmentType, TranslationKey> = {
   none: 'enums.equipmentType.none',
   bodyweight: 'enums.equipmentType.bodyweight',
   barbell: 'enums.equipmentType.barbell',
@@ -44,13 +45,13 @@ export const EQUIPMENT_TYPE_LABELS: Record<EquipmentType, string> = {
   smithMachine: 'enums.equipmentType.smithMachine',
 };
 
-export const DIFFICULTY_LABELS: Record<ExerciseDifficulty, string> = {
+export const DIFFICULTY_LABELS: Record<ExerciseDifficulty, TranslationKey> = {
   beginner: 'enums.difficulty.beginner',
   intermediate: 'enums.difficulty.intermediate',
   advanced: 'enums.difficulty.advanced',
 };
 
-export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
+export const EXERCISE_TYPE_LABELS: Record<ExerciseType, TranslationKey> = {
   strength: 'enums.exerciseType.strength',
   cardio: 'enums.exerciseType.cardio',
   mobility: 'enums.exerciseType.mobility',
@@ -59,7 +60,7 @@ export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
   coolDown: 'enums.exerciseType.coolDown',
 };
 
-export const GENDER_LABELS: Record<ExerciseGender, string> = {
+export const GENDER_LABELS: Record<ExerciseGender, TranslationKey> = {
   any: 'enums.gender.any',
   male: 'enums.gender.male',
   female: 'enums.gender.female',

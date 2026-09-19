@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, input, model, output, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  model,
+  output,
+  untracked,
+} from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Food } from '../../models/food';
 import { FoodSource, ServingUnit } from '../../models/food-attributes';
@@ -41,8 +50,10 @@ export class FoodFormDialog {
 
   readonly save = output<FoodDraft>();
 
-  protected readonly sourceOptions = computed(() => FOOD_SOURCE_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly servingUnitOptions = computed(() => SERVING_UNIT_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
+  protected readonly sourceOptions = computed(() => this.translator.options(FOOD_SOURCE_OPTIONS));
+  protected readonly servingUnitOptions = computed(() =>
+    this.translator.options(SERVING_UNIT_OPTIONS),
+  );
 
   protected readonly names = createLocalizedTextGroup(this.formBuilder);
   protected readonly form = this.formBuilder.group({
@@ -70,8 +81,8 @@ export class FoodFormDialog {
   }
 
   protected title(): string {
-    return this.food() === null 
-      ? this.translator.translate('foods.form.addTitle') 
+    return this.food() === null
+      ? this.translator.translate('foods.form.addTitle')
       : this.translator.translate('foods.form.editTitle');
   }
 

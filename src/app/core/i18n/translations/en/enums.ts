@@ -1,65 +1,67 @@
-export const enumsEn = {
-  "muscleGroup": {
-    "unknown": "Unknown",
-    "chest": "Chest",
-    "back": "Back",
-    "shoulders": "Shoulders",
-    "biceps": "Biceps",
-    "triceps": "Triceps",
-    "forearms": "Forearms",
-    "abs": "Abs",
-    "obliques": "Obliques",
-    "glutes": "Glutes",
-    "quadriceps": "Quadriceps",
-    "hamstrings": "Hamstrings",
-    "calves": "Calves",
-    "fullBody": "Full Body",
-    "cardio": "Cardio"
+import { Dictionary } from '../../dictionary';
+
+export const ENUMS_EN: Dictionary['enums'] = {
+  muscleGroup: {
+    unknown: 'Unknown',
+    chest: 'Chest',
+    back: 'Back',
+    shoulders: 'Shoulders',
+    biceps: 'Biceps',
+    triceps: 'Triceps',
+    forearms: 'Forearms',
+    abs: 'Abs',
+    obliques: 'Obliques',
+    glutes: 'Glutes',
+    quadriceps: 'Quadriceps',
+    hamstrings: 'Hamstrings',
+    calves: 'Calves',
+    fullBody: 'Full Body',
+    cardio: 'Cardio',
   },
-  "equipmentType": {
-    "none": "None",
-    "bodyweight": "Bodyweight",
-    "barbell": "Barbell",
-    "dumbbell": "Dumbbell",
-    "kettlebell": "Kettlebell",
-    "machine": "Machine",
-    "cable": "Cable",
-    "resistanceBand": "Resistance Band",
-    "bench": "Bench",
-    "pullUpBar": "Pull-up Bar",
-    "smithMachine": "Smith Machine"
+  equipmentType: {
+    none: 'None',
+    bodyweight: 'Bodyweight',
+    barbell: 'Barbell',
+    dumbbell: 'Dumbbell',
+    kettlebell: 'Kettlebell',
+    machine: 'Machine',
+    cable: 'Cable',
+    resistanceBand: 'Resistance Band',
+    bench: 'Bench',
+    pullUpBar: 'Pull-up Bar',
+    smithMachine: 'Smith Machine',
   },
-  "difficulty": {
-    "beginner": "Beginner",
-    "intermediate": "Intermediate",
-    "advanced": "Advanced"
+  difficulty: {
+    beginner: 'Beginner',
+    intermediate: 'Intermediate',
+    advanced: 'Advanced',
   },
-  "exerciseType": {
-    "strength": "Strength",
-    "cardio": "Cardio",
-    "mobility": "Mobility",
-    "flexibility": "Flexibility",
-    "warmUp": "Warm-up",
-    "coolDown": "Cool-down"
+  exerciseType: {
+    strength: 'Strength',
+    cardio: 'Cardio',
+    mobility: 'Mobility',
+    flexibility: 'Flexibility',
+    warmUp: 'Warm-up',
+    coolDown: 'Cool-down',
   },
-  "gender": {
-    "any": "Any",
-    "male": "Male",
-    "female": "Female"
+  gender: {
+    any: 'Any',
+    male: 'Male',
+    female: 'Female',
   },
-  "servingUnit": {
-    "grams": "grams",
-    "milliliters": "ml",
-    "piece": "piece",
-    "slice": "slice",
-    "cup": "cup",
-    "tablespoon": "tablespoon",
-    "teaspoon": "teaspoon"
+  servingUnit: {
+    grams: 'grams',
+    milliliters: 'ml',
+    piece: 'piece',
+    slice: 'slice',
+    cup: 'cup',
+    tablespoon: 'tablespoon',
+    teaspoon: 'teaspoon',
   },
-  "foodSource": {
-    "system": "System",
-    "userCustom": "User",
-    "aiScan": "AI Scan",
-    "imported": "Imported"
-  }
+  foodSource: {
+    system: 'System',
+    userCustom: 'User',
+    aiScan: 'AI Scan',
+    imported: 'Imported',
+  },
 };

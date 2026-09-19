@@ -7,6 +7,7 @@ describe('ClipboardService', () => {
   let writeText: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
+    localStorage.clear();
     notifications = { success: vi.fn(), info: vi.fn() };
     writeText = vi.fn();
     vi.stubGlobal('navigator', { clipboard: { writeText } });
@@ -22,17 +23,22 @@ describe('ClipboardService', () => {
   it('should confirm what was copied when the browser allows copying', async () => {
     writeText.mockResolvedValue(undefined);
 
-    await TestBed.inject(ClipboardService).copy('abc', 'Fayl ID');
+    await TestBed.inject(ClipboardService).copy('abc', 'media.page.fileId');
 
     expect(writeText).toHaveBeenCalledWith('abc');
-    expect(notifications.success).toHaveBeenCalledWith('Fayl ID nusxalandi.');
+    expect(notifications.success).toHaveBeenCalledWith('common.clipboard.copied', {
+      what: 'Fayl ID',
+    });
   });
 
   it('should show the text when the browser refuses to copy', async () => {
     writeText.mockRejectedValue(new DOMException('Denied', 'NotAllowedError'));
 
-    await TestBed.inject(ClipboardService).copy('abc', 'Fayl ID');
+    await TestBed.inject(ClipboardService).copy('abc', 'media.page.fileId');
 
-    expect(notifications.info).toHaveBeenCalledWith("Nusxalab bo'lmadi. Fayl ID: abc");
+    expect(notifications.info).toHaveBeenCalledWith('common.clipboard.failed', {
+      what: 'Fayl ID',
+      text: 'abc',
+    });
   });
 });

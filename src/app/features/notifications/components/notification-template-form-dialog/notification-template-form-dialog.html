@@ -1,6 +1,6 @@
 <app-form-dialog
   [(visible)]="visible"
-  [header]="title()"
+  [header]="title() | t"
   [saving]="saving()"
   width="44rem"
   (save)="submit()"
@@ -8,22 +8,22 @@
   <div [formGroup]="form" class="flex flex-col gap-4">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="flex flex-col gap-1">
-        <label for="templateType" class="font-medium">Turi</label>
+        <label for="templateType" class="font-medium">{{ 'notifications.form.type' | t }}</label>
         <p-select
           inputId="templateType"
           formControlName="type"
-          [options]="typeOptions"
+          [options]="typeOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
         />
       </div>
       <div class="flex flex-col gap-1">
-        <label for="templateStyle" class="font-medium">Murabbiy uslubi</label>
+        <label for="templateStyle" class="font-medium">{{ 'notifications.form.style' | t }}</label>
         <p-select
           inputId="templateStyle"
           formControlName="trainerStyle"
-          [options]="styleOptions"
+          [options]="styleOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -33,14 +33,14 @@
 
     <app-localized-text-field
       [group]="titles"
-      label="Sarlavha"
+      [label]="'notifications.form.title' | t"
       idPrefix="template-title"
       [maxLength]="titleMaxLength"
     />
 
     <app-localized-text-field
       [group]="bodies"
-      label="Matn"
+      [label]="'notifications.form.body' | t"
       idPrefix="template-body"
       [multiline]="true"
       [maxLength]="bodyMaxLength"
@@ -48,10 +48,10 @@
 
     <div class="flex items-center gap-2">
       <p-toggleswitch inputId="templateActive" formControlName="isActive" />
-      <label for="templateActive">Faol</label>
+      <label for="templateActive">{{ 'notifications.form.active' | t }}</label>
     </div>
     <small class="text-muted-color -mt-2">
-      Bir tur va uslub uchun faqat bitta faol shablon bo‘lishi mumkin.
+      {{ 'notifications.form.oneActiveHint' | t }}
     </small>
   </div>
 </app-form-dialog>

@@ -1,42 +1,33 @@
+import { DOCUMENT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { LocaleStore } from './locale.store';
-import { DOCUMENT } from '@angular/common';
+
+const STORAGE_KEY = 'tofan.locale';
 
 describe('LocaleStore', () => {
-  let store: LocaleStore;
-  let document: Document;
+  beforeEach(() => localStorage.clear());
 
-  beforeEach(() => {
-    localStorage.clear();
-    TestBed.configureTestingModule({});
-    store = TestBed.inject(LocaleStore);
-    document = TestBed.inject(DOCUMENT);
+  it('should start in Uzbek when nothing is stored', () => {
+    expect(TestBed.inject(LocaleStore).locale()).toBe('uz');
   });
 
-  it('should start with default locale (uz)', () => {
-    expect(store.locale()).toBe('uz');
-    expect(store.isUz()).toBe(true);
+  it('should restore the stored locale when it is supported', () => {
+    localStorage.setItem(STORAGE_KEY, 'ru');
+    expect(TestBed.inject(LocaleStore).locale()).toBe('ru');
   });
 
-  it('should load locale from localStorage if available', () => {
-    localStorage.setItem('tofan_locale', 'ru');
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({});
-    const store2 = TestBed.inject(LocaleStore);
-    expect(store2.locale()).toBe('ru');
+  it('should ignore the stored value when it is not a supported locale', () => {
+    localStorage.setItem(STORAGE_KEY, 'fr');
+    expect(TestBed.inject(LocaleStore).locale()).toBe('uz');
   });
 
-  it('should fallback to uz if localStorage has invalid locale', () => {
-    localStorage.setItem('tofan_locale', 'fr');
-    const store2 = TestBed.inject(LocaleStore);
-    expect(store2.locale()).toBe('uz');
-  });
+  it('should remember the locale and set the page language when it changes', () => {
+    const store = TestBed.inject(LocaleStore);
 
-  it('should update locale and save to localStorage on change', () => {
     store.setLocale('en');
-    expect(store.locale()).toBe('en');
-    TestBed.flushEffects();
-    expect(localStorage.getItem('tofan_locale')).toBe('en');
-    expect(document.documentElement.lang).toBe('en');
+    TestBed.tick();
+
+    expect(localStorage.getItem(STORAGE_KEY)).toBe('en');
+    expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('en');
   });
 });

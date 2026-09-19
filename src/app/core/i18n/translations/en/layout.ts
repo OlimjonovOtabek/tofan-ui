@@ -1,2 +1,60 @@
-export const layoutEn = { topbar: {},
-  menu: {"main":"Main","dashboard":"Dashboard","catalog":"Catalog","exercises":"Exercises","foods":"Foods","media":"Media files","users":"Users","soldiers":"Soldiers","accounts":"Accounts","userSessions":"Sign-in log","notifications":"Notifications","templates":"Templates","sendPush":"Send Push"} };
+import { Dictionary } from '../../dictionary';
+
+export const LAYOUT_EN: Dictionary['layout'] = {
+  topbar: {
+    toggleMenu: 'Toggle menu',
+    profile: 'Profile',
+    logout: 'Sign out',
+    language: 'Language',
+    themeSettings: 'Theme settings',
+    toggleTheme: 'Toggle theme mode',
+    lightMode: 'Light mode',
+    darkMode: 'Dark mode',
+  },
+  menu: {
+    main: 'Main',
+    dashboard: 'Dashboard',
+    catalog: 'Catalog',
+    exercises: 'Exercises',
+    foods: 'Foods',
+    media: 'Media files',
+    users: 'Users',
+    soldiers: 'Soldiers',
+    accounts: 'Accounts',
+    userSessions: 'Sign-in log',
+    notifications: 'Notifications',
+    templates: 'Templates',
+    sendPush: 'Send push',
+  },
+  titles: {
+    login: 'Sign in',
+    accessDenied: 'Access denied',
+    error: 'Error',
+    notFound: 'Page not found',
+    dashboard: 'Dashboard',
+    exercises: 'Exercise catalog',
+    foods: 'Food catalog',
+    media: 'Media files',
+    soldiers: 'Soldiers',
+    soldier: 'Soldier',
+    accounts: 'Accounts',
+    account: 'Account',
+    userSessions: 'Sign-in log',
+    notificationTemplates: 'Notification templates',
+    sendNotification: 'Send push',
+  },
+  status: {
+    accessDeniedTitle: 'Access denied',
+    accessDeniedMessage:
+      'You do not have enough rights to view this page. Contact an administrator.',
+    errorTitle: 'Something went wrong',
+    errorMessage: 'The request could not be completed. Please try again shortly.',
+    notFoundTitle: '404 — Page not found',
+    notFoundMessage: 'The page does not exist or has moved.',
+  },
+  dashboard: {
+    welcome: 'Welcome',
+    welcomeName: 'Welcome, {name}',
+    intro: 'Tofan admin panel. Pick a section in the menu on the left.',
+  },
+};

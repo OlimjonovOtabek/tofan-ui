@@ -1,12 +1,23 @@
 <form [formGroup]="form" class="mb-4 flex flex-wrap items-end gap-3">
   <div class="flex min-w-56 flex-1 flex-col gap-1">
-    <label for="search" class="text-muted-color text-sm">{{ 'exercises.filters.searchLabel' | t }}</label>
-    <input pInputText id="search" type="search" formControlName="search" [placeholder]="'exercises.filters.searchPlaceholder' | t" />
+    <label for="search" class="text-muted-color text-sm">{{
+      'exercises.filters.searchLabel' | t
+    }}</label>
+    <input
+      pInputText
+      id="search"
+      type="search"
+      formControlName="search"
+      [placeholder]="'exercises.filters.searchPlaceholder' | t"
+    />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="filterMuscleGroup" class="text-muted-color text-sm">{{ 'exercises.filters.muscleGroup' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="filterMuscleGroup" class="text-muted-color text-sm">{{
+      'exercises.filters.muscleGroup' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="filterMuscleGroup"
       formControlName="muscleGroup"
       [options]="muscleGroupOptions()"
@@ -17,9 +28,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="filterEquipment" class="text-muted-color text-sm">{{ 'exercises.filters.equipment' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="filterEquipment" class="text-muted-color text-sm">{{
+      'exercises.filters.equipment' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="filterEquipment"
       formControlName="equipmentType"
       [options]="equipmentTypeOptions()"
@@ -30,9 +44,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="filterGender" class="text-muted-color text-sm">{{ 'exercises.filters.gender' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="filterGender" class="text-muted-color text-sm">{{
+      'exercises.filters.gender' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="filterGender"
       formControlName="gender"
       [options]="genderOptions()"
@@ -43,9 +60,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="filterPlace" class="text-muted-color text-sm">{{ 'exercises.filters.place' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="filterPlace" class="text-muted-color text-sm">{{
+      'exercises.filters.place' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="filterPlace"
       formControlName="isHomeExercise"
       [options]="placeOptions()"
@@ -56,9 +76,12 @@
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="filterActivity" class="text-muted-color text-sm">{{ 'exercises.filters.activity' | t }}</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="filterActivity" class="text-muted-color text-sm">{{
+      'exercises.filters.activity' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="filterActivity"
       formControlName="isActive"
       [options]="activityOptions()"

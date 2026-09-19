@@ -1,6 +1,7 @@
+import { pageTitle } from '@core/i18n/page-title';
 import { Routes } from '@angular/router';
 import { NotFoundPage } from './pages/not-found-page/not-found-page';
 
 export const NOT_FOUND_ROUTES: Routes = [
-  { path: '', title: 'Sahifa topilmadi', component: NotFoundPage },
+  { path: '', title: pageTitle('layout.titles.notFound'), component: NotFoundPage },
 ];

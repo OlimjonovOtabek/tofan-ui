@@ -1,69 +1,85 @@
 <form [formGroup]="form" class="mb-4 flex flex-wrap items-end gap-3">
   <div class="flex min-w-56 flex-1 flex-col gap-1">
-    <label for="soldierSearch" class="text-muted-color text-sm">Qidirish</label>
+    <label for="soldierSearch" class="text-muted-color text-sm">{{
+      'soldiers.filters.search' | t
+    }}</label>
     <input
       pInputText
       id="soldierSearch"
       type="search"
       formControlName="search"
-      placeholder="Ism, familiya yoki username"
+      [placeholder]="'soldiers.filters.searchPlaceholder' | t"
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="soldierGender" class="text-muted-color text-sm">Jins</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="soldierGender" class="text-muted-color text-sm">{{
+      'soldiers.filters.gender' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="soldierGender"
       formControlName="gender"
-      [options]="genderOptions"
+      [options]="genderOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'soldiers.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="soldierGoal" class="text-muted-color text-sm">Maqsad</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="soldierGoal" class="text-muted-color text-sm">{{
+      'soldiers.filters.goal' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="soldierGoal"
       formControlName="goal"
-      [options]="goalOptions"
+      [options]="goalOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'soldiers.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="soldierExperience" class="text-muted-color text-sm">Tajriba</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="soldierExperience" class="text-muted-color text-sm">{{
+      'soldiers.filters.experience' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="soldierExperience"
       formControlName="experienceLevel"
-      [options]="experienceOptions"
+      [options]="experienceOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'soldiers.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
-  <div class="flex flex-col gap-1">
-    <label for="soldierPlace" class="text-muted-color text-sm">Joyi</label>
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="soldierPlace" class="text-muted-color text-sm">{{
+      'soldiers.filters.place' | t
+    }}</label>
     <p-select
+      [fluid]="true"
       inputId="soldierPlace"
       formControlName="isHomeWorkout"
-      [options]="placeOptions"
+      [options]="placeOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'soldiers.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
   <div class="flex flex-col gap-1">
-    <label for="soldierJoined" class="text-muted-color text-sm">Ro‘yxatdan o‘tgan</label>
+    <label for="soldierJoined" class="text-muted-color text-sm">{{
+      'soldiers.filters.joined' | t
+    }}</label>
     <p-datepicker
       inputId="soldierJoined"
       formControlName="joined"
@@ -71,13 +87,12 @@
       [readonlyInput]="true"
       [showButtonBar]="true"
       [maxDate]="today"
-      dateFormat="dd.mm.yy"
-      placeholder="Sanalar oralig‘i"
+      [placeholder]="'soldiers.filters.joinedPlaceholder' | t"
     />
   </div>
 
   <p-button
-    label="Tozalash"
+    [label]="'soldiers.filters.clear' | t"
     icon="pi pi-filter-slash"
     severity="secondary"
     [text]="true"

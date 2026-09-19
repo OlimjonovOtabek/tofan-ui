@@ -11,17 +11,19 @@ import {
   GENDER_OPTIONS,
   MUSCLE_GROUP_OPTIONS,
 } from '../../models/exercise-labels';
+import { TranslationKey } from '@core/i18n/dictionary';
 import { Translator } from '@core/i18n/translator';
+import { SelectOption } from '@shared/models/select-option';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 const SEARCH_DEBOUNCE_MS = 400;
 
-const ACTIVITY_OPTIONS = [
+const ACTIVITY_OPTIONS: SelectOption<boolean, TranslationKey>[] = [
   { value: true, label: 'exercises.filters.active' },
   { value: false, label: 'exercises.filters.inactive' },
 ];
 
-const PLACE_OPTIONS = [
+const PLACE_OPTIONS: SelectOption<boolean, TranslationKey>[] = [
   { value: true, label: 'exercises.filters.home' },
   { value: false, label: 'exercises.filters.gym' },
 ];
@@ -33,13 +35,18 @@ const PLACE_OPTIONS = [
 })
 export class ExerciseFilters {
   private readonly translator = inject(Translator);
+
   readonly filterChange = output<ExerciseFilter>();
 
-  protected readonly muscleGroupOptions = computed(() => MUSCLE_GROUP_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly equipmentTypeOptions = computed(() => EQUIPMENT_TYPE_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly genderOptions = computed(() => GENDER_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly activityOptions = computed(() => ACTIVITY_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
-  protected readonly placeOptions = computed(() => PLACE_OPTIONS.map(o => ({ ...o, label: this.translator.translate(o.label) })));
+  protected readonly muscleGroupOptions = computed(() =>
+    this.translator.options(MUSCLE_GROUP_OPTIONS),
+  );
+  protected readonly equipmentTypeOptions = computed(() =>
+    this.translator.options(EQUIPMENT_TYPE_OPTIONS),
+  );
+  protected readonly genderOptions = computed(() => this.translator.options(GENDER_OPTIONS));
+  protected readonly activityOptions = computed(() => this.translator.options(ACTIVITY_OPTIONS));
+  protected readonly placeOptions = computed(() => this.translator.options(PLACE_OPTIONS));
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     search: [''],

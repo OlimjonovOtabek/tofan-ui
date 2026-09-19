@@ -4,6 +4,7 @@ import { environment } from '@environments/environment';
 import { routes } from './routes/app.routes';
 import { provideHttp } from '@core/http/http.providers';
 import { provideUi } from '@core/config/ui.providers';
+import { provideI18n } from '@core/i18n/i18n.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttp(environment.apiBaseUrl),
     provideUi(),
+    provideI18n(),
   ],
 };
