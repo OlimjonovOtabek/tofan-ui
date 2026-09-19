@@ -1,2 +1,53 @@
 export const exercisesEn = {
+  "filters": {
+    "searchLabel": "Search",
+    "searchPlaceholder": "Exercise name",
+    "muscleGroup": "Muscle group",
+    "all": "All",
+    "equipment": "Equipment",
+    "gender": "Gender",
+    "place": "Place",
+    "activity": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "home": "Home",
+    "gym": "Gym",
+    "clear": "Clear"
+  },
+  "form": {
+    "addTitle": "Add Exercise",
+    "editTitle": "Edit Exercise",
+    "name": "Name",
+    "muscleGroup": "Muscle Group",
+    "equipment": "Equipment",
+    "difficulty": "Difficulty",
+    "type": "Type",
+    "gender": "Gender",
+    "isCompound": "Compound Exercise",
+    "isHomeExercise": "Can be done at home",
+    "instructions": "Instructions",
+    "instructionsPlaceholder": "How to perform the exercise",
+    "video": "Video",
+    "uploadedVideo": "Uploaded Video"
+  },
+  "page": {
+    "title": "Exercises Catalog",
+    "totalCount": "Total {count} exercises",
+    "add": "Add Exercise",
+    "empty": "No exercises found matching these criteria.",
+    "columns": {
+      "name": "Name",
+      "muscleGroup": "Muscle Group",
+      "equipment": "Equipment",
+      "difficulty": "Difficulty",
+      "activity": "Status"
+    },
+    "actions": {
+      "videoUploaded": "Video uploaded",
+      "edit": "Edit",
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "delete": "Delete"
+    }
+  }
 };

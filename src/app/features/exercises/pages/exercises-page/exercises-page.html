@@ -2,25 +2,25 @@
   <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
     <div>
       <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-        Mashqlar katalogi
+        {{ 'exercises.page.title' | t }}
       </h1>
       <span class="text-muted-color text-sm"
-        >Jami {{ store.loadError() === null ? store.totalCount() : '—' }} mashq</span
+        >{{ 'exercises.page.totalCount' | t: { count: store.loadError() === null ? store.totalCount() : '?' } }}</span
       >
     </div>
-    <p-button label="Mashq qo'shish" icon="pi pi-plus" (onClick)="add()" />
+    <p-button [label]="'exercises.page.add' | t" icon="pi pi-plus" (onClick)="add()" />
   </div>
 
   <app-exercise-filters (filterChange)="applyFilter($event)" />
 
   <app-data-table
-    [columns]="columns"
+    [columns]="columns()"
     [items]="store.exercises()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
     [error]="store.loadError()"
     [first]="store.first()"
-    emptyMessage="Bu shartlarga mos mashq topilmadi."
+    [emptyMessage]="'exercises.page.empty' | t"
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >
@@ -35,20 +35,20 @@
         <td>{{ difficultyLabel(exercise) }}</td>
         <td>
           <p-tag
-            [value]="exercise.isActive ? 'Faol' : 'Faol emas'"
+            [value]="exercise.isActive ? ('exercises.filters.active' | t) : ('exercises.filters.inactive' | t)"
             [severity]="exercise.isActive ? 'success' : 'secondary'"
           />
         </td>
         <td class="text-right whitespace-nowrap">
           @if (exercise.hasVideo()) {
-            <i class="pi pi-video text-muted-color mr-2" title="Video yuklangan"></i>
+            <i class="pi pi-video text-muted-color mr-2" [title]="'exercises.page.actions.videoUploaded' | t"></i>
           }
           <p-button
             icon="pi pi-pencil"
             severity="secondary"
             [text]="true"
             [rounded]="true"
-            ariaLabel="Tahrirlash"
+            [ariaLabel]="'exercises.page.actions.edit' | t"
             (onClick)="edit(exercise)"
           />
           <p-button
@@ -56,7 +56,7 @@
             severity="secondary"
             [text]="true"
             [rounded]="true"
-            [ariaLabel]="exercise.isActive ? 'Faolsizlantirish' : 'Faollashtirish'"
+            [ariaLabel]="exercise.isActive ? ('exercises.page.actions.deactivate' | t) : ('exercises.page.actions.activate' | t)"
             (onClick)="store.toggleActivation(exercise)"
           />
           <p-button
@@ -64,7 +64,7 @@
             severity="danger"
             [text]="true"
             [rounded]="true"
-            ariaLabel="O'chirish"
+            [ariaLabel]="'exercises.page.actions.delete' | t"
             (onClick)="remove(exercise)"
           />
         </td>

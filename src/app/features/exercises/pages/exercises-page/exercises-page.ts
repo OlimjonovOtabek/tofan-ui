@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Exercise } from '../../models/exercise';
 import { ExerciseDraft } from '../../models/exercise-draft';
 import { ExerciseFilter } from '../../models/exercise-filter';
@@ -15,40 +15,46 @@ import { Button } from '@openng/optimus-ui/button';
 import { Tag } from '@openng/optimus-ui/tag';
 import { ExerciseFilters } from '../../components/exercise-filters/exercise-filters';
 import { ExerciseFormDialog } from '../../components/exercise-form-dialog/exercise-form-dialog';
+import { Translator } from '@core/i18n/translator';
+import { LocaleStore } from '@core/i18n/locale.store';
+import { localizedSortField } from '@shared/models/localized-text';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-exercises-page',
-  imports: [DataTable, ExerciseFilters, ExerciseFormDialog, Button, Tag],
+  imports: [DataTable, ExerciseFilters, ExerciseFormDialog, Button, Tag, TranslatePipe],
   providers: [ExercisesStore],
   templateUrl: './exercises-page.html',
 })
 export class ExercisesPage {
   private readonly confirmations = inject(ConfirmDialogService);
+  private readonly translator = inject(Translator);
+  private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(ExercisesStore);
 
-  protected readonly columns: readonly DataTableColumn[] = [
-    { field: 'nameUz', header: 'Nomi', sortable: true },
-    { field: 'muscleGroup', header: 'Mushak guruhi', sortable: true },
-    { field: 'equipmentType', header: 'Jihoz' },
-    { field: 'difficulty', header: 'Qiyinlik' },
-    { field: 'isActive', header: 'Holati', width: '9rem' },
+  protected readonly columns = computed<readonly DataTableColumn[]>(() => [
+    { field: localizedSortField(this.localeStore.locale()), header: this.translator.translate('exercises.page.columns.name'), sortable: true },
+    { field: 'muscleGroup', header: this.translator.translate('exercises.page.columns.muscleGroup'), sortable: true },
+    { field: 'equipmentType', header: this.translator.translate('exercises.page.columns.equipment') },
+    { field: 'difficulty', header: this.translator.translate('exercises.page.columns.difficulty') },
+    { field: 'isActive', header: this.translator.translate('exercises.page.columns.activity'), width: '9rem' },
     { field: 'actions', header: '', width: '11rem' },
-  ];
+  ]);
 
   protected readonly dialogVisible = signal(false);
   protected readonly editedExercise = signal<Exercise | null>(null);
 
   protected muscleGroupLabel(exercise: Exercise): string {
-    return MUSCLE_GROUP_LABELS[exercise.muscleGroup];
+    return this.translator.translate(MUSCLE_GROUP_LABELS[exercise.muscleGroup]);
   }
 
   protected equipmentTypeLabel(exercise: Exercise): string {
-    return EQUIPMENT_TYPE_LABELS[exercise.equipmentType];
+    return this.translator.translate(EQUIPMENT_TYPE_LABELS[exercise.equipmentType]);
   }
 
   protected difficultyLabel(exercise: Exercise): string {
-    return DIFFICULTY_LABELS[exercise.difficulty];
+    return this.translator.translate(DIFFICULTY_LABELS[exercise.difficulty]);
   }
 
   protected add(): void {

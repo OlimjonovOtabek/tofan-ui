@@ -73,7 +73,7 @@ describe('AccountStore', () => {
     await store.load(ACCOUNT_ID);
 
     expect(store.account()).toBeNull();
-    expect(store.loadError()).toContain('Hisob topilmadi');
+    expect(store.loadError()).toContain('User.NotFound');
   });
 
   it('should block and reload the card when the admin blocks the account', async () => {

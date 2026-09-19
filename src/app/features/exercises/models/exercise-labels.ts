@@ -13,56 +13,56 @@ import {
 import { toSelectOptions } from '@shared/models/select-option';
 
 export const MUSCLE_GROUP_LABELS: Record<MuscleGroup, string> = {
-  unknown: "Noma'lum",
-  chest: "Ko'krak",
-  back: 'Orqa',
-  shoulders: 'Yelka',
-  biceps: 'Bitseps',
-  triceps: 'Tritseps',
-  forearms: 'Bilak',
-  abs: 'Qorin',
-  obliques: 'Yon qorin',
-  glutes: 'Dumba',
-  quadriceps: 'Son (old)',
-  hamstrings: 'Son (orqa)',
-  calves: 'Boldir',
-  fullBody: "To'liq tana",
-  cardio: 'Kardio',
+  unknown: 'enums.muscleGroup.unknown',
+  chest: 'enums.muscleGroup.chest',
+  back: 'enums.muscleGroup.back',
+  shoulders: 'enums.muscleGroup.shoulders',
+  biceps: 'enums.muscleGroup.biceps',
+  triceps: 'enums.muscleGroup.triceps',
+  forearms: 'enums.muscleGroup.forearms',
+  abs: 'enums.muscleGroup.abs',
+  obliques: 'enums.muscleGroup.obliques',
+  glutes: 'enums.muscleGroup.glutes',
+  quadriceps: 'enums.muscleGroup.quadriceps',
+  hamstrings: 'enums.muscleGroup.hamstrings',
+  calves: 'enums.muscleGroup.calves',
+  fullBody: 'enums.muscleGroup.fullBody',
+  cardio: 'enums.muscleGroup.cardio',
 };
 
 export const EQUIPMENT_TYPE_LABELS: Record<EquipmentType, string> = {
-  none: "Jihoz yo'q",
-  bodyweight: "O'z vazni",
-  barbell: 'Shtanga',
-  dumbbell: 'Gantel',
-  kettlebell: 'Girya',
-  machine: 'Trenajyor',
-  cable: 'Blok (tros)',
-  resistanceBand: 'Rezina lenta',
-  bench: 'Skameyka',
-  pullUpBar: 'Turnik',
-  smithMachine: 'Smit mashinasi',
+  none: 'enums.equipmentType.none',
+  bodyweight: 'enums.equipmentType.bodyweight',
+  barbell: 'enums.equipmentType.barbell',
+  dumbbell: 'enums.equipmentType.dumbbell',
+  kettlebell: 'enums.equipmentType.kettlebell',
+  machine: 'enums.equipmentType.machine',
+  cable: 'enums.equipmentType.cable',
+  resistanceBand: 'enums.equipmentType.resistanceBand',
+  bench: 'enums.equipmentType.bench',
+  pullUpBar: 'enums.equipmentType.pullUpBar',
+  smithMachine: 'enums.equipmentType.smithMachine',
 };
 
 export const DIFFICULTY_LABELS: Record<ExerciseDifficulty, string> = {
-  beginner: "Boshlang'ich",
-  intermediate: "O'rta",
-  advanced: 'Yuqori',
+  beginner: 'enums.difficulty.beginner',
+  intermediate: 'enums.difficulty.intermediate',
+  advanced: 'enums.difficulty.advanced',
 };
 
 export const EXERCISE_TYPE_LABELS: Record<ExerciseType, string> = {
-  strength: 'Kuch',
-  cardio: 'Kardio',
-  mobility: 'Harakatchanlik',
-  flexibility: 'Egiluvchanlik',
-  warmUp: 'Isinish',
-  coolDown: 'Sovish',
+  strength: 'enums.exerciseType.strength',
+  cardio: 'enums.exerciseType.cardio',
+  mobility: 'enums.exerciseType.mobility',
+  flexibility: 'enums.exerciseType.flexibility',
+  warmUp: 'enums.exerciseType.warmUp',
+  coolDown: 'enums.exerciseType.coolDown',
 };
 
 export const GENDER_LABELS: Record<ExerciseGender, string> = {
-  any: "Farqi yo'q",
-  male: 'Erkak',
-  female: 'Ayol',
+  any: 'enums.gender.any',
+  male: 'enums.gender.male',
+  female: 'enums.gender.female',
 };
 
 export const MUSCLE_GROUP_OPTIONS = toSelectOptions(MUSCLE_GROUPS, MUSCLE_GROUP_LABELS);

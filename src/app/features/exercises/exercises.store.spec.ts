@@ -82,7 +82,7 @@ describe('ExercisesStore', () => {
 
     await store.applyFilter({ search: 'squat' });
 
-    expect(store.loadError()).toContain('topilmadi');
+    expect(store.loadError()).toContain('notFound');
     expect(store.exercises()).toEqual([]);
     expect(store.totalCount()).toBe(0);
     expect(store.loading()).toBe(false);

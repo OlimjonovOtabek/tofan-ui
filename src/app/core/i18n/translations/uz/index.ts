@@ -7,6 +7,7 @@ import { soldiersUz } from './soldiers';
 import { accountsUz } from './accounts';
 import { userSessionsUz } from './user-sessions';
 import { notificationsUz } from './notifications';
+import { enumsUz } from './enums';
 import { errorsUz } from './errors';
 import { layoutUz } from './layout';
 import { optimusUz } from './optimus';
@@ -21,6 +22,7 @@ export const dictionaryUz = {
   accounts: accountsUz,
   userSessions: userSessionsUz,
   notifications: notificationsUz,
+  enums: enumsUz,
   errors: errorsUz,
   layout: layoutUz,
   optimus: optimusUz,

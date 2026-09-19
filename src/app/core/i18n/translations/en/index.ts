@@ -8,6 +8,7 @@ import { soldiersEn } from './soldiers';
 import { accountsEn } from './accounts';
 import { userSessionsEn } from './user-sessions';
 import { notificationsEn } from './notifications';
+import { enumsEn } from './enums';
 import { errorsEn } from './errors';
 import { layoutEn } from './layout';
 import { optimusEn } from './optimus';
@@ -22,6 +23,7 @@ export const dictionaryEn: Dictionary = {
   accounts: accountsEn,
   userSessions: userSessionsEn,
   notifications: notificationsEn,
+  enums: enumsEn,
   errors: errorsEn,
   layout: layoutEn,
   optimus: optimusEn,

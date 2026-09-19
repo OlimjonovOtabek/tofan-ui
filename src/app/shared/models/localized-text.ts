@@ -15,3 +15,12 @@ export function pickLocalized(text: LocalizedText | undefined | null, locale: Ap
   
   return '';
 }
+
+export function localizedSortField(locale: AppLocale): string {
+  switch (locale) {
+    case 'ru': return 'nameRu';
+    case 'en': return 'name';
+    case 'uz':
+    default: return 'nameUz';
+  }
+}
