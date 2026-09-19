@@ -11,6 +11,19 @@
     </p>
   </div>
 
+  @if (store.userId(); as userId) {
+    <div
+      class="bg-surface-100 dark:bg-surface-800 mb-4 flex flex-wrap items-center gap-3 rounded px-4 py-3 text-sm"
+    >
+      <i class="pi pi-filter text-muted-color"></i>
+      <span>
+        Faqat <span class="font-mono break-all">{{ userId }}</span> foydalanuvchining kirishlari
+      </span>
+      <a [routerLink]="[accountsPath, userId]" class="text-primary font-medium">Hisob</a>
+      <a [routerLink]="userSessionsPath" class="text-primary font-medium">Filtrni olib tashlash</a>
+    </div>
+  }
+
   <app-data-table
     [columns]="columns"
     [items]="store.sessions()"
@@ -26,7 +39,14 @@
   >
     <ng-template #row let-session>
       <tr>
-        <td class="font-mono text-sm break-all">{{ session.userId }}</td>
+        <td class="font-mono text-sm break-all">
+          <a
+            [routerLink]="[accountsPath, session.userId]"
+            class="text-primary"
+            title="Hisob kartochkasi"
+            >{{ session.userId }}</a
+          >
+        </td>
         <td class="whitespace-nowrap">{{ dateLabel(session.loggedInAt) }}</td>
         <td class="text-muted-color whitespace-nowrap">{{ dateLabel(session.expiresAt) }}</td>
         <td>
@@ -36,6 +56,17 @@
           }
         </td>
         <td class="text-right whitespace-nowrap">
+          @if (store.userId() === null) {
+            <a
+              [routerLink]="userSessionsPath"
+              [queryParams]="{ userId: session.userId }"
+              class="p-button p-button-text p-button-rounded p-button-secondary p-button-icon-only"
+              aria-label="Faqat shu foydalanuvchining kirishlari"
+              title="Faqat shu foydalanuvchi"
+            >
+              <i class="pi pi-filter"></i>
+            </a>
+          }
           <p-button
             icon="pi pi-copy"
             severity="secondary"

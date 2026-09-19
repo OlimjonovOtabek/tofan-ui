@@ -26,6 +26,15 @@ const MESSAGES_BY_CODE: Record<string, string> = {
   'UserId.Invalid': 'Foydalanuvchi ID UUID ko‘rinishida bo‘lishi kerak.',
   'Data.KeyEmpty': 'Qo‘shimcha ma’lumotdagi har bir qiymatning kaliti bo‘lishi kerak.',
   'Data.KeyDuplicate': 'Qo‘shimcha ma’lumotda kalitlar takrorlanmasligi kerak.',
+  'StoredFile.InUse':
+    'Fayl mashq videosi sifatida ishlatilmoqda. Avval uni mashqdan olib tashlang.',
+  'StoredFile.NotFound': 'Fayl topilmadi — u allaqachon o‘chirilgan bo‘lishi mumkin.',
+  'User.NotFound': 'Hisob topilmadi — u Keycloak’dan o‘chirilgan bo‘lishi mumkin.',
+  'User.AlreadyBlocked': 'Hisob allaqachon bloklangan.',
+  'User.NotBlocked': 'Hisob bloklanmagan.',
+  'User.CannotBlockSelf': 'O‘z hisobingizni bloklay olmaysiz.',
+  GetUsersQuery:
+    'Hisoblarni Keycloak’dan o‘qib bo‘lmadi. Rol filtri tanlangan bo‘lsa, u hozircha ishlamasligi mumkin (Keycloak sozlamasi kerak).',
 };
 
 export function toErrorMessage(error: unknown): string {

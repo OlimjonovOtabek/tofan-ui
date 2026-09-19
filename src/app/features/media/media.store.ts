@@ -1,13 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { StoredFile } from './models/stored-file';
-import { FileUsage } from './models/file-usage';
-import { toExerciseVideoUsage } from './services/stored-file.mapper';
 import { MediaService } from './services/media.service';
 import { toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
-
-const EXERCISE_BATCH_SIZE = 1000;
 
 @Injectable()
 export class MediaStore {
@@ -22,7 +19,7 @@ export class MediaStore {
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
   readonly first = computed(() => this.currentRequest().first);
-  readonly checkingUsagesOf = signal<string | null>(null);
+  readonly deletingId = signal<string | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
@@ -42,39 +39,19 @@ export class MediaStore {
     return this.mediaService.contentUrl(file.id);
   }
 
-  async findUsages(file: StoredFile): Promise<readonly FileUsage[] | null> {
-    this.checkingUsagesOf.set(file.id);
-    try {
-      return await this.exerciseVideoUsages(file.id);
-    } catch (error) {
-      this.notifications.error(error);
-      return null;
-    } finally {
-      this.checkingUsagesOf.set(null);
-    }
-  }
-
   async remove(file: StoredFile): Promise<void> {
+    this.deletingId.set(file.id);
     try {
       await this.mediaService.delete(file.id);
       this.notifications.success(`"${file.displayName}" o'chirildi.`);
       await this.load();
     } catch (error) {
       this.notifications.error(error);
-    }
-  }
-
-  private async exerciseVideoUsages(fileId: string): Promise<readonly FileUsage[]> {
-    const usages: FileUsage[] = [];
-    for (let first = 0; ; first += EXERCISE_BATCH_SIZE) {
-      const page = await this.mediaService.listExerciseVideos({ first, rows: EXERCISE_BATCH_SIZE });
-      const exercises = page.data;
-      usages.push(
-        ...exercises.filter((item) => item.videoFileId === fileId).map(toExerciseVideoUsage),
-      );
-      if (exercises.length === 0 || first + EXERCISE_BATCH_SIZE >= page.totalCount) {
-        return usages;
+      if (error instanceof NotFoundError) {
+        await this.load();
       }
+    } finally {
+      this.deletingId.set(null);
     }
   }
 }

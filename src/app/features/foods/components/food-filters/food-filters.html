@@ -1,0 +1,57 @@
+<form [formGroup]="form" class="flex min-w-0 flex-1 flex-wrap items-end gap-3">
+  <div class="flex min-w-56 flex-1 flex-col gap-1">
+    <label for="search" class="text-muted-color text-sm">Qidirish</label>
+    <input
+      pInputText
+      id="search"
+      type="search"
+      formControlName="search"
+      placeholder="Ovqat nomi yoki shtrix-kod"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="foodSource" class="text-muted-color text-sm">Manba</label>
+    <p-select
+      inputId="foodSource"
+      formControlName="source"
+      [options]="sourceOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="foodActivity" class="text-muted-color text-sm">Holati</label>
+    <p-select
+      inputId="foodActivity"
+      formControlName="isActive"
+      [options]="activityOptions"
+      optionLabel="label"
+      optionValue="value"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="foodVerification" class="text-muted-color text-sm">Tasdiq</label>
+    <p-select
+      inputId="foodVerification"
+      formControlName="isVerified"
+      [options]="verificationOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <p-button
+    label="Tozalash"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</form>

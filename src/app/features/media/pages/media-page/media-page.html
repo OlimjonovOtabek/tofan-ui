@@ -3,8 +3,8 @@
     <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Media fayllar</h1>
     <span class="text-muted-color text-sm">
       Jami {{ store.loadError() === null ? store.totalCount() : '—' }} fayl — panel va mobil ilova
-      orqali yuklanganlarning hammasi. O‘chirishdan oldin fayl mashqlarda ishlatilgan-ishlatilmagani
-      tekshiriladi.
+      orqali yuklanganlarning hammasi. Mashq videosi sifatida ishlatilayotgan faylni backend
+      o‘chirishga ruxsat bermaydi.
     </span>
   </div>
 
@@ -69,7 +69,7 @@
             [text]="true"
             [rounded]="true"
             ariaLabel="O'chirish"
-            [loading]="store.checkingUsagesOf() === file.id"
+            [loading]="store.deletingId() === file.id"
             (onClick)="remove(file)"
           />
         </td>

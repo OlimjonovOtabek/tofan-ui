@@ -29,6 +29,16 @@ export const routes: Routes = [
         loadChildren: () => import('@features/media/media.routes').then((m) => m.MEDIA_ROUTES),
       },
       {
+        path: 'soldiers',
+        loadChildren: () =>
+          import('@features/soldiers/soldiers.routes').then((m) => m.SOLDIER_ROUTES),
+      },
+      {
+        path: 'accounts',
+        loadChildren: () =>
+          import('@features/accounts/accounts.routes').then((m) => m.ACCOUNT_ROUTES),
+      },
+      {
         path: 'user-sessions',
         loadChildren: () =>
           import('@features/user-sessions/user-sessions.routes').then((m) => m.USER_SESSION_ROUTES),

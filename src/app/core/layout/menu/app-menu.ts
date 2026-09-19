@@ -19,6 +19,8 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
   {
     label: 'Foydalanuvchilar',
     items: [
+      { label: 'Soldierlar', icon: 'pi pi-fw pi-users', routerLink: [AppPaths.soldiers] },
+      { label: 'Hisoblar', icon: 'pi pi-fw pi-id-card', routerLink: [AppPaths.accounts] },
       {
         label: 'Kirishlar jurnali',
         icon: 'pi pi-fw pi-history',

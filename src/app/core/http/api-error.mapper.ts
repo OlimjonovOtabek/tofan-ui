@@ -44,7 +44,7 @@ function fromHttpError(error: HttpErrorResponse): DomainError {
     case HttpStatusCode.Conflict:
       return new ConflictError(message, code);
     default:
-      return new ServiceUnavailableError(message);
+      return new ServiceUnavailableError(message, code);
   }
 }
 

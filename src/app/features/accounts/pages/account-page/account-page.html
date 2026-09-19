@@ -1,0 +1,155 @@
+<div class="card">
+  <a
+    [routerLink]="accountsPath"
+    class="text-muted-color mb-4 inline-flex items-center gap-2 text-sm"
+  >
+    <i class="pi pi-arrow-left"></i> Hisoblar
+  </a>
+
+  @if (store.loadError(); as error) {
+    <p-message severity="error">
+      <div class="flex flex-wrap items-center gap-3">
+        <span>{{ error }}</span>
+        <p-button
+          label="Qayta urinish"
+          icon="pi pi-refresh"
+          severity="secondary"
+          [outlined]="true"
+          size="small"
+          (onClick)="store.load()"
+        />
+      </div>
+    </p-message>
+  } @else if (store.account(); as account) {
+    <div class="mb-6 flex flex-wrap items-center gap-3">
+      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-2xl font-semibold">
+        {{ account.userName }}
+      </h1>
+      <p-tag
+        [value]="account.isActive ? 'Faol' : 'Bloklangan'"
+        [severity]="account.isActive ? 'success' : 'danger'"
+      />
+      @if (store.isCurrentUser()) {
+        <p-tag value="Siz" severity="info" />
+      }
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <dl class="m-0 grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-3 text-sm">
+        <dt class="text-muted-color">ID</dt>
+        <dd class="m-0 flex items-center gap-1 font-mono break-all">
+          {{ account.id }}
+          <p-button
+            icon="pi pi-copy"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            size="small"
+            ariaLabel="ID ni nusxalash"
+            (onClick)="copyId(account)"
+          />
+        </dd>
+        <dt class="text-muted-color">Email</dt>
+        <dd class="m-0 break-all">
+          {{ account.email ?? '—' }}
+          @if (account.email !== null) {
+            <p-tag
+              [value]="account.emailVerified ? 'Tasdiqlangan' : 'Tasdiqlanmagan'"
+              [severity]="account.emailVerified ? 'info' : 'secondary'"
+              styleClass="ml-2"
+            />
+          }
+        </dd>
+        <dt class="text-muted-color">Telefon</dt>
+        <dd class="m-0">{{ account.phoneNumber ?? '—' }}</dd>
+        <dt class="text-muted-color">Ro‘yxatdan o‘tgan</dt>
+        <dd class="m-0">{{ registeredLabel(account) }}</dd>
+        <dt class="text-muted-color">Rollar</dt>
+        <dd class="m-0 flex flex-wrap gap-1">
+          @for (role of store.roles(); track role) {
+            <p-tag [value]="role" severity="warn" />
+          } @empty {
+            <span>Oddiy foydalanuvchi</span>
+          }
+        </dd>
+      </dl>
+
+      <div class="flex flex-col gap-3">
+        <a
+          pButton
+          [routerLink]="[soldiersPath, account.id]"
+          severity="secondary"
+          [outlined]="true"
+          class="justify-center"
+        >
+          <i class="pi pi-user" pButtonIcon></i>
+          <span pButtonLabel>Soldier profili</span>
+        </a>
+        <a
+          pButton
+          [routerLink]="userSessionsPath"
+          [queryParams]="{ userId: account.id }"
+          severity="secondary"
+          [outlined]="true"
+          class="justify-center"
+        >
+          <i class="pi pi-history" pButtonIcon></i>
+          <span pButtonLabel>Kirishlar jurnali</span>
+        </a>
+        <a
+          pButton
+          [routerLink]="sendNotificationPath"
+          [queryParams]="{ userId: account.id }"
+          severity="secondary"
+          [outlined]="true"
+          class="justify-center"
+        >
+          <i class="pi pi-send" pButtonIcon></i>
+          <span pButtonLabel>Push yuborish</span>
+        </a>
+
+        <div class="border-surface mt-2 flex flex-col gap-3 border-t pt-4">
+          @if (account.isActive) {
+            <p-button
+              label="Bloklash"
+              [fluid]="true"
+              icon="pi pi-ban"
+              severity="danger"
+              [disabled]="store.isCurrentUser() || store.runningAction() !== null"
+              [loading]="store.runningAction() === 'block'"
+              (onClick)="block(account)"
+            />
+          } @else {
+            <p-button
+              label="Blokdan chiqarish"
+              [fluid]="true"
+              icon="pi pi-unlock"
+              severity="success"
+              [disabled]="store.runningAction() !== null"
+              [loading]="store.runningAction() === 'unblock'"
+              (onClick)="unblock(account)"
+            />
+          }
+          <p-button
+            label="Hamma joydan chiqarish"
+            [fluid]="true"
+            icon="pi pi-sign-out"
+            severity="secondary"
+            [outlined]="true"
+            [disabled]="store.runningAction() !== null"
+            [loading]="store.runningAction() === 'logoutEverywhere'"
+            (onClick)="logoutEverywhere(account)"
+          />
+          <p class="text-muted-color m-0 text-xs">
+            @if (store.isCurrentUser()) {
+              O‘z hisobingizni bloklay olmaysiz.
+            }
+            {{ tokenLifetimeNote }}
+          </p>
+        </div>
+      </div>
+    </div>
+  } @else if (store.loading()) {
+    <p class="text-muted-color m-0"><i class="pi pi-spin pi-spinner mr-2"></i>Yuklanmoqda…</p>
+  }
+</div>

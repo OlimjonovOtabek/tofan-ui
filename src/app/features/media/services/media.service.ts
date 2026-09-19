@@ -4,11 +4,10 @@ import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
 import { Page, PageRequest } from '@shared/models/page';
 import { StoredFile } from '../models/stored-file';
-import { ExerciseVideoResponse, StoredFileResponse } from './stored-file.dto';
+import { StoredFileResponse } from './stored-file.dto';
 import { toStoredFile } from './stored-file.mapper';
 
 const FILES = '/files';
-const EXERCISES = '/exercises';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -25,10 +24,6 @@ export class MediaService {
 
   contentUrl(id: string): string {
     return this.apiClient.url(`${filePath(id)}/content`);
-  }
-
-  listExerciseVideos(page: PageRequest): Promise<PagedList<ExerciseVideoResponse>> {
-    return this.apiClient.get<PagedList<ExerciseVideoResponse>>(EXERCISES, toPagedQuery(page));
   }
 }
 

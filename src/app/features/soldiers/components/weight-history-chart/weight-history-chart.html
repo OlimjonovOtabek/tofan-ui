@@ -1,0 +1,76 @@
+@if (chart(); as chart) {
+  <svg
+    [attr.viewBox]="'0 0 ' + area.width + ' ' + area.height"
+    class="h-auto w-full"
+    role="img"
+    aria-label="Vazn o‘zgarishi grafigi"
+  >
+    <g class="text-surface-300 dark:text-surface-600">
+      <line
+        [attr.x1]="area.left"
+        [attr.x2]="area.width - area.right"
+        [attr.y1]="area.top"
+        [attr.y2]="area.top"
+        stroke="currentColor"
+      />
+      <line
+        [attr.x1]="area.left"
+        [attr.x2]="area.width - area.right"
+        [attr.y1]="area.height - area.bottom"
+        [attr.y2]="area.height - area.bottom"
+        stroke="currentColor"
+      />
+    </g>
+
+    <g class="text-muted-color text-xs">
+      <text [attr.x]="area.left - 8" [attr.y]="area.top + 4" text-anchor="end" fill="currentColor">
+        {{ chart.maxKg }}
+      </text>
+      <text
+        [attr.x]="area.left - 8"
+        [attr.y]="area.height - area.bottom + 4"
+        text-anchor="end"
+        fill="currentColor"
+      >
+        {{ chart.minKg }}
+      </text>
+      <text [attr.x]="area.left" [attr.y]="area.height - 6" fill="currentColor">
+        {{ firstDate() }}
+      </text>
+      <text
+        [attr.x]="area.width - area.right"
+        [attr.y]="area.height - 6"
+        text-anchor="end"
+        fill="currentColor"
+      >
+        {{ lastDate() }}
+      </text>
+    </g>
+
+    @if (chart.targetY !== null) {
+      <g class="text-green-500">
+        <line
+          [attr.x1]="area.left"
+          [attr.x2]="area.width - area.right"
+          [attr.y1]="chart.targetY"
+          [attr.y2]="chart.targetY"
+          stroke="currentColor"
+          stroke-dasharray="6 4"
+        >
+          <title>Maqsad: {{ targetKg() }} kg</title>
+        </line>
+      </g>
+    }
+
+    <g class="text-primary">
+      <path [attr.d]="chart.path" fill="none" stroke="currentColor" stroke-width="2" />
+      @for (point of chart.points; track point.entry.id) {
+        <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4" fill="currentColor">
+          <title>{{ pointTitle(point) }}</title>
+        </circle>
+      }
+    </g>
+  </svg>
+} @else {
+  <p class="text-muted-color m-0 text-sm">Vazn yozuvlari yo‘q.</p>
+}

@@ -52,6 +52,13 @@ describe('toDomainError', () => {
     expect(toDomainError(problem(500, null))).toBeInstanceOf(ServiceUnavailableError);
   });
 
+  it('should keep the backend title when the server fails', () => {
+    const error = toDomainError(problem(500, { title: 'GetUsersQuery', detail: 'Keycloak down' }));
+
+    expect(error).toBeInstanceOf(ServiceUnavailableError);
+    expect(error.code).toBe('GetUsersQuery');
+  });
+
   it('should report a service failure when the backend is unreachable', () => {
     expect(toDomainError(new Error('offline'))).toBeInstanceOf(ServiceUnavailableError);
   });

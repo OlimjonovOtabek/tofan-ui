@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Food } from '../../models/food';
 import { FoodDraft } from '../../models/food-draft';
+import { FoodFilter } from '../../models/food-filter';
 import { PageRequest } from '@shared/models/page';
 import { FOOD_SOURCE_LABELS, SERVING_UNIT_LABELS } from '../../models/food-labels';
 import { FoodsStore } from '../../foods.store';
@@ -12,14 +12,12 @@ import { NotificationService } from '@core/feedback/notification.service';
 import { Button } from '@openng/optimus-ui/button';
 import { InputText } from '@openng/optimus-ui/inputtext';
 import { Tag } from '@openng/optimus-ui/tag';
-import { debounceTime } from 'rxjs';
+import { FoodFilters } from '../../components/food-filters/food-filters';
 import { FoodFormDialog } from '../../components/food-form-dialog/food-form-dialog';
-
-const SEARCH_DEBOUNCE_MS = 400;
 
 @Component({
   selector: 'app-foods-page',
-  imports: [ReactiveFormsModule, DataTable, FoodFormDialog, Button, InputText, Tag],
+  imports: [ReactiveFormsModule, DataTable, FoodFilters, FoodFormDialog, Button, InputText, Tag],
   providers: [FoodsStore],
   templateUrl: './foods-page.html',
 })
@@ -40,20 +38,11 @@ export class FoodsPage {
     { field: 'actions', header: '', width: '8rem' },
   ];
 
-  protected readonly searchControl = this.formBuilder.control('');
   protected readonly barcodeControl = this.formBuilder.control('');
 
   protected readonly dialogVisible = signal(false);
   protected readonly editedFood = signal<Food | null>(null);
   protected readonly prefilledBarcode = signal<string | null>(null);
-
-  constructor() {
-    this.searchControl.valueChanges
-      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), takeUntilDestroyed())
-      .subscribe((search) => {
-        void this.store.applyFilter(search.trim().length === 0 ? {} : { search: search.trim() });
-      });
-  }
 
   protected servingLabel(food: Food): string {
     return `${food.servingSize} ${SERVING_UNIT_LABELS[food.servingUnit]} · ${food.servingSizeGrams} g`;
@@ -119,6 +108,10 @@ export class FoodsPage {
     if (await this.confirmations.confirmDelete(food.displayName)) {
       await this.store.remove(food);
     }
+  }
+
+  protected applyFilter(filter: FoodFilter): void {
+    void this.store.applyFilter(filter);
   }
 
   protected loadPage(request: PageRequest): void {

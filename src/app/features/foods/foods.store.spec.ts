@@ -88,13 +88,24 @@ describe('FoodsStore', () => {
     expect(store.loading()).toBe(false);
   });
 
+  it('should ask for active foods only when no filter was chosen', async () => {
+    const store = createStore();
+
+    await store.load({ first: 0, rows: 25 });
+
+    expect(service.list).toHaveBeenLastCalledWith({ isActive: true }, { first: 0, rows: 25 });
+  });
+
   it('should go back to the first page when a filter is applied', async () => {
     const store = createStore();
     await store.load({ first: 50, rows: 25 });
 
-    await store.applyFilter({ search: 'plov' });
+    await store.applyFilter({ search: 'plov', isActive: false, isVerified: false });
 
-    expect(service.list).toHaveBeenLastCalledWith({ search: 'plov' }, { first: 0, rows: 25 });
+    expect(service.list).toHaveBeenLastCalledWith(
+      { search: 'plov', isActive: false, isVerified: false },
+      { first: 0, rows: 25 },
+    );
   });
 
   it('should look up the trimmed barcode when searching by barcode', async () => {

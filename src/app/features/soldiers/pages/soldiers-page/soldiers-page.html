@@ -1,0 +1,45 @@
+<div class="card">
+  <div class="mb-4">
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Soldierlar</h1>
+    <p class="text-muted-color m-0 mt-1 max-w-3xl text-sm">
+      Jami {{ store.loadError() === null ? store.totalCount() : '—' }} soldier — onboarding’dan
+      o‘tgan foydalanuvchilar. Onboarding’ni tugatmaganlar va adminlar “Hisoblar” bo‘limida.
+    </p>
+  </div>
+
+  <app-soldier-filters (filterChange)="applyFilter($event)" />
+
+  <app-data-table
+    [columns]="columns"
+    [items]="store.soldiers()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [error]="store.loadError()"
+    [first]="store.first()"
+    dataKey="userId"
+    defaultSortField="createdOnUtc"
+    defaultSortDirection="desc"
+    emptyMessage="Bu shartlarga mos soldier topilmadi."
+    (pageChange)="loadPage($event)"
+    (retry)="store.load()"
+  >
+    <ng-template #row let-soldier>
+      <tr>
+        <td>
+          <a [routerLink]="[soldiersPath, soldier.userId]" class="text-primary font-medium">
+            {{ soldier.fullName }}
+          </a>
+          <div class="text-muted-color text-sm">
+            &#64;{{ soldier.userName }} · {{ soldier.countryCode }}
+          </div>
+        </td>
+        <td>{{ genderLabel(soldier) }}</td>
+        <td>{{ goalLabel(soldier) }}</td>
+        <td>{{ experienceLabel(soldier) }}</td>
+        <td class="whitespace-nowrap">{{ weightLabel(soldier) }}</td>
+        <td>{{ placeLabel(soldier) }}</td>
+        <td class="text-muted-color whitespace-nowrap text-sm">{{ joinedLabel(soldier) }}</td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>

@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { requireBarcode } from './models/barcode';
 import { Food } from './models/food';
 import { FoodDraft, createFoodDraft } from './models/food-draft';
-import { FoodFilter } from './models/food-filter';
+import { DEFAULT_FOOD_FILTER, FoodFilter } from './models/food-filter';
 import { FoodsService } from './services/foods.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { toErrorMessage } from '@core/feedback/error-message';
@@ -14,7 +14,7 @@ export class FoodsStore {
   private readonly notifications = inject(NotificationService);
 
   private readonly page = signal<Page<Food>>(emptyPage<Food>());
-  private readonly currentFilter = signal<FoodFilter>({});
+  private readonly currentFilter = signal<FoodFilter>(DEFAULT_FOOD_FILTER);
   private readonly currentRequest = signal<PageRequest>(firstPage());
 
   readonly foods = computed(() => this.page().items);

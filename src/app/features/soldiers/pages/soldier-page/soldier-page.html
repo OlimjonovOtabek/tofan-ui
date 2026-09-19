@@ -1,0 +1,114 @@
+<div class="card">
+  <a
+    [routerLink]="soldiersPath"
+    class="text-muted-color mb-4 inline-flex items-center gap-2 text-sm"
+  >
+    <i class="pi pi-arrow-left"></i> Soldierlar
+  </a>
+
+  @if (store.loadError(); as error) {
+    <p-message severity="error">
+      <div class="flex flex-wrap items-center gap-3">
+        <span>{{ error }}</span>
+        <p-button
+          label="Qayta urinish"
+          icon="pi pi-refresh"
+          severity="secondary"
+          [outlined]="true"
+          size="small"
+          (onClick)="store.load()"
+        />
+      </div>
+    </p-message>
+  } @else if (store.notOnboarded()) {
+    <p-message severity="info">
+      <div class="flex flex-wrap items-center gap-3">
+        <span>Onboarding tugatilmagan: bu hisobning soldier profili hali yo‘q.</span>
+        <a [routerLink]="[accountsPath, userId()]" class="text-primary font-medium">
+          Hisob kartochkasi
+        </a>
+      </div>
+    </p-message>
+  } @else if (store.profile(); as profile) {
+    <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="text-surface-900 dark:text-surface-0 m-0 text-2xl font-semibold">
+            {{ profile.fullName }}
+          </h1>
+          @if (goalLabel(); as goal) {
+            <p-tag [value]="goal" severity="info" />
+          }
+        </div>
+        <span class="text-muted-color text-sm">&#64;{{ profile.userName }}</span>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <a
+          pButton
+          [routerLink]="[accountsPath, profile.userId]"
+          severity="secondary"
+          [outlined]="true"
+        >
+          <i class="pi pi-id-card" pButtonIcon></i>
+          <span pButtonLabel>Hisob</span>
+        </a>
+        <a
+          pButton
+          [routerLink]="sendNotificationPath"
+          [queryParams]="{ userId: profile.userId }"
+          severity="secondary"
+          [outlined]="true"
+        >
+          <i class="pi pi-send" pButtonIcon></i>
+          <span pButtonLabel>Push yuborish</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+      @for (section of store.factSections(); track section.title) {
+        <section>
+          <div class="mb-3 text-lg font-semibold" role="heading" aria-level="2">
+            {{ section.title }}
+          </div>
+          <dl class="m-0 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+            @for (fact of section.facts; track fact.label) {
+              <dt class="text-muted-color">{{ fact.label }}</dt>
+              <dd class="m-0">{{ fact.value }}</dd>
+            }
+          </dl>
+        </section>
+      }
+    </div>
+
+    <section>
+      <div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+        <div class="text-lg font-semibold" role="heading" aria-level="2">Vazn tarixi</div>
+        @if (changeLabel(); as change) {
+          <span class="text-muted-color text-sm">{{ change }}</span>
+        }
+      </div>
+      <app-weight-history-chart [entries]="store.weights()" [targetKg]="profile.targetWeightKg" />
+
+      @if (store.latestWeights().length > 0) {
+        <div class="text-muted-color mt-6 mb-2 text-sm font-medium" role="heading" aria-level="3">
+          Oxirgi yozuvlar
+        </div>
+        <table class="w-full text-sm">
+          <tbody>
+            @for (entry of store.latestWeights(); track entry.id) {
+              <tr class="border-surface border-b">
+                <td class="py-2 whitespace-nowrap">{{ loggedLabel(entry) }}</td>
+                <td class="py-2 font-medium">{{ entry.weightKg }} kg</td>
+                <td class="text-muted-color py-2">{{ sourceLabel(entry) }}</td>
+                <td class="text-muted-color py-2">{{ entry.note ?? '' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  } @else if (store.loading()) {
+    <p class="text-muted-color m-0"><i class="pi pi-spin pi-spinner mr-2"></i>Yuklanmoqda…</p>
+  }
+</div>

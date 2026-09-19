@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, input, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PageRequest } from '@shared/models/page';
+import { isUuid } from '@shared/utils/identifiers';
 import { UserSession, UserSessionStatus } from '../../models/user-session';
 import { AppPaths } from '@core/config/app-paths';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
@@ -33,10 +34,21 @@ export class UserSessionsPage {
     { field: 'createdOnUtc', header: 'Kirgan vaqti', sortable: true, width: '12rem' },
     { field: 'expiresOnUtc', header: 'Token muddati', sortable: true, width: '12rem' },
     { field: 'status', header: 'Holati', width: '13rem' },
-    { field: 'actions', header: '', width: '8rem' },
+    { field: 'actions', header: '', width: '11rem' },
   ];
 
   protected readonly sendNotificationPath = AppPaths.sendNotification;
+  protected readonly userSessionsPath = AppPaths.userSessions;
+  protected readonly accountsPath = AppPaths.accounts;
+
+  readonly userId = input<string>();
+
+  constructor() {
+    effect(() => {
+      const userId = this.userId()?.trim() ?? '';
+      untracked(() => void this.store.filterByUser(isUuid(userId) ? userId : null));
+    });
+  }
 
   protected statusLabel(session: UserSession): string {
     return STATUS_VIEW[session.status()].label;

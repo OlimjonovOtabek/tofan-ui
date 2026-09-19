@@ -1,6 +1,6 @@
 import { FILE_CATEGORIES } from '@shared/models/file-category';
 import { FileCategoryDto as FileCategory, fileCategories } from '@shared/models/file-category.dto';
-import { toExerciseVideoUsage, toStoredFile } from './stored-file.mapper';
+import { toStoredFile } from './stored-file.mapper';
 
 describe('file mapper', () => {
   it('should map every category when converting both ways', () => {
@@ -40,11 +40,5 @@ describe('file mapper', () => {
     });
 
     expect(file.displayName).toBe('guide.pdf');
-  });
-
-  it('should name the exercise in Uzbek when it uses the file as its video', () => {
-    expect(
-      toExerciseVideoUsage({ id: '7', name: 'Squat', nameUz: 'Skvat', videoFileId: 'v' }),
-    ).toEqual({ kind: 'exerciseVideo', ownerId: '7', ownerName: 'Skvat' });
   });
 });

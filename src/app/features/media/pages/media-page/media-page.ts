@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { PageRequest } from '@shared/models/page';
 import { StoredFile } from '../../models/stored-file';
-import { FileUsage } from '../../models/file-usage';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { ClipboardService } from '@core/feedback/clipboard.service';
@@ -79,23 +78,8 @@ export class MediaPage {
   }
 
   protected async remove(file: StoredFile): Promise<void> {
-    const usages = await this.store.findUsages(file);
-    if (usages === null) {
-      return;
-    }
-    if (await this.confirmations.confirmDelete(file.displayName, usageWarning(usages))) {
+    if (await this.confirmations.confirmDelete(file.displayName)) {
       await this.store.remove(file);
     }
   }
-}
-
-function usageWarning(usages: readonly FileUsage[]): string | undefined {
-  if (usages.length === 0) {
-    return undefined;
-  }
-  const names = usages.map((usage) => `"${usage.ownerName}"`).join(', ');
-  return (
-    `Bu fayl ${usages.length} ta mashqda video sifatida ishlatilmoqda: ${names}. ` +
-    "O'chirilsa, ilovada bu mashqlarning videosi ochilmay qoladi."
-  );
 }

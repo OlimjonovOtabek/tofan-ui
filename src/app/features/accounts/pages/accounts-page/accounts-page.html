@@ -1,0 +1,54 @@
+<div class="card">
+  <div class="mb-4">
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">Hisoblar</h1>
+    <p class="text-muted-color m-0 mt-1 max-w-3xl text-sm">
+      Jami {{ store.loadError() === null ? store.totalCount() : '—' }} ta hisob — Keycloak’dagi
+      hamma akkauntlar, onboarding’ni tugatmaganlar va adminlar ham. Ism va maqsad soldier
+      kartochkasida. Ro‘yxat doim username bo‘yicha alifbo tartibida.
+    </p>
+  </div>
+
+  <app-account-filters (filterChange)="applyFilter($event)" />
+
+  <app-data-table
+    [columns]="columns"
+    [items]="store.accounts()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [error]="store.loadError()"
+    [first]="store.first()"
+    emptyMessage="Bu shartlarga mos hisob topilmadi."
+    (pageChange)="loadPage($event)"
+    (retry)="store.load()"
+  >
+    <ng-template #row let-account>
+      <tr>
+        <td>
+          <a [routerLink]="[accountsPath, account.id]" class="text-primary font-medium">
+            {{ account.userName }}
+          </a>
+        </td>
+        <td class="break-all">
+          @if (account.email; as email) {
+            {{ email }}
+            @if (account.emailVerified) {
+              <i class="pi pi-verified text-primary ml-1" title="Email tasdiqlangan"></i>
+            }
+          } @else {
+            <span class="text-muted-color">—</span>
+          }
+        </td>
+        <td class="whitespace-nowrap">{{ account.phoneNumber ?? '—' }}</td>
+        <td class="text-muted-color whitespace-nowrap text-sm">
+          {{ registeredLabel(account) }}
+        </td>
+        <td>
+          <p-tag
+            [value]="account.isActive ? 'Faol' : 'Bloklangan'"
+            [severity]="account.isActive ? 'success' : 'danger'"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>

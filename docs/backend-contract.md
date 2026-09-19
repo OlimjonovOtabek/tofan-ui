@@ -85,8 +85,12 @@ Frontend mapping (`core/http/api-error.mapper.ts`) turns failures into error cla
 | 409 / `Conflict`                 | `ConflictError`                              |
 | network failure, 5xx / `Failure` | `ServiceUnavailableError`                    |
 
-**Trap:** validation issues carry the FluentValidation _validator_ code (`NotEmptyValidator`),
-not the property name, so they cannot be attached to a form field. Show them as a list.
+Validation issues carry the FluentValidation _validator_ code (`NotEmptyValidator`) and, since
+backend `admin-ui-v1`, an optional camelCase `propertyName` (`nameUz`, `meals[0].items[1].quantityGrams`).
+The panel does not map `propertyName` yet and shows the issues as a list (`docs/deferred.md`).
+
+A 5xx keeps the ProblemDetails `title` as the `ServiceUnavailableError` code, so a known server failure
+(`GetUsersQuery` when Keycloak cannot be read) can get its own message.
 
 ## Enums
 
@@ -100,17 +104,21 @@ with `shared/utils/enum-map.ts`. Some enums start at 1 (`ExerciseType`, `Exercis
 User-facing text comes from `core/feedback/error-message.ts`: first a per-code message
 (`MESSAGES_BY_CODE`), otherwise a generic message per error class.
 
-| Feature                 | Codes                                                                                                                                                                                                                                                                                                     | How they are shown                                                                                            |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| auth                    | Authentication.InvalidCredentials, Authentication.InvalidRefreshToken, IdentityProvider.UserNotFound                                                                                                                                                                                                      | per-code message                                                                                              |
-| notifications           | NotificationTemplate.Conflict, NotificationTemplate.NoActiveTemplate, NotificationPreference.Disabled, PushNotification.NoActiveDevice, PushNotification.DispatchFailed, PushNotification.Disabled, PushNotification.ConfigurationInvalid, UserId.Empty, UserId.Invalid, Data.KeyEmpty, Data.KeyDuplicate | per-code message                                                                                              |
-| exercises, foods, media | Exercise.NotFound, Food.NotFound, StoredFile.NotFound                                                                                                                                                                                                                                                     | generic `NotFoundError` message                                                                               |
-| file upload             | StoredFile.Empty, StoredFile.UnsupportedContent, StoredFile.TooLarge                                                                                                                                                                                                                                      | thrown before the request by `shared/utils/file-upload-rules.ts` as `BusinessRuleError`; its message is shown |
+| Feature          | Codes                                                                                                                                                                                                                                                                                                     | How they are shown                                                                                            |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| auth             | Authentication.InvalidCredentials, Authentication.InvalidRefreshToken, IdentityProvider.UserNotFound                                                                                                                                                                                                      | per-code message                                                                                              |
+| notifications    | NotificationTemplate.Conflict, NotificationTemplate.NoActiveTemplate, NotificationPreference.Disabled, PushNotification.NoActiveDevice, PushNotification.DispatchFailed, PushNotification.Disabled, PushNotification.ConfigurationInvalid, UserId.Empty, UserId.Invalid, Data.KeyEmpty, Data.KeyDuplicate | per-code message                                                                                              |
+| accounts         | User.NotFound, User.AlreadyBlocked, User.NotBlocked, User.CannotBlockSelf, GetUsersQuery (500)                                                                                                                                                                                                            | per-code message                                                                                              |
+| soldiers         | Profile.NotFound                                                                                                                                                                                                                                                                                          | not an error: "onboarding not finished" state                                                                 |
+| media            | StoredFile.InUse, StoredFile.NotFound                                                                                                                                                                                                                                                                     | per-code message                                                                                              |
+| exercises, foods | Exercise.NotFound, Food.NotFound                                                                                                                                                                                                                                                                          | generic `NotFoundError` message                                                                               |
+| file upload      | StoredFile.Empty, StoredFile.UnsupportedContent, StoredFile.TooLarge                                                                                                                                                                                                                                      | thrown before the request by `shared/utils/file-upload-rules.ts` as `BusinessRuleError`; its message is shown |
 
 ## Identity administration
 
-User, role and permission management goes through backend endpoints only (planned shape:
-`GET/POST /admin/users`, `GET/PUT/DELETE /admin/users/{id}`). They do not exist yet (roadmap phase 2).
+Account administration goes through backend endpoints only: `GET /admin/users`, `GET /admin/users/{id}`,
+`GET /admin/users/{id}/roles`, `POST /admin/users/{id}/block|unblock|logout-all` (see
+`docs/modules/accounts.md`). Role assignment and account deletion do not exist yet.
 The panel never calls Keycloak's `/admin/realms/{realm}/...`; the backend reaches Keycloak through
 `IIdentityProviderClient` / `KeycloakAdminClient` in its Auth module.
 

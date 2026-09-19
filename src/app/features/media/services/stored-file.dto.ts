@@ -10,10 +10,3 @@ export interface StoredFileResponse {
   createdOnUtc: string;
   caption?: string | null;
 }
-
-export interface ExerciseVideoResponse {
-  id: string;
-  name: string;
-  nameUz: string;
-  videoFileId?: string | null;
-}

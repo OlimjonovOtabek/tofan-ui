@@ -3,6 +3,8 @@ export const AppPaths = {
   exercises: '/exercises',
   foods: '/foods',
   media: '/media',
+  soldiers: '/soldiers',
+  accounts: '/accounts',
   userSessions: '/user-sessions',
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',

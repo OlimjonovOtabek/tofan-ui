@@ -1,13 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
+import { ConflictError } from '@shared/models/errors/conflict.error';
+import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { MediaStore } from './media.store';
 import { StoredFile } from './models/stored-file';
 import { MediaService } from './services/media.service';
-import { ExerciseVideoResponse } from './services/stored-file.dto';
-
-function exercise(id: string, videoFileId: string | null): ExerciseVideoResponse {
-  return { id, name: `Exercise ${id}`, nameUz: `Mashq ${id}`, videoFileId };
-}
 
 describe('MediaStore', () => {
   const video = new StoredFile(
@@ -20,29 +17,32 @@ describe('MediaStore', () => {
     null,
   );
 
-  let listExerciseVideos: ReturnType<typeof vi.fn>;
-  let list: ReturnType<typeof vi.fn>;
+  let service: Pick<MediaService, 'list' | 'delete'>;
+  let notifications: Pick<NotificationService, 'success' | 'error'>;
 
   function createStore(): MediaStore {
     TestBed.configureTestingModule({
       providers: [
         MediaStore,
-        { provide: MediaService, useValue: { listExerciseVideos, list } },
-        { provide: NotificationService, useValue: { error: vi.fn(), success: vi.fn() } },
+        { provide: MediaService, useValue: service },
+        { provide: NotificationService, useValue: notifications },
       ],
     });
     return TestBed.inject(MediaStore);
   }
 
   beforeEach(() => {
-    listExerciseVideos = vi.fn();
-    list = vi.fn().mockResolvedValue({ items: [video], totalCount: 1 });
+    service = {
+      list: vi.fn().mockResolvedValue({ items: [video], totalCount: 1 }),
+      delete: vi.fn().mockResolvedValue(undefined),
+    };
+    notifications = { success: vi.fn(), error: vi.fn() };
   });
 
   it('should expose the error and drop the old rows when a reload fails', async () => {
     const store = createStore();
     await store.load();
-    list.mockRejectedValue(new Error('offline'));
+    vi.mocked(service.list).mockRejectedValue(new Error('offline'));
 
     await store.load();
 
@@ -51,26 +51,26 @@ describe('MediaStore', () => {
     expect(store.loading()).toBe(false);
   });
 
-  it('should name the exercises when their video is the file', async () => {
-    listExerciseVideos.mockResolvedValue({
-      data: [exercise('1', 'video'), exercise('2', null), exercise('3', 'other')],
-      totalCount: 3,
-    });
+  it('should keep the list and show the reason when the file is still in use', async () => {
+    const store = createStore();
+    await store.load();
+    const inUse = new ConflictError('in use', 'StoredFile.InUse');
+    vi.mocked(service.delete).mockRejectedValue(inUse);
 
-    await expect(createStore().findUsages(video)).resolves.toEqual([
-      { kind: 'exerciseVideo', ownerId: '1', ownerName: 'Mashq 1' },
-    ]);
-    expect(listExerciseVideos).toHaveBeenCalledWith({ first: 0, rows: 1000 });
+    await store.remove(video);
+
+    expect(notifications.error).toHaveBeenCalledWith(inUse);
+    expect(service.list).toHaveBeenCalledTimes(1);
+    expect(store.deletingId()).toBeNull();
   });
 
-  it('should read the whole catalog when it spans several pages', async () => {
-    listExerciseVideos
-      .mockResolvedValueOnce({ data: [exercise('1', null)], totalCount: 1500 })
-      .mockResolvedValueOnce({ data: [exercise('1001', 'video')], totalCount: 1500 });
+  it('should refresh the list when the file was already deleted', async () => {
+    const store = createStore();
+    await store.load();
+    vi.mocked(service.delete).mockRejectedValue(new NotFoundError('gone', 'StoredFile.NotFound'));
 
-    const usages = await createStore().findUsages(video);
+    await store.remove(video);
 
-    expect(usages?.map((usage) => usage.ownerId)).toEqual(['1001']);
-    expect(listExerciseVideos).toHaveBeenLastCalledWith({ first: 1000, rows: 1000 });
+    expect(service.list).toHaveBeenCalledTimes(2);
   });
 });

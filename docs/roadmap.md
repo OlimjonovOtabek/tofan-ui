@@ -149,28 +149,34 @@ servis bo'ladi, shuning uchun:
 
 ### Menyu (reja)
 
-| Guruh | Band | Holat |
-| --- | --- | --- |
-| Asosiy | Boshqaruv paneli | backend 2.1–2.2 kerak |
-| Katalog | Mashqlar, Ovqatlar, Media fayllar | ✅ |
-| Katalog | Mashg'ulot shablonlari | backend P3 kerak |
-| Foydalanuvchilar | Soldierlar | backend 1.1–1.3 kerak |
-| Foydalanuvchilar | Hisoblar | ro'yxat va kartochka backend'da lokal tayyor (0.2), bloklash 1.5 kerak |
-| Foydalanuvchilar | Kirishlar jurnali | ✅ (foydalanuvchi filtri — 0.3) |
-| Bildirishnomalar | Shablonlar, Push yuborish | ✅ |
-| Bildirishnomalar | Yuborilganlar jurnali | backend P2 kerak |
+| Guruh            | Band                              | Holat                                                      |
+| ---------------- | --------------------------------- | ---------------------------------------------------------- |
+| Asosiy           | Boshqaruv paneli                  | backend 2.1–2.2 kerak                                      |
+| Katalog          | Mashqlar, Ovqatlar, Media fayllar | ✅                                                         |
+| Katalog          | Mashg'ulot shablonlari            | backend P3 kerak                                           |
+| Foydalanuvchilar | Soldierlar                        | ✅                                                         |
+| Foydalanuvchilar | Hisoblar                          | ✅ (rol filtri va telefon — Keycloak sozlamasi kutilmoqda) |
+| Foydalanuvchilar | Kirishlar jurnali                 | ✅ (foydalanuvchi filtri bilan)                            |
+| Bildirishnomalar | Shablonlar, Push yuborish         | ✅                                                         |
+| Bildirishnomalar | Yuborilganlar jurnali             | backend P2 kerak                                           |
 
 ### Tartib
 
-| # | Ish (panel) | Backend'dan kerak |
-| --- | --- | --- |
-| 2.1 | Hisoblar: ro'yxat (qidiruv, faollik, rol) va kartochka | 0.2 — `admin-users-read` ni `main` ga qo'shish va deploy |
-| 2.2 | Soldierlar: ro'yxat va kartochka, vazn grafigi, "Hisob" havolasi | 1.1–1.3 |
-| 2.3 | Hisob kartochkasida sessiyalar, bloklash, hamma joydan chiqarish | 0.3, 1.4, 1.5 |
-| 2.4 | Push yuborishda foydalanuvchini ro'yxatdan tanlash (ID qo'lda emas) | 1.1 |
-| 2.5 | Dashboard | 2.1–2.2 |
-| 2.6 | Yuborilganlar jurnali, ommaviy push | P2 bildirishnomalar |
-| 2.7 | Mashg'ulot shablonlari | P3 |
+| #       | Ish (panel)                                                          | Backend'dan kerak   |
+| ------- | -------------------------------------------------------------------- | ------------------- |
+| ~~2.1~~ | ~~Hisoblar: ro'yxat (qidiruv, faollik, rol) va kartochka~~           | ~~0.2~~             |
+| ~~2.2~~ | ~~Soldierlar: ro'yxat va kartochka, vazn grafigi, "Hisob" havolasi~~ | ~~1.1–1.3~~         |
+| ~~2.3~~ | ~~Hisob kartochkasida sessiyalar, bloklash, hamma joydan chiqarish~~ | ~~0.3, 1.4, 1.5~~   |
+| 2.4     | Push yuborishda foydalanuvchini ro'yxatdan tanlash (ID qo'lda emas)  | 1.1                 |
+| 2.5     | Dashboard                                                            | 2.1–2.2             |
+| 2.6     | Yuborilganlar jurnali, ommaviy push                                  | P2 bildirishnomalar |
+| 2.7     | Mashg'ulot shablonlari                                               | P3                  |
+
+**2.1–2.3 bajarildi (2026-09-19)** backend [admin-ui-v1](../../tofan/docs/admin-ui-v1.md) asosida:
+`/soldiers`, `/soldiers/:userId` (vazn grafigi SVG, kutubxonasiz), `/accounts`, `/accounts/:userId`
+(rollar, bloklash, blokdan chiqarish, hamma joydan chiqarish). Hisob kartochkasidagi sessiyalar —
+kirishlar jurnaliga `?userId=` havolasi. Shu bilan birga: ovqatlarda manba/holat/tasdiq filtrlari,
+media o'chirishda backend `409 StoredFile.InUse` (panel tekshiruvi olib tashlandi).
 
 Audit jurnali rejadan olib tashlandi (2026-09-18: hozir kerak emas).
 

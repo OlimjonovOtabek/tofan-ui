@@ -1,0 +1,46 @@
+<form [formGroup]="form" class="mb-4 flex flex-wrap items-end gap-3">
+  <div class="flex min-w-56 flex-1 flex-col gap-1">
+    <label for="accountSearch" class="text-muted-color text-sm">Qidirish</label>
+    <input
+      pInputText
+      id="accountSearch"
+      type="search"
+      formControlName="search"
+      placeholder="Username, email, ism yoki +998… telefon"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="accountStatus" class="text-muted-color text-sm">Holati</label>
+    <p-select
+      inputId="accountStatus"
+      formControlName="isActive"
+      [options]="statusOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="accountRole" class="text-muted-color text-sm">Rol</label>
+    <p-select
+      inputId="accountRole"
+      formControlName="role"
+      [options]="roleOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="Hammasi"
+      [showClear]="true"
+    />
+  </div>
+
+  <p-button
+    label="Tozalash"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</form>

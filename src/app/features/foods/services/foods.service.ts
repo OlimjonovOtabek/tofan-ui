@@ -8,7 +8,7 @@ import { ApiClient } from '@core/http/api-client';
 import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
 import { FoodResponse } from './food.dto';
-import { toCreateFoodRequest, toFood } from './food.mapper';
+import { foodSources, toCreateFoodRequest, toFood } from './food.mapper';
 
 const FOODS = '/diet/foods';
 
@@ -20,6 +20,9 @@ export class FoodsService {
     const list = await this.apiClient.get<PagedList<FoodResponse>>(FOODS, {
       ...toPagedQuery(page),
       Search: filter.search === undefined || filter.search.length === 0 ? undefined : filter.search,
+      Source: filter.source === undefined ? undefined : foodSources.toApi(filter.source),
+      IsActive: filter.isActive,
+      IsVerified: filter.isVerified,
     });
     return toPage(list, toFood);
   }

@@ -1,5 +1,5 @@
 import { FOOD_SOURCES, FoodSource, SERVING_UNITS, ServingUnit } from './food-attributes';
-import { toSelectOptions } from '@shared/models/select-option';
+import { SelectOption, toSelectOptions } from '@shared/models/select-option';
 
 export const SERVING_UNIT_LABELS: Record<ServingUnit, string> = {
   grams: 'gramm',
@@ -20,3 +20,13 @@ export const FOOD_SOURCE_LABELS: Record<FoodSource, string> = {
 
 export const SERVING_UNIT_OPTIONS = toSelectOptions(SERVING_UNITS, SERVING_UNIT_LABELS);
 export const FOOD_SOURCE_OPTIONS = toSelectOptions(FOOD_SOURCES, FOOD_SOURCE_LABELS);
+
+export const FOOD_ACTIVITY_OPTIONS: SelectOption<boolean>[] = [
+  { value: true, label: 'Faol' },
+  { value: false, label: 'O‘chirilgan' },
+];
+
+export const FOOD_VERIFICATION_OPTIONS: SelectOption<boolean>[] = [
+  { value: true, label: 'Tasdiqlangan' },
+  { value: false, label: 'Tasdiqlanmagan' },
+];
