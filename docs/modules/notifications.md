@@ -28,6 +28,8 @@ push to one user, either from templates or with custom text and an optional key�
 - `models/outgoing-notification.ts` validates the recipient (UUID), text limits and payload keys
   before the confirmation dialog, so an invalid push never reaches the confirm step.
 
+- Template titles and bodies are `LocalizedText`; lists, confirms and the send-page sample show them in the admin's language (`titleIn(locale)`), fallback uz → en → ru (2026-09-19, i18n).
+
 ## Traps
 - The backend allows one active template per type and style (409 `NotificationTemplate.Conflict`).
 - For a templated push the backend picks the user's style and falls back to `professional`; without an

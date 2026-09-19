@@ -27,6 +27,8 @@ exists, otherwise open a create dialog with the barcode filled in), create, edit
   non-negative nutrition.
 - `Food.per100Grams` normalises nutrition for the list; it is `null` when the serving weight is 0.
 
+- Names are a `LocalizedText` (`en`, `uz`, `ru`) shown with `pickLocalized` in the current language (fallback uz → en → ru); the name column sorts by `name`, `name_uz` or `name_ru` to match (2026-09-19, i18n).
+
 ## Traps
 
 - `IsActive` has no "both" value: when omitted the backend returns active foods only. The filter

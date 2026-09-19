@@ -26,5 +26,7 @@ create and edit in three languages, attach a video, activate or deactivate, dele
 - Backend enums are integers; `services/exercise.mapper.ts` maps them by name. `MuscleGroup` and
   `EquipmentType` start at 0, `ExerciseType` and `ExerciseDifficulty` at 1.
 
+- Names are a `LocalizedText` (`en`, `uz`, `ru`) shown with `pickLocalized` in the current language (fallback uz → en → ru); the name column sorts by `name`, `name_uz` or `name_ru` to match (2026-09-19, i18n).
+
 ## Traps
 - Sorting sends snake_case `SortField` (`name_uz`); a camelCase name is silently replaced by `id`.
