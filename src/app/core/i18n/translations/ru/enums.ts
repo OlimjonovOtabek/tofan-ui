@@ -46,5 +46,20 @@ export const enumsRu = {
     "any": "Любой",
     "male": "Мужской",
     "female": "Женский"
+  },
+  "servingUnit": {
+    "grams": "грамм",
+    "milliliters": "мл",
+    "piece": "шт",
+    "slice": "кусок",
+    "cup": "стакан",
+    "tablespoon": "ст. ложка",
+    "teaspoon": "ч. ложка"
+  },
+  "foodSource": {
+    "system": "Система",
+    "userCustom": "Пользователь",
+    "aiScan": "AI сканер",
+    "imported": "Импорт"
   }
 };

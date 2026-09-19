@@ -6,15 +6,15 @@
   (save)="submit()"
 >
   <div [formGroup]="form" class="flex flex-col gap-4">
-    <app-localized-text-field [group]="names" label="Nomi" />
+    <app-localized-text-field [group]="names" [label]="'foods.form.name' | t" />
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div class="flex flex-col gap-1">
-        <label for="source" class="font-medium">Manba</label>
+        <label for="source" class="font-medium">{{ 'foods.form.source' | t }}</label>
         <p-select
           inputId="source"
           formControlName="source"
-          [options]="sourceOptions"
+          [options]="sourceOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -22,24 +22,24 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="barcode" class="font-medium">Shtrix-kod</label>
+        <label for="barcode" class="font-medium">{{ 'foods.form.barcode' | t }}</label>
         <input
           pInputText
           id="barcode"
           type="text"
           formControlName="barcode"
-          placeholder="Masalan, 4780016470016"
+          [placeholder]="'foods.form.barcodePlaceholder' | t"
         />
       </div>
     </div>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
       <div class="flex flex-col gap-1">
-        <label for="servingUnit" class="font-medium">Porsiya birligi</label>
+        <label for="servingUnit" class="font-medium">{{ 'foods.form.servingUnit' | t }}</label>
         <p-select
           inputId="servingUnit"
           formControlName="servingUnit"
-          [options]="servingUnitOptions"
+          [options]="servingUnitOptions()"
           optionLabel="label"
           optionValue="value"
           [fluid]="true"
@@ -47,7 +47,7 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="servingSize" class="font-medium">Porsiya hajmi</label>
+        <label for="servingSize" class="font-medium">{{ 'foods.form.servingSize' | t }}</label>
         <p-inputnumber
           inputId="servingSize"
           formControlName="servingSize"
@@ -59,7 +59,7 @@
       </div>
 
       <div class="flex flex-col gap-1">
-        <label for="servingSizeGrams" class="font-medium">Porsiya vazni (g)</label>
+        <label for="servingSizeGrams" class="font-medium">{{ 'foods.form.servingSizeGrams' | t }}</label>
         <p-inputnumber
           inputId="servingSizeGrams"
           formControlName="servingSizeGrams"
@@ -72,10 +72,10 @@
     </div>
 
     <div>
-      <div class="text-surface-900 dark:text-surface-0 mb-2 font-medium">Bir porsiyadagi ozuqa</div>
+      <div class="text-surface-900 dark:text-surface-0 mb-2 font-medium">{{ 'foods.form.nutrientsPerServing' | t }}</div>
       <div class="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <div class="flex flex-col gap-1">
-          <label for="caloriesPerServing" class="text-muted-color text-sm">Kaloriya</label>
+          <label for="caloriesPerServing" class="text-muted-color text-sm">{{ 'foods.form.calories' | t }}</label>
           <p-inputnumber
             inputId="caloriesPerServing"
             formControlName="caloriesPerServing"
@@ -85,7 +85,7 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="proteinGrams" class="text-muted-color text-sm">Oqsil (g)</label>
+          <label for="proteinGrams" class="text-muted-color text-sm">{{ 'foods.form.protein' | t }}</label>
           <p-inputnumber
             inputId="proteinGrams"
             formControlName="proteinGrams"
@@ -96,7 +96,7 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="carbsGrams" class="text-muted-color text-sm">Uglevod (g)</label>
+          <label for="carbsGrams" class="text-muted-color text-sm">{{ 'foods.form.carbs' | t }}</label>
           <p-inputnumber
             inputId="carbsGrams"
             formControlName="carbsGrams"
@@ -107,7 +107,7 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="fatGrams" class="text-muted-color text-sm">Yog' (g)</label>
+          <label for="fatGrams" class="text-muted-color text-sm">{{ 'foods.form.fat' | t }}</label>
           <p-inputnumber
             inputId="fatGrams"
             formControlName="fatGrams"
@@ -118,7 +118,7 @@
           />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="fiberGrams" class="text-muted-color text-sm">Tolalar (g)</label>
+          <label for="fiberGrams" class="text-muted-color text-sm">{{ 'foods.form.fiber' | t }}</label>
           <p-inputnumber
             inputId="fiberGrams"
             formControlName="fiberGrams"
@@ -133,11 +133,11 @@
     <div class="flex flex-wrap gap-6">
       <div class="flex items-center gap-2">
         <p-toggleswitch inputId="isVerified" formControlName="isVerified" />
-        <label for="isVerified">Tasdiqlangan</label>
+        <label for="isVerified">{{ 'foods.form.isVerified' | t }}</label>
       </div>
       <div class="flex items-center gap-2">
         <p-toggleswitch inputId="isActive" formControlName="isActive" />
-        <label for="isActive">Faol</label>
+        <label for="isActive">{{ 'foods.form.isActive' | t }}</label>
       </div>
     </div>
   </div>

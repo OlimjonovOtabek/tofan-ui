@@ -46,5 +46,20 @@ export const enumsUz = {
     "any": "Farqi yo'q",
     "male": "Erkak",
     "female": "Ayol"
+  },
+  "servingUnit": {
+    "grams": "gramm",
+    "milliliters": "ml",
+    "piece": "dona",
+    "slice": "bo'lak",
+    "cup": "stakan",
+    "tablespoon": "osh qoshiq",
+    "teaspoon": "choy qoshiq"
+  },
+  "foodSource": {
+    "system": "Tizim",
+    "userCustom": "Foydalanuvchi",
+    "aiScan": "AI skaner",
+    "imported": "Import"
   }
 };

@@ -1,4 +1,5 @@
 import { FoodSource, ServingUnit } from './food-attributes';
+import { LocalizedText } from '@shared/models/localized-text';
 
 export interface NutritionPer100Grams {
   readonly calories: number;
@@ -10,9 +11,7 @@ export interface NutritionPer100Grams {
 export class Food {
   constructor(
     readonly id: string,
-    readonly name: string,
-    readonly nameUz: string,
-    readonly nameRu: string,
+    readonly names: LocalizedText,
     readonly source: FoodSource,
     readonly servingUnit: ServingUnit,
     readonly servingSize: number,
@@ -26,10 +25,6 @@ export class Food {
     readonly barcode: string | null = null,
     readonly fiberGrams: number | null = null,
   ) {}
-
-  get displayName(): string {
-    return this.nameUz.length > 0 ? this.nameUz : this.name;
-  }
 
   get per100Grams(): NutritionPer100Grams | null {
     if (this.servingSizeGrams <= 0) {

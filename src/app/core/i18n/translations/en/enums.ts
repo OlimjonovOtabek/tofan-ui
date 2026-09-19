@@ -46,5 +46,20 @@ export const enumsEn = {
     "any": "Any",
     "male": "Male",
     "female": "Female"
+  },
+  "servingUnit": {
+    "grams": "grams",
+    "milliliters": "ml",
+    "piece": "piece",
+    "slice": "slice",
+    "cup": "cup",
+    "tablespoon": "tablespoon",
+    "teaspoon": "teaspoon"
+  },
+  "foodSource": {
+    "system": "System",
+    "userCustom": "User",
+    "aiScan": "AI Scan",
+    "imported": "Imported"
   }
 };

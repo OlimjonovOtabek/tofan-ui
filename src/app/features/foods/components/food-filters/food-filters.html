@@ -1,54 +1,54 @@
 <form [formGroup]="form" class="flex min-w-0 flex-1 flex-wrap items-end gap-3">
   <div class="flex min-w-56 flex-1 flex-col gap-1">
-    <label for="search" class="text-muted-color text-sm">Qidirish</label>
+    <label for="search" class="text-muted-color text-sm">{{ 'foods.filters.searchLabel' | t }}</label>
     <input
       pInputText
       id="search"
       type="search"
       formControlName="search"
-      placeholder="Ovqat nomi yoki shtrix-kod"
+      [placeholder]="'foods.filters.searchPlaceholder' | t"
     />
   </div>
 
   <div class="flex flex-col gap-1">
-    <label for="foodSource" class="text-muted-color text-sm">Manba</label>
+    <label for="foodSource" class="text-muted-color text-sm">{{ 'foods.filters.source' | t }}</label>
     <p-select
       inputId="foodSource"
       formControlName="source"
-      [options]="sourceOptions"
+      [options]="sourceOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'foods.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
   <div class="flex flex-col gap-1">
-    <label for="foodActivity" class="text-muted-color text-sm">Holati</label>
+    <label for="foodActivity" class="text-muted-color text-sm">{{ 'foods.filters.activity' | t }}</label>
     <p-select
       inputId="foodActivity"
       formControlName="isActive"
-      [options]="activityOptions"
+      [options]="activityOptions()"
       optionLabel="label"
       optionValue="value"
     />
   </div>
 
   <div class="flex flex-col gap-1">
-    <label for="foodVerification" class="text-muted-color text-sm">Tasdiq</label>
+    <label for="foodVerification" class="text-muted-color text-sm">{{ 'foods.filters.verification' | t }}</label>
     <p-select
       inputId="foodVerification"
       formControlName="isVerified"
-      [options]="verificationOptions"
+      [options]="verificationOptions()"
       optionLabel="label"
       optionValue="value"
-      placeholder="Hammasi"
+      [placeholder]="'foods.filters.all' | t"
       [showClear]="true"
     />
   </div>
 
   <p-button
-    label="Tozalash"
+    [label]="'foods.filters.clear' | t"
     icon="pi pi-filter-slash"
     severity="secondary"
     [text]="true"

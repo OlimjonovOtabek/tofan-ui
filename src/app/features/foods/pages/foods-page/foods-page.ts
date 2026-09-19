@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Food } from '../../models/food';
 import { FoodDraft } from '../../models/food-draft';
@@ -14,10 +14,14 @@ import { InputText } from '@openng/optimus-ui/inputtext';
 import { Tag } from '@openng/optimus-ui/tag';
 import { FoodFilters } from '../../components/food-filters/food-filters';
 import { FoodFormDialog } from '../../components/food-form-dialog/food-form-dialog';
+import { Translator } from '@core/i18n/translator';
+import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { localizedSortField, pickLocalized } from '@shared/models/localized-text';
+import { LocaleStore } from '@core/i18n/locale.store';
 
 @Component({
   selector: 'app-foods-page',
-  imports: [ReactiveFormsModule, DataTable, FoodFilters, FoodFormDialog, Button, InputText, Tag],
+  imports: [ReactiveFormsModule, DataTable, FoodFilters, FoodFormDialog, Button, InputText, Tag, TranslatePipe],
   providers: [FoodsStore],
   templateUrl: './foods-page.html',
 })
@@ -25,18 +29,20 @@ export class FoodsPage {
   private readonly confirmations = inject(ConfirmDialogService);
   private readonly notifications = inject(NotificationService);
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly translator = inject(Translator);
+  private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(FoodsStore);
 
-  protected readonly columns: readonly DataTableColumn[] = [
-    { field: 'nameUz', header: 'Nomi', sortable: true },
-    { field: 'servingSize', header: 'Porsiya' },
-    { field: 'caloriesPerServing', header: 'Kaloriya', sortable: true },
-    { field: 'macros', header: 'O / U / Y' },
-    { field: 'source', header: 'Manba' },
-    { field: 'isActive', header: 'Holati', width: '11rem' },
+  protected readonly columns = computed<readonly DataTableColumn[]>(() => [
+    { field: localizedSortField(this.localeStore.locale()), header: this.translator.translate('foods.page.columns.name'), sortable: true },
+    { field: 'servingSize', header: this.translator.translate('foods.page.columns.serving') },
+    { field: 'caloriesPerServing', header: this.translator.translate('foods.page.columns.calories'), sortable: true },
+    { field: 'macros', header: this.translator.translate('foods.page.columns.macros') },
+    { field: 'source', header: this.translator.translate('foods.page.columns.source') },
+    { field: 'isActive', header: this.translator.translate('foods.page.columns.activity'), width: '11rem' },
     { field: 'actions', header: '', width: '8rem' },
-  ];
+  ]);
 
   protected readonly barcodeControl = this.formBuilder.control('');
 
@@ -44,8 +50,16 @@ export class FoodsPage {
   protected readonly editedFood = signal<Food | null>(null);
   protected readonly prefilledBarcode = signal<string | null>(null);
 
+  protected foodName(food: Food): string {
+    return pickLocalized(food.names, this.localeStore.locale());
+  }
+
+  protected foodSubname(food: Food): string {
+    return food.names.en;
+  }
+
   protected servingLabel(food: Food): string {
-    return `${food.servingSize} ${SERVING_UNIT_LABELS[food.servingUnit]} · ${food.servingSizeGrams} g`;
+    return `${food.servingSize} ${this.translator.translate(SERVING_UNIT_LABELS[food.servingUnit])} • ${food.servingSizeGrams} g`;
   }
 
   protected macrosLabel(food: Food): string {
@@ -53,7 +67,7 @@ export class FoodsPage {
   }
 
   protected sourceLabel(food: Food): string {
-    return FOOD_SOURCE_LABELS[food.source];
+    return this.translator.translate(FOOD_SOURCE_LABELS[food.source]);
   }
 
   protected caloriesLabel(food: Food): string {
@@ -86,7 +100,7 @@ export class FoodsPage {
       return;
     }
     if (found === null) {
-      this.notifications.info(`"${barcode}" katalogda yo'q. Yangi ovqat sifatida qo'shing.`);
+      this.notifications.info(this.translator.translate('foods.page.barcodeNotFound', { barcode }));
       this.editedFood.set(null);
       this.prefilledBarcode.set(barcode);
     } else {
@@ -105,7 +119,7 @@ export class FoodsPage {
   }
 
   protected async remove(food: Food): Promise<void> {
-    if (await this.confirmations.confirmDelete(food.displayName)) {
+    if (await this.confirmations.confirmDelete(this.foodName(food))) {
       await this.store.remove(food);
     }
   }
