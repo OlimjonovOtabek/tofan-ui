@@ -1,0 +1,1 @@
+export const commonRu = { save: 'Сохранить', greeting: 'Привет {name}' };

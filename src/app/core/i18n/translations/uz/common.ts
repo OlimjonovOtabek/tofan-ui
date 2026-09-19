@@ -1,0 +1,1 @@
+export const commonUz = { save: 'Saqlash', greeting: 'Salom {name}' };

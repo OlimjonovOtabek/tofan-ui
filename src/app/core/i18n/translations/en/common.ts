@@ -1,0 +1,1 @@
+export const commonEn = { save: 'Save', greeting: 'Hello {name}' };
