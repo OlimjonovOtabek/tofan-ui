@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
+import { FileUploadService } from '@shared/components/file-upload/file-upload.service';
+import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { MediaStore } from './media.store';
 import { StoredFile } from './models/stored-file';
 import { MediaService } from './services/media.service';
@@ -19,6 +21,7 @@ describe('MediaStore', () => {
 
   let service: Pick<MediaService, 'list' | 'delete'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
+  let fileUploadService: Pick<FileUploadService, 'upload'>;
 
   function createStore(): MediaStore {
     TestBed.configureTestingModule({
@@ -26,6 +29,7 @@ describe('MediaStore', () => {
         MediaStore,
         { provide: MediaService, useValue: service },
         { provide: NotificationService, useValue: notifications },
+        { provide: FileUploadService, useValue: fileUploadService },
       ],
     });
     return TestBed.inject(MediaStore);
@@ -37,6 +41,7 @@ describe('MediaStore', () => {
       delete: vi.fn().mockResolvedValue(undefined),
     };
     notifications = { success: vi.fn(), error: vi.fn() };
+    fileUploadService = { upload: vi.fn().mockResolvedValue('new-file') };
   });
 
   it('should expose the error and drop the old rows when a reload fails', async () => {
@@ -72,5 +77,49 @@ describe('MediaStore', () => {
     await store.remove(video);
 
     expect(service.list).toHaveBeenCalledTimes(2);
+  });
+
+  it('should upload the file and show the newest page when the upload succeeds', async () => {
+    const store = createStore();
+    await store.load({ first: 50, rows: 25, sortField: 'createdOnUtc', sortDirection: 'desc' });
+    const file = new File(['video'], 'squat.mp4');
+
+    const uploaded = await store.upload({ file, category: 'exerciseVideo', caption: ' Skvat ' });
+
+    expect(uploaded).toBe(true);
+    expect(fileUploadService.upload).toHaveBeenCalledWith(
+      expect.objectContaining({ file, category: 'exerciseVideo', caption: 'Skvat' }),
+    );
+    expect(service.list).toHaveBeenLastCalledWith({
+      first: 0,
+      rows: 25,
+      sortField: 'createdOnUtc',
+      sortDirection: 'desc',
+    });
+    expect(store.uploading()).toBe(false);
+  });
+
+  it('should keep the dialog open and report the failure when the upload fails', async () => {
+    const store = createStore();
+    const failure = new ServiceUnavailableError();
+    vi.mocked(fileUploadService.upload).mockRejectedValue(failure);
+
+    const uploaded = await store.upload({
+      file: new File(['x'], 'a.pdf'),
+      category: 'document',
+      caption: '',
+    });
+
+    expect(uploaded).toBe(false);
+    expect(notifications.error).toHaveBeenCalledWith(failure);
+  });
+
+  it('should not call the backend when no file was chosen', async () => {
+    const store = createStore();
+
+    const uploaded = await store.upload({ file: null, category: 'document', caption: '' });
+
+    expect(uploaded).toBe(false);
+    expect(fileUploadService.upload).not.toHaveBeenCalled();
   });
 });

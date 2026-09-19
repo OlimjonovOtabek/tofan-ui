@@ -1,0 +1,70 @@
+<app-form-dialog
+  [(visible)]="visible"
+  header="Fayl yuklash"
+  saveLabel="Yuklash"
+  [saving]="uploading()"
+  [saveDisabled]="cannotUpload()"
+  (save)="submit()"
+>
+  <div [formGroup]="form" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="uploadCategory" class="font-medium">Fayl turi</label>
+      <p-select
+        inputId="uploadCategory"
+        formControlName="category"
+        [options]="categoryOptions"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Tanlang"
+        [fluid]="true"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <span class="font-medium">Fayl</span>
+      <div class="flex flex-wrap items-center gap-3">
+        <input
+          type="file"
+          id="uploadFile"
+          class="hidden"
+          [accept]="accept()"
+          [disabled]="category() === null || uploading()"
+          (change)="choose($event)"
+        />
+        <label
+          for="uploadFile"
+          class="p-button p-button-outlined"
+          [class.p-disabled]="category() === null || uploading()"
+          [class.cursor-pointer]="category() !== null && !uploading()"
+        >
+          <i class="pi pi-upload mr-2"></i>
+          {{ file() === null ? 'Fayl tanlash' : 'Boshqa fayl' }}
+        </label>
+        @if (fileLabel(); as label) {
+          <span class="break-all">
+            <i class="pi pi-paperclip text-muted-color mr-1"></i>{{ label }}
+          </span>
+        }
+      </div>
+      <small class="text-muted-color">{{ limitHint() }}</small>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="uploadCaption" class="font-medium">Izoh (ixtiyoriy)</label>
+      <textarea
+        pTextarea
+        id="uploadCaption"
+        formControlName="caption"
+        rows="2"
+        placeholder="Ro‘yxatda fayl nomi o‘rniga ko‘rsatiladi"
+      ></textarea>
+      <small class="text-muted-color" [class.text-red-500]="captionCount() > captionMaxLength">
+        {{ captionCount() }} / {{ captionMaxLength }}
+      </small>
+    </div>
+
+    @if (uploading()) {
+      <p-progressbar [value]="progress()" />
+    }
+  </div>
+</app-form-dialog>

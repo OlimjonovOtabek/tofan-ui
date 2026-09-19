@@ -7,12 +7,14 @@ import { ClipboardService } from '@core/feedback/clipboard.service';
 import { formatFileSize } from '@shared/utils/file-size';
 import { FILE_CATEGORY_LABELS } from '../../models/file-labels';
 import { MediaStore } from '../../media.store';
+import { MediaUploadDialog } from '../../components/media-upload-dialog/media-upload-dialog';
+import { MediaUploadDraft } from '../../models/media-upload';
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
 
 @Component({
   selector: 'app-media-page',
-  imports: [DataTable, Button, Dialog],
+  imports: [DataTable, Button, Dialog, MediaUploadDialog],
   providers: [MediaStore],
   templateUrl: './media-page.html',
 })
@@ -33,6 +35,7 @@ export class MediaPage {
 
   protected readonly previewed = signal<StoredFile | null>(null);
   protected readonly previewFailed = signal(false);
+  protected readonly uploadVisible = signal(false);
 
   protected categoryLabel(file: StoredFile): string {
     return FILE_CATEGORY_LABELS[file.category];
@@ -75,6 +78,16 @@ export class MediaPage {
 
   protected copyId(file: StoredFile): Promise<void> {
     return this.clipboard.copy(file.id, 'Fayl ID');
+  }
+
+  protected openUpload(): void {
+    this.uploadVisible.set(true);
+  }
+
+  protected async uploadFile(draft: MediaUploadDraft): Promise<void> {
+    if (await this.store.upload(draft)) {
+      this.uploadVisible.set(false);
+    }
   }
 
   protected async remove(file: StoredFile): Promise<void> {

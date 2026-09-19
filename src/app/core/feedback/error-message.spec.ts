@@ -13,6 +13,15 @@ describe('toErrorMessage', () => {
     expect(toErrorMessage(error)).toBe("Login yoki parol noto'g'ri.");
   });
 
+  it('should explain an upload rejection in Uzbek when the file breaks an upload rule', () => {
+    const error = new BusinessRuleError(
+      'The file type is not accepted for this file category.',
+      'StoredFile.UnsupportedContent',
+    );
+
+    expect(toErrorMessage(error)).toBe('Bu fayl turi tanlangan kategoriya uchun qabul qilinmaydi.');
+  });
+
   it('should list every issue when validation fails', () => {
     const error = new ValidationError('invalid', [
       { code: 'Name.Empty', message: 'Nom kiritilmagan.' },

@@ -29,6 +29,9 @@ const MESSAGES_BY_CODE: Record<string, string> = {
   'StoredFile.InUse':
     'Fayl mashq videosi sifatida ishlatilmoqda. Avval uni mashqdan olib tashlang.',
   'StoredFile.NotFound': 'Fayl topilmadi — u allaqachon o‘chirilgan bo‘lishi mumkin.',
+  'StoredFile.Empty': 'Tanlangan fayl bo‘sh.',
+  'StoredFile.UnsupportedContent': 'Bu fayl turi tanlangan kategoriya uchun qabul qilinmaydi.',
+  'StoredFile.TooLarge': 'Fayl bu kategoriya uchun ruxsat etilgan hajmdan katta.',
   'User.NotFound': 'Hisob topilmadi — u Keycloak’dan o‘chirilgan bo‘lishi mumkin.',
   'User.AlreadyBlocked': 'Hisob allaqachon bloklangan.',
   'User.NotBlocked': 'Hisob bloklanmagan.',
