@@ -19,8 +19,7 @@ export const NOTIFICATIONS_EN: Dictionary['notifications'] = {
   },
   templates: {
     title: 'Notification templates',
-    summary:
-      "{count} templates in total. A user gets the template in their trainer's style, or the professional one when there is none.",
+    total: '{count} templates in total',
     add: 'Add template',
     empty: 'No templates yet.',
     active: 'Active',
@@ -44,19 +43,16 @@ export const NOTIFICATIONS_EN: Dictionary['notifications'] = {
     title: 'Title',
     body: 'Text',
     active: 'Active',
-    oneActiveHint: 'Only one template per type and style can be active.',
   },
   coverage: {
     none: 'No active template for this type — sending will fail.',
     addTemplate: 'Add a template',
     partial:
       'Templates exist only for the {styles} style. Users with another style need a professional template, and there is none.',
-    full: "The template is picked by the user's style and language. Active styles: {styles}.",
     sample: 'Sample (professional style)',
   },
   data: {
     title: 'Extra data (optional)',
-    hint: 'Key–value pairs for the app, for example a screen name.',
     addRow: 'Add row',
     key: 'Key',
     keyLabel: 'Key {index}',
@@ -66,15 +62,12 @@ export const NOTIFICATIONS_EN: Dictionary['notifications'] = {
   },
   send: {
     title: 'Send push',
-    summary:
-      'Sent to every active device of one user. The result is kept in the notification history — even if sending fails.',
     mode: 'Sending mode',
     templated: 'From template',
     custom: 'Custom text',
     userId: 'User ID',
     userIdRequired: 'User ID is required',
     userIdInvalid: 'The ID must be a UUID',
-    userIdHint: 'Take the ID from accounts or the sign-in log — the push button there fills it in.',
     type: 'Type',
     templatesLoading: 'Loading templates…',
     templatesFailed: 'Could not load templates, so coverage cannot be checked: {error}',

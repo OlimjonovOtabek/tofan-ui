@@ -142,12 +142,11 @@
             [loading]="store.runningAction() === 'logoutEverywhere'"
             (onClick)="logoutEverywhere(account)"
           />
-          <p class="text-muted-color m-0 text-xs">
-            @if (store.isCurrentUser()) {
+          @if (store.isCurrentUser()) {
+            <p class="text-muted-color m-0 text-xs">
               {{ 'accounts.card.cannotBlockSelf' | t }}
-            }
-            {{ 'accounts.card.tokenLifetime' | t }}
-          </p>
+            </p>
+          }
         </div>
       </div>
     </div>

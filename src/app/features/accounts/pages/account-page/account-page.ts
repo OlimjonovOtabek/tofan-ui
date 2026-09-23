@@ -67,7 +67,7 @@ export class AccountPage {
     const confirmed = await this.confirmations.confirm(
       {
         key: 'accounts.confirm.block',
-        params: { warning, name: account.userName, note: this.tokenLifetimeNote() },
+        params: { warning, name: account.userName },
       },
       'accounts.confirm.blockHeader',
     );
@@ -88,18 +88,11 @@ export class AccountPage {
 
   protected async logoutEverywhere(account: Account): Promise<void> {
     const confirmed = await this.confirmations.confirm(
-      {
-        key: 'accounts.confirm.logout',
-        params: { name: account.userName, note: this.tokenLifetimeNote() },
-      },
+      { key: 'accounts.confirm.logout', params: { name: account.userName } },
       'accounts.confirm.logoutHeader',
     );
     if (confirmed) {
       await this.store.run('logoutEverywhere');
     }
-  }
-
-  private tokenLifetimeNote(): string {
-    return this.translator.translate('accounts.card.tokenLifetime');
   }
 }

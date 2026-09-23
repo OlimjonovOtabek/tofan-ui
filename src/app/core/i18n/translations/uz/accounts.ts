@@ -46,20 +46,17 @@ export const ACCOUNTS_UZ = {
     unblock: 'Blokdan chiqarish',
     logoutEverywhere: 'Hamma joydan chiqarish',
     cannotBlockSelf: 'O‘z hisobingizni bloklay olmaysiz.',
-    tokenLifetime:
-      'Foydalanuvchining qo‘lidagi access token muddati tugaguncha API’dan foydalanishi mumkin.',
     loading: 'Yuklanmoqda…',
   },
   confirm: {
     adminWarning: 'Diqqat: bu admin hisobi.',
     blockHeader: 'Hisobni bloklash',
-    block:
-      '{warning} "{name}" bloklansinmi? Akkaunt o‘chiriladi va hamma sessiyalari yopiladi. {note}',
+    block: '{warning} "{name}" bloklansinmi? Akkaunt o‘chiriladi va hamma sessiyalari yopiladi.',
     unblockHeader: 'Blokdan chiqarish',
     unblock:
       '"{name}" blokdan chiqarilsinmi? Sessiyalar tiklanmaydi — foydalanuvchi qaytadan kiradi.',
     logoutHeader: 'Hamma joydan chiqarish',
-    logout: '"{name}" hamma qurilmalardan chiqarilsinmi? Hisob holati o‘zgarmaydi. {note}',
+    logout: '"{name}" hamma qurilmalardan chiqarilsinmi? Hisob holati o‘zgarmaydi.',
   },
   done: {
     block: 'Hisob bloklandi, sessiyalari yopildi.',

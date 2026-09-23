@@ -10,10 +10,6 @@
   <p-message severity="warn">
     {{ 'notifications.coverage.partial' | t: { styles: styleLabels(coverage().activeStyles) } }}
   </p-message>
-} @else {
-  <p-message severity="info">
-    {{ 'notifications.coverage.full' | t: { styles: styleLabels(coverage().activeStyles) } }}
-  </p-message>
 }
 
 @if (preview(); as template) {

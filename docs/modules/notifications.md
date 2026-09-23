@@ -23,7 +23,8 @@ push to one user, either from templates or with custom text and an optional keyâ
 ## Structure notes
 - `NotificationTemplatesStore` serves the templates screen, `NotificationSendStore` the send screen
   (it loads all templates once to show coverage and a preview).
-- `components/template-coverage-hint` explains which trainer styles have an active template;
+- `components/template-coverage-hint` warns when the type has no active template or only some trainer
+  styles have one (nothing is shown when every style is covered);
   `components/notification-data-entries` edits the payload rows.
 - `models/outgoing-notification.ts` validates the recipient (UUID), text limits and payload keys
   before the confirmation dialog, so an invalid push never reaches the confirm step.

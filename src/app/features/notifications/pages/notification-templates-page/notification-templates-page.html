@@ -6,7 +6,7 @@
       </h1>
       <span class="text-muted-color text-sm">
         {{
-          'notifications.templates.summary'
+          'notifications.templates.total'
             | t: { count: store.loadError() === null ? store.totalCount() : '—' }
         }}
       </span>
