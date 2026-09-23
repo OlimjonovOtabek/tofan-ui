@@ -5,6 +5,8 @@ import { API_BASE_URL } from './api-base-url';
 import { Query } from './api.dto';
 import { toDomainError } from './api-error.mapper';
 import { unwrapResult } from './result-envelope';
+import { toDownloadedFile, withReadableBody } from './downloaded-file.mapper';
+import { DownloadedFile } from '@shared/models/downloaded-file';
 
 @Injectable({ providedIn: 'root' })
 export class ApiClient {
@@ -34,6 +36,21 @@ export class ApiClient {
 
   postAnonymously<TResponse>(path: string, body: unknown): Promise<TResponse> {
     return this.send(this.anonymousHttp.post<unknown>(this.url(path), body));
+  }
+
+  async download(path: string, query: Query, fallbackFileName: string): Promise<DownloadedFile> {
+    try {
+      const response = await firstValueFrom(
+        this.http.get(this.url(path), {
+          params: toHttpParams(query),
+          observe: 'response',
+          responseType: 'blob',
+        }),
+      );
+      return toDownloadedFile(response, fallbackFileName);
+    } catch (error) {
+      throw toDomainError(await withReadableBody(error));
+    }
   }
 
   private async send<TResponse>(request: Observable<unknown>): Promise<TResponse> {

@@ -17,8 +17,7 @@ export const NOTIFICATIONS_UZ = {
   },
   templates: {
     title: 'Bildirishnoma shablonlari',
-    summary:
-      'Jami {count} shablon. Foydalanuvchiga uning murabbiy uslubidagi shablon yuboriladi, u bo‘lmasa — professional uslubdagisi.',
+    total: 'Jami {count} shablon',
     add: "Shablon qo'shish",
     empty: "Hali shablon yo'q.",
     active: 'Faol',
@@ -42,19 +41,16 @@ export const NOTIFICATIONS_UZ = {
     title: 'Sarlavha',
     body: 'Matn',
     active: 'Faol',
-    oneActiveHint: 'Bir tur va uslub uchun faqat bitta faol shablon bo‘lishi mumkin.',
   },
   coverage: {
     none: 'Bu tur uchun faol shablon yo‘q — yuborish muvaffaqiyatsiz bo‘ladi.',
     addTemplate: 'Shablon qo‘shing',
     partial:
       'Faqat {styles} uslubi uchun shablon bor. Boshqa uslubni tanlagan foydalanuvchiga professional shablon kerak, u esa yo‘q.',
-    full: 'Foydalanuvchining uslubi va tiliga mos shablon tanlanadi. Faol uslublar: {styles}.',
     sample: 'Namuna (professional uslub)',
   },
   data: {
     title: 'Qo‘shimcha ma’lumot (ixtiyoriy)',
-    hint: 'Ilova uchun kalit–qiymat juftliklari, masalan ekran nomi.',
     addRow: "Qator qo'shish",
     key: 'Kalit',
     keyLabel: 'Kalit {index}',
@@ -64,16 +60,12 @@ export const NOTIFICATIONS_UZ = {
   },
   send: {
     title: 'Push yuborish',
-    summary:
-      'Bitta foydalanuvchining barcha faol qurilmalariga yuboriladi. Natija bildirishnoma tarixida saqlanadi — yuborilmasa ham.',
     mode: 'Yuborish usuli',
     templated: 'Shablon asosida',
     custom: 'Maxsus matn',
     userId: 'Foydalanuvchi ID',
     userIdRequired: 'Foydalanuvchi ID kiritilishi shart',
     userIdInvalid: 'ID UUID ko‘rinishida bo‘lishi kerak',
-    userIdHint:
-      'ID ni hisoblar yoki kirishlar jurnalidan oling — u yerdagi push tugmasi uni o‘zi to‘ldiradi.',
     type: 'Turi',
     templatesLoading: 'Shablonlar yuklanmoqda…',
     templatesFailed: 'Shablonlarni yuklab bo‘lmadi, qamrovni tekshirib bo‘lmaydi: {error}',

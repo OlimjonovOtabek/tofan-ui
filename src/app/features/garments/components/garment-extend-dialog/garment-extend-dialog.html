@@ -1,0 +1,25 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="header()"
+  [saveLabel]="'garments.extend.save' | t"
+  [saving]="saving()"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-4">
+    <p class="m-0">
+      {{ 'garments.extend.current' | t }} <span class="font-medium">{{ expiresLabel() }}</span>
+    </p>
+
+    <div class="flex flex-col gap-1">
+      <label for="months" class="font-medium">{{ 'garments.extend.months' | t }}</label>
+      <app-number-field
+        inputId="months"
+        [formField]="form.months"
+        [showButtons]="true"
+        [suffix]="'garments.extend.suffix' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.months()" />
+    </div>
+  </div>
+</app-form-dialog>

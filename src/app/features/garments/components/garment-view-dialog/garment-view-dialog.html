@@ -1,0 +1,98 @@
+<p-dialog
+  [(visible)]="visible"
+  [header]="'garments.view.header' | t"
+  [modal]="true"
+  [draggable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: '44rem' }"
+  [breakpoints]="{ '640px': '95vw' }"
+>
+  @if (garment(); as garment) {
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <p-tag [value]="statusLabel()" [severity]="statusSeverity()" />
+        @if (expired()) {
+          <p-tag [value]="'garments.list.expired' | t" severity="danger" />
+        }
+      </div>
+
+      <dl class="divide-surface-200 dark:divide-surface-700 m-0 flex flex-col divide-y">
+        @for (row of rows(); track row.label) {
+          <div
+            class="grid grid-cols-1 items-center gap-x-4 gap-y-1 py-2 sm:grid-cols-[11rem_1fr_auto]"
+          >
+            <dt class="text-muted-color text-sm">{{ row.label | t }}</dt>
+            <dd class="m-0 flex min-w-0 items-center gap-2">
+              @if (row.swatch; as color) {
+                <span
+                  class="border-surface-300 size-4 shrink-0 rounded-full border"
+                  [style.background-color]="color"
+                  aria-hidden="true"
+                ></span>
+              }
+              <span class="break-all" [class.font-mono]="row.code">{{ row.text }}</span>
+            </dd>
+            @if (row.copyable) {
+              <p-button
+                icon="pi pi-copy"
+                severity="secondary"
+                [text]="true"
+                [rounded]="true"
+                size="small"
+                [ariaLabel]="'garments.view.copy' | t: { field: (row.label | t) }"
+                [pTooltip]="'garments.view.copy' | t: { field: (row.label | t) }"
+                (onClick)="copy(row)"
+              />
+            } @else {
+              <span></span>
+            }
+          </div>
+        }
+      </dl>
+    </div>
+  }
+
+  <ng-template #footer>
+    <div class="flex w-full flex-wrap justify-end gap-2">
+      @if (deletable(); as garment) {
+        <p-button
+          [label]="'garments.list.delete' | t"
+          icon="pi pi-trash"
+          severity="danger"
+          [outlined]="true"
+          styleClass="whitespace-nowrap"
+          class="me-auto"
+          (onClick)="remove.emit(garment)"
+        />
+      }
+      @if (garment()?.ownerId; as ownerId) {
+        <a
+          pButton
+          [routerLink]="[soldiersPath, ownerId]"
+          severity="secondary"
+          [outlined]="true"
+          class="whitespace-nowrap"
+        >
+          <i class="pi pi-user" pButtonIcon></i>
+          <span pButtonLabel>{{ 'garments.view.soldier' | t }}</span>
+        </a>
+        <a
+          pButton
+          [routerLink]="[accountsPath, ownerId]"
+          severity="secondary"
+          [outlined]="true"
+          class="whitespace-nowrap"
+        >
+          <i class="pi pi-id-card" pButtonIcon></i>
+          <span pButtonLabel>{{ 'garments.view.account' | t }}</span>
+        </a>
+      }
+      <p-button
+        [label]="'garments.view.copyAll' | t"
+        icon="pi pi-copy"
+        styleClass="whitespace-nowrap"
+        (onClick)="copyAll()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

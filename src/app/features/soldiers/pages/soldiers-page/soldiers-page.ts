@@ -59,7 +59,7 @@ export class SoldiersPage {
   ]);
 
   protected genderLabel(soldier: SoldierSummary): string {
-    return this.text(GENDER_LABELS[soldier.gender]);
+    return soldier.gender === null ? MISSING_VALUE : this.text(GENDER_LABELS[soldier.gender]);
   }
 
   protected goalLabel(soldier: SoldierSummary): string {

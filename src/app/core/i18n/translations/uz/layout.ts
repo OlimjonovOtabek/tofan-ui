@@ -16,6 +16,8 @@ export const LAYOUT_UZ = {
     exercises: 'Mashqlar',
     foods: 'Ovqatlar',
     media: 'Media fayllar',
+    products: 'Mahsulotlar',
+    garments: 'NFC futbolkalar',
     users: 'Foydalanuvchilar',
     soldiers: 'Soldierlar',
     accounts: 'Hisoblar',
@@ -37,6 +39,7 @@ export const LAYOUT_UZ = {
     soldier: 'Soldier',
     accounts: 'Hisoblar',
     account: 'Hisob',
+    garments: 'NFC futbolkalar',
     userSessions: 'Kirishlar jurnali',
     notificationTemplates: 'Bildirishnoma shablonlari',
     sendNotification: 'Push yuborish',
@@ -53,6 +56,5 @@ export const LAYOUT_UZ = {
   dashboard: {
     welcome: 'Xush kelibsiz',
     welcomeName: 'Xush kelibsiz, {name}',
-    intro: "Tofan boshqaruv paneli. Chap menyudan kerakli bo'limni tanlang.",
   },
 };

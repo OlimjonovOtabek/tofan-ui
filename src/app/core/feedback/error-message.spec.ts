@@ -3,6 +3,7 @@ import { AccessDeniedError } from '@shared/models/errors/access-denied.error';
 import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
+import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ValidationError } from '@shared/models/errors/validation.error';
 import { toErrorMessage } from './error-message';
 
@@ -49,7 +50,13 @@ describe('toErrorMessage', () => {
     );
   });
 
-  it('should map non-DomainError to network message', () => {
-    expect(toErrorMessage(new Error('boom'))).toBe('errors.classes.network');
+  it('should map ServiceUnavailableError to the network message', () => {
+    expect(toErrorMessage(new ServiceUnavailableError())).toBe('errors.classes.network');
+  });
+
+  it('should map an error thrown inside the panel to the generic message', () => {
+    expect(toErrorMessage(new Error('The API returned the unknown enum value 0.'))).toBe(
+      'errors.classes.generic',
+    );
   });
 });

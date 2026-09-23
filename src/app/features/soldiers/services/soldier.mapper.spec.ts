@@ -1,5 +1,5 @@
 import { toSoldierProfile, toSoldierSummary, toWeightEntry } from './soldier.mapper';
-import { SoldierResponse } from './soldier.dto';
+import { Gender, SoldierResponse } from './soldier.dto';
 
 const detail: SoldierResponse = {
   profileId: '70454f3e-a449-467f-b867-7be5d994d3e2',
@@ -79,6 +79,21 @@ describe('soldier mapper', () => {
     expect(soldier.goal).toBeNull();
     expect(soldier.isHomeWorkout).toBeNull();
     expect(soldier.fullName).toBe('ali_v');
+  });
+
+  it('should leave the gender empty when the backend stores a value outside the enum', () => {
+    const soldier = toSoldierSummary({
+      userId: 'fe0bfbd9-6fa7-4d89-8812-fd316828e5ed',
+      firstName: 'Abdulhakim',
+      lastName: 'Abdurahimov',
+      userName: 'abdulhakim',
+      gender: 0 as Gender,
+      countryCode: 'UZ',
+      createdOnUtc: '2026-09-22T22:53:48.922381Z',
+    });
+
+    expect(soldier.gender).toBeNull();
+    expect(toSoldierProfile({ ...detail, gender: 0 as Gender }).gender).toBeNull();
   });
 
   it('should map the card with dates and training days when a profile arrives', () => {

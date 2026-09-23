@@ -1,6 +1,7 @@
 export interface EnumMap<TDomain extends string, TApi extends number> {
   toApi(value: TDomain): TApi;
   toDomain(value: TApi): TDomain;
+  toDomainOrNull(value: TApi): TDomain | null;
 }
 
 export function enumMap<TDomain extends string, TApi extends number>(
@@ -20,6 +21,10 @@ export function enumMap<TDomain extends string, TApi extends number>(
         throw new Error(`The API returned the unknown enum value ${value}.`);
       }
       return uncapitalize(name) as TDomain;
+    },
+    toDomainOrNull: (value) => {
+      const name = apiEnum[value];
+      return typeof name === 'string' ? (uncapitalize(name) as TDomain) : null;
     },
   };
 }

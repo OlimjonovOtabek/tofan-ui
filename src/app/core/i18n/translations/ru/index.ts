@@ -4,6 +4,7 @@ import { AUTH_RU } from './auth';
 import { EXERCISES_RU } from './exercises';
 import { FOODS_RU } from './foods';
 import { MEDIA_RU } from './media';
+import { GARMENTS_RU } from './garments';
 import { SOLDIERS_RU } from './soldiers';
 import { ACCOUNTS_RU } from './accounts';
 import { USER_SESSIONS_RU } from './user-sessions';
@@ -18,6 +19,7 @@ export const DICTIONARY_RU: Dictionary = {
   exercises: EXERCISES_RU,
   foods: FOODS_RU,
   media: MEDIA_RU,
+  garments: GARMENTS_RU,
   soldiers: SOLDIERS_RU,
   accounts: ACCOUNTS_RU,
   userSessions: USER_SESSIONS_RU,

@@ -48,6 +48,14 @@ export const ERRORS_EN: Dictionary['errors'] = {
       NotBlocked: 'The account is not blocked.',
       CannotBlockSelf: 'You cannot block your own account.',
     },
+    Garment: {
+      NotFound: 'Shirt not found — it may have been deleted.',
+      ManufacturedInFuture: 'The manufacturing date cannot be in the future.',
+      NotClaimed: 'Only an activated shirt can be extended.',
+      CannotDeleteClaimed: 'An activated shirt cannot be deleted. Revoke it instead.',
+      StatusNotAllowed: 'A shirt can only be set to active, hidden or revoked.',
+      MonthsOutOfRange: 'The period must be between 1 and 24 months.',
+    },
     GetUsersQuery:
       'Could not read accounts from Keycloak. If a role filter is selected, it may not work yet (Keycloak needs configuring).',
   },

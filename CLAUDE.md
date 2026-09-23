@@ -71,7 +71,7 @@ src/app/
 ```
 
 Current features: `dashboard`, `auth` (login, access denied, error pages), `exercises`, `foods`,
-`media`, `soldiers`, `accounts`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
+`media`, `soldiers`, `accounts`, `garments`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
 its routed components in `pages/` and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only
 uses `loadChildren`.
 
@@ -136,9 +136,10 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
   No `@Input`/`@Output` decorators. `effect()` only for side effects outside Angular (logging, storage).
 - Templates: `@if`, `@for (...; track item.id)`, `@switch`, `@let`, `@defer`.
   No `*ngIf`, `*ngFor`, `ngClass`, `ngStyle` → use `[class.x]`, `[style.x]`.
-- Forms: Signal Forms (`form()`, `[formField]`) for all new forms. Every existing form is still
-  Reactive Forms (login, filters, the three form dialogs, send notification); migrate a form when
-  it is reworked, not in passing.
+- Forms: Signal Forms (`form()`, `[formField]`) for all new forms (reference: `features/garments`;
+  Optimus `p-select`/`p-datepicker`/`p-inputnumber` go through the `shared/components` wrappers, see
+  `.claude/rules/forms.md`). The older forms are still Reactive Forms (login, exercise/food filters,
+  the three older form dialogs, send notification); migrate a form when it is reworked, not in passing.
 - Routing: lazy `loadChildren` per feature, functional guards, `withComponentInputBinding()`.
 - No `any`, in any form: annotations, `as any`, `any[]`, rest parameters, `$any()` in templates, or an
   `any` leaking from a library (`JSON.parse`, untyped APIs). Type it or use `unknown` and narrow.

@@ -5,6 +5,7 @@ export const AppPaths = {
   media: '/media',
   soldiers: '/soldiers',
   accounts: '/accounts',
+  garments: '/garments',
   userSessions: '/user-sessions',
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',

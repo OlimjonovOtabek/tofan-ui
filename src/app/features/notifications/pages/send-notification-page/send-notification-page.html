@@ -3,9 +3,6 @@
     <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
       {{ 'notifications.send.title' | t }}
     </h1>
-    <span class="text-muted-color text-sm">
-      {{ 'notifications.send.summary' | t }}
-    </span>
   </div>
 
   <form [formGroup]="form" class="flex max-w-3xl flex-col gap-5" (ngSubmit)="send()" novalidate>
@@ -37,10 +34,6 @@
                 ? ('notifications.send.userIdRequired' | t)
                 : ('notifications.send.userIdInvalid' | t)
             }}
-          </small>
-        } @else {
-          <small class="text-muted-color">
-            {{ 'notifications.send.userIdHint' | t }}
           </small>
         }
       </div>

@@ -18,6 +18,8 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     exercises: 'Упражнения',
     foods: 'Продукты',
     media: 'Медиафайлы',
+    products: 'Продукты',
+    garments: 'NFC-футболки',
     users: 'Пользователи',
     soldiers: 'Soldier',
     accounts: 'Аккаунты',
@@ -39,6 +41,7 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     soldier: 'Soldier',
     accounts: 'Аккаунты',
     account: 'Аккаунт',
+    garments: 'NFC-футболки',
     userSessions: 'Журнал входов',
     notificationTemplates: 'Шаблоны уведомлений',
     sendNotification: 'Отправить push',
@@ -54,6 +57,5 @@ export const LAYOUT_RU: Dictionary['layout'] = {
   dashboard: {
     welcome: 'Добро пожаловать',
     welcomeName: 'Добро пожаловать, {name}',
-    intro: 'Панель управления Tofan. Выберите раздел в меню слева.',
   },
 };

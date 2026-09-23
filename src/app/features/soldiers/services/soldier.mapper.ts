@@ -40,10 +40,10 @@ export function toSoldierSummary(response: SoldierListItemResponse): SoldierSumm
     response.firstName,
     response.lastName,
     response.userName,
-    genders.toDomain(response.gender),
+    genders.toDomainOrNull(response.gender),
     response.countryCode,
-    optional(response.goal, fitnessGoals.toDomain),
-    optional(response.experienceLevel, experienceLevels.toDomain),
+    optional(response.goal, fitnessGoals.toDomainOrNull),
+    optional(response.experienceLevel, experienceLevels.toDomainOrNull),
     response.currentWeightKg ?? null,
     response.targetWeightKg ?? null,
     response.isHomeWorkout ?? null,
@@ -57,7 +57,7 @@ export function toSoldierProfile(response: SoldierResponse): SoldierProfile {
     ...bodyOf(response),
     ...goalOf(response),
     currencyCode: response.currencyCode ?? null,
-    trainerStyle: optional(response.trainerStyle, trainerStyles.toDomain),
+    trainerStyle: optional(response.trainerStyle, trainerStyles.toDomainOrNull),
     languageCode: response.languageCode ?? null,
     createdAt: new Date(response.createdOnUtc),
     updatedAt: optional(response.updatedOnUtc, toDate),
@@ -83,7 +83,7 @@ function identityOf(response: SoldierResponse) {
     userName: response.userName,
     fullName: fullName(response.firstName, response.lastName, response.userName),
     dateOfBirth: new Date(response.dateOfBirth),
-    gender: genders.toDomain(response.gender),
+    gender: genders.toDomainOrNull(response.gender),
     photoUrl: response.profilePhotoUrl ?? null,
     countryCode: response.countryCode,
     timeZone: response.timeZone,
@@ -103,11 +103,11 @@ function bodyOf(response: SoldierResponse) {
 
 function goalOf(response: SoldierResponse) {
   return {
-    experienceLevel: optional(response.experienceLevel, experienceLevels.toDomain),
-    activityLevel: optional(response.activityLevel, activityLevels.toDomain),
+    experienceLevel: optional(response.experienceLevel, experienceLevels.toDomainOrNull),
+    activityLevel: optional(response.activityLevel, activityLevels.toDomainOrNull),
     isHomeWorkout: response.isHomeWorkout ?? null,
-    goal: optional(response.goal, fitnessGoals.toDomain),
-    goalPace: optional(response.goalPace, goalPaces.toDomain),
+    goal: optional(response.goal, fitnessGoals.toDomainOrNull),
+    goalPace: optional(response.goalPace, goalPaces.toDomainOrNull),
     workoutDaysPerWeek: response.workoutDaysPerWeek ?? null,
     trainingDays: (response.trainingDays ?? []).filter(isWeekDay),
     goalStartDate: optional(response.goalStartDate, toDate),
@@ -119,7 +119,7 @@ function goalOf(response: SoldierResponse) {
 
 function optional<TApi, TDomain>(
   value: TApi | null | undefined,
-  map: (value: TApi) => TDomain,
+  map: (value: TApi) => TDomain | null,
 ): TDomain | null {
   return value === null || value === undefined ? null : map(value);
 }

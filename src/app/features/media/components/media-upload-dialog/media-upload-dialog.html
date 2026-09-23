@@ -52,7 +52,6 @@
             [emptyFilterMessage]="'media.upload.noExerciseFound' | t"
             [fluid]="true"
           />
-          <small class="text-muted-color">{{ 'media.upload.exerciseHint' | t }}</small>
         }
       </div>
     }
@@ -94,13 +93,7 @@
 
     <div class="flex flex-col gap-1">
       <label for="uploadCaption" class="font-medium">{{ 'media.upload.caption' | t }}</label>
-      <textarea
-        pTextarea
-        id="uploadCaption"
-        formControlName="caption"
-        rows="2"
-        [placeholder]="'media.upload.captionPlaceholder' | t"
-      ></textarea>
+      <textarea pTextarea id="uploadCaption" formControlName="caption" rows="2"></textarea>
       <small class="text-muted-color" [class.text-red-500]="captionCount() > captionMaxLength">
         {{ captionCount() }} / {{ captionMaxLength }}
       </small>

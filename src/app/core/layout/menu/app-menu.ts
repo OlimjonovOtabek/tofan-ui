@@ -25,6 +25,12 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
     ],
   },
   {
+    label: 'layout.menu.products',
+    items: [
+      { label: 'layout.menu.garments', icon: 'pi pi-fw pi-tag', routerLink: [AppPaths.garments] },
+    ],
+  },
+  {
     label: 'layout.menu.users',
     items: [
       { label: 'layout.menu.soldiers', icon: 'pi pi-fw pi-users', routerLink: [AppPaths.soldiers] },
