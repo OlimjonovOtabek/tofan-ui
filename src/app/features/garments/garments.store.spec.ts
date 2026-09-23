@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { FileDownloadService } from '@core/feedback/file-download.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
+import { ConflictError } from '@shared/models/errors/conflict.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { GarmentsStore } from './garments.store';
 import { Garment } from './models/garment';
@@ -41,7 +42,10 @@ const garment = new Garment(
 );
 
 describe('GarmentsStore', () => {
-  let service: Pick<GarmentsService, 'list' | 'create' | 'changeStatus' | 'extend' | 'exportLinks'>;
+  let service: Pick<
+    GarmentsService,
+    'list' | 'create' | 'changeStatus' | 'extend' | 'delete' | 'exportLinks'
+  >;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
   let downloads: Pick<FileDownloadService, 'save'>;
 
@@ -63,6 +67,7 @@ describe('GarmentsStore', () => {
       create: vi.fn().mockResolvedValue(created),
       changeStatus: vi.fn().mockResolvedValue(undefined),
       extend: vi.fn().mockResolvedValue(new Date('2027-02-21T10:12:00Z')),
+      delete: vi.fn().mockResolvedValue(undefined),
       exportLinks: vi.fn().mockResolvedValue({ content: new Blob(), fileName: 'links.xlsx' }),
     };
     notifications = { success: vi.fn(), error: vi.fn() };
@@ -183,6 +188,29 @@ describe('GarmentsStore', () => {
       expect.objectContaining({ fileName: 'links.xlsx' }),
     );
     expect(store.exporting()).toBe(false);
+  });
+
+  it('should delete, announce and reload when an unclaimed garment is removed', async () => {
+    const store = createStore();
+
+    await expect(store.remove(garment)).resolves.toBe(true);
+
+    expect(service.delete).toHaveBeenCalledWith('1');
+    expect(notifications.success).toHaveBeenCalledWith('garments.toast.deleted', {
+      serial: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
+    });
+    expect(service.list).toHaveBeenCalled();
+  });
+
+  it('should report the refusal when the backend keeps a claimed garment', async () => {
+    const refusal = new ConflictError('claimed', 'Garment.CannotDeleteClaimed');
+    vi.mocked(service.delete).mockRejectedValue(refusal);
+    const store = createStore();
+
+    await expect(store.remove(garment)).resolves.toBe(false);
+
+    expect(notifications.error).toHaveBeenCalledWith(refusal);
+    expect(service.list).not.toHaveBeenCalled();
   });
 
   it('should report the failure when the export fails', async () => {

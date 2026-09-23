@@ -39,6 +39,12 @@ describe('Garment', () => {
     expect(garment('inactive').canExtend()).toBe(false);
   });
 
+  it('should allow deleting only when nobody activated it', () => {
+    expect(garment('inactive').canDelete()).toBe(true);
+    expect(garment('revoked').canDelete()).toBe(true);
+    expect(garment('revoked', 'u1').canDelete()).toBe(false);
+  });
+
   it('should offer hiding and revoking when the garment is visible', () => {
     expect(garment('inactive').statusChanges()).toEqual(['hidden', 'revoked']);
     expect(garment('active', 'u1').statusChanges()).toEqual(['hidden', 'revoked']);

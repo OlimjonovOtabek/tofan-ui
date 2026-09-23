@@ -17,6 +17,7 @@ export const GARMENTS_UZ = {
     copyToken: 'Tokenni nusxalash',
     view: "{serial} — ma'lumotlarni ko'rish",
     extend: 'Muddatni uzaytirish',
+    delete: "O'chirish",
     confirmStatus: '{warning} "{serial}" uchun davom etilsinmi?',
   },
   fields: {
@@ -115,5 +116,6 @@ export const GARMENTS_UZ = {
   toast: {
     created: '"{serial}" futbolkasi qo\'shildi.',
     extended: '"{serial}" muddati {date} gacha uzaytirildi.',
+    deleted: '"{serial}" o\'chirildi.',
   },
 };

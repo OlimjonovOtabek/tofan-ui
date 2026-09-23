@@ -101,6 +101,18 @@ export class GarmentsStore {
     }
   }
 
+  async remove(garment: Garment): Promise<boolean> {
+    try {
+      await this.garmentsService.delete(garment.id);
+      this.notifications.success('garments.toast.deleted', { serial: garment.serialNumber });
+      await this.load();
+      return true;
+    } catch (error) {
+      this.notifications.error(error);
+      return false;
+    }
+  }
+
   async exportLinks(): Promise<void> {
     this.exporting.set(true);
     try {

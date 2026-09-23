@@ -18,17 +18,40 @@ const garment = new Garment(
   'inactive',
 );
 
-async function render(): Promise<{ copy: ReturnType<typeof vi.fn> }> {
+const claimed = new Garment(
+  'c9b2',
+  'k2hp4Yt7',
+  '01K7X8M4Q9F2A6BC3DEFGHJKMP',
+  'Peaktofan Classic',
+  '#1A3C6E',
+  'M',
+  '',
+  new Date(2026, 8, 20),
+  'active',
+  'u1',
+  new Date('2026-09-21T10:12:00Z'),
+  new Date('2026-11-21T10:12:00Z'),
+);
+
+async function render(
+  shown: Garment = garment,
+): Promise<{ copy: ReturnType<typeof vi.fn>; dialog: GarmentViewDialog }> {
   const copy = vi.fn().mockResolvedValue(undefined);
   TestBed.configureTestingModule({
     providers: [provideRouter([]), { provide: ClipboardService, useValue: { copy } }],
   });
   const fixture = TestBed.createComponent(GarmentViewDialog);
   fixture.componentRef.setInput('visible', true);
-  fixture.componentRef.setInput('garment', garment);
+  fixture.componentRef.setInput('garment', shown);
   fixture.detectChanges();
   await fixture.whenStable();
-  return { copy };
+  return { copy, dialog: fixture.componentInstance };
+}
+
+function deleteButton(): HTMLButtonElement | undefined {
+  return [...document.body.querySelectorAll<HTMLButtonElement>('.p-dialog-footer button')].find(
+    (button) => button.querySelector('.pi-trash') !== null,
+  );
 }
 
 function copyButtons(): HTMLButtonElement[] {
@@ -61,5 +84,21 @@ describe('GarmentViewDialog', () => {
     copyButtons()[0]?.click();
 
     expect(copy).toHaveBeenCalledWith(SERIAL, 'garments.fields.serialNumber');
+  });
+
+  it('should ask to remove the garment when delete is clicked on an unclaimed one', async () => {
+    const { dialog } = await render();
+    const removed = vi.fn();
+    dialog.remove.subscribe(removed);
+
+    deleteButton()?.click();
+
+    expect(removed).toHaveBeenCalledWith(garment);
+  });
+
+  it('should offer no delete when the garment has an owner', async () => {
+    await render(claimed);
+
+    expect(deleteButton()).toBeUndefined();
   });
 });

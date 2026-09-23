@@ -52,6 +52,7 @@ export const ERRORS_EN: Dictionary['errors'] = {
       NotFound: 'Shirt not found — it may have been deleted.',
       ManufacturedInFuture: 'The manufacturing date cannot be in the future.',
       NotClaimed: 'Only an activated shirt can be extended.',
+      CannotDeleteClaimed: 'An activated shirt cannot be deleted. Revoke it instead.',
       StatusNotAllowed: 'A shirt can only be set to active, hidden or revoked.',
       MonthsOutOfRange: 'The period must be between 1 and 24 months.',
     },

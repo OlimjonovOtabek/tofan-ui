@@ -112,6 +112,17 @@
               (onClick)="changeStatus(garment, status)"
             />
           }
+          @if (garment.canDelete()) {
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [text]="true"
+              [rounded]="true"
+              [ariaLabel]="'garments.list.delete' | t"
+              [pTooltip]="'garments.list.delete' | t"
+              (onClick)="remove(garment)"
+            />
+          }
         </td>
       </tr>
     </ng-template>
@@ -125,7 +136,12 @@
   (save)="create($event)"
 />
 
-<app-garment-view-dialog [(visible)]="viewVisible" [garment]="viewed()" [now]="now" />
+<app-garment-view-dialog
+  [(visible)]="viewVisible"
+  [garment]="viewed()"
+  [now]="now"
+  (remove)="remove($event)"
+/>
 
 <app-garment-extend-dialog
   [(visible)]="extendVisible"

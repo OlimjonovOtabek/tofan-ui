@@ -9,12 +9,12 @@ links of the filtered shirts to Excel for the print shop.
 ## Backend
 - Base route: `/admin/garments` (backend Garment module, handover: `tofan/docs/garment-ui-v1.md`)
 - Endpoints used: `GET /admin/garments` (paged, filters `SerialNumber` (ILIKE), `Status`, `OwnerId`),
-  `POST /admin/garments`, `POST /admin/garments/{id}/status`, `POST /admin/garments/{id}/extend`,
+  `POST /admin/garments`, `POST /admin/garments/{id}/status`, `POST /admin/garments/{id}/extend`, `DELETE /admin/garments/{id}`,
   `GET /admin/garments/export-links` (same filters, no paging). The backend has no shirt photo,
   so the panel has none either (no upload field, no media category).
 - Access (backend policy): `Policies.Admin` on every endpoint
 - Error codes handled: `Garment.NotFound`, `Garment.ManufacturedInFuture`,
-  `Garment.NotClaimed`, `Garment.StatusNotAllowed` (per-code messages in `core/feedback/error-message.ts`)
+  `Garment.NotClaimed`, `Garment.StatusNotAllowed`, `Garment.CannotDeleteClaimed` (per-code messages in `core/feedback/error-message.ts`)
 
 ## Screens
 | Route | Page | Access |
@@ -85,5 +85,9 @@ links of the filtered shirts to Excel for the print shop.
 - The NFC site used to pick the shirt picture by the colour codes `black` / `blue`. New shirts carry a
   `#RRGGBB` code, so the NFC site has to handle that (or show no colour-based picture).
 - Hidden and revoked shirts show `Invalid` on the NFC site, also to their owner.
-- There is no delete, no regenerate-link, no batch create and no transfer on the backend; do not add
-  them here without a backend endpoint.
+- Delete is a hard delete and only for shirts nobody activated (`Garment.canDelete()`, backend
+  `Garment.CannotDeleteClaimed` otherwise): a mistaken or unsold shirt. A claimed shirt is revoked
+  instead, so its owner keeps the passport. The trash button is in the row and in the view dialog, both
+  behind `confirmDelete`. If the link was already written to a chip, that chip now scans as not found.
+- There is no regenerate-link, no batch create and no transfer on the backend; do not add them here
+  without a backend endpoint.

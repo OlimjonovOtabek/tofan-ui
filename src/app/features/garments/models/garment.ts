@@ -28,6 +28,10 @@ export class Garment {
     return this.isClaimed();
   }
 
+  canDelete(): boolean {
+    return !this.isClaimed();
+  }
+
   statusChanges(): readonly AssignableGarmentStatus[] {
     switch (this.status) {
       case 'hidden':

@@ -54,6 +54,17 @@
 
   <ng-template #footer>
     <div class="flex w-full flex-wrap justify-end gap-2">
+      @if (deletable(); as garment) {
+        <p-button
+          [label]="'garments.list.delete' | t"
+          icon="pi pi-trash"
+          severity="danger"
+          [outlined]="true"
+          styleClass="whitespace-nowrap"
+          class="me-auto"
+          (onClick)="remove.emit(garment)"
+        />
+      }
       @if (garment()?.ownerId; as ownerId) {
         <a
           pButton

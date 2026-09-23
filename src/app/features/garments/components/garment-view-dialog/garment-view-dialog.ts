@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, model } from '@angular/core';
+import { Component, computed, inject, input, model, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
 import { ClipboardService } from '@core/feedback/clipboard.service';
@@ -50,6 +50,8 @@ export class GarmentViewDialog {
   readonly garment = input<Garment | null>(null);
   readonly now = input(new Date());
 
+  readonly remove = output<Garment>();
+
   protected readonly soldiersPath = AppPaths.soldiers;
   protected readonly accountsPath = AppPaths.accounts;
 
@@ -66,6 +68,10 @@ export class GarmentViewDialog {
     return garment === null ? undefined : GARMENT_STATUS_SEVERITIES[garment.status];
   });
   protected readonly expired = computed(() => this.garment()?.isExpired(this.now()) ?? false);
+  protected readonly deletable = computed(() => {
+    const garment = this.garment();
+    return garment !== null && garment.canDelete() ? garment : null;
+  });
 
   protected copy(row: GarmentDetailRow): Promise<void> {
     return this.clipboard.copy(row.text, row.label);

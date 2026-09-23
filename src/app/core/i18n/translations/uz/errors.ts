@@ -50,6 +50,7 @@ export const ERRORS_UZ = {
       NotFound: "Futbolka topilmadi — u o'chirilgan bo'lishi mumkin.",
       ManufacturedInFuture: "Ishlab chiqarilgan sana kelajakda bo'lishi mumkin emas.",
       NotClaimed: 'Muddatni faqat aktivatsiya qilingan futbolkaga uzaytirish mumkin.',
+      CannotDeleteClaimed: "Aktivatsiya qilingan futbolkani o'chirib bo'lmaydi. Uni bekor qiling.",
       StatusNotAllowed:
         "Futbolkani faqat faol, yashirilgan yoki bekor qilingan holatga o'tkazish mumkin.",
       MonthsOutOfRange: "Muddat 1 oydan 24 oygacha bo'lishi kerak.",

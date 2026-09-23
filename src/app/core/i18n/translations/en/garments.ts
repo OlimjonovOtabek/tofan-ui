@@ -19,6 +19,7 @@ export const GARMENTS_EN: Dictionary['garments'] = {
     copyToken: 'Copy token',
     view: 'View details of {serial}',
     extend: 'Extend validity',
+    delete: 'Delete',
     confirmStatus: '{warning} Continue for "{serial}"?',
   },
   fields: {
@@ -116,5 +117,6 @@ export const GARMENTS_EN: Dictionary['garments'] = {
   toast: {
     created: 'Shirt "{serial}" added.',
     extended: '"{serial}" is now valid until {date}.',
+    deleted: '"{serial}" deleted.',
   },
 };

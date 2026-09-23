@@ -56,6 +56,10 @@ export class GarmentsService {
     return new Date(await this.apiClient.post<string>(`${garmentPath(id)}/extend`, body));
   }
 
+  async delete(id: string): Promise<void> {
+    await this.apiClient.delete(garmentPath(id));
+  }
+
   exportLinks(filter: GarmentFilter): Promise<DownloadedFile> {
     return this.apiClient.download(EXPORT_LINKS, toFilterQuery(filter), EXPORT_FILE_NAME);
   }

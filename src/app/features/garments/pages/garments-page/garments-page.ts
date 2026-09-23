@@ -153,6 +153,15 @@ export class GarmentsPage {
     }
   }
 
+  protected async remove(garment: Garment): Promise<void> {
+    if (!(await this.confirmations.confirmDelete(garment.serialNumber))) {
+      return;
+    }
+    if (await this.store.remove(garment)) {
+      this.viewVisible.set(false);
+    }
+  }
+
   protected copyToken(garment: Garment): Promise<void> {
     return this.clipboard.copy(garment.token, 'garments.fields.token');
   }

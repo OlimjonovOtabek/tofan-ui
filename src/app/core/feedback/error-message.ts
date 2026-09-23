@@ -38,6 +38,7 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Garment.NotFound': 'errors.backend.Garment.NotFound',
   'Garment.ManufacturedInFuture': 'errors.backend.Garment.ManufacturedInFuture',
   'Garment.NotClaimed': 'errors.backend.Garment.NotClaimed',
+  'Garment.CannotDeleteClaimed': 'errors.backend.Garment.CannotDeleteClaimed',
   'Garment.StatusNotAllowed': 'errors.backend.Garment.StatusNotAllowed',
   'Garment.MonthsOutOfRange': 'errors.backend.Garment.MonthsOutOfRange',
 };

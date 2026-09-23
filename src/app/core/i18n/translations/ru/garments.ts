@@ -19,6 +19,7 @@ export const GARMENTS_RU: Dictionary['garments'] = {
     copyToken: 'Скопировать токен',
     view: 'Открыть данные {serial}',
     extend: 'Продлить срок',
+    delete: 'Удалить',
     confirmStatus: '{warning} Продолжить для «{serial}»?',
   },
   fields: {
@@ -117,5 +118,6 @@ export const GARMENTS_RU: Dictionary['garments'] = {
   toast: {
     created: 'Футболка «{serial}» добавлена.',
     extended: 'Срок «{serial}» продлён до {date}.',
+    deleted: '«{serial}» удалена.',
   },
 };
