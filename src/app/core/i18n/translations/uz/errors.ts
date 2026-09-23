@@ -46,6 +46,14 @@ export const ERRORS_UZ = {
       NotBlocked: 'Hisob bloklanmagan.',
       CannotBlockSelf: 'O‘z hisobingizni bloklay olmaysiz.',
     },
+    Garment: {
+      NotFound: "Futbolka topilmadi — u o'chirilgan bo'lishi mumkin.",
+      ManufacturedInFuture: "Ishlab chiqarilgan sana kelajakda bo'lishi mumkin emas.",
+      NotClaimed: 'Muddatni faqat aktivatsiya qilingan futbolkaga uzaytirish mumkin.',
+      StatusNotAllowed:
+        "Futbolkani faqat faol, yashirilgan yoki bekor qilingan holatga o'tkazish mumkin.",
+      MonthsOutOfRange: "Muddat 1 oydan 24 oygacha bo'lishi kerak.",
+    },
     GetUsersQuery:
       'Hisoblarni Keycloak’dan o‘qib bo‘lmadi. Rol filtri tanlangan bo‘lsa, u hozircha ishlamasligi mumkin (Keycloak sozlamasi kerak).',
   },

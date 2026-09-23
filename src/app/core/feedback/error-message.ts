@@ -6,6 +6,7 @@ import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { DomainError } from '@shared/models/errors/domain.error';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
+import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ValidationError } from '@shared/models/errors/validation.error';
 
 const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
@@ -34,11 +35,16 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'User.NotBlocked': 'errors.backend.User.NotBlocked',
   'User.CannotBlockSelf': 'errors.backend.User.CannotBlockSelf',
   GetUsersQuery: 'errors.backend.GetUsersQuery',
+  'Garment.NotFound': 'errors.backend.Garment.NotFound',
+  'Garment.ManufacturedInFuture': 'errors.backend.Garment.ManufacturedInFuture',
+  'Garment.NotClaimed': 'errors.backend.Garment.NotClaimed',
+  'Garment.StatusNotAllowed': 'errors.backend.Garment.StatusNotAllowed',
+  'Garment.MonthsOutOfRange': 'errors.backend.Garment.MonthsOutOfRange',
 };
 
 export function toErrorMessage(error: unknown): string {
   if (!(error instanceof DomainError)) {
-    return 'errors.classes.network';
+    return 'errors.classes.generic';
   }
 
   return MESSAGES_BY_CODE[error.code] ?? messageForErrorClass(error);
@@ -62,6 +68,9 @@ function messageForErrorClass(error: DomainError): string {
   }
   if (error instanceof ConflictError) {
     return 'errors.classes.conflict';
+  }
+  if (error instanceof ServiceUnavailableError) {
+    return 'errors.classes.network';
   }
   if (error instanceof BusinessRuleError && error.message.length > 0) {
     return error.message;

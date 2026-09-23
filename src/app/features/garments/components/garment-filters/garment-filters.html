@@ -1,0 +1,52 @@
+<div class="mb-4 flex flex-wrap items-start gap-3">
+  <div class="flex min-w-56 flex-1 flex-col gap-1">
+    <label for="filterSerialNumber" class="text-muted-color text-sm">{{
+      'garments.filters.serialNumber' | t
+    }}</label>
+    <input
+      pInputText
+      id="filterSerialNumber"
+      type="search"
+      [formField]="form.serialNumber"
+      placeholder="01K7"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterStatus" class="text-muted-color text-sm">{{
+      'garments.filters.status' | t
+    }}</label>
+    <app-select-field
+      inputId="filterStatus"
+      [formField]="form.status"
+      [options]="statusOptions()"
+      [placeholder]="'garments.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex min-w-72 flex-col gap-1">
+    <label for="filterOwnerId" class="text-muted-color text-sm">{{
+      'garments.filters.ownerId' | t
+    }}</label>
+    <input
+      pInputText
+      id="filterOwnerId"
+      type="search"
+      [formField]="form.ownerId"
+      placeholder="UUID"
+    />
+    @if (ownerIdInvalid()) {
+      <small class="text-red-500">{{ 'garments.filters.ownerIdInvalid' | t }}</small>
+    }
+  </div>
+
+  <p-button
+    class="self-end"
+    [label]="'common.actions.clear' | t"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</div>

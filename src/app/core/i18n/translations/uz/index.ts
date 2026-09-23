@@ -3,6 +3,7 @@ import { AUTH_UZ } from './auth';
 import { EXERCISES_UZ } from './exercises';
 import { FOODS_UZ } from './foods';
 import { MEDIA_UZ } from './media';
+import { GARMENTS_UZ } from './garments';
 import { SOLDIERS_UZ } from './soldiers';
 import { ACCOUNTS_UZ } from './accounts';
 import { USER_SESSIONS_UZ } from './user-sessions';
@@ -17,6 +18,7 @@ export const DICTIONARY_UZ = {
   exercises: EXERCISES_UZ,
   foods: FOODS_UZ,
   media: MEDIA_UZ,
+  garments: GARMENTS_UZ,
   soldiers: SOLDIERS_UZ,
   accounts: ACCOUNTS_UZ,
   userSessions: USER_SESSIONS_UZ,

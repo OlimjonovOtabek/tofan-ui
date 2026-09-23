@@ -13,10 +13,16 @@ export class FormDialog {
   readonly header = input.required<string>();
   readonly saving = input(false);
   readonly saveLabel = input<string | null>(null);
+  readonly cancelLabel = input<string | null>(null);
   readonly saveDisabled = input(false);
   readonly width = input('32rem');
 
   readonly save = output<void>();
+
+  protected submit(event: Event): void {
+    event.preventDefault();
+    this.save.emit();
+  }
 
   protected close(): void {
     this.visible.set(false);

@@ -15,6 +15,7 @@ export function provideUi(): EnvironmentProviders {
   return makeEnvironmentProviders([
     provideOptimus({
       theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } },
+      overlayAppendTo: 'body',
     }),
     provideAppInitializer(() => {
       inject(ThemeService);
