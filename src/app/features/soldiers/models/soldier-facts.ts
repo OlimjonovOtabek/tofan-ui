@@ -52,7 +52,7 @@ function personalFacts(facts: FactWriter, profile: SoldierProfile, now: Date): S
   });
   return [
     facts.fact('soldiers.facts.birthDate', birthDate),
-    facts.fact('soldiers.facts.gender', facts.text(GENDER_LABELS[profile.gender])),
+    facts.fact('soldiers.facts.gender', facts.label(profile.gender, GENDER_LABELS)),
     facts.fact('soldiers.facts.country', profile.countryCode),
     facts.fact('soldiers.facts.timeZone', profile.timeZone),
   ];

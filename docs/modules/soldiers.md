@@ -39,4 +39,8 @@ account card or push sending.
 
 - Soldiers without a body or goal profile have `null` goal, experience, weights and place.
   With `desc` sorting the backend puts `null`s first.
+- The backend can return `gender: 0` (the profile commands do not validate `Gender`; a profile created
+  without it stores `0`), and such a profile can also carry `dateOfBirth` `1970-01-01`. The mapper reads
+  every soldier enum with `toDomainOrNull`, so an unknown value shows `—` instead of failing the whole
+  list. The real fix is `IsInEnum` validation on the backend.
 - `trainingDays` uses .NET `DayOfWeek` (0 = Sunday); the card lists them from Monday.

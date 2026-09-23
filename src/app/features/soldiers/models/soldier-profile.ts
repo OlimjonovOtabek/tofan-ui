@@ -16,7 +16,7 @@ export interface SoldierProfile {
   readonly userName: string;
   readonly fullName: string;
   readonly dateOfBirth: Date;
-  readonly gender: Gender;
+  readonly gender: Gender | null;
   readonly photoUrl: string | null;
   readonly countryCode: string;
   readonly timeZone: string;

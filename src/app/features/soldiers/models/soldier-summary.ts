@@ -6,7 +6,7 @@ export class SoldierSummary {
     readonly firstName: string,
     readonly lastName: string,
     readonly userName: string,
-    readonly gender: Gender,
+    readonly gender: Gender | null,
     readonly countryCode: string,
     readonly goal: FitnessGoal | null,
     readonly experienceLevel: ExperienceLevel | null,
