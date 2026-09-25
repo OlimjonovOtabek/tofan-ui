@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { toSoldierFactSections } from './models/soldier-facts';
 import { SoldierProfile } from './models/soldier-profile';
@@ -19,7 +19,7 @@ export class SoldierStore {
   readonly profile = signal<SoldierProfile | null>(null);
   readonly weights = signal<readonly WeightEntry[]>([]);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
 
   readonly notOnboarded = computed(
     () => this.loaded() && this.loadError() === null && this.profile() === null,

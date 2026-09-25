@@ -1,13 +1,20 @@
 import { InvalidCredentialsError } from '@core/auth/invalid-credentials.error';
 import { SessionExpiredError } from '@core/auth/session-expired.error';
 import { TranslationKey } from '@core/i18n/dictionary';
+import { AppLocale } from '@core/i18n/locale';
+import { TranslatableMessage } from '@core/i18n/translate';
 import { AccessDeniedError } from '@shared/models/errors/access-denied.error';
 import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { DomainError } from '@shared/models/errors/domain.error';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
-import { ValidationError } from '@shared/models/errors/validation.error';
+import { ValidationError, ValidationIssue } from '@shared/models/errors/validation.error';
+import { LocalizedText } from '@shared/models/localized-text';
+
+export type ErrorMessage = TranslatableMessage;
+
+const ISSUE_SEPARATOR = ' ';
 
 const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Authentication.InvalidCredentials': 'errors.backend.Authentication.InvalidCredentials',
@@ -43,7 +50,7 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Garment.MonthsOutOfRange': 'errors.backend.Garment.MonthsOutOfRange',
 };
 
-export function toErrorMessage(error: unknown): string {
+export function toErrorMessage(error: unknown): ErrorMessage {
   if (!(error instanceof DomainError)) {
     return 'errors.classes.generic';
   }
@@ -51,7 +58,13 @@ export function toErrorMessage(error: unknown): string {
   return MESSAGES_BY_CODE[error.code] ?? messageForErrorClass(error);
 }
 
-function messageForErrorClass(error: DomainError): string {
+function messageForErrorClass(error: DomainError): ErrorMessage {
+  if (error instanceof ValidationError) {
+    return validationMessage(error);
+  }
+  if (error.messages !== undefined) {
+    return error.messages;
+  }
   if (error instanceof InvalidCredentialsError) {
     return 'errors.classes.invalidCredentials';
   }
@@ -60,9 +73,6 @@ function messageForErrorClass(error: DomainError): string {
   }
   if (error instanceof AccessDeniedError) {
     return 'errors.classes.accessDenied';
-  }
-  if (error instanceof ValidationError) {
-    return validationMessage(error);
   }
   if (error instanceof NotFoundError) {
     return 'errors.classes.notFound';
@@ -79,10 +89,24 @@ function messageForErrorClass(error: DomainError): string {
   return 'errors.classes.generic';
 }
 
-function validationMessage(error: ValidationError): string {
+function validationMessage(error: ValidationError): ErrorMessage {
   if (error.issues.length === 0) {
     return 'errors.classes.validationFallback';
   }
   const known = error.issues.map((issue) => MESSAGES_BY_CODE[issue.code]).find(Boolean);
-  return known ?? error.issues.map((issue) => issue.message).join(' ');
+  return known ?? joinIssues(error.issues);
+}
+
+function joinIssues(issues: readonly ValidationIssue[]): ErrorMessage {
+  const translated = issues.map((issue) => issue.messages);
+  if (!translated.every(isLocalizedText)) {
+    return issues.map((issue) => issue.message).join(ISSUE_SEPARATOR);
+  }
+  const joinIn = (locale: AppLocale): string =>
+    translated.map((messages) => messages[locale]).join(ISSUE_SEPARATOR);
+  return { en: joinIn('en'), uz: joinIn('uz'), ru: joinIn('ru') };
+}
+
+function isLocalizedText(messages: LocalizedText | undefined): messages is LocalizedText {
+  return messages !== undefined;
 }

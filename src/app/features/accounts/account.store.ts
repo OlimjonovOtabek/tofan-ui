@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { AuthStore } from '@core/auth/auth.store';
 import { Roles } from '@core/auth/roles';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { TranslationKey } from '@core/i18n/dictionary';
 import { Account } from './models/account';
@@ -31,7 +31,7 @@ export class AccountStore {
   readonly account = signal<Account | null>(null);
   readonly roles = signal<readonly string[]>([]);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly runningAction = signal<AccountAction | null>(null);
 
   readonly isAdmin = computed(() => this.roles().includes(Roles.admin));

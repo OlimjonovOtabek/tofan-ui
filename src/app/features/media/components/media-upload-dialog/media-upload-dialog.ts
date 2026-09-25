@@ -19,6 +19,7 @@ import { ProgressBar } from '@openng/optimus-ui/progressbar';
 import { Message } from '@openng/optimus-ui/message';
 import { Select } from '@openng/optimus-ui/select';
 import { Textarea } from '@openng/optimus-ui/textarea';
+import { ErrorMessage } from '@core/feedback/error-message';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
@@ -51,7 +52,7 @@ export class MediaUploadDialog {
   readonly progress = input(0);
   readonly exerciseChoices = input<readonly ExerciseChoice[]>([]);
   readonly exercisesLoading = input(false);
-  readonly exercisesError = input<string | null>(null);
+  readonly exercisesError = input<ErrorMessage | null>(null);
 
   readonly upload = output<MediaUploadDraft>();
   readonly retryExercises = output();

@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { AuthStore } from '@core/auth/auth.store';
 import { FloatingThemeSwitcher } from '@core/layout/components/floating-theme-switcher/floating-theme-switcher';
 import { AppPaths } from '@core/config/app-paths';
@@ -39,7 +39,7 @@ export class LoginPage {
     password: ['', Validators.required],
   });
   protected readonly isSubmitting = signal(false);
-  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly errorMessage = signal<ErrorMessage | null>(null);
 
   protected async submit(): Promise<void> {
     if (this.form.invalid) {

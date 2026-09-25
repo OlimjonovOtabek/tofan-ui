@@ -3,7 +3,7 @@ import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@sha
 import { UserSession } from './models/user-session';
 import { UserSessionFilter } from './models/user-session-filter';
 import { UserSessionsService } from './services/user-sessions.service';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 
 @Injectable()
 export class UserSessionsStore {
@@ -16,7 +16,7 @@ export class UserSessionsStore {
   readonly sessions = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly first = computed(() => this.currentRequest()?.first ?? 0);
   readonly userId = computed(() => this.currentFilter().userId ?? null);
 

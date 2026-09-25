@@ -10,7 +10,7 @@ import {
 import { PushNotificationsService } from './services/push-notifications.service';
 import { NotificationTemplatesService } from './services/notification-templates.service';
 import { TemplateCoverage, templateCoverage } from './models/template-coverage';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
 const ALL_TEMPLATES = { first: 0, rows: 1000 };
@@ -25,7 +25,7 @@ export class NotificationSendStore {
 
   readonly templatesLoaded = signal(false);
   readonly templatesLoading = signal(false);
-  readonly templatesError = signal<string | null>(null);
+  readonly templatesError = signal<ErrorMessage | null>(null);
   readonly sending = signal(false);
 
   async loadTemplates(): Promise<void> {

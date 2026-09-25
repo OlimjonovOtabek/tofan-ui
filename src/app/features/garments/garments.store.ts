@@ -8,7 +8,7 @@ import { GARMENT_STATUS_ACTIONS } from './models/garment-labels';
 import { AssignableGarmentStatus } from './models/garment-status';
 import { GarmentsService } from './services/garments.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { formatDate } from '@core/i18n/date-format';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { FileDownloadService } from '@core/feedback/file-download.service';
@@ -28,7 +28,7 @@ export class GarmentsStore {
   readonly garments = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly saving = signal(false);
   readonly exporting = signal(false);
   readonly filter = this.currentFilter.asReadonly();

@@ -5,7 +5,16 @@ import { ConflictError } from '@shared/models/errors/conflict.error';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ValidationError } from '@shared/models/errors/validation.error';
+import { LocalizedText } from '@shared/models/localized-text';
 import { toErrorMessage } from './error-message';
+
+const BACKEND_TEXT: LocalizedText = {
+  en: 'The plan is locked.',
+  uz: 'Reja qulflangan.',
+  ru: 'План заблокирован.',
+};
+const NAME_EMPTY: LocalizedText = { en: 'Name is empty.', uz: "Nom bo'sh.", ru: 'Имя пустое.' };
+const NAME_LONG: LocalizedText = { en: 'Name is long.', uz: 'Nom uzun.', ru: 'Имя длинное.' };
 
 describe('toErrorMessage', () => {
   it('should format backend codes from dictionary', () => {
@@ -52,6 +61,40 @@ describe('toErrorMessage', () => {
 
   it('should map ServiceUnavailableError to the network message', () => {
     expect(toErrorMessage(new ServiceUnavailableError())).toBe('errors.classes.network');
+  });
+
+  it('should prefer the dictionary over the backend text when the code is known', () => {
+    const error = new NotFoundError('gone', 'User.NotFound', BACKEND_TEXT);
+
+    expect(toErrorMessage(error)).toBe('errors.backend.User.NotFound');
+  });
+
+  it('should return the backend text in every language when the code is unknown', () => {
+    const error = new ConflictError('exists', 'Workout.PlanLocked', BACKEND_TEXT);
+
+    expect(toErrorMessage(error)).toEqual(BACKEND_TEXT);
+  });
+
+  it('should join the issues per language when every issue is translated', () => {
+    const error = new ValidationError('invalid', [
+      { code: 'NotEmptyValidator', message: 'Name is empty.', messages: NAME_EMPTY },
+      { code: 'MaximumLengthValidator', message: 'Name is long.', messages: NAME_LONG },
+    ]);
+
+    expect(toErrorMessage(error)).toEqual({
+      en: 'Name is empty. Name is long.',
+      uz: "Nom bo'sh. Nom uzun.",
+      ru: 'Имя пустое. Имя длинное.',
+    });
+  });
+
+  it('should join the plain messages when an issue has no translation', () => {
+    const error = new ValidationError('invalid', [
+      { code: 'NotEmptyValidator', message: 'Name is empty.', messages: NAME_EMPTY },
+      { code: 'Unknown.Code', message: 'Nom juda uzun.' },
+    ]);
+
+    expect(toErrorMessage(error)).toBe('Name is empty. Nom juda uzun.');
   });
 
   it('should map an error thrown inside the panel to the generic message', () => {

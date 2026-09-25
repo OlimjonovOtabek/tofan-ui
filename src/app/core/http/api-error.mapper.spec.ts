@@ -42,6 +42,29 @@ describe('toDomainError', () => {
     ]);
   });
 
+  it('should keep the backend translations when the problem carries them', () => {
+    const messages = { en: 'Not found.', uz: 'Topilmadi.', ru: 'Не найдено.' };
+
+    const error = toDomainError(problem(404, { title: 'Garment.NotFound', messages }));
+
+    expect(error.messages).toEqual(messages);
+  });
+
+  it('should keep the translations of each issue when validation fails', () => {
+    const messages = { en: 'Empty.', uz: "Bo'sh.", ru: 'Пусто.' };
+
+    const error = toDomainError(
+      problem(400, {
+        title: 'General.Validation',
+        errors: [
+          { code: 'NotEmptyValidator', message: 'Empty.', messages, type: ErrorType.Problem },
+        ],
+      }),
+    );
+
+    expect((error as ValidationError).issues[0]?.messages).toEqual(messages);
+  });
+
   it('should map each status when the backend answers with an error', () => {
     expect(toDomainError(problem(401, null))).toBeInstanceOf(SessionExpiredError);
     expect(toDomainError(problem(403, null))).toBeInstanceOf(AccessDeniedError);
