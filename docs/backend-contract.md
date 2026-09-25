@@ -40,7 +40,7 @@ Commands and single-item queries return `Result` / `Result<T>` with status 200:
 {
   "isSuccess": true,
   "isFailure": false,
-  "error": { "code": "", "message": "", "type": 0 },
+  "error": { "code": "", "message": "", "messages": { "en": "", "uz": "", "ru": "" }, "type": 0 },
   "data": {}
 }
 ```
@@ -58,9 +58,29 @@ Failures are RFC 7807 ProblemDetails built by `ApiResults.Problem`:
   "title": "Exercise.NotFound",
   "status": 404,
   "detail": "The exercise was not found.",
-  "errors": [{ "code": "NotEmptyValidator", "message": "'Title' must not be empty.", "type": 2 }]
+  "messages": {
+    "en": "The specified exercise was not found.",
+    "uz": "Ko'rsatilgan mashq topilmadi.",
+    "ru": "Указанное упражнение не найдено."
+  },
+  "errors": [
+    {
+      "code": "NotEmptyValidator",
+      "message": "'Title' must not be empty.",
+      "messages": { "en": "…", "uz": "…", "ru": "…" },
+      "type": 2
+    }
+  ]
 }
 ```
+
+Since backend commit `203860a` (`tofan/docs/mobile-errors-v1.md`) every error response carries
+`messages: { en, uz, ru }`, including 409 `Conflict.DuplicateKey` and 500, and so does every item of
+`errors`. `title`, `detail` and `message` keep their English values. A 500 answers with the generic
+`General.Unexpected` text, never the exception message. Custom validation rules now report their own
+code instead of `PredicateValidator` (`Profile.InvalidTimeZone`, `GoalProfile.TrainingDaysNotUnique`,
+`Food.ServingSizeGramsMismatch`, ...). Keycloak login/refresh failures no longer put Keycloak's raw text
+in `detail`.
 
 | Backend `ErrorType`           | Status                                                 |
 | ----------------------------- | ------------------------------------------------------ |
@@ -68,22 +88,24 @@ Failures are RFC 7807 ProblemDetails built by `ApiResults.Problem`:
 | Problem                       | 400                                                    |
 | NotFound                      | 404                                                    |
 | Conflict                      | 409                                                    |
-| Failure / unhandled exception | 500 (`title` is the exception message)                 |
+| Failure                       | 500 (`title` = `Server failure`)                       |
+| Unhandled exception           | 500 (`title` is the exception message)                 |
 
 Unique-constraint races answer 409 with `title` `Conflict.DuplicateKey`.
 
 Frontend mapping (`core/http/api-error.mapper.ts`) turns failures into error classes from
-`shared/models/errors`, each with the backend `code` and `message`:
+`shared/models/errors`, each with the backend `code`, `message` and `messages` (a `LocalizedText`,
+`undefined` when the response had none, for example a network failure):
 
-| Status / envelope type           | Class                                        |
-| -------------------------------- | -------------------------------------------- |
-| 400 with `errors` / `Validation` | `ValidationError` (`issues`: code + message) |
-| 400 without `errors` / `Problem` | `BusinessRuleError`                          |
-| 401                              | `SessionExpiredError` (`core/auth`)          |
-| 403                              | `AccessDeniedError`                          |
-| 404 / `NotFound`                 | `NotFoundError`                              |
-| 409 / `Conflict`                 | `ConflictError`                              |
-| network failure, 5xx / `Failure` | `ServiceUnavailableError`                    |
+| Status / envelope type           | Class                                                   |
+| -------------------------------- | ------------------------------------------------------- |
+| 400 with `errors` / `Validation` | `ValidationError` (`issues`: code + message + messages) |
+| 400 without `errors` / `Problem` | `BusinessRuleError`                                     |
+| 401                              | `SessionExpiredError` (`core/auth`)                     |
+| 403                              | `AccessDeniedError`                                     |
+| 404 / `NotFound`                 | `NotFoundError`                                         |
+| 409 / `Conflict`                 | `ConflictError`                                         |
+| network failure, 5xx / `Failure` | `ServiceUnavailableError`                               |
 
 Validation issues carry the FluentValidation _validator_ code (`NotEmptyValidator`) and, since
 backend `admin-ui-v1`, an optional camelCase `propertyName` (`nameUz`, `meals[0].items[1].quantityGrams`).

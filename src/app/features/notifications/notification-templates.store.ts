@@ -6,7 +6,7 @@ import {
 } from './models/notification-template-draft';
 import { NotificationTemplatesService } from './services/notification-templates.service';
 import { Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { LocaleStore } from '@core/i18n/locale.store';
 
@@ -22,7 +22,7 @@ export class NotificationTemplatesStore {
   readonly templates = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly saving = signal(false);
   readonly first = computed(() => this.currentRequest().first);
 

@@ -4,6 +4,7 @@ import { DEFAULT_PAGE_SIZE, PageRequest, SortDirection } from '@shared/models/pa
 import { TableLazyLoadEvent } from '@openng/optimus-ui/types/table';
 import { Button } from '@openng/optimus-ui/button';
 import { TableModule } from '@openng/optimus-ui/table';
+import { ErrorMessage } from '@core/feedback/error-message';
 import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 
@@ -31,7 +32,7 @@ export class DataTable<TItem> {
   readonly pageSize = input(DEFAULT_PAGE_SIZE);
   readonly first = input(0);
   readonly emptyMessage = input<string | null>(null);
-  readonly error = input<string | null>(null);
+  readonly error = input<ErrorMessage | null>(null);
   readonly dataKey = input('id');
   readonly defaultSortField = input<string | undefined>(undefined);
   readonly defaultSortDirection = input<SortDirection>('asc');

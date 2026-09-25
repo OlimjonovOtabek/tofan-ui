@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { Account } from './models/account';
 import { AccountFilter } from './models/account-filter';
@@ -16,7 +16,7 @@ export class AccountsStore {
   readonly accounts = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly first = computed(() => this.currentRequest().first);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {

@@ -5,7 +5,7 @@ import { FoodDraft, createFoodDraft } from './models/food-draft';
 import { DEFAULT_FOOD_FILTER, FoodFilter } from './models/food-filter';
 import { FoodsService } from './services/foods.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { pickLocalized } from '@shared/models/localized-text';
 import { LocaleStore } from '@core/i18n/locale.store';
@@ -23,7 +23,7 @@ export class FoodsStore {
   readonly foods = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly saving = signal(false);
   readonly searchingBarcode = signal(false);
   readonly first = computed(() => this.currentRequest().first);

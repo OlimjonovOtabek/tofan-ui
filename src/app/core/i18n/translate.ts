@@ -1,9 +1,12 @@
+import { LocalizedText, pickLocalized } from '@shared/models/localized-text';
 import { Dictionary, TranslationKey, TranslationParams } from './dictionary';
 import { AppLocale, DEFAULT_LOCALE } from './locale';
 import { interpolate, lookupText } from './translation-lookup';
 import { DICTIONARY_EN } from './translations/en';
 import { DICTIONARY_RU } from './translations/ru';
 import { DICTIONARY_UZ } from './translations/uz';
+
+export type TranslatableMessage = string | LocalizedText;
 
 const DICTIONARIES: Record<AppLocale, Dictionary> = {
   uz: DICTIONARY_UZ,
@@ -21,10 +24,13 @@ export function translate(
 
 export function translateMessage(
   locale: AppLocale,
-  keyOrText: string,
+  message: TranslatableMessage,
   params?: TranslationParams,
 ): string {
-  return textOf(locale, keyOrText, params) ?? keyOrText;
+  if (typeof message !== 'string') {
+    return pickLocalized(message, locale);
+  }
+  return textOf(locale, message, params) ?? message;
 }
 
 function textOf(locale: AppLocale, key: string, params?: TranslationParams): string | undefined {

@@ -7,7 +7,7 @@ import { MediaUpload, MediaUploadDraft, createMediaUpload } from './models/media
 import { StoredFile } from './models/stored-file';
 import { ExerciseVideosService } from './services/exercise-videos.service';
 import { MediaService } from './services/media.service';
-import { toErrorMessage } from '@core/feedback/error-message';
+import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
 @Injectable()
@@ -23,14 +23,14 @@ export class MediaStore {
   readonly files = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
-  readonly loadError = signal<string | null>(null);
+  readonly loadError = signal<ErrorMessage | null>(null);
   readonly first = computed(() => this.currentRequest().first);
   readonly deletingId = signal<string | null>(null);
   readonly uploading = signal(false);
   readonly uploadProgress = signal(0);
   readonly exerciseChoices = signal<readonly ExerciseChoice[]>([]);
   readonly exerciseChoicesLoading = signal(false);
-  readonly exerciseChoicesError = signal<string | null>(null);
+  readonly exerciseChoicesError = signal<ErrorMessage | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);

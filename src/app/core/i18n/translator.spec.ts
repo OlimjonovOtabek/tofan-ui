@@ -37,6 +37,15 @@ describe('Translator', () => {
     );
   });
 
+  it('should pick the backend text in the current language when a message is localized', () => {
+    const message = { en: 'Not found.', uz: 'Topilmadi.', ru: 'Не найдено.' };
+
+    expect(translator.message(message)).toBe('Topilmadi.');
+
+    localeStore.setLocale('ru');
+    expect(translator.message(message)).toBe('Не найдено.');
+  });
+
   it('should return plain text as is when a message is not a key', () => {
     expect(translator.message('Nom kiritilmagan.')).toBe('Nom kiritilmagan.');
     expect(translator.message('common.toast.error')).toBe('Xatolik');
