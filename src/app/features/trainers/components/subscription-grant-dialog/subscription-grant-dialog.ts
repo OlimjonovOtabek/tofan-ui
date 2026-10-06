@@ -10,13 +10,15 @@ import {
 } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import { InputText } from '@openng/optimus-ui/inputtext';
+import { TranslationKey } from '@core/i18n/dictionary';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { FieldError } from '@shared/components/field-error/field-error';
 import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { NumberField } from '@shared/components/number-field/number-field';
 import { SelectField } from '@shared/components/select-field/select-field';
-import { TextField } from '@shared/components/text-field/text-field';
 import { SelectOption } from '@shared/models/select-option';
+import { SoldierOption } from '../../models/soldier-option';
+import { SoldierField } from '../soldier-field/soldier-field';
 import { Trainer } from '../../models/trainer';
 import {
   SubscriptionGrantFormValue,
@@ -39,7 +41,7 @@ export interface SubscriptionGrantRequest {
     FieldError,
     NumberField,
     SelectField,
-    TextField,
+    SoldierField,
     TranslatePipe,
   ],
   templateUrl: './subscription-grant-dialog.html',
@@ -48,11 +50,16 @@ export class SubscriptionGrantDialog {
   readonly visible = model.required<boolean>();
   readonly trainer = input<Trainer | null>(null);
   readonly trainerOptions = input<readonly SelectOption<string>[]>([]);
+  readonly soldiers = input<readonly SoldierOption[]>([]);
+  readonly soldiersFailed = input(false);
   readonly saving = input(false);
 
   readonly grant = output<SubscriptionGrantRequest>();
+  readonly soldierSearch = output<string>();
 
-  protected readonly trainerLocked = computed(() => this.trainer() !== null);
+  protected readonly soldiersEmpty = computed<TranslationKey>(() =>
+    this.soldiersFailed() ? 'trainers.grant.soldierFailed' : 'trainers.grant.soldierEmpty',
+  );
   protected readonly value = signal<SubscriptionGrantFormValue>(emptyGrantFormValue(null));
   protected readonly form = form(this.value, subscriptionGrantSchema);
 
@@ -60,7 +67,10 @@ export class SubscriptionGrantDialog {
     effect(() => {
       if (this.visible()) {
         const trainerId = this.trainer()?.id ?? null;
-        untracked(() => this.form().reset(emptyGrantFormValue(trainerId)));
+        untracked(() => {
+          this.form().reset(emptyGrantFormValue(trainerId));
+          this.soldierSearch.emit('');
+        });
       }
     });
   }
@@ -68,7 +78,7 @@ export class SubscriptionGrantDialog {
   protected submit(): void {
     this.form().markAsTouched();
     const { trainerId, userId, months } = this.value();
-    if (this.form().invalid() || trainerId === null || months === null) {
+    if (this.form().invalid() || trainerId === null || userId === null || months === null) {
       return;
     }
     this.grant.emit({ trainerId, userId, months });

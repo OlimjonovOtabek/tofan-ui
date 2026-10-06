@@ -29,11 +29,13 @@
 
     <div class="flex flex-col gap-1">
       <label for="grantUserId" class="font-medium">{{ 'trainers.grant.userId' | t }}</label>
-      <app-text-field
+      <app-soldier-field
         inputId="grantUserId"
-        autocomplete="off"
-        placeholder="UUID"
         [formField]="form.userId"
+        [options]="soldiers()"
+        [placeholder]="'trainers.grant.soldierPlaceholder' | t"
+        [emptyMessage]="soldiersEmpty() | t"
+        (searchChange)="soldierSearch.emit($event)"
       />
       <app-field-error [field]="form.userId()" />
     </div>

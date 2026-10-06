@@ -14,6 +14,7 @@ The trainer panel (`/coach/*`) is not part of this app.
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`
   - `GET /admin/trainer-subscriptions` (paging, sort, `TrainerId`, `UserId`, `IsActive`)
   - `POST /admin/trainer-subscriptions/{id}/end`
+  - `GET /admin/soldiers` (`Search`, 10 rows): only for the soldier autocomplete in the grant dialog
 - Access (backend policy): `Policies.Admin`.
 - Error codes handled: `Trainer.PriceNotSet`, `Trainer.NotFound`, `TrainerSubscription.OtherTrainerActive`,
   `WorkoutPlan.TrainerProgramMissing`, `MealPlan.TrainerProgramMissing`; client side:
@@ -37,6 +38,11 @@ The trainer panel (`/coach/*`) is not part of this app.
 - The menu item uses a subset route match so it stays active on both tabs.
 - Actions are never disabled in advance because of backend rules (price missing, programs missing,
   another trainer active); the server's refusal is shown as a toast.
+
+- The grant dialog picks the user from `SoldierField` (an Optimus autocomplete wrapped as a form control).
+  `SoldierSearchStore` is provided by each page; the dialog emits `soldierSearch` and the page forwards it.
+  The dialog asks for the first 10 soldiers when it opens, and the field asks again on focus and on typing.
+  Reading `/admin/soldiers` goes through `SoldierLookupService` with its own DTO, never the soldiers feature.
 
 ## Traps
 - There is no endpoint to read one trainer, so there is no detail page.

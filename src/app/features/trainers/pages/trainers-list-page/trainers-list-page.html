@@ -86,6 +86,9 @@
 <app-subscription-grant-dialog
   [(visible)]="grantVisible"
   [trainer]="granting()"
+  [soldiers]="soldierSearch.options()"
+  [soldiersFailed]="soldierSearch.failed()"
   [saving]="store.saving()"
   (grant)="grant($event)"
+  (soldierSearch)="soldierSearch.search($event)"
 />

@@ -10,6 +10,7 @@ import {
   SUBSCRIPTION_STATUS_SEVERITIES,
   TrainerTagSeverity,
 } from '../../models/trainer-labels';
+import { SoldierSearchStore } from '../../soldier-search.store';
 import { TrainerSubscriptionsStore } from '../../trainer-subscriptions.store';
 import { SubscriptionFilters } from '../../components/subscription-filters/subscription-filters';
 import {
@@ -40,7 +41,7 @@ import { Translator } from '@core/i18n/translator';
     TranslatePipe,
     MessagePipe,
   ],
-  providers: [TrainerSubscriptionsStore],
+  providers: [TrainerSubscriptionsStore, SoldierSearchStore],
   templateUrl: './trainer-subscriptions-page.html',
 })
 export class TrainerSubscriptionsPage implements OnInit {
@@ -49,6 +50,7 @@ export class TrainerSubscriptionsPage implements OnInit {
   private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(TrainerSubscriptionsStore);
+  protected readonly soldierSearch = inject(SoldierSearchStore);
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'trainerDisplayName', header: this.column('trainer') },

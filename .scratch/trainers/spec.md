@@ -47,7 +47,8 @@ Admin panelga "Trenerlar" bo'limi qo'shiladi: menyuda "Trenerlar" guruhi va unda
 31. As an admin, I want the list to refresh after publish or unpublish, so that the status tag is current.
 32. As an admin, I want a "grant subscription" action on each trainer row, so that I can subscribe a user to that trainer directly.
 33. As an admin, I want the grant dialog opened from a trainer row to show that trainer as fixed and read-only, so that I cannot pick the wrong one.
-34. As an admin, I want to enter the user ID and the number of months in the grant dialog, so that I define who and for how long.
+34. As an admin, I want to pick the user in the grant dialog from an autocomplete of soldiers and enter the number of months, so that I define who and for how long without typing a UUID.
+34a. As an admin, I want the soldier autocomplete to show the first 10 soldiers when I open it without typing, and to search by name or username as I type, so that I can find the person quickly.
 35. As an admin, I want the months limited to 1 through 12 with a stepper, so that I cannot enter an invalid length.
 36. As an admin, I want a hint that granting to a trainer the user already follows extends the term, so that I understand the outcome.
 37. As an admin, I want a clear error when the user already has an active subscription to another trainer, so that I know to end that one first.
@@ -100,6 +101,7 @@ Admin panelga "Trenerlar" bo'limi qo'shiladi: menyuda "Trenerlar" guruhi va unda
 - Models (plain TypeScript): a trainer, a trainer draft with its preparation rule, a subscription grant with its range rule, a trainer subscription with a status rule, a subscription filter, a subscription status union, and label and severity tables.
 - Services: one service for trainers (list, create, publish, unpublish, photo URL building) and one for subscriptions (list, grant, end). DTOs mirror the Swagger exactly. Mappers convert DTO to model; the trainer mapper receives a function that builds the photo URL so the mapper stays pure.
 - Stores: a trainers store and a subscriptions store. The subscriptions store also loads a trainer list (first 100) to feed the trainer filter and the grant dialog. Both stores can grant a subscription; the granting rule lives in the shared model rule, not duplicated logic.
+- Soldier lookup (added after the first version): the grant dialog picks the user from an autocomplete backed by the soldiers list endpoint with its search text and a page of 10. It is read through the feature's own small service and DTO (a feature never imports another feature). A small store per page holds the suggestions, ignores answers from older searches and flags a failed search. The autocomplete opens with the first 10 soldiers on focus or click and searches as the admin types.
 - Components: a form dialog to add a trainer, a grant dialog (trainer fixed or selectable), and a subscription filters component. Both dialogs use signal forms and the shared form dialog, select, number and text wrappers.
 - Shared pieces reused as they are: the server-paged data table, the form dialog, the field error, the select, number and text field wrappers, the confirm dialog service, the notification service.
 
@@ -142,7 +144,7 @@ Admin panelga "Trenerlar" bo'limi qo'shiladi: menyuda "Trenerlar" guruhi va unda
 
 - The trainer panel and all coach endpoints: profile and price, trainer exercises and foods, programs, clients and their results.
 - Editing or deleting a trainer card, and changing a trainer's price from the admin side. A trainer without a price stays a draft until the trainer sets it elsewhere.
-- Searching users by name or phone when granting a subscription; the admin enters a UUID.
+- Searching users by phone when granting a subscription; the grant dialog searches soldiers by the backend's search text. The subscriptions filter still takes a user UUID.
 - Showing who granted a subscription or when it was created, and telling an admin cancellation from automatic expiry.
 - A single-trainer detail page; no endpoint supports it.
 - Payment, purchase through app stores, refreshing subscribers' copies of a changed program, paid video protection.

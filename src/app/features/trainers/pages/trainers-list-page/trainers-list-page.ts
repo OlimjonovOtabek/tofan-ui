@@ -10,6 +10,7 @@ import {
   TRAINER_PUBLISH_SEVERITIES,
   TrainerTagSeverity,
 } from '../../models/trainer-labels';
+import { SoldierSearchStore } from '../../soldier-search.store';
 import { TrainersStore } from '../../trainers.store';
 import {
   SubscriptionGrantRequest,
@@ -38,7 +39,7 @@ import { Translator } from '@core/i18n/translator';
     Tooltip,
     TranslatePipe,
   ],
-  providers: [TrainersStore],
+  providers: [TrainersStore, SoldierSearchStore],
   templateUrl: './trainers-list-page.html',
 })
 export class TrainersListPage {
@@ -46,6 +47,7 @@ export class TrainersListPage {
   private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(TrainersStore);
+  protected readonly soldierSearch = inject(SoldierSearchStore);
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'displayName', header: this.column('trainer'), sortable: true },
