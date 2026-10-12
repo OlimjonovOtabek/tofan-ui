@@ -15,7 +15,7 @@ import { CoachWorkoutDayList } from '../../components/coach-workout-day-list/coa
 import { CoachWorkoutEditorStore } from '../../coach-workout-editor.store';
 import { FITNESS_GOAL_LABELS } from '@coach/core/fitness/fitness-goal';
 import { EXPERIENCE_LEVEL_LABELS } from '../../models/coach-program-attributes';
-import { WorkoutDaySettings } from '../../models/coach-workout-draft';
+import { WorkoutDayDraft, WorkoutDaySettings } from '../../models/coach-workout-draft';
 
 type DayDialogMode = 'add' | 'edit';
 
@@ -48,7 +48,7 @@ export class CoachWorkoutEditorPage implements OnInit {
   protected readonly dayOpenOnMobile = signal(false);
   protected readonly dayDialog = signal<DayDialogMode | null>(null);
   protected readonly pickerDayKey = signal<string | null>(null);
-  protected readonly selectedDay = computed(() => {
+  protected readonly selectedDay = computed<WorkoutDayDraft | null>(() => {
     const days = this.store.days();
     return days.find((day) => day.key === this.selectedKey()) ?? days[0] ?? null;
   });
