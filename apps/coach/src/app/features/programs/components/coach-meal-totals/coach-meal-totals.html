@@ -1,0 +1,32 @@
+@let draft = store.draft();
+<aside class="meal-aside">
+  <section class="workspace-panel totals-panel">
+    <h2>{{ 'coach.workspace.menuTotal' | t }}</h2>
+    <p class="calories"><b>{{ store.totals().calories }}</b> kcal</p>
+    <small>{{ 'coach.workspace.totalsHint' | t }}</small>
+    <div class="macro-bar" aria-hidden="true">
+      @for (row of rows(); track row.tone) {
+        <span class="macro-segment" [class]="row.tone" [style.flex-grow]="row.grams"></span>
+      }
+    </div>
+    @for (row of rows(); track row.tone) {
+      <p class="macro-row">
+        <span class="macro-dot" [class]="row.tone"></span>{{ row.labelKey | t }}<b>{{ grams(row.grams) }} g</b>
+      </p>
+    }
+  </section>
+  @if (draft) {
+    <section class="workspace-panel dates-panel">
+      <h2>{{ 'coach.workspace.dateRange' | t }}</h2>
+      <label for="mealStartDate">
+        <span>{{ 'coach.programs.startDate' | t }}</span>
+        <input id="mealStartDate" pInputText type="date" [value]="draft.startDate" (change)="dateChanged($event, 'startDate')" />
+      </label>
+      <label for="mealEndDate">
+        <span>{{ 'coach.programs.endDate' | t }}</span>
+        <input id="mealEndDate" pInputText type="date" [value]="draft.endDate" (change)="dateChanged($event, 'endDate')" />
+      </label>
+    </section>
+  }
+  <p class="aside-note">{{ 'coach.programs.estimateNote' | t }}</p>
+</aside>

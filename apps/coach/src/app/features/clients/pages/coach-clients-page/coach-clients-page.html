@@ -1,0 +1,62 @@
+<section class="clients-heading">
+  <h1>{{ 'coach.clients.title' | t }}</h1>
+  <p>{{ 'coach.clients.description' | t }}</p>
+</section>
+@if (store.loading()) {
+  <p-skeleton height="14rem" />
+} @else if (store.error(); as error) {
+  <p-message severity="error"
+    >{{ error | message
+    }}<p-button [label]="'coach.programs.retry' | t" severity="secondary" [text]="true" (onClick)="store.load()"
+  /></p-message>
+} @else if (store.clients().length === 0) {
+  <section class="workspace-panel clients-empty">
+    <i class="pi pi-users" aria-hidden="true"></i>
+    <p>{{ 'coach.clients.empty' | t }}</p>
+  </section>
+} @else {
+  <section class="workspace-panel">
+    <div class="workspace-tools">
+      <label class="workspace-search">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input
+          type="search"
+          [value]="store.query()"
+          (input)="queryChanged($event)"
+          [attr.aria-label]="'coach.clients.search' | t"
+          [placeholder]="'coach.clients.search' | t"
+        />
+      </label>
+      <span class="clients-count">{{ 'coach.clients.count' | t: { count: store.clients().length } }}</span>
+    </div>
+    @if (store.visibleClients().length === 0) {
+      <div class="workspace-state">
+        <p>{{ 'coach.clients.noMatches' | t }}</p>
+        <p-button [label]="'coach.content.clearSearch' | t" severity="secondary" [outlined]="true" (onClick)="clearQuery()" />
+      </div>
+    } @else {
+      <div class="clients-table-head" aria-hidden="true">
+        <span>{{ 'coach.clients.colClient' | t }}</span>
+        <span>{{ 'coach.clients.weight' | t }}</span>
+        <span>{{ 'coach.clients.targetWeight' | t }}</span>
+        <span>{{ 'coach.clients.ends' | t }}</span>
+        <span>{{ 'coach.clients.colReport' | t }}</span>
+      </div>
+      @for (client of store.visibleClients(); track client.userId) {
+        <a class="client-row" [routerLink]="['/clients', client.userId]">
+          <span class="client-identity">
+            <span class="client-avatar">{{ initials(client) }}</span>
+            <span class="client-name">
+              <b>{{ client.firstName }} {{ client.lastName }}</b>
+              <small>{{ goalKey(client) | t }}</small>
+            </span>
+          </span>
+          <span class="client-cell"><span class="cell-label">{{ 'coach.clients.weight' | t }}</span>{{ weight(client.currentWeightKg) }}</span>
+          <span class="client-cell"><span class="cell-label">{{ 'coach.clients.targetWeight' | t }}</span>{{ weight(client.targetWeightKg) }}</span>
+          <span class="client-cell"><span class="cell-label">{{ 'coach.clients.ends' | t }}</span>{{ dateLabel(client.subscriptionEndsOnUtc) }}</span>
+          <span class="client-open">{{ 'coach.clients.colReport' | t }}<i class="pi pi-chevron-right" aria-hidden="true"></i></span>
+        </a>
+      }
+    }
+  </section>
+}

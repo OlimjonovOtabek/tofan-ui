@@ -1,0 +1,122 @@
+@let profile = store.profile();
+<div class="report-layout">
+  <section class="workspace-panel">
+    <header class="card-head">
+      <div>
+        <h2>{{ 'coach.clients.weightTrend' | t }}</h2>
+        <p>{{ period() }}</p>
+      </div>
+      <coach-period-control [from]="weightReport.weightFrom()" [to]="weightReport.weightTo()" (rangeChange)="weightReport.setWeightRange($event)" />
+    </header>
+    @if (weightReport.weightError(); as failure) {
+      <coach-report-state [error]="failure" title="coach.clients.weightEmptyTitle" hint="coach.clients.weightEmptyHint" (retry)="weightReport.retryWeights()" />
+    } @else {
+      @let weightChart = chart();
+      @let weightSummary = stats();
+      @if (weightChart && weightSummary) {
+      <div class="card-body">
+        <svg
+          class="weight-chart"
+          [attr.viewBox]="'0 0 ' + size().width + ' ' + size().height"
+          role="img"
+          [attr.aria-label]="'coach.clients.chartLabel' | t: { first: kg(weightSummary.first), last: kg(weightSummary.last) }"
+        >
+          @for (line of weightChart.grid; track line.value) {
+            <line class="grid" [attr.x1]="size().left" [attr.x2]="size().right" [attr.y1]="line.y" [attr.y2]="line.y" />
+            <text class="axis" x="0" [attr.y]="line.y + axisTextOffset">{{ line.value }}</text>
+          }
+          <polygon class="area" [attr.points]="weightChart.area" />
+          <polyline class="line" [attr.points]="weightChart.line" />
+          @for (dot of weightChart.dots; track $index) {
+            <circle [attr.cx]="dot.x" [attr.cy]="dot.y" [attr.r]="$last ? 5 : 3.5" />
+          }
+          @if (profile && profile.targetWeightKg !== null) {
+            @if (weightChart.goalY !== null) {
+              <line class="goal" [attr.x1]="size().left" [attr.x2]="size().right" [attr.y1]="weightChart.goalY" [attr.y2]="weightChart.goalY" />
+              <text class="goal-label" text-anchor="end" [attr.x]="size().right" [attr.y]="weightChart.goalY - goalTextOffset">
+                {{ 'coach.clients.goalMarker' | t: { value: profile.targetWeightKg } }}
+              </text>
+            } @else {
+              <text class="goal-label" text-anchor="end" [attr.x]="size().right" [attr.y]="size().bottom - goalTextOffset">
+                {{ profile.targetWeightKg > weightSummary.last ? '↑' : '↓' }} {{ 'coach.clients.goalMarker' | t: { value: profile.targetWeightKg } }}
+              </text>
+            }
+          }
+          @for (label of weightChart.labels; track label.date) {
+            <text class="axis" text-anchor="middle" [attr.x]="label.x" [attr.y]="labelY()">{{ dayLabel(label.date) }}</text>
+          }
+        </svg>
+        <dl class="stat-row">
+          <div>
+            <dt>{{ 'coach.clients.periodStart' | t }}</dt>
+            <dd>{{ kg(weightSummary.first) }} kg</dd>
+          </div>
+          <div>
+            <dt>{{ 'coach.clients.periodEnd' | t }}</dt>
+            <dd>{{ kg(weightSummary.last) }} kg</dd>
+          </div>
+          <div>
+            <dt>{{ 'coach.clients.change' | t }}</dt>
+            <dd [class]="trend(weightSummary.change)">{{ signed(weightSummary.change) }} kg</dd>
+          </div>
+          <div>
+            <dt>{{ 'coach.clients.entries' | t }}</dt>
+            <dd>{{ 'coach.clients.entriesCount' | t: { count: weightSummary.count } }}</dd>
+          </div>
+        </dl>
+        <h3 class="sub-title">{{ 'coach.clients.recentEntries' | t }}</h3>
+      </div>
+      <div class="table-head weight-columns" aria-hidden="true">
+        <span>{{ 'coach.clients.date' | t }}</span>
+        <span>{{ 'coach.clients.weight' | t }}</span>
+        <span>{{ 'coach.clients.change' | t }}</span>
+        <span class="note">{{ 'coach.clients.note' | t }}</span>
+      </div>
+      @for (row of rows(); track row.point.id) {
+        <div class="table-row weight-columns">
+          <span>{{ dayLabel(row.point.loggedDate) }}<small>{{ weekday(row.point.loggedDate) }}</small></span>
+          <b>{{ kg(row.point.weightKg) }} kg</b>
+          <span [class]="trend(row.delta)">{{ row.delta === null ? '—' : signed(row.delta) + ' kg' }}</span>
+          <span class="note">{{ row.point.note ?? '—' }}</span>
+        </div>
+      }
+      } @else {
+        <coach-report-state icon="pi pi-clock" title="coach.clients.weightEmptyTitle" hint="coach.clients.weightEmptyHint" />
+      }
+    }
+  </section>
+  @if (profile) {
+    <aside class="workspace-panel weight-summary">
+      <h3>{{ 'coach.clients.currentWeight' | t }}</h3>
+      <p class="weight-value">{{ profile.currentWeightKg ?? '—' }}<small> kg</small></p>
+      <p class="muted">{{ (profile.currentWeightKg === null ? 'coach.clients.weightMissing' : 'coach.clients.fromProfile') | t }}</p>
+      @if (remaining(); as left) {
+        <p class="goal-box"><span>{{ 'coach.clients.remainingToGoal' | t }}</span><b>{{ kg(left) }} kg</b></p>
+      }
+      <dl class="facts">
+        <div>
+          <dt>{{ 'coach.clients.targetWeight' | t }}</dt>
+          <dd>{{ profile.targetWeightKg ?? '—' }} kg</dd>
+        </div>
+        @if (profile.goalTargetDate; as goalDate) {
+          <div>
+            <dt>{{ 'coach.clients.goalDate' | t }}</dt>
+            <dd>{{ dateLabel(goalDate) }}</dd>
+          </div>
+        }
+        @if (profile.heightCm !== null) {
+          <div>
+            <dt>{{ 'coach.clients.height' | t }}</dt>
+            <dd>{{ 'coach.clients.heightValue' | t: { value: profile.heightCm } }}</dd>
+          </div>
+        }
+        @if (store.summary(); as summary) {
+          <div>
+            <dt>{{ 'coach.clients.subscribed' | t }}</dt>
+            <dd>{{ dateLabel(summary.subscribedOnUtc) }}</dd>
+          </div>
+        }
+      </dl>
+    </aside>
+  }
+</div>

@@ -1,0 +1,50 @@
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: 2rem 1.25rem;
+}
+.login-layout {
+  width: min(100%, 28rem);
+}
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+  font-size: 1.65rem;
+  font-weight: 650;
+}
+.login-logo {
+  display: block;
+  height: 3rem;
+  width: 2rem;
+}
+.brand-product {
+  color: var(--coach-muted);
+  font-weight: 450;
+  font-size: 1.1rem;
+}
+.login-heading {
+  margin-bottom: 1.75rem;
+}
+.login-heading p {
+  margin-top: 0.75rem;
+  color: var(--coach-muted);
+}
+form {
+  display: grid;
+  gap: 1.25rem;
+}
+.login-submit {
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+@media (max-width: 760px) {
+  .login-page {
+    align-content: start;
+    padding-top: 4rem;
+  }
+}

@@ -1,0 +1,60 @@
+<article class="workspace-panel meal-card">
+  <header class="meal-card-head">
+    <span class="meal-icon"><i class="pi pi-apple" aria-hidden="true"></i></span>
+    <div class="meal-heading">
+      <h2>{{ meal().title || typeLabel() }}</h2>
+      <small>{{ typeLabel() }}</small>
+    </div>
+    @if (meal().plannedTime) {
+      <span class="meal-time">{{ meal().plannedTime }}</span>
+    }
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      [outlined]="true"
+      [attr.aria-label]="'coach.workspace.editMeal' | t"
+      (click)="editRequested.emit()"
+    >
+      <i class="pi pi-pencil" aria-hidden="true"></i>
+    </button>
+  </header>
+  @for (item of meal().items; track item.key) {
+    <div class="meal-item">
+      <div class="meal-food-name">
+        <strong>{{ foodName(item) }}</strong>
+        <small>{{ item.calories }} kcal · {{ macros(item) }}</small>
+      </div>
+      <label class="quantity-field" [for]="'quantity-' + item.key">
+        <span class="sr-only">{{ 'coach.programs.quantityGrams' | t }}</span>
+        <app-number-field
+          [inputId]="'quantity-' + item.key"
+          [value]="item.quantityGrams"
+          [min]="minQuantity"
+          [fluid]="true"
+          [useGrouping]="false"
+          (valueChange)="quantityChanged($event, item)"
+        />
+        <span class="unit">g</span>
+      </label>
+      <button
+        pButton
+        type="button"
+        severity="danger"
+        [text]="true"
+        [attr.aria-label]="'coach.programs.removeFood' | t"
+        (click)="removeFood(item)"
+      >
+        <i class="pi pi-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  } @empty {
+    <p class="meal-empty">{{ 'coach.programs.noFoods' | t }}</p>
+  }
+  <footer class="meal-foot">
+    <button pButton type="button" severity="secondary" [text]="true" (click)="pickRequested.emit()">
+      <i class="pi pi-plus" aria-hidden="true"></i>{{ 'coach.programs.addFood' | t }}
+    </button>
+    <span class="meal-subtotal">{{ totals().calories }} kcal · {{ macros(totals()) }}</span>
+  </footer>
+</article>

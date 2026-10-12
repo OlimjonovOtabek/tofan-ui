@@ -1,0 +1,6 @@
+<p-dialog [closeAriaLabel]="'common.actions.cancel' | t" [header]="'coach.programs.createMealTitle' | t" [visible]="true" (visibleChange)="closed.emit()" [modal]="true" [style]="{ width: '32rem' }" [breakpoints]="{ '760px': '95vw' }">
+  <form class="program-editor" (submit)="$event.preventDefault(); submit()">
+    <div class="editor-grid date-grid"><div class="editor-field"><label for="mealStartDate">{{ 'coach.programs.startDate' | t }}</label><input pInputText id="mealStartDate" type="date" [formField]="mealForm.startDate" /></div><div class="editor-field"><label for="mealEndDate">{{ 'coach.programs.endDate' | t }}</label><input pInputText id="mealEndDate" type="date" [formField]="mealForm.endDate" /></div></div>
+    <footer class="editor-actions"><button pButton severity="secondary" [outlined]="true" type="button" (click)="closed.emit()">{{ 'common.actions.cancel' | t }}</button><button pButton [loading]="saving()" type="submit" [disabled]="saving()">{{ saving() ? ('coach.profile.saving' | t) : ('common.actions.save' | t) }}</button></footer>
+  </form>
+</p-dialog>

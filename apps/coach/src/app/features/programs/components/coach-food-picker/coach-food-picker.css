@@ -1,0 +1,51 @@
+.food-picker {
+  display: grid;
+  gap: 1rem;
+}
+.picker-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+.picker-search .workspace-search {
+  max-width: none;
+}
+.picker-list {
+  display: grid;
+  gap: 0.5rem;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.picker-item {
+  justify-content: space-between;
+  text-align: left;
+}
+.picker-empty {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--coach-muted);
+}
+.picker-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+@media (max-width: 760px) {
+  .picker-actions {
+    flex-direction: column-reverse;
+  }
+  .picker-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+  .picker-list {
+    max-height: calc(100dvh - 24rem);
+  }
+}
+
+.food-option-text {
+  display: grid;
+}
+.food-option-text small {
+  color: var(--coach-muted);
+  font-size: 0.7rem;
+}

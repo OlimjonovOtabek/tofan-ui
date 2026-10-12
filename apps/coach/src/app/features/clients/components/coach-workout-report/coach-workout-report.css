@@ -1,0 +1,144 @@
+.adherence-kpis {
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  margin-bottom: 0;
+}
+.cal-head,
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+.cal-head {
+  margin-top: 1.1rem;
+  color: var(--coach-muted);
+  font-size: 0.66rem;
+  text-align: center;
+}
+.cal-grid {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cal-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.2rem;
+  min-height: 4.6rem;
+  padding: 0.55rem 0.35rem;
+  border-radius: 0.65rem;
+  background: var(--report-track);
+  color: var(--coach-muted);
+  font-size: 0.64rem;
+}
+.cal-day span {
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+.cal-day.completed {
+  background: var(--report-good-soft);
+  color: var(--report-good);
+}
+.cal-day.missed {
+  background: var(--report-warn-soft);
+  color: var(--report-warn);
+}
+.cal-day.planned {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--coach-border);
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--coach-muted);
+  font-size: 0.7rem;
+}
+.legend li::before {
+  content: '';
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.45rem;
+  border-radius: 3px;
+  background: var(--coach-muted);
+}
+.legend .completed::before {
+  background: var(--report-good);
+}
+.legend .missed::before {
+  background: var(--report-warn);
+}
+.legend .planned::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--coach-muted);
+}
+.sessions-head {
+  padding-bottom: 1.1rem;
+}
+.status-filter {
+  width: 13rem;
+}
+.session-columns {
+  grid-template-columns: 1.6fr 1fr 0.8fr 1.2fr 0.8fr 0.8fr;
+}
+.session-title b {
+  font-weight: 600;
+}
+.end {
+  text-align: right;
+}
+.list-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--coach-border);
+}
+@media (max-width: 760px) {
+  .adherence-kpis {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .adherence-kpis .main {
+    grid-column: 1 / -1;
+  }
+  .cal-head,
+  .cal-grid {
+    gap: 0.3rem;
+  }
+  .cal-day {
+    min-height: 3.4rem;
+    padding: 0.4rem 0.1rem;
+  }
+  .cal-day small {
+    display: none;
+  }
+  .status-filter {
+    width: 100%;
+  }
+  .session-columns {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+  .session-title {
+    grid-column: 1 / 4;
+  }
+  .session-status {
+    grid-column: 4;
+    justify-self: end;
+  }
+  .end {
+    text-align: left;
+  }
+  .list-foot {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 1.25rem;
+    text-align: center;
+  }
+}

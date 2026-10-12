@@ -1,0 +1,75 @@
+.client-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--coach-muted);
+  font-size: 0.72rem;
+}
+.client-breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+.client-breadcrumb b {
+  color: var(--coach-text);
+  font-weight: 500;
+}
+.client-breadcrumb i {
+  font-size: 0.6rem;
+}
+.client-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+.client-photo {
+  flex: 0 0 auto;
+  width: 3.9rem;
+  height: 3.9rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.client-initials {
+  display: grid;
+  place-items: center;
+  background: var(--coach-accent-soft);
+  color: var(--coach-primary);
+  font-size: 1.25rem;
+  font-weight: 650;
+}
+.client-identity {
+  flex: 1;
+  min-width: 0;
+}
+.client-identity h1 {
+  overflow-wrap: anywhere;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+.client-identity p {
+  margin-top: 0.35rem;
+  color: var(--coach-muted);
+  font-size: 0.78rem;
+}
+.report-tabs {
+  padding: 0;
+}
+.detail-state {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .client-photo {
+    width: 3.3rem;
+    height: 3.3rem;
+  }
+  .client-identity h1 {
+    font-size: 1.55rem;
+  }
+}

@@ -1,0 +1,65 @@
+<nav class="breadcrumb" [attr.aria-label]="'coach.programs.title' | t">
+  <a routerLink="/programs">{{ 'coach.programs.title' | t }}</a>
+  <i class="pi pi-chevron-right" aria-hidden="true"></i>
+  <b>{{ 'coach.workspace.workoutEditor' | t }}</b>
+</nav>
+
+@if (store.loading()) {
+  <p-skeleton height="12rem" />
+} @else if (store.error(); as error) {
+  <p-message severity="error">{{ error | message }}</p-message>
+} @else if (store.plan(); as plan) {
+  <header class="editor-heading">
+    <h1>{{ plan.name }}</h1>
+    <p class="plan-meta">
+      {{ planSummary() }} · {{ (plan.isHomeWorkout ? 'coach.programs.homeWorkout' : 'coach.programs.gymWorkout') | t }}
+    </p>
+  </header>
+  @if (store.isPublished()) {
+    <aside class="published-notice">
+      <i aria-hidden="true" class="pi pi-info-circle"></i>{{ 'coach.programs.changesForFuture' | t }}
+    </aside>
+  }
+  @if (store.showIssue() && store.issue(); as issue) {
+    <p-message severity="error">
+      {{ (issue === 'dayTitle' ? 'coach.programs.issueDayTitle' : 'coach.programs.issueExercise') | t }}
+    </p-message>
+  }
+  @if (store.saveStates().size > 0 && store.dirty()) {
+    <p class="field-hint">{{ 'coach.programs.partialSaveHint' | t }}</p>
+  }
+  <div class="editor-layout" [class.day-focused]="dayOpenOnMobile()">
+    <coach-workout-day-list
+      [days]="store.days()"
+      [selectedKey]="selectedDay()?.key ?? null"
+      [saveStates]="store.saveStates()"
+      (daySelected)="selectDay($event)"
+      (addRequested)="dayDialog.set('add')"
+    />
+    @if (selectedDay(); as day) {
+      <coach-workout-day-editor
+        [day]="day"
+        (settingsRequested)="dayDialog.set('edit')"
+        (pickRequested)="pickerDayKey.set(day.key)"
+        (backRequested)="dayOpenOnMobile.set(false)"
+      />
+    } @else {
+      <section class="workspace-panel empty-days">
+        <b>{{ 'coach.programs.noDays' | t }}</b>
+        <button pButton type="button" (click)="dayDialog.set('add')">
+          <i class="pi pi-plus" aria-hidden="true"></i>{{ 'coach.programs.addDay' | t }}
+        </button>
+      </section>
+    }
+  </div>
+  <coach-save-bar [dirty]="store.dirty()" [saving]="store.saving()" (saveRequested)="store.save()" (discardRequested)="discard()" />
+}
+
+<coach-workout-day-dialog
+  [visible]="dayDialog() !== null"
+  [day]="dayDialog() === 'edit' ? selectedDay() : null"
+  (closed)="dayDialog.set(null)"
+  (confirmed)="saveDay($event)"
+  (removed)="removeSelectedDay()"
+/>
+<coach-exercise-picker [dayKey]="pickerDayKey()" (closed)="pickerDayKey.set(null)" />

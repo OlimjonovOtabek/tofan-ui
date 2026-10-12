@@ -1,0 +1,181 @@
+.workspace-panel {
+  background: var(--coach-surface);
+  border: 1px solid var(--coach-border);
+  border-radius: 13px;
+  min-width: 0;
+  overflow: hidden;
+}
+.workspace-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--coach-border);
+}
+.workspace-tabs {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--coach-border);
+  overflow-x: auto;
+}
+.workspace-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 56px;
+  color: var(--coach-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 15px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.workspace-tab.active {
+  color: var(--coach-primary);
+  border-bottom-color: var(--coach-primary);
+}
+.workspace-count {
+  background: var(--coach-canvas);
+  border-radius: 5px;
+  padding: 1px 6px;
+  color: var(--coach-muted);
+  font-size: 10px;
+}
+.workspace-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 17px 24px;
+}
+.workspace-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  max-width: 340px;
+  min-height: 42px;
+  padding: 0 11px;
+  border: 1px solid var(--coach-border);
+  border-radius: 8px;
+  background: var(--coach-surface);
+  color: var(--coach-muted);
+}
+.workspace-search:focus-within {
+  outline: 2px solid var(--coach-primary);
+  outline-offset: 2px;
+}
+.workspace-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--coach-text);
+  font-size: 12px;
+}
+.workspace-select {
+  min-height: 42px;
+  padding: 9px 25px 9px 10px;
+  background: var(--coach-surface);
+  border: 1px solid var(--coach-border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.workspace-state {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--coach-muted);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+.workspace-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: var(--p-orange-50);
+  color: var(--p-orange-800);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.workspace-status::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  border-radius: 50%;
+}
+.workspace-status.published {
+  background: var(--p-green-50);
+  color: var(--p-green-800);
+}
+.app-dark .workspace-status {
+  background: var(--p-surface-800);
+  color: var(--p-orange-300);
+}
+.app-dark .workspace-status.published {
+  color: var(--p-green-300);
+}
+.workspace-save-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 20px;
+  margin-top: 20px;
+  border: 1px solid var(--coach-border);
+  border-radius: 10px;
+  background: var(--coach-surface);
+}
+.workspace-save-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--coach-muted);
+}
+.workspace-save-state::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.workspace-save-state.dirty { color: var(--coach-gold); }
+@media (max-width: 760px) {
+  .workspace-tools { padding: 15px 20px; gap: 8px; }
+  .workspace-search { max-width: none; min-height: 44px; }
+  .workspace-search input { font-size: 16px; }
+  .workspace-select { min-height: 44px; }
+  .workspace-tabs { padding-inline: 20px; gap: 21px; }
+  .workspace-tab { min-height: 52px; }
+  .workspace-save-bar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 25;
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    border-top: 1px solid var(--coach-border);
+  }
+  body:has(.workspace-save-bar) .mobile-nav { display: none; }
+}
+.workspace-status.failed {
+  background: var(--p-red-50);
+  color: var(--p-red-800);
+}
+.app-dark .workspace-status.failed {
+  color: var(--p-red-300);
+}

@@ -1,0 +1,44 @@
+.save-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: -4rem;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--coach-border);
+  border-radius: 1rem;
+  background: var(--coach-surface);
+}
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--p-green-500);
+}
+.save-status.dirty .status-dot {
+  background: var(--p-orange-500);
+}
+.save-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+@media (max-width: 760px) {
+  .save-bar {
+    position: fixed;
+    right: 0;
+    bottom: 4.25rem;
+    left: 0;
+    margin: 0;
+    border-radius: 0;
+  }
+}

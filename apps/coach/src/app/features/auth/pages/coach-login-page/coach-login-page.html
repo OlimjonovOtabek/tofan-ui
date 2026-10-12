@@ -1,0 +1,44 @@
+<main class="login-page">
+  <div class="login-layout">
+    <a class="login-brand" href="/auth/login" aria-label="Tofan Coach"
+      ><app-logo class="login-logo" /><span>Tofan <span class="brand-product">Coach</span></span></a
+    >
+    <p-card>
+      <div class="login-heading">
+        <h1 id="loginTitle">{{ 'coach.auth.title' | t }}</h1>
+        <p>{{ 'coach.auth.description' | t }}</p>
+      </div>
+      <form aria-labelledby="loginTitle" (submit)="$event.preventDefault(); submit()">
+        <div class="field">
+          <label for="coachUsername">{{ 'coach.auth.username' | t }}</label
+          ><app-text-field
+            inputId="coachUsername"
+            autocomplete="username"
+            [formField]="loginForm.username"
+          />
+        </div>
+        <div class="field">
+          <label for="coachPassword">{{ 'coach.auth.password' | t }}</label
+          ><app-text-field
+            inputId="coachPassword"
+            type="password"
+            autocomplete="current-password"
+            [formField]="loginForm.password"
+          />
+        </div>
+        @if (failure(); as message) {
+          <p-message severity="error">{{ message }}</p-message>
+        }
+        <button
+          pButton
+          class="login-submit"
+          type="submit"
+          [loading]="saving()"
+          [disabled]="saving()"
+        >
+          {{ 'coach.auth.submit' | t }}<i class="pi pi-arrow-right" aria-hidden="true"></i>
+        </button>
+      </form>
+    </p-card>
+  </div>
+</main>

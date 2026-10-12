@@ -1,0 +1,113 @@
+.clients-heading {
+  margin-bottom: 1.5rem;
+}
+.clients-heading h1 {
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+.clients-heading p,
+.clients-count {
+  color: var(--coach-muted);
+  font-size: 0.85rem;
+}
+.clients-count {
+  margin-left: auto;
+}
+.clients-empty {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  padding: 3rem 1.5rem;
+  color: var(--coach-muted);
+}
+.clients-empty i {
+  font-size: 2rem;
+  color: var(--coach-primary);
+}
+.clients-table-head,
+.client-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 1fr 1fr 1fr 7rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+}
+.clients-table-head {
+  min-height: 2.6rem;
+  border-top: 1px solid var(--coach-border);
+  border-bottom: 1px solid var(--coach-border);
+  color: var(--coach-muted);
+  font-size: 0.7rem;
+}
+.client-row {
+  min-height: 4.5rem;
+  border-bottom: 1px solid var(--coach-border);
+  color: inherit;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.client-row:hover {
+  background: var(--coach-canvas);
+}
+.client-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+.client-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--coach-accent-soft);
+  color: var(--coach-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.client-name {
+  display: grid;
+  min-width: 0;
+}
+.client-name b {
+  overflow-wrap: anywhere;
+}
+.client-name small {
+  color: var(--coach-muted);
+  font-size: 0.72rem;
+}
+.client-open {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  color: var(--coach-primary);
+  font-weight: 600;
+}
+.cell-label {
+  display: none;
+}
+@media (max-width: 760px) {
+  .clients-table-head {
+    display: none;
+  }
+  .client-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem 0.75rem;
+    padding: 1rem 1.25rem;
+  }
+  .client-identity {
+    grid-column: 1 / -1;
+  }
+  .client-open {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+  .cell-label {
+    display: block;
+    color: var(--coach-muted);
+    font-size: 0.68rem;
+  }
+}

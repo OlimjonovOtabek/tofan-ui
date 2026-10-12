@@ -1,0 +1,80 @@
+<coach-content-header createLabel="coach.content.addExercise" [busy]="store.saving()" (create)="addExercise()" />
+<form class="content-search" (submit)="$event.preventDefault(); load()">
+  <label class="workspace-search">
+    <i class="pi pi-search" aria-hidden="true"></i>
+    <input
+      type="search"
+      [value]="store.searchText()"
+      [placeholder]="'coach.content.search' | t"
+      (input)="searchChanged($event)"
+      [attr.aria-label]="'coach.content.search' | t"
+    />
+  </label>
+</form>
+<p-dialog
+  [closeAriaLabel]="'common.actions.cancel' | t"
+  [header]="
+    (editingExercise() === null ? 'coach.content.addExercise' : 'coach.content.editExercise') | t
+  "
+  [visible]="editorVisible()"
+  (visibleChange)="$event ? editorVisible.set(true) : closeEditor()"
+  [modal]="true"
+  [style]="{ width: '46rem' }"
+  [breakpoints]="{ '760px': '95vw' }"
+>
+  @if (editorVisible()) {
+    <coach-exercise-editor
+      [exercise]="editingExercise()"
+      [videoFileId]="videoFileId()"
+      [saving]="store.saving()"
+      [uploadProgress]="store.uploadProgress()"
+      [uploadFailed]="store.uploadFailed()"
+      (exerciseSubmitted)="saveExercise($event)"
+      (uploadVideo)="uploadVideo($event)"
+      (uploadCancelled)="cancelVideoUpload()"
+      (editingCancelled)="closeEditor()"
+    />
+  }
+</p-dialog>
+@if (store.loading()) {
+  <p-skeleton height="6rem" />
+} @else if (store.error(); as message) {
+  <p-message severity="error">{{ message | message }}</p-message>
+} @else if (store.items().length === 0 && store.appliedSearch() !== '') {
+  <div class="workspace-state">
+    <p>{{ 'coach.content.noResults' | t }}</p>
+    <button pButton type="button" severity="secondary" [outlined]="true" (click)="clearSearch()">
+      {{ 'coach.content.clearSearch' | t }}
+    </button>
+  </div>
+} @else if (store.items().length === 0) {
+  <div class="workspace-state">
+    <p>{{ 'coach.content.emptyExercises' | t }}</p>
+    <button pButton type="button" class="primary-button" (click)="addExercise()">
+      {{ 'coach.content.addExercise' | t }}
+    </button>
+  </div>
+} @else {
+  <div class="content-grid">
+    @for (exercise of store.items(); track exercise.id) {
+      <article class="content-card">
+        <div class="content-preview">
+          <i class="pi pi-bolt" aria-hidden="true"></i>
+          @if (exercise.videoFileId) {
+            <span class="video-hint"
+              ><i class="pi pi-video" aria-hidden="true"></i>{{ 'coach.content.videoAvailable' | t }}</span
+            >
+          }
+        </div>
+        <h2>{{ nameOf(exercise) }}</h2>
+        <p>{{ summaryOf(exercise) }}</p>
+        <footer>
+          <span class="owned-label">{{ 'coach.content.ownedByMe' | t }}</span>
+          <button pButton severity="secondary" [outlined]="true" type="button" (click)="editExercise(exercise)">
+            <i class="pi pi-pencil" aria-hidden="true"></i>{{ 'coach.content.edit' | t }}
+          </button>
+        </footer>
+      </article>
+    }
+  </div>
+}

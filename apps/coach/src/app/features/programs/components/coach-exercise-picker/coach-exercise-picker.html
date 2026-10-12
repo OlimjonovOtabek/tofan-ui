@@ -1,0 +1,64 @@
+<p-dialog
+  [closeAriaLabel]="'common.actions.cancel' | t"
+  [header]="'coach.programs.chooseExercise' | t"
+  [visible]="dayKey() !== null"
+  (visibleChange)="$event || close()"
+  (onShow)="open()"
+  [modal]="true"
+  styleClass="coach-picker-dialog"
+  [style]="{ width: '42rem' }"
+  [breakpoints]="{ '760px': '100vw' }"
+>
+  <section class="exercise-picker">
+    <div class="picker-tabs">
+      <button pButton type="button" [outlined]="store.source() !== 'catalog'" [attr.aria-pressed]="store.source() === 'catalog'" (click)="setSource('catalog')">
+        {{ 'coach.programs.catalog' | t }}
+      </button>
+      <button pButton type="button" [outlined]="store.source() !== 'own'" [attr.aria-pressed]="store.source() === 'own'" (click)="setSource('own')">
+        {{ 'coach.programs.ownExercises' | t }}
+      </button>
+    </div>
+    <form class="picker-search" (submit)="$event.preventDefault(); search()">
+      <label class="workspace-search">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input
+          type="search"
+          [value]="store.searchText()"
+          [placeholder]="'coach.content.search' | t"
+          [attr.aria-label]="'coach.content.search' | t"
+          (input)="searchChanged($event)"
+        />
+      </label>
+    </form>
+    @if (store.loading()) {
+      <p-skeleton height="6rem" />
+    } @else if (store.options().length === 0) {
+      <p class="picker-empty">{{ 'coach.content.noResults' | t }}</p>
+    } @else {
+      <div class="picker-list">
+        @for (exercise of store.options(); track exercise.id) {
+          <button
+            pButton
+            type="button"
+            class="picker-item"
+            severity="secondary"
+            [outlined]="!isSelected(exercise)"
+            [attr.aria-pressed]="isSelected(exercise)"
+            (click)="toggle(exercise)"
+          >
+            <span>{{ nameOf(exercise) }}</span>
+            <i class="pi" [class.pi-check]="isSelected(exercise)" [class.pi-plus]="!isSelected(exercise)" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+    }
+    <footer class="picker-actions">
+      <button pButton type="button" severity="secondary" [outlined]="true" (click)="close()">
+        {{ 'common.actions.cancel' | t }}
+      </button>
+      <button pButton type="button" [disabled]="selected().length === 0" (click)="addSelected()">
+        {{ 'coach.programs.addSelected' | t }} ({{ selected().length }})
+      </button>
+    </footer>
+  </section>
+</p-dialog>

@@ -1,0 +1,26 @@
+.workspace-heading { margin-bottom: 2rem; }
+.section-label { color: var(--coach-muted); font-size: .75rem; font-weight: 600; margin-bottom: .8rem; }
+.workspace-programs-layout { display: grid; grid-template-columns: minmax(0, 1fr) 17rem; gap: 1.5rem; align-items: start; }
+.workspace-program-rows { min-width: 0; }
+.workspace-table-head, .workspace-program-row { display: grid; grid-template-columns: minmax(0, 1fr) 5.5rem 8rem 15rem; align-items: center; gap: .9rem; padding: 0 1.5rem; }
+.workspace-table-head { min-height: 2.6rem; color: var(--coach-muted); font-size: .68rem; border-bottom: 1px solid var(--coach-border); }
+.workspace-table-head span:last-child { text-align: right; }
+.workspace-program-row { min-height: 5.6rem; padding-block: 1rem; border-bottom: 1px solid var(--coach-border); }
+.workspace-row-identity { display: flex; align-items: center; gap: .9rem; min-width: 0; }
+.workspace-row-count { font-size: .78rem; }
+.workspace-row-icon { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: .55rem; background: var(--coach-accent-soft); color: var(--coach-primary); flex: 0 0 auto; }
+.workspace-row-icon.meal { background: var(--coach-gold-soft); color: var(--coach-gold); }
+.workspace-row-summary { flex: 1; min-width: 0; }
+.workspace-row-summary h3 { overflow-wrap: anywhere; }
+.workspace-row-summary p { color: var(--coach-muted); font-size: .72rem; margin-top: .3rem; }
+.workspace-row-actions { display: flex; gap: .25rem; align-items: center; justify-content: flex-end; }
+@media (max-width: 980px) { .workspace-programs-layout { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+  .workspace-heading { flex-direction: column; align-items: stretch; }
+  .workspace-table-head { display: none; }
+  .workspace-program-row { grid-template-columns: 1fr auto; padding: 1.1rem 1.25rem; gap: .6rem; }
+  .workspace-row-identity { grid-column: 1 / -1; }
+  .workspace-row-count { font-size: .72rem; color: var(--coach-muted); }
+  .workspace-row-actions { grid-column: 1 / -1; justify-content: stretch; margin-top: .25rem; }
+  .workspace-row-actions .p-button { flex: 1; }
+}

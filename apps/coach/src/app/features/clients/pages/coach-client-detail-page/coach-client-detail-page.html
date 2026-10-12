@@ -1,0 +1,61 @@
+<nav class="client-breadcrumb" [attr.aria-label]="'coach.navigation.clients' | t">
+  <a routerLink="/clients">{{ 'coach.navigation.clients' | t }}</a>
+  <i class="pi pi-chevron-right" aria-hidden="true"></i>
+  <b>{{ 'coach.clients.reportCrumb' | t }}</b>
+</nav>
+
+@if (store.profileError(); as error) {
+  <section class="workspace-panel detail-state" role="alert">
+    <p>{{ error | message }}</p>
+    <a routerLink="/clients">{{ 'coach.navigation.clients' | t }}</a>
+  </section>
+} @else if (store.profile(); as profile) {
+  <header class="client-head">
+    @if (profile.profilePhotoUrl; as photo) {
+      <img class="client-photo" [src]="photo" alt="" />
+    } @else {
+      <span class="client-photo client-initials" aria-hidden="true">{{ initials() }}</span>
+    }
+    <div class="client-identity">
+      <h1>{{ clientName() }}</h1>
+      <p>
+        {{ goalKey() | t }}
+        @if (subscriptionEnd(); as end) {
+          · {{ 'coach.clients.subscriptionUntil' | t: { date: end } }}
+        }
+      </p>
+    </div>
+    @if (store.summary()) {
+      <span class="workspace-status published">{{ 'coach.clients.activeSubscription' | t }}</span>
+    }
+  </header>
+
+  <div class="workspace-tabs report-tabs" role="tablist" [attr.aria-label]="'coach.clients.reportCrumb' | t">
+    @for (item of tabs; track item.key) {
+      <button
+        type="button"
+        role="tab"
+        class="workspace-tab"
+        [class.active]="tab() === item.key"
+        [attr.aria-selected]="tab() === item.key"
+        (click)="tab.set(item.key)"
+      >
+        {{ item.label | t }}
+      </button>
+    }
+  </div>
+
+  @switch (tab()) {
+    @case ('weight') {
+      <coach-weight-report />
+    }
+    @case ('workouts') {
+      <coach-workout-report />
+    }
+    @case ('nutrition') {
+      <coach-nutrition-report />
+    }
+  }
+} @else {
+  <p-skeleton height="12rem" />
+}
