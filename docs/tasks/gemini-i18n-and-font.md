@@ -168,7 +168,7 @@ src/app/core/i18n/
    Model qoidalaridagi `BusinessRuleError` lar ham matn o'rniga kod/kalit ishlatsin.
 4. **Toast va confirm** (`notification.service.ts`, `confirmation.service.ts`) va store'lardagi
    muvaffaqiyat xabarlari.
-5. **Route sarlavhalari.** `title` da kalit turadi; `core/config/app-title.strategy.ts` uni tarjima
+5. **Route sarlavhalari.** `title` da kalit turadi; `libs/core/src/i18n/app-title.strategy.ts` uni tarjima
    qiladi va til almashganda sarlavhani yangilaydi.
 6. **Menyu** — `core/layout/menu/app-menu.ts`.
 7. **Optimus UI matnlari** — `inject(Optimus).setTranslation(...)` (`@openng/optimus-ui/config`) til
