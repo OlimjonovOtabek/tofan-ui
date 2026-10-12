@@ -13,10 +13,15 @@
     "target": "ES2022",
     "module": "preserve",
     "paths": {
-      "@core/*": ["./src/app/core/*"],
-      "@shared/*": ["./src/app/shared/*"],
-      "@features/*": ["./src/app/features/*"],
-      "@environments/*": ["./src/environments/*"]
+      "@core/layout/*": ["./apps/admin/src/app/core/layout/*"],
+      "@core/config/*": ["./apps/admin/src/app/core/config/*"],
+      "@core/auth/*": ["./libs/core/src/auth/*", "./apps/admin/src/app/core/auth/*"],
+      "@core/*": ["./libs/core/src/*", "./apps/admin/src/app/core/*"],
+      "@shared/*": ["./libs/shared/src/*"],
+      "@features/*": ["./apps/admin/src/app/features/*"],
+      "@environments/*": ["./apps/admin/src/environments/*"],
+      "@coach/*": ["./apps/coach/src/app/*"],
+      "@coach-environments/*": ["./apps/coach/src/environments/*"]
     }
   },
   "angularCompilerOptions": {
@@ -32,6 +37,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/coach/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/coach/tsconfig.spec.json"
     }
   ]
 }

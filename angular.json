@@ -4,33 +4,39 @@
   "cli": {
     "packageManager": "npm",
     "analytics": "2fa9c179-22df-4c45-93bf-97ecaa94a9b4",
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": "projects",
   "projects": {
-    "tofan-ui": {
+    "admin": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "css"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "apps/admin",
+      "sourceRoot": "apps/admin/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
+            "browser": "apps/admin/src/main.ts",
+            "outputPath": "dist/tofan-ui",
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "apps/admin/public"
               }
             ],
-            "styles": ["src/styles/tailwind.css", "src/styles/styles.css"]
+            "styles": [
+              "apps/admin/src/styles/tailwind.css",
+              "apps/admin/src/styles/styles.css"
+            ]
           },
           "configurations": {
             "production": {
@@ -54,8 +60,8 @@
               "sourceMap": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "replace": "apps/admin/src/environments/environment.ts",
+                  "with": "apps/admin/src/environments/environment.development.ts"
                 }
               ]
             }
@@ -69,13 +75,103 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "tofan-ui:build:production"
+              "buildTarget": "admin:build:production"
             },
             "development": {
-              "buildTarget": "tofan-ui:build:development"
+              "buildTarget": "admin:build:development"
             },
             "staging": {
-              "buildTarget": "tofan-ui:build:development",
+              "buildTarget": "admin:build:development",
+              "proxyConfig": "proxy.staging.conf.json"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/admin/src/**/*.ts",
+              "apps/admin/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "coach": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/coach",
+      "sourceRoot": "apps/coach/src",
+      "prefix": "coach",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "apps/coach/src/main.ts",
+            "tsConfig": "apps/coach/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "apps/coach/public"
+              }
+            ],
+            "styles": [
+              "apps/coach/src/tailwind.css",
+              "apps/coach/src/styles.css"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "2MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "apps/coach/src/environments/environment.ts",
+                  "with": "apps/coach/src/environments/environment.development.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json",
+            "port": 4300
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "coach:build:production"
+            },
+            "development": {
+              "buildTarget": "coach:build:development"
+            },
+            "staging": {
+              "buildTarget": "coach:build:development",
               "proxyConfig": "proxy.staging.conf.json"
             }
           },
@@ -87,7 +183,41 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+            "lintFilePatterns": [
+              "apps/coach/**/*.ts",
+              "apps/coach/**/*.html"
+            ],
+            "eslintConfig": "apps/coach/eslint.config.js"
+          }
+        }
+      }
+    },
+    "core": {
+      "projectType": "library",
+      "root": "libs/core",
+      "sourceRoot": "libs/core/src",
+      "prefix": "lib",
+      "architect": {
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "admin:build:development",
+            "tsConfig": "libs/core/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "shared": {
+      "projectType": "library",
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "prefix": "lib",
+      "architect": {
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "admin:build:development",
+            "tsConfig": "libs/shared/tsconfig.spec.json"
           }
         }
       }

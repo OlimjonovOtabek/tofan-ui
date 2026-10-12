@@ -51,7 +51,12 @@ module.exports = defineConfig([
     plugins: { tofan: projectPlugin },
     languageOptions: {
       parserOptions: {
-        project: ['./tsconfig.app.json', './tsconfig.spec.json'],
+        project: [
+          './tsconfig.app.json',
+          './tsconfig.spec.json',
+          './apps/coach/tsconfig.app.json',
+          './apps/coach/tsconfig.spec.json',
+        ],
         tsconfigRootDir: __dirname,
       },
     },
@@ -81,13 +86,13 @@ module.exports = defineConfig([
     },
   },
   {
-    files: ['src/app/core/**/*.ts', 'src/app/shared/**/*.ts'],
+    files: ['apps/admin/src/app/core/**/*.ts', 'libs/core/src/**/*.ts', 'libs/shared/src/**/*.ts'],
     rules: {
       'no-restricted-imports': forbid(boundary.features, boundary.environments),
     },
   },
   {
-    files: ['src/app/features/**/*.ts'],
+    files: ['apps/admin/src/app/features/**/*.ts'],
     rules: {
       'no-restricted-imports': forbid(boundary.features, boundary.environments),
     },
