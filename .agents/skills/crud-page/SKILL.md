@@ -5,12 +5,16 @@ description: Builds a complete admin screen in the Tofan admin panel — server-
 
 # CRUD page
 
+Before building tables, filters or form controls, read `../optimus-ui/SKILL.md` and use its official
+documentation and installed-package checks. Existing shared wrappers and repository i18n rules take
+precedence over generic library examples.
+
 ## Inputs to confirm
 - Feature (must exist; otherwise run the `new-feature` skill first)
 - Backend endpoints: list (paged), get by id, create, update, state change/delete
 - Columns, filters, form fields with validation
 Ask only for what cannot be read from the backend contract or existing code.
-Reference implementation: `src/app/features/exercises`.
+Reference implementation: `apps/admin/src/app/features/exercises`.
 
 ## Build order
 
@@ -28,4 +32,4 @@ Reference implementation: `src/app/features/exercises`.
 - Loading, empty and error states: `app-data-table` gets `[loading]`, `emptyMessage`, `[error]` and `(retry)`.
 - Page resets to the first page on filter change.
 - No client-side filtering or paging.
-- User-facing text in Uzbek constants (no i18n library).
+- User-facing text uses the repository's typed translation keys in UZ/RU/EN.

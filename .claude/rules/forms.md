@@ -24,6 +24,8 @@ paths:
   `FormValueControl` wrappers in `shared/components` (`app-select-field`, `app-date-field`,
   `app-number-field`, `app-choice-field` for `p-selectbutton`, `app-color-field` for `p-colorpicker`); add a new wrapper there when another
   control is needed.
+- `pTextarea` reads legacy `NgControl.valueChanges`, which is absent on Signal Forms controls. Use
+  `app-textarea-field` instead of binding `[formField]` directly to `textarea pTextarea`.
 - Never `(ngSubmit)` on a `<form>` without `FormsModule`/`ReactiveFormsModule`: nothing emits it and the
   browser submits natively, reloading the page. `app-form-dialog` handles `(submit)` itself and calls
   `preventDefault()`; a Signal Forms page form uses `[formRoot]` from `@angular/forms/signals`.
