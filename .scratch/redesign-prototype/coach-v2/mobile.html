@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tofan Coach — Mobil prototip</title>
+    <style>
+      * { box-sizing:border-box; }
+      body { margin:0; background:#e9edf5; color:#172139; font:13px/1.5 'Segoe UI',sans-serif; }
+      header { display:flex; align-items:center; justify-content:center; gap:20px; padding:16px; }
+      a { color:#344fd3; text-decoration:none; }
+      select { font:inherit; border:1px solid #cbd4e4; background:white; border-radius:6px; padding:6px; }
+      .device { width:390px; height:844px; max-height:calc(100dvh - 85px); margin:0 auto 20px; border:1px solid #bfc9dc; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px #17213910; background:white; }
+      iframe { width:100%; height:100%; display:block; border:0; }
+      @media(max-width:500px) { header { padding:10px; } .device { width:100%!important; height:calc(100dvh - 55px); max-height:none; margin:0; border:0; border-radius:0; } }
+    </style>
+  </head>
+  <body>
+    <header><a href="./review.html">Ko‘rinishlarga qaytish</a><label>Ekran <select id="width"><option value="390">390 px</option><option value="430">430 px</option><option value="360">360 px</option></select></label></header>
+    <div class="device"><iframe id="mobile-frame" title="Tofan Coach interaktiv mobil prototipi" src="./"></iframe></div>
+    <script type="module">
+      const screen=new URLSearchParams(location.search).get('screen')??'programs';
+      const allowed=['programs','workout','meal','client','content','clients','profile'];
+      document.getElementById('mobile-frame').src=`./?screen=${allowed.includes(screen)?screen:'programs'}${screen==='workout'?'&day=00000000-0000-4000-8000-000000000050':''}`;
+      document.getElementById('width').addEventListener('change',event=>{document.querySelector('.device').style.width=`${event.target.value}px`;});
+    </script>
+  </body>
+</html>

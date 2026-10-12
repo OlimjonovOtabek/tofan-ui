@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tofan Coach — Mijoz hisobotlari (mobil)</title>
+    <style>
+      * { box-sizing:border-box; }
+      body { margin:0; background:#e9edf5; color:#172139; font:13px/1.5 'Segoe UI',sans-serif; display:flex; gap:24px; justify-content:center; padding:20px; flex-wrap:wrap; }
+      figure { margin:0; }
+      figcaption { text-align:center; padding:0 0 8px; font-weight:600; }
+      .device { width:390px; height:844px; border:1px solid #bfc9dc; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px #17213910; background:white; }
+      iframe { width:100%; height:100%; display:block; border:0; }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      const theme=new URLSearchParams(location.search).get('theme')==='dark'?'dark':'light';
+      const screens=[['Vazn','tab=weight'],['Mashg‘ulot','tab=workouts'],['Ovqatlanish · kunlar','tab=nutrition'],['Ovqatlanish · kundalik','tab=nutrition&open=1&day=2026-10-09']];
+      document.body.insertAdjacentHTML('beforeend',screens.map(([label,query])=>`<figure><figcaption>${label}</figcaption><div class="device"><iframe title="${label}" src="./client-reports.html?${query}&theme=${theme}"></iframe></div></figure>`).join(''));
+    </script>
+  </body>
+</html>

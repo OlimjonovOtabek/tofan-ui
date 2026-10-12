@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tofan Coach — Desktop va mobil redesign</title>
+    <link rel="stylesheet" href="./review.css">
+    <link rel="icon" href="../logo.svg" type="image/svg+xml">
+  </head>
+  <body>
+    <header><a class="brand" href="./"><img src="../logo.svg" alt=""><b>Tofan Coach</b><span>Workspace v2</span></a><nav><a href="./">Desktop prototip</a><a href="./mobile.html">Mobil prototip</a></nav></header>
+    <main>
+      <section class="intro"><span class="intro-label">Coach panelining yangi yo‘nalishi</span><h1>Trenerning ishiga mos ish maydoni.</h1><p>Dasturlar, mijozlar va shaxsiy kontent. Desktopda yonma-yon ishlash, telefonda aniq ketma-ketlik.</p></section>
+      <nav class="screen-tabs" aria-label="Ko‘rish uchun ekran"><button data-screen="programs" class="active">Dasturlar</button><button data-screen="workout">Mashg‘ulot muharriri</button><button data-screen="meal">Ovqatlanish menyusi</button><button data-screen="client">Mijoz hisoboti</button></nav>
+      <section class="preview-grid"><div><div class="preview-label"><h2>Desktop ish maydoni</h2><a id="desktop-link" href="./">Interaktiv ochish</a></div><a id="desktop-image-link" href="./programs-desktop.png"><img id="desktop-image" src="./programs-desktop.png" alt="Coach desktop dasturlar ekranining haqiqiy screenshoti"></a></div><div><div class="preview-label"><h2>Telefon</h2><a id="mobile-link" href="./mobile.html">Interaktiv ochish</a></div><a id="mobile-image-link" class="phone-shot" href="./programs-mobile.png"><img id="mobile-image" src="./programs-mobile.png" alt="Coach mobil dasturlar ekranining haqiqiy screenshoti"></a></div></section>
+      <section class="changes"><div><h3>Dasturga yo‘naltirilgan tuzilma</h3><p>Faol juftlik va qoralamalar ajratilgan. Desktop muharririda kunlar doim ko‘rinadi; mobil ekran bitta vazifaga qaratiladi.</p></div><div><h3>API modeliga mos menyu</h3><p>Ovqatlanish rejasi sana oralig‘ida takrorlanadi. Vaqt ixtiyoriy, ovqat miqdori grammda, oziq qiymatlari porsiyadan hisoblanadi.</p></div><div><h3>O‘zgarishlar ustidan nazorat</h3><p>Aniq Saqlash, saqlanmagan o‘zgarishdan chiqish tasdig‘i, xatoda qoralama saqlanishi va nashrdagi dastur almashtirilishi.</p></div></section>
+      <footer><span>Interaktiv namuna · Haqiqiy API chaqiruvlari yo‘q</span><a href="./CONTRACT.md">API mosligi va tekshiruv dalillari</a></footer>
+    </main>
+    <script type="module">
+      const routes={programs:'programs',workout:'workout&day=00000000-0000-4000-8000-000000000050',meal:'meal',client:'client'};
+      document.querySelectorAll('[data-screen]').forEach(button=>button.addEventListener('click',()=>{
+        const screen=button.dataset.screen;
+        for(const kind of ['desktop','mobile']){
+          const image=`./${screen}-${kind}.png`;
+          document.getElementById(`${kind}-image`).src=image;
+          document.getElementById(`${kind}-image`).alt=`Coach ${kind} — ${button.textContent}`;
+          document.getElementById(`${kind}-image-link`).href=image;
+        }
+        document.getElementById('desktop-link').href=`./?screen=${routes[screen]}`;
+        document.getElementById('mobile-link').href=`./mobile.html?screen=${screen}`;
+        document.querySelectorAll('[data-screen]').forEach(other=>{other.classList.toggle('active',other===button);other.setAttribute('aria-pressed',String(other===button));});
+      }));
+    </script>
+  </body>
+</html>
