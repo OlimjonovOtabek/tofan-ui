@@ -1,4 +1,4 @@
-# Tofan UI — admin panel
+# Tofan UI — admin and coach panels
 
 Angular 22 · Node.js 24 · Optimus UI 2 · Sakai layout · Tailwind CSS v4 · Vitest
 
@@ -6,11 +6,14 @@ Angular 22 · Node.js 24 · Optimus UI 2 · Sakai layout · Tailwind CSS v4 · V
 
 ```bash
 npm install
-npm start          # http://localhost:4200
+npm run start:staging       # Admin: http://localhost:4200
+npm run start:coach:staging # Coach: http://localhost:4300, ikkinchi terminalda
 ```
 
-Mock rejim yo'q: dev server `/api` so'rovlarini backend'ga uzatadi (`proxy.conf.json`,
-standart `http://localhost:5179`). Kirish uchun backend'da `admin` realm roli bor Keycloak akkaunti kerak.
+Ikkala app staging backend’ga ulanadi. Admin `4200`, Coach `4300` portda ochiladi; ikkalasini
+parallel ishlatish uchun buyruqlarni alohida terminallarda bajaring. `/api` so‘rovlari
+`proxy.staging.conf.json` orqali staging API’ga uzatiladi. Admin uchun `admin`, Coach uchun
+`trainer` realm roli va coach profili mavjud akkaunt kerak.
 
 Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 
@@ -18,8 +21,12 @@ Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 | ----------------------- | ------------------------------------------------------------------------ |
 | `npm start`             | Dev server                                                               |
 | `npm run start:staging` | Dev server, `/api` stend backend'iga uzatiladi                           |
+| `npm run start:coach`   | Coach dev server (`http://localhost:4300`), local backend proxy        |
+| `npm run start:coach:staging` | Coach dev server (`http://localhost:4300`), staging API proxy     |
 | `npm run build`         | Production build (`dist/tofan-ui/browser`)                               |
+| `npm run build:coach`   | Coach build (`dist/coach/browser`)                                      |
 | `npm test`              | Unit testlar (Vitest)                                                    |
+| `npm run test:coach`    | Coach unit testlar (Vitest)                                             |
 | `npm run lint`          | ESLint + izohsizlik tekshiruvi + Sheriff (papkalar orasidagi bog'liqlik) |
 | `npm run format`        | Prettier                                                                 |
 
@@ -29,32 +36,10 @@ Standart Angular feature tuzilmasi. Clean Architecture qatlamlari, repository ab
 use case klasslari va mock servislar yo'q — bu UI loyiha.
 
 ```
-src/app/
-├── core/                    # Butun ilova uchun bitta marta
-│   ├── auth/                # AuthStore, AuthService, sessiya, guard'lar, token interceptor'lari
-│   ├── http/                # ApiClient (HttpClient), API_BASE_URL, Result konverti, xatolik mapper'i
-│   ├── layout/              # Sakai: topbar, sidebar, menyu, tema
-│   ├── config/              # AppPaths, title strategy, Optimus UI provayderlari
-│   └── feedback/            # Toast, tasdiqlash oynasi, clipboard, xato matnlari
-├── features/                # Har bir bo'lim alohida, lazy yuklanadi
-│   ├── dashboard/
-│   ├── auth/                # login, "ruxsat yo'q", xatolik sahifalari
-│   ├── exercises/
-│   │   ├── pages/exercises-page/
-│   │   ├── components/exercise-form-dialog/
-│   │   ├── models/          # Exercise, filtr, draft (validatsiya), label'lar
-│   │   ├── services/        # exercises.service.ts, exercise.dto.ts, exercise.mapper.ts
-│   │   ├── exercises.store.ts
-│   │   └── exercises.routes.ts
-│   ├── foods/  media/  user-sessions/  notifications/  not-found/
-├── shared/                  # Biznesdan xoli, istalgan feature'da ishlatiladi
-│   ├── components/          # data-table, form-dialog, file-upload, localized-text-field, ...
-│   ├── models/              # Page, SelectOption, FileCategory, xato klasslari
-│   └── utils/               # enumMap, fayl hajmi, UUID, yuklash qoidalari
-├── routes/
-│   └── app.routes.ts
-├── app.config.ts
-└── app.ts
+apps/admin/src/app/    # Existing admin routes, layout and features
+apps/coach/src/app/    # core/ (shell, guard, profile service), features/, routes/
+libs/core/src/         # Shared auth, HTTP, feedback and i18n
+libs/shared/src/       # Shared components, models and utilities
 ```
 
 `directives/`, `pipes/`, `validators/` papkalari `shared/` ichida birinchi kerak bo'lganda yaratiladi.
@@ -62,15 +47,15 @@ src/app/
 ### Bog'liqlik qoidasi
 
 ```
-page ──> store ──> service ──> core/http/ApiClient ──> backend
-core, shared ──X──> features
-features/a   ──X──> features/b
+app ──> feature ──> libs/core + libs/shared ──> backend
+libs/core ──> libs/shared
+features/a ──X──> features/b
 ```
 
 Buni [Sheriff](https://github.com/softarc-consulting/sheriff) **majburiy** qiladi: qoidalar
 `sheriff.config.ts` da, tekshiruv `npm run lint:boundaries` (`npm run lint` ichida). Sheriff importni
 haqiqiy fayl yo'li bo'yicha tekshiradi, shuning uchun `../../foods/...` kabi nisbiy importlar ham ushlanadi.
-Sheriff `src/main.ts` dan boshlab yuradi va test fayllarini ko'rmaydi; ularda `@features/*` importini
+Sheriff `apps/admin/src/main.ts` dan boshlab yuradi va test fayllarini ko'rmaydi; ularda `@features/*` importini
 `eslint.config.js` dagi `no-restricted-imports` ushlaydi. Feature ichida nisbiy importlar ishlatiladi.
 
 ### Kelishuvlar
@@ -81,8 +66,8 @@ Sheriff `src/main.ts` dan boshlab yuradi va test fayllarini ko'rmaydi; ularda `@
 - Servislar `@Injectable({ providedIn: 'root' })`; store'lar `@Injectable()` va sahifaning
   `providers` ida.
 - `inject()` ishlatiladi; `public` modifikatori yozilmaydi; template'ga kerakli a'zolar `protected`.
-- Import alias'lar: `@core/*`, `@shared/*`, `@features/*`, `@environments/*`.
-- Stillar: faqat CSS (`src/styles/`), Tailwind utility klasslari + `@openng/optimus-ui-tailwindcss`.
+- Import alias'lar: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`, `@coach-environments/*`.
+- Admin stillari `apps/admin/src/styles/`; Coach stillari `apps/coach/src/`; Tailwind utility klasslari + `@openng/optimus-ui-tailwindcss`.
 - UI matnlari o'zbek tilida.
 
 ## Yangi feature qo'shish (masalan, "Foydalanuvchilar")

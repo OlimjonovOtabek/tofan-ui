@@ -1,0 +1,86 @@
+.meal-card {
+  min-width: 0;
+}
+.meal-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--coach-border);
+}
+.meal-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: var(--coach-gold-soft);
+  color: var(--coach-gold);
+}
+.meal-heading {
+  flex: 1;
+  min-width: 0;
+}
+.meal-heading h2 {
+  overflow-wrap: anywhere;
+  font-size: 1.05rem;
+}
+.meal-heading small,
+.meal-time,
+.unit,
+.meal-subtotal {
+  color: var(--coach-muted);
+  font-size: 0.75rem;
+}
+.meal-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--coach-border);
+}
+.meal-food-name {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.meal-food-name strong {
+  overflow-wrap: anywhere;
+  font-size: 0.85rem;
+}
+.meal-food-name small {
+  color: var(--coach-muted);
+  font-size: 0.7rem;
+}
+.quantity-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 8.5rem;
+}
+.meal-empty {
+  padding: 1.5rem;
+  color: var(--coach-muted);
+  font-size: 0.8rem;
+}
+.meal-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+}
+@media (max-width: 760px) {
+  .meal-card-head,
+  .meal-item {
+    padding-inline: 1rem;
+  }
+  .meal-item {
+    flex-wrap: wrap;
+  }
+  .quantity-field {
+    width: 7rem;
+  }
+}

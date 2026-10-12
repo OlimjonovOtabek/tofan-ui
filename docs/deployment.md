@@ -1,4 +1,4 @@
-# Admin panelni serverga chiqarish
+# Admin va Coach panellarini serverga chiqarish
 
 Backend `DEPLOYMENT.md` (Hetzner, Docker Swarm, `tofan-net`, tashqi nginx + Let's Encrypt) davomi.
 Bu yerda faqat panelga tegishli qadamlar. Manzil namunasi: `https://admin.157.90.117.20.sslip.io`.
@@ -27,6 +27,7 @@ sozlanmaydi. API manzili image ichiga yozilmaydi, bitta image har qanday muhitda
 | Fayl                          | Vazifasi                                                            |
 | ----------------------------- | ------------------------------------------------------------------- |
 | `Dockerfile`                  | `node:24-slim` da `npm ci` + `npm run build`, keyin nginx           |
+| `Dockerfile.coach`            | Coach app’ni alohida image qilib yig‘adi (`dist/coach/browser`)      |
 | `nginx/default.conf.template` | SPA, kesh, `/api` proxy; ishga tushganda env bilan to'ldiriladi     |
 | `nginx/security-headers.inc`  | `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`               |
 | `.dockerignore`               | `node_modules`, `dist`, `.git` va hujjatlarni kontekstdan chiqaradi |
@@ -49,6 +50,20 @@ docker push ejakhangir/tofan-admin:v1.0
 ```
 
 Lokal tekshirish: `docker run --rm -p 8080:8080 -e API_UPSTREAM=http://host.docker.internal:5179 ejakhangir/tofan-admin:v1.0`.
+
+## Coach image
+
+Coach alohida build output va image oladi. U alohida host name, stack service, env image tag’i va
+external TLS nginx server block bilan chiqarilishi mumkin. Admin `Dockerfile` va admin stack’i
+o‘zgarmaydi.
+
+```bash
+docker build -f Dockerfile.coach -t ejakhangir/tofan-coach:v1.0 .
+docker run --rm -p 8081:8080 -e API_UPSTREAM=http://host.docker.internal:5179 ejakhangir/tofan-coach:v1.0
+```
+
+Rollback: coach service image tag’ini oxirgi ishlagan `tofan-coach` tag’iga qaytaring. Admin service
+image’iga tegilmaydi.
 
 ## Serverda
 

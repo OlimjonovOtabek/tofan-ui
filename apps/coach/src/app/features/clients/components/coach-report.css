@@ -1,0 +1,147 @@
+:host {
+  --report-good: var(--p-green-600);
+  --report-good-soft: color-mix(in srgb, var(--p-green-500) 14%, transparent);
+  --report-warn: var(--coach-gold);
+  --report-warn-soft: color-mix(in srgb, var(--p-orange-500) 16%, transparent);
+  --report-track: var(--coach-canvas);
+  display: block;
+}
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  padding: 1.4rem 1.5rem 0;
+}
+.card-head h2 {
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+.card-head p,
+.muted {
+  color: var(--coach-muted);
+  font-size: 0.7rem;
+}
+.card-head p {
+  margin-top: 0.25rem;
+}
+.card-body {
+  padding: 0.4rem 1.5rem 1.5rem;
+}
+.report-block {
+  margin-top: 1.5rem;
+}
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin-top: 1.25rem;
+  border-block: 1px solid var(--coach-border);
+  background: var(--coach-border);
+}
+.kpi {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  padding: 1.1rem 1.5rem;
+  background: var(--coach-surface);
+}
+.kpi span {
+  color: var(--coach-muted);
+  font-size: 0.7rem;
+}
+.kpi b {
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1.2;
+}
+.kpi b small {
+  color: var(--coach-muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.kpi b.warn,
+.warn-text {
+  color: var(--report-warn);
+}
+.meter {
+  height: 6px;
+  margin-top: 0.45rem;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--report-track);
+}
+.meter span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--coach-primary);
+}
+.meter.over span {
+  background: var(--report-warn);
+}
+.meter.no-target {
+  background: repeating-linear-gradient(90deg, var(--report-track) 0 6px, transparent 6px 10px);
+}
+.table-head,
+.table-row {
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+}
+.table-head {
+  min-height: 2.5rem;
+  border-block: 1px solid var(--coach-border);
+  background: var(--coach-canvas);
+  color: var(--coach-muted);
+  font-size: 0.68rem;
+}
+.table-row {
+  min-height: 3.6rem;
+  border-bottom: 1px solid var(--coach-border);
+  font-size: 0.78rem;
+}
+.table-row:last-child {
+  border-bottom: 0;
+}
+.table-row small {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--coach-muted);
+  font-size: 0.66rem;
+}
+.cell-label {
+  display: none;
+}
+@media (max-width: 760px) {
+  .card-head {
+    padding: 1.1rem 1.25rem 0;
+  }
+  .card-body {
+    padding: 0.25rem 1.25rem 1.25rem;
+  }
+  .kpi-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .kpi {
+    padding: 0.95rem 1.25rem;
+  }
+  .kpi b {
+    font-size: 1.4rem;
+  }
+  .table-head {
+    display: none;
+  }
+  .table-row {
+    padding: 0.9rem 1.25rem;
+  }
+  .cell-label {
+    display: block;
+    color: var(--coach-muted);
+    font-size: 0.62rem;
+  }
+}

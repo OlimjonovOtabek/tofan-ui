@@ -1,0 +1,18 @@
+.exercise-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  grid-column: 1 / -1;
+}
+.upload-error {
+  color: var(--coach-danger);
+}
+.exercise-field input[type='file'] {
+  color: var(--coach-muted);
+  max-width: 100%;
+}
+@media (max-width: 760px) {
+  .exercise-checks {
+    grid-column: auto;
+  }
+}

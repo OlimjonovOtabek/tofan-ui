@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "core",
+  "projectType": "library",
+  "root": "libs/core",
+  "sourceRoot": "libs/core/src",
+  "tags": [
+    "type:core"
+  ],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ng test core --watch=false"
+      },
+      "cache": true
+    }
+  }
+}

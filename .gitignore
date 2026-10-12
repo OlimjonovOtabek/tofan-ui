@@ -4,6 +4,7 @@
 /bazel-out
 
 /node_modules
+/.nx
 npm-debug.log
 yarn-error.log
 

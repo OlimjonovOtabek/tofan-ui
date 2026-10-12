@@ -1,0 +1,29 @@
+<div class="period">
+  <div class="segmented" role="group" [attr.aria-label]="'coach.clients.periodLabel' | t">
+    @for (preset of presets; track preset.days) {
+      <button
+        type="button"
+        [class.active]="activePreset() === preset.days"
+        [attr.aria-pressed]="activePreset() === preset.days"
+        (click)="choosePreset(preset.days)"
+      >
+        {{ preset.label | t }}
+      </button>
+    }
+    <button type="button" [class.active]="customActive()" [attr.aria-pressed]="customActive()" (click)="customOpen.set(true)">
+      {{ 'coach.clients.periodCustom' | t }}
+    </button>
+  </div>
+  @if (customActive()) {
+    <div class="period-custom">
+      <label>
+        <span>{{ 'coach.clients.fromDate' | t }}</span>
+        <input type="date" [value]="from()" [min]="earliestFrom()" [max]="to()" (change)="edgeChanged($event, 'from')" />
+      </label>
+      <label>
+        <span>{{ 'coach.clients.toDate' | t }}</span>
+        <input type="date" [value]="to()" [min]="from()" [max]="today" (change)="edgeChanged($event, 'to')" />
+      </label>
+    </div>
+  }
+</div>

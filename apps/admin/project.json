@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "admin",
+  "projectType": "application",
+  "root": "apps/admin",
+  "sourceRoot": "apps/admin/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng build admin" },
+      "outputs": ["{workspaceRoot}/dist/tofan-ui/browser"]
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng serve admin" },
+      "configurations": {
+        "staging": { "command": "ng serve admin --configuration=staging" },
+        "production": { "command": "ng serve admin --configuration=production" }
+      },
+      "cache": false
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng test admin --watch=false" },
+      "cache": true
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng lint admin" },
+      "cache": true
+    }
+  }
+}

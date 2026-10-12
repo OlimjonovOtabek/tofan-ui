@@ -1,0 +1,12 @@
+<aside class="workspace-panel workspace-readiness">
+  <h2>{{ 'coach.workspace.readiness' | t }}</h2>
+  <p>{{ 'coach.workspace.readinessHint' | t }}</p>
+  @if (!store.loaded()) {
+  <p-skeleton width="100%" height="3rem" /><p-skeleton width="100%" height="3rem" /><p-skeleton width="100%" height="3rem" />
+  } @else {
+  <a class="workspace-readiness-item" routerLink="/profile"><i class="pi" [class.pi-check-circle]="store.profileReady()" [class.pi-exclamation-circle]="!store.profileReady()" aria-hidden="true"></i><span><b>{{ 'coach.workspace.profilePrice' | t }}</b><small>{{ store.profileReady() ? ('coach.workspace.ready' | t) : ('coach.workspace.profileOpen' | t) }}</small></span></a>
+  <a class="workspace-readiness-item" routerLink="/programs"><i class="pi" [class.pi-check-circle]="store.publishedWorkout() !== null" [class.pi-exclamation-circle]="store.publishedWorkout() === null" aria-hidden="true"></i><span><b>{{ 'coach.programs.workout' | t }}</b><small>{{ store.publishedWorkout() ? ('coach.workspace.ready' | t) : ('coach.workspace.needed' | t) }}</small></span></a>
+  <a class="workspace-readiness-item" routerLink="/programs"><i class="pi" [class.pi-check-circle]="store.publishedMeal() !== null" [class.pi-exclamation-circle]="store.publishedMeal() === null" aria-hidden="true"></i><span><b>{{ 'coach.programs.meal' | t }}</b><small>{{ store.publishedMeal() ? ('coach.workspace.ready' | t) : ('coach.workspace.needed' | t) }}</small></span></a>
+  }
+  <p class="workspace-aside-note">{{ 'coach.workspace.publishedNote' | t }}</p>
+</aside>

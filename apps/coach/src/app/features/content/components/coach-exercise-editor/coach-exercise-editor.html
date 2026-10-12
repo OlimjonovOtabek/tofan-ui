@@ -1,0 +1,152 @@
+<section class="exercise-editor">
+  <form (submit)="$event.preventDefault(); submit()">
+    <div class="exercise-form-grid">
+      <div class="exercise-field field-wide">
+        <label for="exerciseNameEn">{{ 'coach.content.nameEn' | t }}</label>
+        <app-text-field inputId="exerciseNameEn" autocomplete="off" [formField]="exerciseForm.name" />
+        @if (exerciseForm.name().touched() && exerciseForm.name().invalid()) {
+          <small>{{ 'coach.content.exerciseNameRequired' | t }}</small>
+        }
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseNameRu">{{ 'coach.content.nameRu' | t }}</label>
+        <app-text-field inputId="exerciseNameRu" autocomplete="off" [formField]="exerciseForm.nameRu" />
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseNameUz">{{ 'coach.content.nameUz' | t }}</label>
+        <app-text-field inputId="exerciseNameUz" autocomplete="off" [formField]="exerciseForm.nameUz" />
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseMuscle">{{ 'coach.content.muscleGroup' | t }}</label>
+        <app-select-field
+          [fluid]="true"
+          inputId="exerciseMuscle"
+          [formField]="exerciseForm.muscleGroup"
+          [options]="muscleOptions()"
+          [placeholder]="'coach.content.muscleGroup' | t"
+          [ariaLabel]="'coach.content.muscleGroup' | t"
+        />
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseEquipment">{{ 'coach.content.equipment' | t }}</label>
+        <app-select-field
+          [fluid]="true"
+          inputId="exerciseEquipment"
+          [formField]="exerciseForm.equipmentType"
+          [options]="equipmentOptions()"
+          [placeholder]="'coach.content.equipment' | t"
+          [ariaLabel]="'coach.content.equipment' | t"
+        />
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseDifficulty">{{ 'coach.content.difficulty' | t }}</label>
+        <app-select-field
+          [fluid]="true"
+          inputId="exerciseDifficulty"
+          [formField]="exerciseForm.difficulty"
+          [options]="difficultyOptions()"
+          [ariaLabel]="'coach.content.difficulty' | t"
+        />
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseType">{{ 'coach.content.exerciseType' | t }}</label>
+        <app-select-field
+          [fluid]="true"
+          inputId="exerciseType"
+          [formField]="exerciseForm.type"
+          [options]="typeOptions()"
+          [ariaLabel]="'coach.content.exerciseType' | t"
+        />
+      </div>
+      <div class="exercise-field">
+        <label for="exerciseGender">{{ 'coach.content.gender' | t }}</label>
+        <app-select-field
+          [fluid]="true"
+          inputId="exerciseGender"
+          [formField]="exerciseForm.gender"
+          [options]="genderOptions()"
+          [ariaLabel]="'coach.content.gender' | t"
+        />
+      </div>
+      <div class="exercise-checks">
+        <label for="coach-exercise-editor-1"
+          ><app-toggle-field
+            [formField]="exerciseForm.isHomeExercise"
+            inputId="coach-exercise-editor-1"
+          />{{ 'coach.content.homeExercise' | t }}</label
+        >
+        <label for="coach-exercise-editor-2"
+          ><app-toggle-field
+            [formField]="exerciseForm.isCompound"
+            inputId="coach-exercise-editor-2"
+          />{{ 'coach.content.compoundExercise' | t }}</label
+        >
+      </div>
+      <div class="exercise-field field-wide">
+        <label for="exerciseInstructions">{{ 'coach.content.instructions' | t }}</label>
+        <app-textarea-field
+          inputId="exerciseInstructions"
+          [rows]="3"
+          [formField]="exerciseForm.instructions"
+        />
+      </div>
+      <div class="exercise-field field-wide">
+        <label for="exerciseVideo">{{ 'coach.content.video' | t }}</label>
+        <input
+          #videoChooser
+          hidden
+          id="exerciseVideo"
+          type="file"
+          accept="video/mp4,video/quicktime,video/webm"
+          (change)="selectVideo($event)"
+        />
+        <p-button
+          [label]="'coach.content.video' | t"
+          icon="pi pi-upload"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="videoChooser.click()"
+          [ariaLabel]="'coach.content.video' | t"
+        />
+        @if (value().videoFileId) {
+          <p-tag severity="success" icon="pi pi-check" [value]="'coach.content.video' | t" />
+        }
+        @if (uploadProgress() !== null) {
+          <p-progressbar [value]="uploadProgress() ?? 0" [showValue]="false" />
+          <p-button
+            [label]="'coach.workspace.uploadCancel' | t"
+            severity="secondary"
+            [text]="true"
+            (onClick)="cancelUpload()"
+          />
+        }
+        @if (uploadFailed()) {
+          <small class="upload-error" role="alert">{{
+            'coach.content.uploadFailedRetry' | t
+          }}</small>
+        }
+      </div>
+    </div>
+    <footer class="exercise-editor-actions">
+      <button
+        pButton
+        severity="secondary"
+        [outlined]="true"
+        class="secondary-button"
+        type="button"
+        (click)="editingCancelled.emit()"
+      >
+        {{ 'common.actions.cancel' | t }}
+      </button>
+      <button
+        pButton
+        [loading]="saving()"
+        class="primary-button"
+        type="submit"
+        [disabled]="saving()"
+      >
+        {{ saving() ? ('coach.profile.saving' | t) : ('common.actions.save' | t) }}
+      </button>
+    </footer>
+  </form>
+</section>
