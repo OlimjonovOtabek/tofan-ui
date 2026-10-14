@@ -1,0 +1,11 @@
+<main class="onboarding-page">
+  <p-card>
+    <div class="status-icon"><i class="pi pi-user-plus" aria-hidden="true"></i></div>
+    <p class="eyebrow">{{ 'coach.title' | t }}</p>
+    <h1>{{ 'coach.access.missingProfileTitle' | t }}</h1>
+    <p>{{ 'coach.access.missingProfileMessage' | t }}</p>
+    <button pButton type="button" class="sign-out-button" (click)="signOut()">
+      {{ 'coach.navigation.logout' | t }}
+    </button>
+  </p-card>
+</main>

@@ -1,0 +1,105 @@
+<section class="page-heading workspace-heading">
+  <div>
+    <h1>{{ 'coach.programs.title' | t }}</h1>
+    <p>{{ 'coach.programs.description' | t }}</p>
+  </div>
+  <p-button
+    styleClass="w-full md:w-auto"
+    [label]="(tab() === 'workouts' ? 'coach.programs.addWorkout' : 'coach.programs.addMeal') | t"
+    icon="pi pi-plus"
+    (onClick)="tab() === 'workouts' ? createWorkout() : createMeal()"
+  />
+</section>
+
+@if (store.publishRefreshFailed()) {
+  <p-message severity="warn">
+    {{ 'coach.programs.publishedRefreshFailed' | t }}
+    <button pButton type="button" [text]="true" (click)="store.refresh()">
+      {{ 'coach.programs.refreshList' | t }}
+    </button>
+  </p-message>
+}
+<p class="section-label">{{ 'coach.workspace.publishedPair' | t }}</p>
+<coach-published-programs (workoutRequested)="createWorkout()" (mealRequested)="createMeal()" />
+
+<div class="workspace-programs-layout">
+  <section class="workspace-panel workspace-program-list">
+    <div class="workspace-tabs" role="tablist" [attr.aria-label]="'coach.programs.title' | t">
+      <button type="button" class="workspace-tab" [class.active]="tab() === 'workouts'" role="tab" [attr.aria-selected]="tab() === 'workouts'" (click)="selectTab('workouts')">
+        {{ 'coach.programs.workout' | t }} <span class="workspace-count">{{ store.workouts().length }}</span>
+      </button>
+      <button type="button" class="workspace-tab" [class.active]="tab() === 'meals'" role="tab" [attr.aria-selected]="tab() === 'meals'" (click)="selectTab('meals')">
+        {{ 'coach.programs.meal' | t }} <span class="workspace-count">{{ store.meals().length }}</span>
+      </button>
+    </div>
+
+    <div class="workspace-tools">
+      <label class="workspace-search">
+        <i class="pi pi-search" aria-hidden="true"></i>
+        <input type="search" [value]="search()" [placeholder]="'coach.workspace.search' | t" [attr.aria-label]="'coach.workspace.search' | t" (input)="searchChanged($event)" />
+      </label>
+      <select class="workspace-select" [value]="status()" [attr.aria-label]="'coach.workspace.allStatuses' | t" (change)="statusChanged($event)">
+        <option value="all">{{ 'coach.workspace.allStatuses' | t }}</option>
+        <option value="published">{{ 'coach.programs.published' | t }}</option>
+        <option value="draft">{{ 'coach.programs.draft' | t }}</option>
+      </select>
+    </div>
+
+    @if (store.loading()) {
+      <div class="workspace-state"><p-skeleton width="100%" height="4rem" /><p-skeleton width="100%" height="4rem" /></div>
+    } @else if (tab() === 'workouts' && store.workoutError(); as error) {
+      <div class="workspace-state"><p-message severity="error">{{ error | message }}</p-message><p-button [label]="'coach.programs.retry' | t" icon="pi pi-refresh" (onClick)="store.load()" /></div>
+    } @else if (tab() === 'meals' && store.mealError(); as error) {
+      <div class="workspace-state"><p-message severity="error">{{ error | message }}</p-message><p-button [label]="'coach.programs.retry' | t" icon="pi pi-refresh" (onClick)="store.load()" /></div>
+    } @else if (tab() === 'workouts') {
+      <div class="workspace-program-rows">
+        <div class="workspace-table-head" aria-hidden="true"><span>{{ 'coach.workspace.colProgram' | t }}</span><span>{{ 'coach.workspace.colDays' | t }}</span><span>{{ 'coach.workspace.colStatus' | t }}</span><span>{{ 'coach.workspace.colAction' | t }}</span></div>
+        @for (program of filteredWorkouts(); track program.id) {
+          <article class="workspace-program-row">
+            <div class="workspace-row-identity">
+              <span class="workspace-row-icon"><i class="pi pi-bolt" aria-hidden="true"></i></span>
+              <div class="workspace-row-summary"><h3>{{ program.name }}</h3><p>{{ goalLabel(program.goal) }} · {{ (program.isHomeWorkout ? 'coach.programs.homeWorkout' : 'coach.programs.gymWorkout') | t }}</p></div>
+            </div>
+            <span class="workspace-row-count">{{ 'coach.programs.days' | t: { count: program.dayCount } }}</span>
+            <span class="workspace-status" [class.published]="program.isPublished">{{ (program.isPublished ? 'coach.programs.published' : 'coach.programs.draft') | t }}</span>
+            <div class="workspace-row-actions">
+              <p-button styleClass="whitespace-nowrap" [label]="'coach.content.open' | t" icon="pi pi-pencil" severity="secondary" [text]="true" [routerLink]="['/programs/workout', program.id]" />
+              @if (!program.isPublished) { <p-button styleClass="whitespace-nowrap" [label]="'coach.programs.publish' | t" icon="pi pi-check" [disabled]="store.saving() || store.publishing()" (onClick)="publishWorkout(program)" /> }
+            </div>
+          </article>
+        } @empty {
+          <div class="workspace-state"><i class="pi pi-search" aria-hidden="true"></i><p>{{ 'coach.programs.missing' | t }}</p><p-button [label]="'coach.programs.addWorkout' | t" icon="pi pi-plus" (onClick)="createWorkout()" /></div>
+        }
+      </div>
+    } @else {
+      <div class="workspace-program-rows">
+        <div class="workspace-table-head" aria-hidden="true"><span>{{ 'coach.workspace.colProgram' | t }}</span><span>{{ 'coach.workspace.colMenu' | t }}</span><span>{{ 'coach.workspace.colStatus' | t }}</span><span>{{ 'coach.workspace.colAction' | t }}</span></div>
+        @for (program of filteredMeals(); track program.id) {
+          <article class="workspace-program-row">
+            <div class="workspace-row-identity">
+              <span class="workspace-row-icon meal"><i class="pi pi-apple" aria-hidden="true"></i></span>
+              <div class="workspace-row-summary"><h3>{{ mealRange(program) }}</h3><p>{{ 'coach.workspace.recurring' | t }}</p></div>
+            </div>
+            <span class="workspace-row-count">{{ 'coach.programs.meals' | t: { count: program.mealCount } }}</span>
+            <span class="workspace-status" [class.published]="program.isPublished">{{ (program.isPublished ? 'coach.programs.published' : 'coach.programs.draft') | t }}</span>
+            <div class="workspace-row-actions">
+              <p-button styleClass="whitespace-nowrap" [label]="'coach.content.open' | t" icon="pi pi-pencil" severity="secondary" [text]="true" [routerLink]="['/programs/meal', program.id]" />
+              @if (!program.isPublished) { <p-button styleClass="whitespace-nowrap" [label]="'coach.programs.publish' | t" icon="pi pi-check" [disabled]="store.saving() || store.publishing()" (onClick)="publishMeal(program)" /> }
+            </div>
+          </article>
+        } @empty {
+          <div class="workspace-state"><i class="pi pi-search" aria-hidden="true"></i><p>{{ 'coach.programs.missing' | t }}</p><p-button [label]="'coach.programs.addMeal' | t" icon="pi pi-plus" (onClick)="createMeal()" /></div>
+        }
+      </div>
+    }
+  </section>
+
+  <coach-program-readiness />
+</div>
+
+@if (editor() === 'workout') {
+  <coach-workout-create-dialog [saving]="store.saving()" (created)="saveWorkout($event)" (closed)="editor.set(null)" />
+}
+@if (editor() === 'meal') {
+  <coach-meal-create-dialog [saving]="store.saving()" (created)="saveMeal($event)" (closed)="editor.set(null)" />
+}

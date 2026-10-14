@@ -8,7 +8,7 @@ Detailed rules live in `.claude/rules/` (loaded per file type) and `docs/` (read
 
 ## 1. Project identity
 
-Tofan is a fitness ecosystem. This repository is **only the admin panel**: management, operations, reporting.
+Tofan is a fitness ecosystem. This repository contains separate admin and coach panels in one Nx workspace.
 Backend (.NET 10, modular monolith, CQRS) lives in a separate repository.
 Backend contract details: `docs/backend-contract.md`. Architecture rationale: `docs/architecture.md`.
 
@@ -20,35 +20,40 @@ Stack:
   `primeicons` (PrimeNG 22+ needs a paid PrimeUI license key, see `docs/architecture.md`)
 - Signals first; RxJS only where streams are genuinely needed
 - Keycloak tokens obtained through the backend (`POST /auth/login`, `/auth/refresh`, `/auth/logout`),
-  kept in `core/auth`
-- Vitest (`ng test`), ESLint (`ng lint`), Sheriff (`sheriff verify`, module boundaries), Prettier
+  kept in `libs/core/src/auth`; admin requires `admin`, coach requires `trainer` and a trainer card
+- Nx task runner, Angular CLI builders, Vitest, ESLint, Sheriff, Prettier
 
 ## 2. Commands
 
 ```bash
-npm start             # ng serve, /api is proxied to the local backend (proxy.conf.json)
-npm run start:staging # ng serve, /api is proxied to the staging server (proxy.staging.conf.json)
-npm run build         # ng build (must pass before finishing a task)
-npm test              # ng test (Vitest)
-npx ng test --watch=false --include src/app/features/exercises/exercises.store.spec.ts   # one spec file
-npm run format        # prettier --write src/**/*.{ts,html,css}
-npm run lint          # ng lint + lint:comments + lint:boundaries (must pass before finishing a task)
+npm start             # admin via Nx; local backend proxy
+npm run start:staging # admin via Nx; staging backend proxy
+npm run start:coach   # coach via Nx; local backend proxy
+npm run start:coach:staging # coach via Nx; staging backend proxy
+npm run build         # admin production build
+npm run build:coach   # coach production build
+npm test              # admin Vitest suite
+npm run test:coach    # coach Vitest suite
+npm run format        # Prettier over apps/ and libs/
+npm run lint          # Nx lint targets + lint:comments + lint:boundaries
 npm run lint:comments # fails on any comment in any project file
 npm run lint:boundaries # sheriff verify: fails on an import that breaks the table in 3.1
-npx ng g component src/app/features/<feature>/components/<name>
+npx ng g component apps/admin/src/app/features/<feature>/components/<name>
 ```
 
-After every task: run `lint`, `test`, `build`. Fix what you broke. Never disable a rule to make it pass.
+After every task: run `lint`, `test`, `test:coach`, `build` and `build:coach`. Fix what you broke. Never disable a rule to make it pass.
 There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
 `http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
 forwards to the real staging API `https://api.157.90.117.20.sslip.io`. Signing in needs a
 Keycloak account with the realm role `admin`. Contract source: the staging Swagger
 (`https://api.157.90.117.20.sslip.io/swagger/v1/swagger.json`).
 
-Registering a new screen: `features/<x>/<x>.routes.ts` → `loadChildren` in `routes/app.routes.ts`,
-path in `core/config/app-paths.ts`, menu item in `core/layout/menu/app-menu.ts`.
-Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@environments/*`.
-Styles: plain CSS in `src/styles/`, Tailwind v4 utilities + `@openng/optimus-ui-tailwindcss`; layout is
+Admin features live in `apps/admin/src/app/features`; Coach features live in `apps/coach/src/app/features`
+(same `pages/`, `components/`, `models/`, `services/` layout; coach-only shared code in `apps/coach/src/app/core`).
+Shared auth, HTTP, feedback and i18n live in `libs/core`; shared UI, models and utilities live in
+`libs/shared`. Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`,
+`@coach-environments/*`. Admin styles live in `apps/admin/src/styles/`; Coach styles live in
+`apps/coach/src/`. Both use Tailwind v4 utilities + `@openng/optimus-ui-tailwindcss`; admin layout is
 based on Sakai (sakai-ng). `AGENTS.md` is the tool-neutral copy of these rules; keep it in sync.
 
 ### 2.1 Production
@@ -83,35 +88,20 @@ infrastructure/presentation split, no repository abstractions, no use-case class
 folder). It is a UI project; keep it flat and readable.
 
 ```text
-src/app/
-  core/                    # app-wide singletons, loaded once, never feature-specific
-    auth/                  # AuthStore, AuthService, session storage, guards, auth interceptors
-    http/                  # ApiClient (HttpClient), API_BASE_URL, Result envelope, error mapping, paging query
-    layout/                # shell, sidebar, topbar, menu, theme
-    config/                # app paths, title strategy, UI providers
-    feedback/              # toast, confirm, clipboard, error message keys
-    i18n/                  # locale store, translator, t pipe, dictionaries (uz, ru, en), date format
-  features/                # one folder per screen group, lazy loaded
-    <feature>/
-      pages/<name>-page/   # routed components
-      components/<name>/   # components used only inside this feature
-      models/              # models, filters, drafts, enums, labels, pure rules (+ specs)
-      services/            # <feature>.service.ts (HTTP), *.dto.ts, *.mapper.ts (+ specs)
-      <feature>.store.ts   # signal state for the screen
-      <feature>.routes.ts  # lazy routes of the feature
-  shared/                  # business-agnostic, reusable in any feature
-    components/            # dumb reusable components (wrappers over Optimus UI)
-    directives/ | pipes/ | validators/   # created when the first one is needed
-    models/                # paging, select option, file category, error classes
-    utils/                 # pure functions (enum mapping, file size, identifiers, upload rules)
-  routes/
-    app.routes.ts          # top-level routes, loadChildren per feature
-  app.config.ts
-  app.ts                   # root component (Angular 22 naming, no .component suffix)
+apps/admin/src/app/
+  core/layout/             # admin shell, sidebar, topbar, menu and theme
+  features/                # admin feature groups, lazy loaded
+  routes/                  # admin app.routes.ts
+apps/coach/src/app/
+  core/                    # coach shell, profile guard and the shared coach profile service
+  features/                # auth, programs, content, profile, clients (lazy loaded)
+  routes/                  # coach app.routes.ts
+libs/core/src/             # shared auth, HTTP, feedback and i18n
+libs/shared/src/           # shared components, models and utilities
 ```
 
 Current features: `dashboard`, `auth` (login, access denied, error pages), `exercises`, `foods`,
-`media`, `soldiers`, `accounts`, `garments`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
+`media`, `soldiers`, `accounts`, `trainers`, `garments`, `user-sessions`, `notifications`, `not-found`. Every feature, even a single-page one, keeps
 its routed components in `pages/` and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only
 uses `loadChildren`.
 
@@ -119,19 +109,19 @@ uses `loadChildren`.
 
 | Folder | May import | Must NOT import |
 |---|---|---|
-| core | other `core/` folders, shared | features |
-| shared | other `shared/` folders, `core/http`, `core/feedback`, `core/i18n` | features, other `core/` folders |
-| features/<x> | core, shared, its own files (relative imports) | other features |
-| routes | features (lazy `import()`), `core/auth` guards, `core/layout` shell | shared |
+| apps/admin, apps/coach | own features, `libs/core`, `libs/shared` | each other |
+| libs/core | other core areas, `libs/shared` | app features |
+| libs/shared | shared code, core HTTP/feedback/i18n | app features, core layout |
+| feature/<x> | core, shared, own files | other features |
 
 - The table is enforced by Sheriff (`sheriff.config.ts`, run by `npm run lint:boundaries`). It follows the
   real file an import resolves to, so relative imports (`../../foods/...`) are caught too. Sheriff walks
-  the app from `src/main.ts`, so spec files are not checked by it; ESLint `no-restricted-imports` still
+  the admin app from `apps/admin/src/main.ts`, so spec files are not checked by it; ESLint `no-restricted-imports` still
   rejects `@features/*` imports in `core/`, `shared/` and `features/` (specs included) and shows it in the editor.
   Sheriff runs as a CLI only: `@softarc/eslint-plugin-sheriff` does not support ESLint 10 yet.
-- Features **never** import other features.
-  Inside a feature use relative imports; across folders use `@core/*`, `@shared/*`, `@features/*`.
-  If two features need the same code, move it to `shared/` (or `core/` if it is an app singleton).
+- Apps **never** import each other; features **never** import other features.
+  Inside a feature use relative imports; across boundaries use `@core/*`, `@shared/*`, `@features/*` or `@coach/*`.
+  Code used by both apps belongs in `libs/core` or `libs/shared`.
   A feature may call a backend endpoint that "belongs" to another screen through its own service and DTO
   (example: `media` reads `GET /exercises` to find videos in use).
 - Only `app.config.ts` reads `environments/` (Sheriff: the root module is not importable from any tag).
@@ -142,7 +132,7 @@ uses `loadChildren`.
 | Need | Location | File name |
 |---|---|---|
 | Model / entity | `features/<x>/models/` | `exercise.ts` |
-| Filter, draft, labels, pure rule | `features/<x>/models/` | `exercise-filter.ts`, `exercise-draft.ts`, `exercise-labels.ts` |
+| Filter, draft, labels, pure rule | `features/<x>/models/` | `exercise-filter.ts`, `exercise-draft.ts`, `garment-labels.ts` |
 | Backend DTO | `features/<x>/services/` | `exercise.dto.ts` |
 | DTO ↔ model mapping | `features/<x>/services/` | `exercise.mapper.ts` |
 | HTTP calls | `features/<x>/services/` | `exercises.service.ts` |
@@ -189,6 +179,10 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
 
 ## 6. UI library rules (Optimus UI)
 
+- Before component, form, overlay or theme work, read `.agents/skills/optimus-ui/SKILL.md`.
+  Primary documentation: https://optimus.openng.org/llms/llms.txt. Find the relevant page in that index
+  and read its `.md` representation; use the full documentation only when a focused page is insufficient.
+  Verify every component API and token against the installed package and existing shared wrappers.
 - Optimus UI components are used in components, pages, `shared/components/` and `core/layout/`.
   Never in models, services or stores.
 - Repeated patterns (data table with server paging, form dialog, localized text field, file upload)
@@ -199,7 +193,8 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
 - Toasts and confirms go through `core/feedback` (`NotificationService`, `ConfirmDialogService`),
   not `MessageService` in every component.
 - Import individual components (`import { TableModule } from '@openng/optimus-ui/table'`), never barrels.
-- PrimeNG v21 documentation applies to Optimus UI; only the import paths differ.
+- Prefer official Optimus documentation. PrimeNG v21 documentation is a fallback only after verifying
+  the relevant Optimus API; do not assume newer PrimeNG documentation matches the installed package.
 
 ## 7. Backend integration
 
@@ -348,6 +343,12 @@ Rules:
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
 
 ## Agent skills
+
+### Optimus UI
+
+For UI components, theme tokens, responsive layouts and Signal Forms adapters, use
+[optimus-ui](.agents/skills/optimus-ui/SKILL.md). Official documentation index:
+https://optimus.openng.org/llms/llms.txt.
 
 ### Issue tracker
 

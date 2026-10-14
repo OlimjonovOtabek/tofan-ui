@@ -1,0 +1,78 @@
+<div class="coach-layout">
+  <header class="coach-topbar">
+    <a class="brand" routerLink="/programs" aria-label="Tofan Coach">
+      <app-logo class="brand-logo" /><span>Tofan Coach<small>{{ 'coach.workspace.subtitle' | t }}</small></span>
+    </a>
+    <div class="topbar-actions">
+      <button
+        pButton
+        type="button"
+        class="language-trigger"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        [attr.aria-label]="('layout.topbar.language' | t) + ': ' + languageName()"
+        [title]="('layout.topbar.language' | t) + ': ' + languageName()"
+        aria-haspopup="menu"
+        aria-controls="coachLanguageMenu"
+        [attr.aria-expanded]="languageMenuOpen()"
+        (click)="languageMenu.toggle($event)"
+      >
+        <span pButtonLabel>{{ languageCode() }}</span>
+      </button>
+      <p-menu
+        #languageMenu
+        id="coachLanguageMenu"
+        [model]="languages()"
+        [popup]="true"
+        appendTo="body"
+        (onShow)="languageMenuOpen.set(true)"
+        (onHide)="languageMenuOpen.set(false)"
+      />
+      <p-button
+        [icon]="darkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        [ariaLabel]="'layout.topbar.toggleTheme' | t"
+        (onClick)="toggleTheme()"
+      />
+      <p-button
+        icon="pi pi-sign-out"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        [ariaLabel]="'coach.navigation.logout' | t"
+        (onClick)="signOut()"
+      />
+      <a class="profile-trigger" routerLink="/profile">
+        <span>{{ auth.displayName() }}</span>
+        <p-avatar [label]="auth.displayName().slice(0, 1) || 'C'" shape="circle" />
+      </a>
+    </div>
+  </header>
+  <aside class="coach-sidebar">
+    <a class="rail-brand" routerLink="/programs" aria-label="Tofan Coach"><app-logo class="rail-logo" /><span>TOFAN</span></a>
+    <nav class="primary-nav" [attr.aria-label]="'coach.title' | t">
+      @for (item of navigation; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page"
+          ><i [class]="item.icon" aria-hidden="true"></i><span>{{ item.label | t }}</span></a
+        >
+      }
+    </nav>
+    <a class="sidebar-profile" routerLink="/profile">
+      <p-avatar [label]="auth.displayName().slice(0, 1) || 'C'" shape="circle" />
+      <span class="profile-label">{{ 'coach.navigation.profile' | t }}</span>
+    </a>
+  </aside>
+  <main class="coach-main">
+    <div class="coach-page-content"><router-outlet /></div>
+  </main>
+  <nav class="mobile-nav" [attr.aria-label]="'coach.title' | t">
+    @for (item of navigation; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page"
+        ><i [class]="item.icon" aria-hidden="true"></i><span>{{ item.label | t }}</span></a
+      >
+    }
+  </nav>
+</div>

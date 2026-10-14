@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "shared",
+  "projectType": "library",
+  "root": "libs/shared",
+  "sourceRoot": "libs/shared/src",
+  "tags": [
+    "type:shared"
+  ],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ng test shared --watch=false"
+      },
+      "cache": true
+    }
+  }
+}

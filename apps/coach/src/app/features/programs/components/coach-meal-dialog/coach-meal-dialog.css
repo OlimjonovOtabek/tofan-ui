@@ -1,0 +1,31 @@
+.meal-form {
+  display: grid;
+  gap: 1.25rem;
+}
+.meal-form label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.meal-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.meal-form-actions button:first-child {
+  margin-right: auto;
+}
+
+@media (max-width: 760px) {
+  .meal-form-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .meal-form-actions button:first-child:not(:nth-last-child(-n + 2)) {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-right: 0;
+  }
+}

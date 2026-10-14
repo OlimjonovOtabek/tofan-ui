@@ -1,0 +1,60 @@
+<p-dialog
+  [closeAriaLabel]="'common.actions.cancel' | t"
+  [header]="(day() === null ? 'coach.programs.addDay' : 'coach.workspace.daySettings') | t"
+  [visible]="visible()"
+  (visibleChange)="$event || close()"
+  [modal]="true"
+  [style]="{ width: '34rem' }"
+  [breakpoints]="{ '760px': '95vw' }"
+>
+  <form class="day-form" (submit)="$event.preventDefault(); submit()">
+    <label for="dayDialogWeekday">
+      <span>{{ 'coach.programs.dayOfWeek' | t }}</span>
+      <app-select-field
+        inputId="dayDialogWeekday"
+        [value]="dayOfWeek()"
+        (valueChange)="dayChanged($event)"
+        [options]="dayOptions()"
+        [fluid]="true"
+        [ariaLabel]="'coach.programs.dayOfWeek' | t"
+      />
+    </label>
+    <label>
+      <span>{{ 'coach.programs.dayTitle' | t }}</span>
+      <input pInputText [value]="title()" (input)="titleChanged($event)" />
+      @if (titleInvalid()) {
+        <small class="field-error">{{ 'coach.programs.dayTitleRequired' | t }}</small>
+      }
+    </label>
+    <label for="dayDialogSplit">
+      <span>{{ 'coach.programs.splitType' | t }}</span>
+      <app-select-field
+        inputId="dayDialogSplit"
+        [value]="splitType()"
+        (valueChange)="splitChanged($event)"
+        [options]="splitOptions()"
+        [fluid]="true"
+        [ariaLabel]="'coach.programs.splitType' | t"
+      />
+    </label>
+    <label class="rest-toggle" for="dayDialogRest">
+      <app-toggle-field
+        inputId="dayDialogRest"
+        [checked]="restDay()"
+        (checkedChange)="restDay.set($event)"
+        [ariaLabel]="'coach.programs.restDay' | t"
+      />{{ 'coach.programs.restDay' | t }}
+    </label>
+    <footer class="day-form-actions">
+      @if (day() !== null) {
+        <button pButton type="button" severity="danger" [text]="true" (click)="removed.emit()">
+          {{ 'coach.programs.removeDay' | t }}
+        </button>
+      }
+      <button pButton type="button" severity="secondary" [outlined]="true" (click)="close()">
+        {{ 'common.actions.cancel' | t }}
+      </button>
+      <button pButton type="submit">{{ 'common.actions.save' | t }}</button>
+    </footer>
+  </form>
+</p-dialog>

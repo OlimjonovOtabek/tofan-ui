@@ -1,13 +1,13 @@
-# Onboarding: how the Tofan admin panel works
+# Onboarding: Tofan admin and coach apps
 
 Read this first. It explains the flows end to end. The rules live in `CLAUDE.md`, the reasons in
 `docs/architecture.md`, and the per-screen details in `docs/modules/<feature>.md`.
 
 ## 1. What this app is
 
-An Angular 22 admin panel for the Tofan fitness ecosystem: catalogs (exercises, foods, media files),
-NFC garments, users (soldiers, accounts, sessions) and push notifications. It has no business logic
-of its own. The .NET backend (separate repository) owns every rule; the panel validates only for UX.
+An Nx workspace with two Angular 22 apps for the Tofan fitness ecosystem. Admin manages catalogs,
+users and operations. Coach edits a trainer profile and views programs, owned content and active clients.
+The .NET backend (separate repository) owns business rules; both apps validate only for UX.
 
 The panel never talks to Keycloak. Identity goes Angular → .NET API → Keycloak.
 
@@ -15,30 +15,33 @@ The panel never talks to Keycloak. Identity goes Angular → .NET API → Keyclo
 
 ```bash
 npm install
-npm start               # /api is proxied to http://localhost:5179 (proxy.conf.json)
-npm run start:staging   # /api is proxied to the staging API (proxy.staging.conf.json)
+npm run start:staging       # Admin: http://localhost:4200, staging API
+npm run start:coach:staging # Coach: http://localhost:4300, staging API
 ```
 
-There is no mock backend. Signing in needs a Keycloak account with the realm role `admin`.
-After every task run `npm run lint`, `npm test`, `npm run build`.
+Admin runs at `http://localhost:4200`; Coach runs at `http://localhost:4300`. To run both at once,
+start each command in a separate terminal. Both apps proxy `/api` to the staging API through
+`proxy.staging.conf.json`. For local backend development, use `npm start` and `npm run start:coach`.
+
+There is no mock backend. Admin requires the `admin` role. Coach requires the `trainer` role and an
+existing trainer card. After changes run lint, both app test targets and both app builds.
 
 ## 3. Folder map
 
 ```text
-src/app/
-  core/       one-per-app singletons: auth, http, layout, config, feedback, i18n
-  shared/     business-agnostic: components, models, utils
-  features/   one lazy folder per screen group
-  routes/     app.routes.ts (top-level table, loadChildren only)
-  app.config.ts   providers: router, HTTP, UI, i18n
+apps/admin/src/app/  admin shell, routes and feature folders
+apps/coach/src/app/ core/ (shell, guard, profile service), features/ (auth, programs, content, profile, clients), routes/
+libs/core/src/      shared auth, HTTP, feedback and i18n
+libs/shared/src/    shared components, models and utilities
 ```
 
 Dependency direction (enforced by Sheriff, `npm run lint:boundaries`):
 
 | Folder | May import | Must not import |
 |---|---|---|
-| core | other core, shared | features |
-| shared | shared, `core/http`, `core/feedback`, `core/i18n` | features, other core |
+| admin/coach apps | own features, shared libs | each other |
+| `libs/core` | other core areas, `libs/shared` | app features |
+| `libs/shared` | shared code, core HTTP/feedback/i18n | app features, core layout |
 | features/x | core, shared, own files | other features |
 
 Features are removable: deleting `features/x` breaks only its route entry and menu item.
