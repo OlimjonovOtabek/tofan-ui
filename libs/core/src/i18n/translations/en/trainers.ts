@@ -66,6 +66,7 @@ export const TRAINERS_EN = {
     phoneNumber: 'Phone number (optional)',
     password: 'Password',
     passwordHint: 'The trainer signs in to the trainer panel with this username and password.',
+    photo: 'Photo (optional)',
     errors: {
       username: 'Use Latin letters, digits and . _ - @ only, up to 128 characters.',
       email: 'Enter a valid email address.',

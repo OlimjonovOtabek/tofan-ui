@@ -8,8 +8,11 @@ The trainer panel (`/coach/*`) is not part of this app.
 ## Backend
 - Base routes: `/admin/trainers`, `/admin/trainer-subscriptions`; photo: `GET /files/{id}/content`.
 - Endpoints used:
-  - `POST /admin/trainers` (`username`, `email`, `phoneNumber?`, `password`, `displayName`) → card `Guid`.
-    The backend opens the account and gives it the role; an existing account cannot be made a trainer.
+  - `POST /admin/trainers` (`username`, `email`, `phoneNumber?`, `password`, `displayName`,
+    `photoFileId?`) → card `Guid`. The backend opens the account and gives it the role; an existing
+    account cannot be made a trainer.
+  - `POST /files` (`category` avatar) through the shared `app-file-upload`: the optional photo in the
+    add-trainer dialog. The trainer can replace it later in the coach panel (`PUT /coach/profile`).
   - `GET /admin/trainers` (paging, sort)
   - `POST /admin/trainers/{id}/publish`, `POST /admin/trainers/{id}/unpublish`
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`

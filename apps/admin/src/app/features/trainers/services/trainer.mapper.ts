@@ -26,5 +26,6 @@ export function toCreateTrainerRequest(draft: TrainerDraft): CreateTrainerReques
     phoneNumber: draft.phoneNumber,
     password: draft.password,
     displayName: draft.displayName,
+    photoFileId: draft.photoFileId,
   };
 }

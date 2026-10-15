@@ -15,4 +15,5 @@ export interface CreateTrainerRequest {
   phoneNumber: string | null;
   password: string;
   displayName: string;
+  photoFileId: string | null;
 }

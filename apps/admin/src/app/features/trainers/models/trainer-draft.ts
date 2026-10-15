@@ -14,6 +14,7 @@ export interface TrainerDraft {
   readonly phoneNumber: string | null;
   readonly password: string;
   readonly displayName: string;
+  readonly photoFileId: string | null;
 }
 
 export function createTrainerDraft(draft: TrainerDraft): TrainerDraft {
@@ -35,6 +36,7 @@ export function createTrainerDraft(draft: TrainerDraft): TrainerDraft {
     phoneNumber: toOptionalPhoneNumber(draft.phoneNumber),
     password: draft.password,
     displayName,
+    photoFileId: draft.photoFileId,
   };
 }
 
