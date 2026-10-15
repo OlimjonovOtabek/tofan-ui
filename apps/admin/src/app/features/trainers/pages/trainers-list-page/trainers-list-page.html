@@ -80,6 +80,7 @@
 <app-trainer-form-dialog
   [(visible)]="formVisible"
   [saving]="store.saving()"
+  [takenAccount]="store.takenAccount()"
   (save)="create($event)"
 />
 

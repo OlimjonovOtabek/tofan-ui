@@ -4,7 +4,9 @@ import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { FieldError } from '@shared/components/field-error/field-error';
 import { FileUpload } from '@shared/components/file-upload/file-upload';
 import { FormDialog } from '@shared/components/form-dialog/form-dialog';
+import { PasswordField } from '@shared/components/password-field/password-field';
 import { TextField } from '@shared/components/text-field/text-field';
+import { TakenTrainerAccount } from '../../models/taken-trainer-account';
 import { TrainerDraft } from '../../models/trainer-draft';
 import {
   TrainerFormValue,
@@ -15,17 +17,18 @@ import {
 
 @Component({
   selector: 'app-trainer-form-dialog',
-  imports: [FormField, FormDialog, FieldError, FileUpload, TextField, TranslatePipe],
+  imports: [FormField, FormDialog, FieldError, FileUpload, PasswordField, TextField, TranslatePipe],
   templateUrl: './trainer-form-dialog.html',
 })
 export class TrainerFormDialog {
   readonly visible = model.required<boolean>();
   readonly saving = input(false);
+  readonly takenAccount = input<TakenTrainerAccount | null>(null);
 
   readonly save = output<TrainerDraft>();
 
   protected readonly value = signal<TrainerFormValue>(emptyTrainerFormValue());
-  protected readonly form = form(this.value, trainerFormSchema);
+  protected readonly form = form(this.value, trainerFormSchema(this.takenAccount));
   protected readonly photoFileId = signal<string | null>(null);
   protected readonly photoFileName = signal<string | null>(null);
 

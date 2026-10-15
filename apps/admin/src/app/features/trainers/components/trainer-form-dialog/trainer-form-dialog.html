@@ -51,9 +51,8 @@
 
     <div class="flex flex-col gap-1">
       <label for="trainerPassword" class="font-medium">{{ 'trainers.form.password' | t }}</label>
-      <app-text-field
+      <app-password-field
         inputId="trainerPassword"
-        type="password"
         autocomplete="new-password"
         [formField]="form.password"
       />

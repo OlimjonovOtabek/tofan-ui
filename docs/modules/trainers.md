@@ -23,8 +23,12 @@ The trainer panel (`/coach/*`) is not part of this app.
 - Error codes handled: `Trainer.PriceNotSet`, `Trainer.NotFound`, `TrainerSubscription.OtherTrainerActive`,
   `WorkoutPlan.TrainerProgramMissing`, `MealPlan.TrainerProgramMissing`; client side:
   `Trainer.DisplayNameEmpty`, `User.InvalidUsername`, `TrainerSubscription.MonthsOutOfRange`, `UserId.Invalid`.
-  `User.UsernameTaken`, `User.EmailTaken` and `IdentityProvider.RoleNotFound` show the backend's own
-  localized `messages`; the dialog stays open so the admin can change the field.
+  `User.UsernameTaken` and `User.EmailTaken` show under the username or email field, not as a toast:
+  `TrainersStore.takenAccount` keeps the refused value and the form schema marks the field invalid while
+  it still holds that value (case and spaces ignored), so the same name cannot be sent twice.
+  `IdentityProvider.RoleNotFound` shows the backend's own localized `messages` as a toast. In both cases
+  the dialog stays open.
+- The password field has a show/hide eye (`app-password-field`, `p-password` with `toggleMask`).
 - The form mirrors the backend limits (username `^[A-Za-z0-9._@-]+$` up to 128, email up to 320,
   phone up to 32, password 8–128, name up to 200). The backend checks the name first and the account
   fields second, so without these client rules two-step errors would reach the admin.

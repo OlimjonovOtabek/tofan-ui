@@ -73,6 +73,8 @@ export const TRAINERS_EN = {
       phoneNumber: 'The phone number can be up to 32 characters.',
       password: 'The password must be 8 to 128 characters.',
       displayName: 'Enter a name of up to 200 characters.',
+      usernameTaken: 'This username is already taken. Choose another one.',
+      emailTaken: 'An account with this email already exists.',
     },
   },
   grant: {

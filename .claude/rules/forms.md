@@ -22,7 +22,8 @@ paths:
 - Optimus UI controls built on `BaseInput` (`p-select`, `p-datepicker`, `p-inputnumber`, ...) do not compile
   with `[formField]`: their `min`, `max` and `pattern` inputs clash with `FormUiControl` types. Use the
   `FormValueControl` wrappers in `shared/components` (`app-select-field`, `app-date-field`,
-  `app-number-field`, `app-choice-field` for `p-selectbutton`, `app-color-field` for `p-colorpicker`); add a new wrapper there when another
+  `app-number-field`, `app-choice-field` for `p-selectbutton`, `app-color-field` for `p-colorpicker`,
+  `app-password-field` for `p-password` with the show/hide eye); add a new wrapper there when another
   control is needed.
 - `pTextarea` reads legacy `NgControl.valueChanges`, which is absent on Signal Forms controls. Use
   `app-textarea-field` instead of binding `[formField]` directly to `textarea pTextarea`.
