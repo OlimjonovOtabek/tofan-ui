@@ -31,7 +31,11 @@ export const TRAINERS_EN = {
       grant: 'Grant subscription',
       publish: 'Publish',
       unpublish: 'Unpublish',
+      edit: 'Edit',
+      password: 'Change password',
+      delete: 'Delete',
     },
+    deleteWarning: 'The trainer card and its Keycloak account will be deleted for good.',
   },
   subscriptions: {
     total: '{count} subscriptions in total',
@@ -67,7 +71,9 @@ export const TRAINERS_EN = {
     password: 'Password',
     passwordHint: 'The trainer signs in to the trainer panel with this username and password.',
     photo: 'Photo (optional)',
+    bio: 'Bio (optional)',
     errors: {
+      bio: 'The bio can be up to 2000 characters.',
       username: 'Use Latin letters, digits and . _ - @ only, up to 128 characters.',
       email: 'Enter a valid email address.',
       phoneNumber: 'The phone number can be up to 32 characters.',
@@ -76,6 +82,23 @@ export const TRAINERS_EN = {
       usernameTaken: 'This username is already taken. Choose another one.',
       emailTaken: 'An account with this email already exists.',
     },
+  },
+  edit: {
+    header: 'Edit trainer',
+    usernameHint: 'The username cannot be changed.',
+    monthlyPrice: 'Monthly price',
+    priceSuffix: ' UZS',
+    priceHint: '0 means no price is set. A published trainer cannot have a price of 0.',
+    currentPhoto: 'Current photo',
+    loading: 'Loading the account details…',
+    errors: {
+      monthlyPrice: 'Enter a price of 0 or more.',
+    },
+  },
+  password: {
+    header: 'New password for "{name}"',
+    label: 'New password',
+    hint: 'The trainer uses this password the next time they sign in. Pass it on to them yourself.',
   },
   grant: {
     header: 'Grant subscription',
@@ -102,5 +125,8 @@ export const TRAINERS_EN = {
     unpublished: 'Trainer "{name}" was unpublished.',
     granted: 'A subscription to "{name}" was granted.',
     ended: 'The subscription to "{name}" was ended.',
+    updated: 'Trainer "{name}" was saved.',
+    passwordChanged: 'A new password was set for "{name}".',
+    deleted: 'Trainer "{name}" was deleted.',
   },
 };

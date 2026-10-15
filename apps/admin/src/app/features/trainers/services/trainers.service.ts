@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Trainer } from '../models/trainer';
 import { TrainerDraft } from '../models/trainer-draft';
+import { TrainerEditDraft } from '../models/trainer-edit-draft';
 import { Page, PageRequest } from '@shared/models/page';
 import { ApiClient } from '@core/http/api-client';
 import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
-import { TrainerResponse } from './trainer.dto';
-import { toCreateTrainerRequest, toTrainer } from './trainer.mapper';
+import { ChangeTrainerPasswordRequest, TrainerResponse } from './trainer.dto';
+import { toCreateTrainerRequest, toTrainer, toUpdateTrainerRequest } from './trainer.mapper';
 
 const TRAINERS = '/admin/trainers';
 const FILES = '/files';
@@ -30,6 +31,19 @@ export class TrainersService {
 
   async unpublish(id: string): Promise<void> {
     await this.apiClient.post(`${trainerPath(id)}/unpublish`);
+  }
+
+  async update(id: string, draft: TrainerEditDraft): Promise<void> {
+    await this.apiClient.put(trainerPath(id), toUpdateTrainerRequest(draft));
+  }
+
+  async changePassword(id: string, password: string): Promise<void> {
+    const request: ChangeTrainerPasswordRequest = { password };
+    await this.apiClient.put(`${trainerPath(id)}/password`, request);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.apiClient.delete(trainerPath(id));
   }
 
   private photoUrl(fileId: string): string {

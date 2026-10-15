@@ -16,7 +16,11 @@ import {
   SubscriptionGrantRequest,
   SubscriptionGrantDialog,
 } from '../../components/subscription-grant-dialog/subscription-grant-dialog';
+import { TrainerEditDialog } from '../../components/trainer-edit-dialog/trainer-edit-dialog';
 import { TrainerFormDialog } from '../../components/trainer-form-dialog/trainer-form-dialog';
+import { TrainerPasswordDialog } from '../../components/trainer-password-dialog/trainer-password-dialog';
+import { TrainerEditDraft } from '../../models/trainer-edit-draft';
+import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { PageRequest } from '@shared/models/page';
 import { shortId } from '@shared/utils/identifiers';
@@ -32,6 +36,8 @@ import { Translator } from '@core/i18n/translator';
   imports: [
     DataTable,
     TrainerFormDialog,
+    TrainerEditDialog,
+    TrainerPasswordDialog,
     SubscriptionGrantDialog,
     Avatar,
     Button,
@@ -45,6 +51,7 @@ import { Translator } from '@core/i18n/translator';
 export class TrainersListPage {
   private readonly translator = inject(Translator);
   private readonly localeStore = inject(LocaleStore);
+  private readonly confirmDialog = inject(ConfirmDialogService);
 
   protected readonly store = inject(TrainersStore);
   protected readonly soldierSearch = inject(SoldierSearchStore);
@@ -55,12 +62,16 @@ export class TrainersListPage {
     { field: 'monthlyPrice', header: this.column('monthlyPrice'), sortable: true, width: '12rem' },
     { field: 'status', header: this.column('status'), width: '12rem' },
     { field: 'createdOnUtc', header: this.column('createdOn'), sortable: true, width: '10rem' },
-    { field: 'actions', header: '', width: '8rem' },
+    { field: 'actions', header: '', width: '14rem' },
   ]);
 
   protected readonly formVisible = signal(false);
   protected readonly granting = signal<Trainer | null>(null);
   protected readonly grantVisible = signal(false);
+  protected readonly editing = signal<Trainer | null>(null);
+  protected readonly editVisible = signal(false);
+  protected readonly passwordFor = signal<Trainer | null>(null);
+  protected readonly passwordVisible = signal(false);
 
   protected statusLabel(trainer: Trainer): string {
     return this.translator.translate(TRAINER_PUBLISH_LABELS[trainer.publishState()]);
@@ -93,6 +104,42 @@ export class TrainersListPage {
   protected async create(draft: TrainerDraft): Promise<void> {
     if (await this.store.create(draft)) {
       this.formVisible.set(false);
+    }
+  }
+
+  protected async openEdit(trainer: Trainer): Promise<void> {
+    this.editing.set(trainer);
+    this.editVisible.set(true);
+    if (!(await this.store.loadAccount(trainer))) {
+      this.editVisible.set(false);
+    }
+  }
+
+  protected async update(draft: TrainerEditDraft): Promise<void> {
+    const trainer = this.editing();
+    if (trainer !== null && (await this.store.update(trainer, draft))) {
+      this.editVisible.set(false);
+    }
+  }
+
+  protected openPassword(trainer: Trainer): void {
+    this.passwordFor.set(trainer);
+    this.passwordVisible.set(true);
+  }
+
+  protected async changePassword(password: string): Promise<void> {
+    const trainer = this.passwordFor();
+    if (trainer !== null && (await this.store.changePassword(trainer, password))) {
+      this.passwordVisible.set(false);
+    }
+  }
+
+  protected async remove(trainer: Trainer): Promise<void> {
+    const confirmed = await this.confirmDialog.confirmDelete(trainer.displayName, {
+      key: 'trainers.list.deleteWarning',
+    });
+    if (confirmed) {
+      await this.store.remove(trainer);
     }
   }
 

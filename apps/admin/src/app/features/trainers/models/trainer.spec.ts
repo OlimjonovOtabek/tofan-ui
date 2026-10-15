@@ -7,6 +7,7 @@ function trainerWith(displayName: string, monthlyPrice: number): Trainer {
     displayName,
     null,
     null,
+    null,
     monthlyPrice,
     false,
     new Date('2026-10-02T09:00:00Z'),

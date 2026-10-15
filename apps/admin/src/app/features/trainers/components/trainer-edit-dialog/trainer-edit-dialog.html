@@ -1,0 +1,83 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="'trainers.edit.header' | t"
+  [saving]="saving()"
+  [saveDisabled]="account() === null"
+  (save)="submit()"
+>
+  @if (account(); as account) {
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-1">
+        <label for="editTrainerUsername" class="font-medium">{{
+          'trainers.form.username' | t
+        }}</label>
+        <app-text-field
+          inputId="editTrainerUsername"
+          [value]="account.username"
+          [disabled]="true"
+        />
+        <small class="text-muted-color">{{ 'trainers.edit.usernameHint' | t }}</small>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="editTrainerDisplayName" class="font-medium">{{
+          'trainers.form.displayName' | t
+        }}</label>
+        <app-text-field
+          inputId="editTrainerDisplayName"
+          autocomplete="off"
+          [formField]="form.displayName"
+        />
+        <app-field-error [field]="form.displayName()" />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="editTrainerBio" class="font-medium">{{ 'trainers.form.bio' | t }}</label>
+        <app-textarea-field inputId="editTrainerBio" [rows]="3" [formField]="form.bio" />
+        <app-field-error [field]="form.bio()" />
+      </div>
+
+      <app-file-upload
+        category="avatar"
+        [label]="'trainers.form.photo' | t"
+        [(fileId)]="photoFileId"
+        [(fileName)]="photoFileName"
+      />
+
+      <div class="flex flex-col gap-1">
+        <label for="editTrainerPrice" class="font-medium">{{
+          'trainers.edit.monthlyPrice' | t
+        }}</label>
+        <app-number-field
+          inputId="editTrainerPrice"
+          [suffix]="'trainers.edit.priceSuffix' | t"
+          [fluid]="true"
+          [formField]="form.monthlyPrice"
+        />
+        <app-field-error [field]="form.monthlyPrice()" />
+        <small class="text-muted-color">{{ 'trainers.edit.priceHint' | t }}</small>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="editTrainerEmail" class="font-medium">{{ 'trainers.form.email' | t }}</label>
+        <app-text-field inputId="editTrainerEmail" autocomplete="off" [formField]="form.email" />
+        <app-field-error [field]="form.email()" />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="editTrainerPhoneNumber" class="font-medium">{{
+          'trainers.form.phoneNumber' | t
+        }}</label>
+        <app-text-field
+          inputId="editTrainerPhoneNumber"
+          autocomplete="off"
+          placeholder="+998901234567"
+          [formField]="form.phoneNumber"
+        />
+        <app-field-error [field]="form.phoneNumber()" />
+      </div>
+    </div>
+  } @else {
+    <p class="text-muted-color">{{ 'trainers.edit.loading' | t }}</p>
+  }
+</app-form-dialog>

@@ -4,7 +4,10 @@ import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { Trainer } from './models/trainer';
+import { TrainerAccount } from './models/trainer-account';
 import { TrainerDraft } from './models/trainer-draft';
+import { TrainerEditDraft } from './models/trainer-edit-draft';
+import { TrainerAccountsService } from './services/trainer-accounts.service';
 import { TrainerSubscriptionsService } from './services/trainer-subscriptions.service';
 import { TrainersService } from './services/trainers.service';
 import { TrainersStore } from './trainers.store';
@@ -15,6 +18,7 @@ const trainer = new Trainer(
   't1',
   USER_ID,
   'Jasur Karimov',
+  null,
   null,
   null,
   450000,
@@ -28,11 +32,31 @@ const draft: TrainerDraft = {
   phoneNumber: null,
   password: 'Passw0rd!23',
   displayName: 'Jasur',
+  bio: null,
   photoFileId: null,
 };
 
+const editDraft: TrainerEditDraft = {
+  email: 'jasur@example.com',
+  phoneNumber: null,
+  displayName: 'Jasur',
+  bio: 'Kalistenika',
+  photoFileId: null,
+  monthlyPrice: 350000,
+};
+
+const account: TrainerAccount = {
+  username: 'jasur',
+  email: 'jasur@example.com',
+  phoneNumber: null,
+};
+
 describe('TrainersStore', () => {
-  let trainers: Pick<TrainersService, 'list' | 'create' | 'publish' | 'unpublish'>;
+  let trainers: Pick<
+    TrainersService,
+    'list' | 'create' | 'publish' | 'unpublish' | 'update' | 'changePassword' | 'delete'
+  >;
+  let accounts: Pick<TrainerAccountsService, 'get'>;
   let subscriptions: Pick<TrainerSubscriptionsService, 'grant'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
 
@@ -41,6 +65,7 @@ describe('TrainersStore', () => {
       providers: [
         TrainersStore,
         { provide: TrainersService, useValue: trainers },
+        { provide: TrainerAccountsService, useValue: accounts },
         { provide: TrainerSubscriptionsService, useValue: subscriptions },
         { provide: NotificationService, useValue: notifications },
       ],
@@ -54,9 +79,90 @@ describe('TrainersStore', () => {
       create: vi.fn().mockResolvedValue('t2'),
       publish: vi.fn().mockResolvedValue(undefined),
       unpublish: vi.fn().mockResolvedValue(undefined),
+      update: vi.fn().mockResolvedValue(undefined),
+      changePassword: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
     };
+    accounts = { get: vi.fn().mockResolvedValue(account) };
     subscriptions = { grant: vi.fn().mockResolvedValue('s1') };
     notifications = { success: vi.fn(), error: vi.fn() };
+  });
+
+  it('should expose the account when it is loaded for editing', async () => {
+    const store = createStore();
+
+    await expect(store.loadAccount(trainer)).resolves.toBe(true);
+
+    expect(accounts.get).toHaveBeenCalledWith(USER_ID);
+    expect(store.account()).toEqual(account);
+  });
+
+  it('should report the failure and expose no account when it cannot be loaded', async () => {
+    vi.mocked(accounts.get).mockRejectedValue(new ServiceUnavailableError());
+    const store = createStore();
+
+    await expect(store.loadAccount(trainer)).resolves.toBe(false);
+
+    expect(store.account()).toBeNull();
+    expect(notifications.error).toHaveBeenCalled();
+  });
+
+  it('should send the prepared edit, announce it and reload when a trainer is updated', async () => {
+    const store = createStore();
+
+    await expect(
+      store.update(trainer, { ...editDraft, displayName: ' Jasur ', bio: ' Kalistenika ' }),
+    ).resolves.toBe(true);
+
+    expect(trainers.update).toHaveBeenCalledWith('t1', editDraft);
+    expect(notifications.success).toHaveBeenCalledWith('trainers.toast.updated', {
+      name: 'Jasur',
+    });
+    expect(trainers.list).toHaveBeenCalled();
+  });
+
+  it('should mark the email field when the new email is taken', async () => {
+    vi.mocked(trainers.update).mockRejectedValue(new ConflictError('taken', 'User.EmailTaken'));
+    const store = createStore();
+
+    await expect(store.update(trainer, editDraft)).resolves.toBe(false);
+
+    expect(store.takenAccount()).toEqual({ field: 'email', value: 'jasur@example.com' });
+    expect(notifications.error).not.toHaveBeenCalled();
+  });
+
+  it('should set the password and announce it when the admin changes it', async () => {
+    const store = createStore();
+
+    await expect(store.changePassword(trainer, 'NewPassw0rd!')).resolves.toBe(true);
+
+    expect(trainers.changePassword).toHaveBeenCalledWith('t1', 'NewPassw0rd!');
+    expect(notifications.success).toHaveBeenCalledWith('trainers.toast.passwordChanged', {
+      name: 'Jasur Karimov',
+    });
+  });
+
+  it('should delete, announce and reload when a draft is deleted', async () => {
+    const store = createStore();
+
+    await store.remove(trainer);
+
+    expect(trainers.delete).toHaveBeenCalledWith('t1');
+    expect(notifications.success).toHaveBeenCalledWith('trainers.toast.deleted', {
+      name: 'Jasur Karimov',
+    });
+    expect(trainers.list).toHaveBeenCalled();
+  });
+
+  it('should report the refusal and not reload when the trainer cannot be deleted', async () => {
+    const refusal = new ConflictError('subscriptions', 'Trainer.HasSubscriptions');
+    vi.mocked(trainers.delete).mockRejectedValue(refusal);
+    const store = createStore();
+
+    await store.remove(trainer);
+
+    expect(notifications.error).toHaveBeenCalledWith(refusal);
+    expect(trainers.list).not.toHaveBeenCalled();
   });
 
   it('should expose the page when the service answers', async () => {

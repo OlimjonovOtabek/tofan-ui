@@ -1,16 +1,23 @@
 # Trainers feature
 
 ## Purpose
-The admin registers trainers (a new Keycloak account, the `trainer` role and the card in one request), publishes or unpublishes them, grants a user a subscription to a
-trainer and ends a subscription. One section, two tabs: "Trenerlar" and "Obunalar".
+The admin registers trainers (a new Keycloak account, the `trainer` role and the card in one request),
+edits them, sets a new password, deletes drafts, publishes or unpublishes them, grants a user a
+subscription to a trainer and ends a subscription. One section, two tabs: "Trenerlar" and "Obunalar".
 The trainer panel (`/coach/*`) is not part of this app.
 
 ## Backend
 - Base routes: `/admin/trainers`, `/admin/trainer-subscriptions`; photo: `GET /files/{id}/content`.
 - Endpoints used:
-  - `POST /admin/trainers` (`username`, `email`, `phoneNumber?`, `password`, `displayName`,
+  - `POST /admin/trainers` (`username`, `email`, `phoneNumber?`, `password`, `displayName`, `bio?`,
     `photoFileId?`) → card `Guid`. The backend opens the account and gives it the role; an existing
     account cannot be made a trainer.
+  - `PUT /admin/trainers/{id}` (`email`, `phoneNumber?`, `displayName`, `bio?`, `photoFileId?`,
+    `monthlyPrice` ≥ 0). The username is shown but cannot change (the realm forbids it).
+  - `GET /admin/users/{userId}`: only to fill the username, email and phone in the edit dialog, through
+    `TrainerAccountsService` with its own DTO, never the accounts feature.
+  - `PUT /admin/trainers/{id}/password` (`password` 8–128)
+  - `DELETE /admin/trainers/{id}`: drafts only; removes the card and the Keycloak account.
   - `POST /files` (`category` avatar) through the shared `app-file-upload`: the optional photo in the
     add-trainer dialog. The trainer can replace it later in the coach panel (`PUT /coach/profile`).
   - `GET /admin/trainers` (paging, sort)
@@ -20,7 +27,9 @@ The trainer panel (`/coach/*`) is not part of this app.
   - `POST /admin/trainer-subscriptions/{id}/end`
   - `GET /admin/soldiers` (`Search`, 10 rows): only for the soldier autocomplete in the grant dialog
 - Access (backend policy): `Policies.Admin`.
-- Error codes handled: `Trainer.PriceNotSet`, `Trainer.NotFound`, `TrainerSubscription.OtherTrainerActive`,
+- Error codes handled: `Trainer.PriceNotSet`, `Trainer.NotFound`, `Trainer.PublishedPriceRequired`,
+  `Trainer.PublishedCannotBeDeleted`, `Trainer.HasSubscriptions` (backend `messages`, toast),
+  `TrainerSubscription.OtherTrainerActive`,
   `WorkoutPlan.TrainerProgramMissing`, `MealPlan.TrainerProgramMissing`; client side:
   `Trainer.DisplayNameEmpty`, `User.InvalidUsername`, `TrainerSubscription.MonthsOutOfRange`, `UserId.Invalid`.
   `User.UsernameTaken` and `User.EmailTaken` show under the username or email field, not as a toast:
@@ -29,6 +38,10 @@ The trainer panel (`/coach/*`) is not part of this app.
   `IdentityProvider.RoleNotFound` shows the backend's own localized `messages` as a toast. In both cases
   the dialog stays open.
 - The password field has a show/hide eye (`app-password-field`, `p-password` with `toggleMask`).
+- Row actions: edit and change password on every trainer; delete only on drafts (published trainers
+  must be unpublished first), with a confirm that says the Keycloak account goes too.
+- The edit dialog waits for the account (`TrainersStore.loadAccount`) and closes itself if it cannot be
+  read. Email, phone, name and bio rules are shared with the add dialog through `trainer-field.rules.ts`.
 - The form mirrors the backend limits (username `^[A-Za-z0-9._@-]+$` up to 128, email up to 320,
   phone up to 32, password 8–128, name up to 200). The backend checks the name first and the account
   fields second, so without these client rules two-step errors would reach the admin.
