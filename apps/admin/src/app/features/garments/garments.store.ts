@@ -1,11 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { CreatedGarment } from './models/created-garment';
+import { Drop } from './models/drop';
 import { Garment } from './models/garment';
 import { GarmentDraft, createGarmentDraft } from './models/garment-draft';
 import { ensureExtensionMonths } from './models/garment-extension';
 import { GarmentFilter } from './models/garment-filter';
 import { GARMENT_STATUS_ACTIONS } from './models/garment-labels';
 import { AssignableGarmentStatus } from './models/garment-status';
+import { DropsService } from './services/drops.service';
 import { GarmentsService } from './services/garments.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
@@ -17,6 +19,7 @@ import { NotificationService } from '@core/feedback/notification.service';
 @Injectable()
 export class GarmentsStore {
   private readonly garmentsService = inject(GarmentsService);
+  private readonly dropsService = inject(DropsService);
   private readonly notifications = inject(NotificationService);
   private readonly downloads = inject(FileDownloadService);
   private readonly localeStore = inject(LocaleStore);
@@ -33,6 +36,8 @@ export class GarmentsStore {
   readonly exporting = signal(false);
   readonly filter = this.currentFilter.asReadonly();
   readonly first = computed(() => this.currentRequest().first);
+  readonly drops = signal<readonly Drop[]>([]);
+  private readonly createdBatch = signal<GarmentFilter | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
@@ -48,17 +53,29 @@ export class GarmentsStore {
     }
   }
 
+  async loadDrops(): Promise<void> {
+    try {
+      this.drops.set(await this.dropsService.list());
+    } catch (error) {
+      this.notifications.error(error);
+    }
+  }
+
   async applyFilter(filter: GarmentFilter): Promise<void> {
     this.currentFilter.set(filter);
     await this.load(firstPage(this.currentRequest().rows || DEFAULT_PAGE_SIZE));
   }
 
-  async create(draft: GarmentDraft, now: Date = new Date()): Promise<CreatedGarment | null> {
+  async create(
+    draft: GarmentDraft,
+    now: Date = new Date(),
+  ): Promise<readonly CreatedGarment[] | null> {
     this.saving.set(true);
     try {
       const created = await this.garmentsService.create(createGarmentDraft(draft, now));
-      this.notifications.success('garments.toast.created', { serial: created.serialNumber });
-      await this.load();
+      this.announceCreated(created);
+      this.createdBatch.set(batchFilter(draft.dropId, created));
+      await Promise.all([this.load(), this.loadDrops()]);
       return created;
     } catch (error) {
       this.notifications.error(error);
@@ -105,7 +122,7 @@ export class GarmentsStore {
     try {
       await this.garmentsService.delete(garment.id);
       this.notifications.success('garments.toast.deleted', { serial: garment.serialNumber });
-      await this.load();
+      await Promise.all([this.load(), this.loadDrops()]);
       return true;
     } catch (error) {
       this.notifications.error(error);
@@ -113,14 +130,42 @@ export class GarmentsStore {
     }
   }
 
-  async exportLinks(): Promise<void> {
+  async exportLinks(filter: GarmentFilter = this.currentFilter()): Promise<void> {
     this.exporting.set(true);
     try {
-      this.downloads.save(await this.garmentsService.exportLinks(this.currentFilter()));
+      this.downloads.save(await this.garmentsService.exportLinks(filter));
     } catch (error) {
       this.notifications.error(error);
     } finally {
       this.exporting.set(false);
     }
   }
+
+  async exportCreatedLinks(): Promise<void> {
+    const batch = this.createdBatch();
+    if (batch !== null) {
+      await this.exportLinks(batch);
+    }
+  }
+
+  private announceCreated(created: readonly CreatedGarment[]): void {
+    const [first] = created;
+    if (created.length === 1) {
+      this.notifications.success('garments.toast.created', {
+        serial: first.serialNumber,
+        edition: first.editionNumber,
+      });
+      return;
+    }
+    this.notifications.success('garments.toast.createdMany', {
+      count: created.length,
+      first: first.editionNumber,
+      last: created[created.length - 1].editionNumber,
+    });
+  }
+}
+
+function batchFilter(dropId: string, created: readonly CreatedGarment[]): GarmentFilter {
+  const editions = created.map((garment) => garment.editionNumber);
+  return { dropId, editionFrom: Math.min(...editions), editionTo: Math.max(...editions) };
 }

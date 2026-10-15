@@ -38,12 +38,12 @@ export class GarmentsService {
     return toPage(list, toGarment);
   }
 
-  async create(draft: GarmentDraft): Promise<CreatedGarment> {
-    const response = await this.apiClient.post<CreateGarmentResponse>(
+  async create(draft: GarmentDraft): Promise<readonly CreatedGarment[]> {
+    const response = await this.apiClient.post<CreateGarmentResponse[]>(
       GARMENTS,
       toCreateGarmentRequest(draft),
     );
-    return toCreatedGarment(response);
+    return response.map(toCreatedGarment);
   }
 
   async changeStatus(id: string, status: AssignableGarmentStatus): Promise<void> {
@@ -74,5 +74,11 @@ function toFilterQuery(filter: GarmentFilter): Query {
     SerialNumber: filter.serialNumber,
     Status: filter.status === undefined ? undefined : garmentStatuses.toApi(filter.status),
     OwnerId: filter.ownerId,
+    DropId: filter.dropId,
+    VariantId: filter.variantId,
+    Size: filter.size,
+    IsClaimed: filter.isClaimed,
+    EditionFrom: filter.editionFrom,
+    EditionTo: filter.editionTo,
   };
 }
