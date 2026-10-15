@@ -20,5 +20,11 @@ export function toTrainer(response: TrainerResponse, photoUrlOf: PhotoUrlOf): Tr
 }
 
 export function toCreateTrainerRequest(draft: TrainerDraft): CreateTrainerRequest {
-  return { userId: draft.userId, displayName: draft.displayName };
+  return {
+    username: draft.username,
+    email: draft.email,
+    phoneNumber: draft.phoneNumber,
+    password: draft.password,
+    displayName: draft.displayName,
+  };
 }

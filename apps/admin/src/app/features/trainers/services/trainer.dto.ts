@@ -10,6 +10,9 @@ export interface TrainerResponse {
 }
 
 export interface CreateTrainerRequest {
-  userId: string;
+  username: string;
+  email: string;
+  phoneNumber: string | null;
+  password: string;
   displayName: string;
 }

@@ -37,10 +37,15 @@ describe('toTrainer', () => {
 });
 
 describe('toCreateTrainerRequest', () => {
-  it('should send the user id and the display name when the request is built', () => {
-    expect(toCreateTrainerRequest({ userId: 'u1', displayName: 'Jasur' })).toEqual({
-      userId: 'u1',
+  it('should send the account fields and the display name when the request is built', () => {
+    const draft = {
+      username: 'jasur',
+      email: 'jasur@example.com',
+      phoneNumber: null,
+      password: 'Passw0rd!23',
       displayName: 'Jasur',
-    });
+    };
+
+    expect(toCreateTrainerRequest(draft)).toEqual(draft);
   });
 });

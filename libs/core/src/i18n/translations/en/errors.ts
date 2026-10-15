@@ -47,6 +47,7 @@ export const ERRORS_EN: Dictionary['errors'] = {
       AlreadyBlocked: 'The account is already blocked.',
       NotBlocked: 'The account is not blocked.',
       CannotBlockSelf: 'You cannot block your own account.',
+      InvalidUsername: 'The username may contain only Latin letters, digits and . _ - @',
     },
     Garment: {
       NotFound: 'Shirt not found — it may have been deleted.',

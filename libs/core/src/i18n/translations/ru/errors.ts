@@ -47,6 +47,8 @@ export const ERRORS_RU: Dictionary['errors'] = {
       AlreadyBlocked: 'Аккаунт уже заблокирован.',
       NotBlocked: 'Аккаунт не заблокирован.',
       CannotBlockSelf: 'Нельзя заблокировать свой аккаунт.',
+      InvalidUsername:
+        'Имя пользователя может содержать только латинские буквы, цифры и символы . _ - @',
     },
     Garment: {
       NotFound: 'Футболка не найдена — возможно, она удалена.',
