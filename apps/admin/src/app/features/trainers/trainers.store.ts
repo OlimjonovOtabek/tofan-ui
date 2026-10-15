@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { SubscriptionGrant, createSubscriptionGrant } from './models/subscription-grant';
 import { Trainer } from './models/trainer';
+import { TakenTrainerAccount, toTakenTrainerAccount } from './models/taken-trainer-account';
 import { TrainerDraft, createTrainerDraft } from './models/trainer-draft';
 import { TrainerSubscriptionsService } from './services/trainer-subscriptions.service';
 import { TrainersService } from './services/trainers.service';
@@ -22,6 +23,7 @@ export class TrainersStore {
   readonly loading = signal(false);
   readonly loadError = signal<ErrorMessage | null>(null);
   readonly saving = signal(false);
+  readonly takenAccount = signal<TakenTrainerAccount | null>(null);
   readonly first = computed(() => this.currentRequest().first);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
@@ -40,6 +42,7 @@ export class TrainersStore {
 
   async create(draft: TrainerDraft): Promise<boolean> {
     this.saving.set(true);
+    this.takenAccount.set(null);
     try {
       const prepared = createTrainerDraft(draft);
       await this.trainersService.create(prepared);
@@ -47,7 +50,7 @@ export class TrainersStore {
       await this.load();
       return true;
     } catch (error) {
-      this.notifications.error(error);
+      this.reportCreateFailure(error, draft);
       return false;
     } finally {
       this.saving.set(false);
@@ -86,5 +89,14 @@ export class TrainersStore {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  private reportCreateFailure(error: unknown, draft: TrainerDraft): void {
+    const taken = toTakenTrainerAccount(error, draft);
+    if (taken === null) {
+      this.notifications.error(error);
+      return;
+    }
+    this.takenAccount.set(taken);
   }
 }

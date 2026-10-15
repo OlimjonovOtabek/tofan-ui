@@ -120,16 +120,49 @@ describe('TrainersStore', () => {
     expect(notifications.error).toHaveBeenCalled();
   });
 
-  it('should report the refusal and keep the dialog open when the username is taken', async () => {
-    const refusal = new ConflictError('taken', 'User.UsernameTaken');
+  it('should mark the username field instead of a toast when the username is taken', async () => {
+    vi.mocked(trainers.create).mockRejectedValue(new ConflictError('taken', 'User.UsernameTaken'));
+    const store = createStore();
+
+    await expect(store.create(draft)).resolves.toBe(false);
+
+    expect(store.takenAccount()).toEqual({ field: 'username', value: 'jasur' });
+    expect(notifications.error).not.toHaveBeenCalled();
+    expect(trainers.list).not.toHaveBeenCalled();
+    expect(store.saving()).toBe(false);
+  });
+
+  it('should mark the email field when the email is taken', async () => {
+    vi.mocked(trainers.create).mockRejectedValue(new ConflictError('taken', 'User.EmailTaken'));
+    const store = createStore();
+
+    await store.create(draft);
+
+    expect(store.takenAccount()).toEqual({ field: 'email', value: 'jasur@example.com' });
+    expect(notifications.error).not.toHaveBeenCalled();
+  });
+
+  it('should forget the taken field when the next attempt is sent', async () => {
+    vi.mocked(trainers.create).mockRejectedValueOnce(
+      new ConflictError('taken', 'User.UsernameTaken'),
+    );
+    const store = createStore();
+    await store.create(draft);
+
+    await expect(store.create({ ...draft, username: 'jasur2' })).resolves.toBe(true);
+
+    expect(store.takenAccount()).toBeNull();
+  });
+
+  it('should report any other refusal as a toast', async () => {
+    const refusal = new ConflictError('exists', 'Conflict.DuplicateKey');
     vi.mocked(trainers.create).mockRejectedValue(refusal);
     const store = createStore();
 
     await expect(store.create(draft)).resolves.toBe(false);
 
     expect(notifications.error).toHaveBeenCalledWith(refusal);
-    expect(trainers.list).not.toHaveBeenCalled();
-    expect(store.saving()).toBe(false);
+    expect(store.takenAccount()).toBeNull();
   });
 
   it('should publish, announce and reload when a trainer is published', async () => {

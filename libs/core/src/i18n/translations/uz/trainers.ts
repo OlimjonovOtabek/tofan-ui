@@ -73,6 +73,8 @@ export const TRAINERS_UZ = {
       phoneNumber: 'Telefon raqami 32 belgidan oshmasligi kerak.',
       password: "Parol 8 dan 128 belgigacha bo'lishi kerak.",
       displayName: 'Ismni kiriting, 200 belgigacha.',
+      usernameTaken: 'Bu username band. Boshqasini tanlang.',
+      emailTaken: 'Bu email bilan hisob allaqachon mavjud.',
     },
   },
   grant: {
