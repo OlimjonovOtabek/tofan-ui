@@ -7,6 +7,7 @@ const draft: TrainerDraft = {
   phoneNumber: '+998901234567',
   password: 'Passw0rd!23',
   displayName: 'Jasur Karimov',
+  photoFileId: '7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f',
 };
 
 function issueCodes(invalid: TrainerDraft): string[] {

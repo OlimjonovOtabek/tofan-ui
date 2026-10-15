@@ -37,13 +37,14 @@ describe('toTrainer', () => {
 });
 
 describe('toCreateTrainerRequest', () => {
-  it('should send the account fields and the display name when the request is built', () => {
+  it('should send the account fields, the display name and the photo when the request is built', () => {
     const draft = {
       username: 'jasur',
       email: 'jasur@example.com',
       phoneNumber: null,
       password: 'Passw0rd!23',
       displayName: 'Jasur',
+      photoFileId: 'f1',
     };
 
     expect(toCreateTrainerRequest(draft)).toEqual(draft);

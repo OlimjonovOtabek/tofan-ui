@@ -2,6 +2,7 @@ import { Component, effect, input, model, output, signal, untracked } from '@ang
 import { FormField, form } from '@angular/forms/signals';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { FieldError } from '@shared/components/field-error/field-error';
+import { FileUpload } from '@shared/components/file-upload/file-upload';
 import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { TextField } from '@shared/components/text-field/text-field';
 import { TrainerDraft } from '../../models/trainer-draft';
@@ -14,7 +15,7 @@ import {
 
 @Component({
   selector: 'app-trainer-form-dialog',
-  imports: [FormField, FormDialog, FieldError, TextField, TranslatePipe],
+  imports: [FormField, FormDialog, FieldError, FileUpload, TextField, TranslatePipe],
   templateUrl: './trainer-form-dialog.html',
 })
 export class TrainerFormDialog {
@@ -25,11 +26,13 @@ export class TrainerFormDialog {
 
   protected readonly value = signal<TrainerFormValue>(emptyTrainerFormValue());
   protected readonly form = form(this.value, trainerFormSchema);
+  protected readonly photoFileId = signal<string | null>(null);
+  protected readonly photoFileName = signal<string | null>(null);
 
   constructor() {
     effect(() => {
       if (this.visible()) {
-        untracked(() => this.form().reset(emptyTrainerFormValue()));
+        untracked(() => this.prepare());
       }
     });
   }
@@ -39,6 +42,12 @@ export class TrainerFormDialog {
     if (this.form().invalid()) {
       return;
     }
-    this.save.emit(toTrainerDraft(this.value()));
+    this.save.emit(toTrainerDraft(this.value(), this.photoFileId()));
+  }
+
+  private prepare(): void {
+    this.form().reset(emptyTrainerFormValue());
+    this.photoFileId.set(null);
+    this.photoFileName.set(null);
   }
 }

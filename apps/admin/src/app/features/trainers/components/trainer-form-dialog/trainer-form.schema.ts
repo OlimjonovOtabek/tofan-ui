@@ -33,13 +33,14 @@ export function emptyTrainerFormValue(): TrainerFormValue {
   return { username: '', email: '', phoneNumber: '', password: '', displayName: '' };
 }
 
-export function toTrainerDraft(value: TrainerFormValue): TrainerDraft {
+export function toTrainerDraft(value: TrainerFormValue, photoFileId: string | null): TrainerDraft {
   return {
     username: value.username,
     email: value.email,
     phoneNumber: value.phoneNumber,
     password: value.password,
     displayName: value.displayName,
+    photoFileId,
   };
 }
 

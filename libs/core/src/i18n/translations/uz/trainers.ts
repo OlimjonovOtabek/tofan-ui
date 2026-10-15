@@ -66,6 +66,7 @@ export const TRAINERS_UZ = {
     phoneNumber: 'Telefon raqami (ixtiyoriy)',
     password: 'Parol',
     passwordHint: 'Trener trener paneliga shu username va parol bilan kiradi.',
+    photo: 'Rasm (ixtiyoriy)',
     errors: {
       username: 'Faqat lotin harflari, raqamlar va . _ - @ belgilari, 128 tagacha.',
       email: "To'g'ri email manzilini kiriting.",

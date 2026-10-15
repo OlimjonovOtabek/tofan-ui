@@ -28,6 +28,7 @@ const draft: TrainerDraft = {
   phoneNumber: null,
   password: 'Passw0rd!23',
   displayName: 'Jasur',
+  photoFileId: null,
 };
 
 describe('TrainersStore', () => {

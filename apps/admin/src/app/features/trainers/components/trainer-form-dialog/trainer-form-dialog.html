@@ -17,6 +17,13 @@
       <app-field-error [field]="form.displayName()" />
     </div>
 
+    <app-file-upload
+      category="avatar"
+      [label]="'trainers.form.photo' | t"
+      [(fileId)]="photoFileId"
+      [(fileName)]="photoFileName"
+    />
+
     <div class="flex flex-col gap-1">
       <label for="trainerUsername" class="font-medium">{{ 'trainers.form.username' | t }}</label>
       <app-text-field inputId="trainerUsername" autocomplete="off" [formField]="form.username" />
