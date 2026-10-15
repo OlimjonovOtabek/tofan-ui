@@ -7,6 +7,7 @@ const draft: TrainerDraft = {
   phoneNumber: '+998901234567',
   password: 'Passw0rd!23',
   displayName: 'Jasur Karimov',
+  bio: 'Kalistenika',
   photoFileId: '7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f',
 };
 
@@ -28,6 +29,7 @@ describe('createTrainerDraft', () => {
       email: ' jasur@example.com ',
       phoneNumber: ' +998901234567 ',
       displayName: '  Jasur  ',
+      bio: ' Kalistenika ',
     });
 
     expect(prepared).toEqual({ ...draft, displayName: 'Jasur' });
@@ -41,6 +43,10 @@ describe('createTrainerDraft', () => {
 
   it('should send no phone number when the field is blank', () => {
     expect(createTrainerDraft({ ...draft, phoneNumber: '   ' }).phoneNumber).toBeNull();
+  });
+
+  it('should send no bio when the field is blank', () => {
+    expect(createTrainerDraft({ ...draft, bio: '  ' }).bio).toBeNull();
   });
 
   it('should refuse the draft when the username has characters Keycloak rejects', () => {

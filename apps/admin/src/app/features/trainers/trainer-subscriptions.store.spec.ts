@@ -28,6 +28,7 @@ const trainer = new Trainer(
   'Jasur Karimov',
   null,
   null,
+  null,
   450000,
   true,
   new Date('2026-10-02T09:00:00Z'),

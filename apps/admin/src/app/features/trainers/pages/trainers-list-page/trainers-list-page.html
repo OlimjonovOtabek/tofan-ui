@@ -43,6 +43,24 @@
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(trainer.createdOn) }}</td>
       <td class="text-right whitespace-nowrap">
         <p-button
+          icon="pi pi-pencil"
+          severity="secondary"
+          [text]="true"
+          [rounded]="true"
+          [ariaLabel]="'trainers.list.actions.edit' | t"
+          [pTooltip]="'trainers.list.actions.edit' | t"
+          (onClick)="openEdit(trainer)"
+        />
+        <p-button
+          icon="pi pi-key"
+          severity="secondary"
+          [text]="true"
+          [rounded]="true"
+          [ariaLabel]="'trainers.list.actions.password' | t"
+          [pTooltip]="'trainers.list.actions.password' | t"
+          (onClick)="openPassword(trainer)"
+        />
+        <p-button
           icon="pi pi-user-plus"
           severity="secondary"
           [text]="true"
@@ -71,6 +89,15 @@
             [pTooltip]="'trainers.list.actions.publish' | t"
             (onClick)="store.publish(trainer)"
           />
+          <p-button
+            icon="pi pi-trash"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="'trainers.list.actions.delete' | t"
+            [pTooltip]="'trainers.list.actions.delete' | t"
+            (onClick)="remove(trainer)"
+          />
         }
       </td>
     </tr>
@@ -82,6 +109,22 @@
   [saving]="store.saving()"
   [takenAccount]="store.takenAccount()"
   (save)="create($event)"
+/>
+
+<app-trainer-edit-dialog
+  [(visible)]="editVisible"
+  [trainer]="editing()"
+  [account]="store.account()"
+  [saving]="store.saving()"
+  [takenAccount]="store.takenAccount()"
+  (save)="update($event)"
+/>
+
+<app-trainer-password-dialog
+  [(visible)]="passwordVisible"
+  [trainer]="passwordFor()"
+  [saving]="store.saving()"
+  (save)="changePassword($event)"
 />
 
 <app-subscription-grant-dialog

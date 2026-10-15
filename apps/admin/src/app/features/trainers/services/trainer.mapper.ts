@@ -1,18 +1,19 @@
 import { Trainer } from '../models/trainer';
 import { TrainerDraft } from '../models/trainer-draft';
-import { CreateTrainerRequest, TrainerResponse } from './trainer.dto';
+import { TrainerEditDraft } from '../models/trainer-edit-draft';
+import { CreateTrainerRequest, TrainerResponse, UpdateTrainerRequest } from './trainer.dto';
 
 export type PhotoUrlOf = (fileId: string) => string;
 
 export function toTrainer(response: TrainerResponse, photoUrlOf: PhotoUrlOf): Trainer {
+  const photoFileId = response.photoFileId ?? null;
   return new Trainer(
     response.id,
     response.userId,
     response.displayName,
     response.bio ?? null,
-    response.photoFileId === null || response.photoFileId === undefined
-      ? null
-      : photoUrlOf(response.photoFileId),
+    photoFileId,
+    photoFileId === null ? null : photoUrlOf(photoFileId),
     response.monthlyPrice,
     response.isPublished,
     new Date(response.createdOnUtc),
@@ -26,6 +27,18 @@ export function toCreateTrainerRequest(draft: TrainerDraft): CreateTrainerReques
     phoneNumber: draft.phoneNumber,
     password: draft.password,
     displayName: draft.displayName,
+    bio: draft.bio,
     photoFileId: draft.photoFileId,
+  };
+}
+
+export function toUpdateTrainerRequest(draft: TrainerEditDraft): UpdateTrainerRequest {
+  return {
+    email: draft.email,
+    phoneNumber: draft.phoneNumber,
+    displayName: draft.displayName,
+    bio: draft.bio,
+    photoFileId: draft.photoFileId,
+    monthlyPrice: draft.monthlyPrice,
   };
 }

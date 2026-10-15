@@ -31,7 +31,11 @@ export const TRAINERS_UZ = {
       grant: 'Obuna berish',
       publish: "E'lon qilish",
       unpublish: "Ro'yxatdan olish",
+      edit: 'Tahrirlash',
+      password: 'Parolni almashtirish',
+      delete: "O'chirish",
     },
+    deleteWarning: "Trener kartasi va uning Keycloak hisobi butunlay o'chadi.",
   },
   subscriptions: {
     total: 'Jami {count} ta obuna',
@@ -67,7 +71,9 @@ export const TRAINERS_UZ = {
     password: 'Parol',
     passwordHint: 'Trener trener paneliga shu username va parol bilan kiradi.',
     photo: 'Rasm (ixtiyoriy)',
+    bio: 'Bio (ixtiyoriy)',
     errors: {
+      bio: 'Bio 2000 belgidan oshmasligi kerak.',
       username: 'Faqat lotin harflari, raqamlar va . _ - @ belgilari, 128 tagacha.',
       email: "To'g'ri email manzilini kiriting.",
       phoneNumber: 'Telefon raqami 32 belgidan oshmasligi kerak.',
@@ -76,6 +82,23 @@ export const TRAINERS_UZ = {
       usernameTaken: 'Bu username band. Boshqasini tanlang.',
       emailTaken: 'Bu email bilan hisob allaqachon mavjud.',
     },
+  },
+  edit: {
+    header: 'Trenerni tahrirlash',
+    usernameHint: "Username o'zgartirilmaydi.",
+    monthlyPrice: 'Oylik narx',
+    priceSuffix: " so'm",
+    priceHint: "0 — narx belgilanmagan. E'lon qilingan trenerning narxi 0 bo'lishi mumkin emas.",
+    currentPhoto: 'Joriy rasm',
+    loading: "Hisob ma'lumotlari yuklanmoqda…",
+    errors: {
+      monthlyPrice: 'Narxni kiriting, 0 yoki undan katta.',
+    },
+  },
+  password: {
+    header: '"{name}" uchun yangi parol',
+    label: 'Yangi parol',
+    hint: "Trener keyingi kirishda shu paroldan foydalanadi. Parolni trenerga o'zingiz yetkazing.",
   },
   grant: {
     header: 'Obuna berish',
@@ -102,5 +125,8 @@ export const TRAINERS_UZ = {
     unpublished: '"{name}" ro\'yxatdan olindi.',
     granted: '"{name}" trenerining obunasi berildi.',
     ended: '"{name}" trenerining obunasi tugatildi.',
+    updated: '"{name}" saqlandi.',
+    passwordChanged: '"{name}" uchun yangi parol o\'rnatildi.',
+    deleted: '"{name}" o\'chirildi.',
   },
 };

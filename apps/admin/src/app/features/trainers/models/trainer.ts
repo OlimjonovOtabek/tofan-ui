@@ -8,6 +8,7 @@ export class Trainer {
     readonly userId: string,
     readonly displayName: string,
     readonly bio: string | null,
+    readonly photoFileId: string | null,
     readonly photoUrl: string | null,
     readonly monthlyPrice: number,
     readonly isPublished: boolean,

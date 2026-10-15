@@ -6,6 +6,7 @@ import { FileUpload } from '@shared/components/file-upload/file-upload';
 import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { PasswordField } from '@shared/components/password-field/password-field';
 import { TextField } from '@shared/components/text-field/text-field';
+import { TextareaField } from '@shared/components/textarea-field/textarea-field';
 import { TakenTrainerAccount } from '../../models/taken-trainer-account';
 import { TrainerDraft } from '../../models/trainer-draft';
 import {
@@ -17,7 +18,16 @@ import {
 
 @Component({
   selector: 'app-trainer-form-dialog',
-  imports: [FormField, FormDialog, FieldError, FileUpload, PasswordField, TextField, TranslatePipe],
+  imports: [
+    FormField,
+    FormDialog,
+    FieldError,
+    FileUpload,
+    PasswordField,
+    TextField,
+    TextareaField,
+    TranslatePipe,
+  ],
   templateUrl: './trainer-form-dialog.html',
 })
 export class TrainerFormDialog {

@@ -17,6 +17,12 @@
       <app-field-error [field]="form.displayName()" />
     </div>
 
+    <div class="flex flex-col gap-1">
+      <label for="trainerBio" class="font-medium">{{ 'trainers.form.bio' | t }}</label>
+      <app-textarea-field inputId="trainerBio" [rows]="3" [formField]="form.bio" />
+      <app-field-error [field]="form.bio()" />
+    </div>
+
     <app-file-upload
       category="avatar"
       [label]="'trainers.form.photo' | t"

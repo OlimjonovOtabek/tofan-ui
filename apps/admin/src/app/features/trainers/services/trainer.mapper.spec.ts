@@ -1,4 +1,4 @@
-import { toCreateTrainerRequest, toTrainer } from './trainer.mapper';
+import { toCreateTrainerRequest, toTrainer, toUpdateTrainerRequest } from './trainer.mapper';
 import { TrainerResponse } from './trainer.dto';
 
 const response: TrainerResponse = {
@@ -32,21 +32,42 @@ describe('toTrainer', () => {
     const trainer = toTrainer({ ...response, bio: null, photoFileId: null }, photoUrlOf);
 
     expect(trainer.bio).toBeNull();
+    expect(trainer.photoFileId).toBeNull();
     expect(trainer.photoUrl).toBeNull();
+  });
+
+  it('should keep the photo file id next to its url when the trainer has a photo', () => {
+    expect(toTrainer(response, photoUrlOf).photoFileId).toBe('f1');
   });
 });
 
 describe('toCreateTrainerRequest', () => {
-  it('should send the account fields, the display name and the photo when the request is built', () => {
+  it('should send the account fields, the card and the photo when the request is built', () => {
     const draft = {
       username: 'jasur',
       email: 'jasur@example.com',
       phoneNumber: null,
       password: 'Passw0rd!23',
       displayName: 'Jasur',
+      bio: 'Kalistenika',
       photoFileId: 'f1',
     };
 
     expect(toCreateTrainerRequest(draft)).toEqual(draft);
+  });
+});
+
+describe('toUpdateTrainerRequest', () => {
+  it('should send the contact, the card and the price when the request is built', () => {
+    const draft = {
+      email: 'jasur@example.com',
+      phoneNumber: '+998901234567',
+      displayName: 'Jasur',
+      bio: null,
+      photoFileId: null,
+      monthlyPrice: 350000,
+    };
+
+    expect(toUpdateTrainerRequest(draft)).toEqual(draft);
   });
 });
