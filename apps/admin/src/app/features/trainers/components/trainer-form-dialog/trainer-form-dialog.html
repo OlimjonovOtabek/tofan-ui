@@ -6,18 +6,6 @@
 >
   <div class="flex flex-col gap-4">
     <div class="flex flex-col gap-1">
-      <label for="trainerUserId" class="font-medium">{{ 'trainers.form.userId' | t }}</label>
-      <app-text-field
-        inputId="trainerUserId"
-        autocomplete="off"
-        placeholder="UUID"
-        [formField]="form.userId"
-      />
-      <app-field-error [field]="form.userId()" />
-      <small class="text-muted-color">{{ 'trainers.form.userIdHint' | t }}</small>
-    </div>
-
-    <div class="flex flex-col gap-1">
       <label for="trainerDisplayName" class="font-medium">{{
         'trainers.form.displayName' | t
       }}</label>
@@ -27,6 +15,43 @@
         [formField]="form.displayName"
       />
       <app-field-error [field]="form.displayName()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="trainerUsername" class="font-medium">{{ 'trainers.form.username' | t }}</label>
+      <app-text-field inputId="trainerUsername" autocomplete="off" [formField]="form.username" />
+      <app-field-error [field]="form.username()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="trainerEmail" class="font-medium">{{ 'trainers.form.email' | t }}</label>
+      <app-text-field inputId="trainerEmail" autocomplete="off" [formField]="form.email" />
+      <app-field-error [field]="form.email()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="trainerPhoneNumber" class="font-medium">{{
+        'trainers.form.phoneNumber' | t
+      }}</label>
+      <app-text-field
+        inputId="trainerPhoneNumber"
+        autocomplete="off"
+        placeholder="+998901234567"
+        [formField]="form.phoneNumber"
+      />
+      <app-field-error [field]="form.phoneNumber()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="trainerPassword" class="font-medium">{{ 'trainers.form.password' | t }}</label>
+      <app-text-field
+        inputId="trainerPassword"
+        type="password"
+        autocomplete="new-password"
+        [formField]="form.password"
+      />
+      <app-field-error [field]="form.password()" />
+      <small class="text-muted-color">{{ 'trainers.form.passwordHint' | t }}</small>
     </div>
   </div>
 </app-form-dialog>

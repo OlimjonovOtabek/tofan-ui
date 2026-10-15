@@ -45,6 +45,8 @@ export const ERRORS_UZ = {
       AlreadyBlocked: 'Hisob allaqachon bloklangan.',
       NotBlocked: 'Hisob bloklanmagan.',
       CannotBlockSelf: 'O‘z hisobingizni bloklay olmaysiz.',
+      InvalidUsername:
+        'Username faqat lotin harflari, raqamlar va . _ - @ belgilaridan iborat bo‘lishi mumkin.',
     },
     Garment: {
       NotFound: "Futbolka topilmadi — u o'chirilgan bo'lishi mumkin.",

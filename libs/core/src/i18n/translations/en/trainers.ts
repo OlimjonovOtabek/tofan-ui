@@ -60,12 +60,18 @@ export const TRAINERS_EN = {
   },
   form: {
     header: 'Add trainer',
-    userId: 'User ID (Keycloak)',
-    userIdHint: 'This account must already have the trainer role in Keycloak.',
     displayName: 'Display name',
+    username: 'Username',
+    email: 'Email',
+    phoneNumber: 'Phone number (optional)',
+    password: 'Password',
+    passwordHint: 'The trainer signs in to the trainer panel with this username and password.',
     errors: {
-      userId: 'Enter the user ID as a UUID.',
-      displayName: 'Enter a name.',
+      username: 'Use Latin letters, digits and . _ - @ only, up to 128 characters.',
+      email: 'Enter a valid email address.',
+      phoneNumber: 'The phone number can be up to 32 characters.',
+      password: 'The password must be 8 to 128 characters.',
+      displayName: 'Enter a name of up to 200 characters.',
     },
   },
   grant: {

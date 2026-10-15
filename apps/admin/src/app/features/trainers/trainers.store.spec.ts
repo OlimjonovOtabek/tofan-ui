@@ -4,6 +4,7 @@ import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { Trainer } from './models/trainer';
+import { TrainerDraft } from './models/trainer-draft';
 import { TrainerSubscriptionsService } from './services/trainer-subscriptions.service';
 import { TrainersService } from './services/trainers.service';
 import { TrainersStore } from './trainers.store';
@@ -20,6 +21,14 @@ const trainer = new Trainer(
   false,
   new Date('2026-10-02T09:00:00Z'),
 );
+
+const draft: TrainerDraft = {
+  username: 'jasur',
+  email: 'jasur@example.com',
+  phoneNumber: null,
+  password: 'Passw0rd!23',
+  displayName: 'Jasur',
+};
 
 describe('TrainersStore', () => {
   let trainers: Pick<TrainersService, 'list' | 'create' | 'publish' | 'unpublish'>;
@@ -90,13 +99,10 @@ describe('TrainersStore', () => {
     const store = createStore();
 
     await expect(
-      store.create({ userId: ` ${USER_ID} `, displayName: ' Jasur Karimov ' }),
+      store.create({ ...draft, username: ' jasur ', displayName: ' Jasur Karimov ' }),
     ).resolves.toBe(true);
 
-    expect(trainers.create).toHaveBeenCalledWith({
-      userId: USER_ID,
-      displayName: 'Jasur Karimov',
-    });
+    expect(trainers.create).toHaveBeenCalledWith({ ...draft, displayName: 'Jasur Karimov' });
     expect(notifications.success).toHaveBeenCalledWith('trainers.toast.created', {
       name: 'Jasur Karimov',
     });
@@ -104,21 +110,21 @@ describe('TrainersStore', () => {
     expect(store.saving()).toBe(false);
   });
 
-  it('should not call the backend when the user id is not a UUID', async () => {
+  it('should not call the backend when the username is not valid', async () => {
     const store = createStore();
 
-    await expect(store.create({ userId: 'abc', displayName: 'Jasur' })).resolves.toBe(false);
+    await expect(store.create({ ...draft, username: 'jasur karimov' })).resolves.toBe(false);
 
     expect(trainers.create).not.toHaveBeenCalled();
     expect(notifications.error).toHaveBeenCalled();
   });
 
-  it('should report the refusal and keep the dialog open when the card already exists', async () => {
-    const refusal = new ConflictError('exists', 'Conflict.DuplicateKey');
+  it('should report the refusal and keep the dialog open when the username is taken', async () => {
+    const refusal = new ConflictError('taken', 'User.UsernameTaken');
     vi.mocked(trainers.create).mockRejectedValue(refusal);
     const store = createStore();
 
-    await expect(store.create({ userId: USER_ID, displayName: 'Jasur' })).resolves.toBe(false);
+    await expect(store.create(draft)).resolves.toBe(false);
 
     expect(notifications.error).toHaveBeenCalledWith(refusal);
     expect(trainers.list).not.toHaveBeenCalled();

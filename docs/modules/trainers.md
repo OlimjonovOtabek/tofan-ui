@@ -1,14 +1,15 @@
 # Trainers feature
 
 ## Purpose
-The admin creates trainer cards, publishes or unpublishes them, grants a user a subscription to a
+The admin registers trainers (a new Keycloak account, the `trainer` role and the card in one request), publishes or unpublishes them, grants a user a subscription to a
 trainer and ends a subscription. One section, two tabs: "Trenerlar" and "Obunalar".
 The trainer panel (`/coach/*`) is not part of this app.
 
 ## Backend
 - Base routes: `/admin/trainers`, `/admin/trainer-subscriptions`; photo: `GET /files/{id}/content`.
 - Endpoints used:
-  - `POST /admin/trainers` (`userId` Keycloak id, `displayName`) → `Guid`
+  - `POST /admin/trainers` (`username`, `email`, `phoneNumber?`, `password`, `displayName`) → card `Guid`.
+    The backend opens the account and gives it the role; an existing account cannot be made a trainer.
   - `GET /admin/trainers` (paging, sort)
   - `POST /admin/trainers/{id}/publish`, `POST /admin/trainers/{id}/unpublish`
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`
@@ -18,8 +19,12 @@ The trainer panel (`/coach/*`) is not part of this app.
 - Access (backend policy): `Policies.Admin`.
 - Error codes handled: `Trainer.PriceNotSet`, `Trainer.NotFound`, `TrainerSubscription.OtherTrainerActive`,
   `WorkoutPlan.TrainerProgramMissing`, `MealPlan.TrainerProgramMissing`; client side:
-  `Trainer.DisplayNameEmpty`, `TrainerSubscription.MonthsOutOfRange`, `UserId.Invalid`.
-  The generic `Conflict.DuplicateKey` (card already exists) keeps the generic conflict text.
+  `Trainer.DisplayNameEmpty`, `User.InvalidUsername`, `TrainerSubscription.MonthsOutOfRange`, `UserId.Invalid`.
+  `User.UsernameTaken`, `User.EmailTaken` and `IdentityProvider.RoleNotFound` show the backend's own
+  localized `messages`; the dialog stays open so the admin can change the field.
+- The form mirrors the backend limits (username `^[A-Za-z0-9._@-]+$` up to 128, email up to 320,
+  phone up to 32, password 8–128, name up to 200). The backend checks the name first and the account
+  fields second, so without these client rules two-step errors would reach the admin.
 
 ## Screens
 | Route | Page | Access |

@@ -1,9 +1,13 @@
 import { ValidationError } from '@shared/models/errors/validation.error';
 import { TrainerDraft, createTrainerDraft } from './trainer-draft';
 
-const USER_ID = '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b';
-
-const draft: TrainerDraft = { userId: USER_ID, displayName: 'Jasur Karimov' };
+const draft: TrainerDraft = {
+  username: 'jasur.karimov',
+  email: 'jasur@example.com',
+  phoneNumber: '+998901234567',
+  password: 'Passw0rd!23',
+  displayName: 'Jasur Karimov',
+};
 
 function issueCodes(invalid: TrainerDraft): string[] {
   try {
@@ -16,18 +20,34 @@ function issueCodes(invalid: TrainerDraft): string[] {
 }
 
 describe('createTrainerDraft', () => {
-  it('should trim both fields when the user typed them loosely', () => {
-    const prepared = createTrainerDraft({ userId: ` ${USER_ID} `, displayName: '  Jasur  ' });
+  it('should trim the text fields when the user typed them loosely', () => {
+    const prepared = createTrainerDraft({
+      ...draft,
+      username: ' jasur.karimov ',
+      email: ' jasur@example.com ',
+      phoneNumber: ' +998901234567 ',
+      displayName: '  Jasur  ',
+    });
 
-    expect(prepared).toEqual({ userId: USER_ID, displayName: 'Jasur' });
+    expect(prepared).toEqual({ ...draft, displayName: 'Jasur' });
   });
 
-  it('should refuse the draft when the user id is not a UUID', () => {
-    expect(issueCodes({ ...draft, userId: 'not-a-uuid' })).toEqual(['UserId.Invalid']);
+  it('should keep the password exactly as typed when it has spaces', () => {
+    expect(createTrainerDraft({ ...draft, password: ' Passw0rd!23 ' }).password).toBe(
+      ' Passw0rd!23 ',
+    );
   });
 
-  it('should refuse the draft when the user id is empty', () => {
-    expect(issueCodes({ ...draft, userId: '  ' })).toEqual(['UserId.Invalid']);
+  it('should send no phone number when the field is blank', () => {
+    expect(createTrainerDraft({ ...draft, phoneNumber: '   ' }).phoneNumber).toBeNull();
+  });
+
+  it('should refuse the draft when the username has characters Keycloak rejects', () => {
+    expect(issueCodes({ ...draft, username: 'jasur karimov' })).toEqual(['User.InvalidUsername']);
+  });
+
+  it('should refuse the draft when the username is empty', () => {
+    expect(issueCodes({ ...draft, username: '  ' })).toEqual(['User.InvalidUsername']);
   });
 
   it('should refuse the draft when the display name is blank', () => {

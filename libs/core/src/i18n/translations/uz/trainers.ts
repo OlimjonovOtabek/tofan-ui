@@ -60,12 +60,18 @@ export const TRAINERS_UZ = {
   },
   form: {
     header: "Trener qo'shish",
-    userId: 'Foydalanuvchi ID (Keycloak)',
-    userIdHint: "Keycloak'da shu hisobga trainer roli oldindan berilgan bo'lishi kerak.",
     displayName: "Ko'rinadigan ism",
+    username: 'Username',
+    email: 'Email',
+    phoneNumber: 'Telefon raqami (ixtiyoriy)',
+    password: 'Parol',
+    passwordHint: 'Trener trener paneliga shu username va parol bilan kiradi.',
     errors: {
-      userId: "Foydalanuvchi ID ni UUID ko'rinishida kiriting.",
-      displayName: 'Ismni kiriting.',
+      username: 'Faqat lotin harflari, raqamlar va . _ - @ belgilari, 128 tagacha.',
+      email: "To'g'ri email manzilini kiriting.",
+      phoneNumber: 'Telefon raqami 32 belgidan oshmasligi kerak.',
+      password: "Parol 8 dan 128 belgigacha bo'lishi kerak.",
+      displayName: 'Ismni kiriting, 200 belgigacha.',
     },
   },
   grant: {
