@@ -9,7 +9,10 @@ export interface GarmentResponse {
   id: string;
   token: string;
   serialNumber: string;
-  model: string;
+  dropId: string;
+  dropName: string;
+  editionNumber: number;
+  variantName: string;
   color: string;
   size: string;
   material: string;
@@ -21,16 +24,18 @@ export interface GarmentResponse {
 }
 
 export interface CreateGarmentRequest {
-  model: string;
-  color: string;
+  dropId: string;
+  variantId: string;
   size: string;
   material: string;
   manufacturedAt: string;
+  quantity: number;
 }
 
 export interface CreateGarmentResponse {
   id: string;
   serialNumber: string;
+  editionNumber: number;
   token: string;
   linkUrl: string;
 }
