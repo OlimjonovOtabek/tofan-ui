@@ -88,6 +88,10 @@ export class ExerciseFormDialog {
   });
   protected readonly videoFileId = signal<string | null>(null);
   protected readonly videoFileName = signal<string | null>(null);
+  protected readonly videoFailed = signal(false);
+  protected readonly savedVideoUrl = computed(
+    () => this.exercise()?.playableVideoUrl(this.videoFileId()) ?? null,
+  );
 
   constructor() {
     effect(() => {
@@ -143,6 +147,7 @@ export class ExerciseFormDialog {
       instructions: exercise?.instructions ?? '',
     });
     this.videoFileId.set(exercise?.videoFileId ?? null);
+    this.videoFailed.set(false);
     this.videoFileName.set(
       exercise?.hasVideo() === true
         ? this.translator.translate('exercises.form.uploadedVideo')

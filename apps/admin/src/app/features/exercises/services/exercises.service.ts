@@ -21,11 +21,12 @@ export class ExercisesService {
       ...toPagedQuery(page),
       ...toFilterQuery(filter),
     });
-    return toPage(list, toExercise);
+    return toPage(list, (response) => toExercise(response, (path) => this.apiClient.url(path)));
   }
 
   async getById(id: string): Promise<Exercise> {
-    return toExercise(await this.apiClient.get<ExerciseResponse>(exercisePath(id)));
+    const response = await this.apiClient.get<ExerciseResponse>(exercisePath(id));
+    return toExercise(response, (path) => this.apiClient.url(path));
   }
 
   create(draft: ExerciseDraft): Promise<string> {

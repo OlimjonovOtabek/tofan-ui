@@ -93,6 +93,22 @@
       ></textarea>
     </div>
 
+    @if (savedVideoUrl(); as videoUrl) {
+      @if (videoFailed()) {
+        <div class="bg-surface-100 dark:bg-surface-800 text-muted-color rounded p-4 text-center">
+          {{ 'exercises.form.videoPreviewFailed' | t }}
+        </div>
+      } @else {
+        <video
+          [src]="videoUrl"
+          controls
+          preload="metadata"
+          class="max-h-72 w-full rounded bg-black"
+          (error)="videoFailed.set(true)"
+        ></video>
+      }
+    }
+
     <app-file-upload
       category="exerciseVideo"
       [label]="'exercises.form.video' | t"

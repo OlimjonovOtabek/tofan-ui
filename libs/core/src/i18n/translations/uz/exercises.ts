@@ -29,6 +29,8 @@ export const EXERCISES_UZ = {
     instructionsPlaceholder: 'Mashq qanday bajariladi',
     video: 'Video',
     uploadedVideo: 'Yuklangan video',
+    videoPreviewFailed:
+      "Videoni yuklab bo'lmadi. Havolani yangilash uchun mashqni yopib qayta oching.",
   },
   page: {
     title: 'Mashqlar katalogi',

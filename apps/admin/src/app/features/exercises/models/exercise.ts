@@ -21,9 +21,17 @@ export class Exercise {
     readonly isActive: boolean,
     readonly instructions: string | null = null,
     readonly videoFileId: string | null = null,
+    readonly videoUrl: string | null = null,
   ) {}
 
   hasVideo(): boolean {
     return this.videoFileId !== null;
+  }
+
+  playableVideoUrl(currentVideoFileId: string | null): string | null {
+    if (currentVideoFileId === null || currentVideoFileId !== this.videoFileId) {
+      return null;
+    }
+    return this.videoUrl;
   }
 }
