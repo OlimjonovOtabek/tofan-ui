@@ -61,6 +61,7 @@ export class TrainersListPage {
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'displayName', header: this.column('trainer'), sortable: true },
+    { field: 'slug', header: this.column('slug') },
     { field: 'userId', header: this.column('userId') },
     { field: 'monthlyPrice', header: this.column('monthlyPrice'), sortable: true, width: '12rem' },
     {

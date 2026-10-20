@@ -23,7 +23,7 @@ The trainer panel (`/coach/*`) is not part of this app.
   - `DELETE /admin/trainers/{id}`: drafts only; removes the card and the Keycloak account.
   - `POST /files` (`category` avatar) through the shared `app-file-upload`: the optional photo in the
     add-trainer dialog. The trainer can replace it later in the coach panel (`PUT /coach/profile`).
-  - `GET /admin/trainers` (paging, sort); each row carries `commissionPercent`
+  - `GET /admin/trainers` (paging, sort); each row carries `commissionPercent` and `slug`
   - `POST /admin/trainers/{id}/publish`, `POST /admin/trainers/{id}/unpublish`
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`
   - `GET /admin/trainer-subscriptions` (paging, sort, `TrainerId`, `UserId`, `IsActive`)
@@ -41,6 +41,10 @@ The trainer panel (`/coach/*`) is not part of this app.
   `IdentityProvider.RoleNotFound` shows the backend's own localized `messages` as a toast. In both cases
   the dialog stays open.
 - The password field has a show/hide eye (`app-password-field`, `p-password` with `toggleMask`).
+- The list shows the trainer's `slug` in a read-only "Link" column (API v9.1). Only the trainer changes it
+  (`PUT /coach/profile`, format `^[a-z0-9]+(-[a-z0-9]+)*$`, 3 to 30 characters); `CreateTrainerRequest` and
+  `UpdateTrainerRequest` have no `slug`. It is plain text: the public page `peaktofan.com/t/<slug>` is opened by the
+  mobile app only, so the panel builds no link and has no copy button. Old accounts may show `-` until the backend fills it.
 - Row actions (`TrainerRowActions`): edit, change password and change commission on every trainer; delete only on drafts (published trainers
   must be unpublished first), with a confirm that says the Keycloak account goes too.
 - The edit dialog waits for the account (`TrainersStore.loadAccount`) and closes itself if it cannot be

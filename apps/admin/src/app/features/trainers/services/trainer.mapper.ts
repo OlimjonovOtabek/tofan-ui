@@ -18,6 +18,7 @@ export function toTrainer(response: TrainerResponse, photoUrlOf: PhotoUrlOf): Tr
     response.commissionPercent,
     response.isPublished,
     new Date(response.createdOnUtc),
+    response.slug ?? null,
   );
 }
 

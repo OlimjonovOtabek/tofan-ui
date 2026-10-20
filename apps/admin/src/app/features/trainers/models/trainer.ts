@@ -14,6 +14,7 @@ export class Trainer {
     readonly commissionPercent: number,
     readonly isPublished: boolean,
     readonly createdOn: Date,
+    readonly slug: string | null = null,
   ) {}
 
   publishState(): TrainerPublishState {

@@ -2,6 +2,7 @@ export interface TrainerResponse {
   id: string;
   userId: string;
   displayName: string;
+  slug?: string | null;
   bio: string | null;
   photoFileId: string | null;
   monthlyPrice: number;

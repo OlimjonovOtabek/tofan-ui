@@ -23,6 +23,7 @@ export const TRAINERS_EN = {
     priceMissing: 'Not set',
     columns: {
       trainer: 'Trainer',
+      slug: 'Link',
       userId: 'User ID',
       monthlyPrice: 'Monthly price',
       status: 'Status',

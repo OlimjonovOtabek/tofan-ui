@@ -23,6 +23,7 @@ export const TRAINERS_UZ = {
     priceMissing: 'Belgilanmagan',
     columns: {
       trainer: 'Trener',
+      slug: 'Havola',
       userId: 'Foydalanuvchi ID',
       monthlyPrice: 'Oylik narx',
       status: 'Holati',
