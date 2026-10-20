@@ -5,6 +5,19 @@ export function hasNoVideo(response: ExerciseResponse): boolean {
   return response.videoFileId === undefined || response.videoFileId === null;
 }
 
+export function toSignedVideoUrls(
+  responses: readonly ExerciseResponse[],
+  apiUrlOf: (path: string) => string,
+): ReadonlyMap<string, string> {
+  const urls = new Map<string, string>();
+  for (const { videoFileId, videoUrl } of responses) {
+    if (videoFileId && videoUrl) {
+      urls.set(videoFileId, apiUrlOf(videoUrl));
+    }
+  }
+  return urls;
+}
+
 export function toExerciseChoice(response: ExerciseResponse): ExerciseChoice {
   return {
     id: response.id,

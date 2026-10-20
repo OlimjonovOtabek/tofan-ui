@@ -1,5 +1,10 @@
 import { ExerciseResponse } from './exercise-video.dto';
-import { hasNoVideo, toExerciseChoice, toVideoUpdateRequest } from './exercise-video.mapper';
+import {
+  hasNoVideo,
+  toExerciseChoice,
+  toSignedVideoUrls,
+  toVideoUpdateRequest,
+} from './exercise-video.mapper';
 
 const exercise: ExerciseResponse = {
   id: '7',
@@ -48,6 +53,36 @@ describe('exercise video mapper', () => {
       isHomeExercise: false,
       instructions: null,
       videoFileId: 'file-2',
+    });
+  });
+
+  describe('toSignedVideoUrls', () => {
+    const withApiBase = (path: string): string => `/api${path}`;
+
+    it('should map each video file to its full signed url when exercises carry one', () => {
+      const urls = toSignedVideoUrls(
+        [
+          { ...exercise, videoFileId: 'f1', videoUrl: '/files/f1/content?signature=a' },
+          { ...exercise, id: '8', videoFileId: 'f2', videoUrl: '/files/f2/content?signature=b' },
+        ],
+        withApiBase,
+      );
+
+      expect(urls.get('f1')).toBe('/api/files/f1/content?signature=a');
+      expect(urls.get('f2')).toBe('/api/files/f2/content?signature=b');
+    });
+
+    it('should skip exercises without a video or without a signed url', () => {
+      const urls = toSignedVideoUrls(
+        [
+          exercise,
+          { ...exercise, videoFileId: 'f3', videoUrl: null },
+          { ...exercise, videoFileId: 'f4' },
+        ],
+        withApiBase,
+      );
+
+      expect(urls.size).toBe(0);
     });
   });
 });

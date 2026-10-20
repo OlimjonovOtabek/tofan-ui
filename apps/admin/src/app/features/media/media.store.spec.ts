@@ -20,10 +20,13 @@ describe('MediaStore', () => {
     null,
   );
 
-  let service: Pick<MediaService, 'list' | 'delete'>;
+  let service: Pick<MediaService, 'list' | 'delete' | 'contentUrl'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
   let fileUploadService: Pick<FileUploadService, 'upload'>;
-  let exerciseVideos: Pick<ExerciseVideosService, 'listWithoutVideo' | 'attachVideo'>;
+  let exerciseVideos: Pick<
+    ExerciseVideosService,
+    'listWithoutVideo' | 'attachVideo' | 'listSignedVideoUrls'
+  >;
 
   function createStore(): MediaStore {
     TestBed.configureTestingModule({
@@ -42,6 +45,7 @@ describe('MediaStore', () => {
     service = {
       list: vi.fn().mockResolvedValue({ items: [video], totalCount: 1 }),
       delete: vi.fn().mockResolvedValue(undefined),
+      contentUrl: vi.fn((id: string) => `/api/files/${id}/content`),
     };
     notifications = { success: vi.fn(), error: vi.fn() };
     fileUploadService = { upload: vi.fn().mockResolvedValue('new-file') };
@@ -52,7 +56,38 @@ describe('MediaStore', () => {
           { id: 'e1', names: { en: 'Squat', uz: 'Skvat', ru: 'Присед' }, isActive: true },
         ]),
       attachVideo: vi.fn().mockResolvedValue(undefined),
+      listSignedVideoUrls: vi.fn().mockResolvedValue(new Map<string, string>()),
     };
+  });
+
+  it('should open a video with its signed url when an exercise uses it', async () => {
+    vi.mocked(exerciseVideos.listSignedVideoUrls).mockResolvedValue(
+      new Map([['video', '/api/files/video/content?signature=x']]),
+    );
+    const store = createStore();
+
+    await store.load();
+
+    expect(store.contentUrl(video)).toBe('/api/files/video/content?signature=x');
+  });
+
+  it('should fall back to the plain content url when no exercise uses the video', async () => {
+    const store = createStore();
+
+    await store.load();
+
+    expect(store.contentUrl(video)).toBe('/api/files/video/content');
+  });
+
+  it('should still list the files and use plain urls when the exercise catalog cannot be read', async () => {
+    vi.mocked(exerciseVideos.listSignedVideoUrls).mockRejectedValue(new Error('offline'));
+    const store = createStore();
+
+    await store.load();
+
+    expect(store.files()).toEqual([video]);
+    expect(store.loadError()).toBeNull();
+    expect(store.contentUrl(video)).toBe('/api/files/video/content');
   });
 
   it('should expose the error and drop the old rows when a reload fails', async () => {
