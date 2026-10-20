@@ -30,6 +30,8 @@ npm start             # admin via Nx; local backend proxy
 npm run start:staging # admin via Nx; staging backend proxy
 npm run start:coach   # coach via Nx; local backend proxy
 npm run start:coach:staging # coach via Nx; staging backend proxy
+npm run start:prod    # admin via Nx; api.peaktofan.com proxy (API v9.1)
+npm run start:coach:prod # coach via Nx; api.peaktofan.com proxy (API v9.1)
 npm run build         # admin production build
 npm run build:coach   # coach production build
 npm test              # admin Vitest suite
@@ -44,9 +46,12 @@ npx ng g component apps/admin/src/app/features/<feature>/components/<name>
 After every task: run `lint`, `test`, `test:coach`, `build` and `build:coach`. Fix what you broke. Never disable a rule to make it pass.
 There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
 `http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
-forwards to the real staging API `https://api.157.90.117.20.sslip.io`. Signing in needs a
-Keycloak account with the realm role `admin`. Contract source: the staging Swagger
-(`https://api.157.90.117.20.sslip.io/swagger/v1/swagger.json`).
+forwards to the old staging API `https://api.157.90.117.20.sslip.io` (API v8.9, becomes the stage server
+after the release). `npm run start:prod` uses `proxy.prod.conf.json`, which forwards to
+`https://api.peaktofan.com` (API v9.1, with `ws: true` for SignalR). Until the release day it is a copy of
+production data that is re-copied on release day; after the release it is production, so never create test
+data there. Signing in needs a Keycloak account with the realm role `admin`. Contract source: the Swagger of
+`api.peaktofan.com` (`https://api.peaktofan.com/swagger/v1/swagger.json`).
 
 Admin features live in `apps/admin/src/app/features`; Coach features live in `apps/coach/src/app/features`
 (same `pages/`, `components/`, `models/`, `services/` layout; coach-only shared code in `apps/coach/src/app/core`).
@@ -199,7 +204,7 @@ Stores `.store.ts`, services `.service.ts`, DTOs `.dto.ts`, mappers `.mapper.ts`
 ## 7. Backend integration
 
 - Backend owns business rules. The admin panel validates for UX, never as the only guard.
-- No OpenAPI client generation. DTOs are hand-written from the staging Swagger and called through
+- No OpenAPI client generation. DTOs are hand-written from the `api.peaktofan.com` Swagger and called through
   `core/http/ApiClient` (`get`, `post`, `put`, `delete`) in `features/<x>/services/`.
   The panel uses a handful of endpoints; a generator is not worth it.
 - No use-case classes and no repository abstractions. A store calls the service directly and

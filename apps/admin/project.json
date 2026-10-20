@@ -15,6 +15,7 @@
       "options": { "command": "ng serve admin" },
       "configurations": {
         "staging": { "command": "ng serve admin --configuration=staging" },
+        "prod": { "command": "ng serve admin --configuration=prod" },
         "production": { "command": "ng serve admin --configuration=production" }
       },
       "cache": false

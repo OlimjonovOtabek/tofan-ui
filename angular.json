@@ -83,6 +83,10 @@
             "staging": {
               "buildTarget": "admin:build:development",
               "proxyConfig": "proxy.staging.conf.json"
+            },
+            "prod": {
+              "buildTarget": "admin:build:development",
+              "proxyConfig": "proxy.prod.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -173,6 +177,10 @@
             "staging": {
               "buildTarget": "coach:build:development",
               "proxyConfig": "proxy.staging.conf.json"
+            },
+            "prod": {
+              "buildTarget": "coach:build:development",
+              "proxyConfig": "proxy.prod.conf.json"
             }
           },
           "defaultConfiguration": "development"

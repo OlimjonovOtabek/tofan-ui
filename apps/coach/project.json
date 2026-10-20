@@ -15,6 +15,7 @@
       "options": { "command": "ng serve coach" },
       "configurations": {
         "staging": { "command": "ng serve coach --configuration=staging" },
+        "prod": { "command": "ng serve coach --configuration=prod" },
         "production": { "command": "ng serve coach --configuration=production" }
       },
       "cache": false

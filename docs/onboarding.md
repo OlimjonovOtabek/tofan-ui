@@ -21,7 +21,9 @@ npm run start:coach:staging # Coach: http://localhost:4300, staging API
 
 Admin runs at `http://localhost:4200`; Coach runs at `http://localhost:4300`. To run both at once,
 start each command in a separate terminal. Both apps proxy `/api` to the staging API through
-`proxy.staging.conf.json`. For local backend development, use `npm start` and `npm run start:coach`.
+`proxy.staging.conf.json`. To work against API v9.1 use `npm run start:prod` and `npm run start:coach:prod`
+(`proxy.prod.conf.json`, `https://api.peaktofan.com`); after the release that server is production, so never
+create test data there. For local backend development, use `npm start` and `npm run start:coach`.
 
 There is no mock backend. Admin requires the `admin` role. Coach requires the `trainer` role and an
 existing trainer card. After changes run lint, both app test targets and both app builds.
