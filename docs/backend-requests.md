@@ -234,6 +234,39 @@ keyin admin CRUD: `GET/POST/PUT/DELETE /admin/workout-plan-templates`, `/activat
 
 ---
 
+## P1 - `GET /files` javobida `contentUrl` (video himoyasi uchun)
+
+Yangilangan: 2026-10-21, API `v9.1` bo'yicha.
+
+Backend video himoyasini yoqganda `/files/{id}/content` imzosiz ochilmay qoladi (`400 StoredFile.LinkInvalid`).
+Hozir imzoli havola (`videoUrl`) faqat mashq, namuna video va reja endpoint'larida bor.
+`StoredFileResponse` da yo'q: `id, category, originalName, extension, contentType, size, caption, createdOnUtc`.
+
+Admin media sahifasi `GET /files` ro'yxatini ko'rsatadi.
+Mashqqa bog'langan video'larni `GET /exercises` dagi `videoUrl` bilan ochamiz.
+Hech qaysi mashqqa bog'lanmagan video uchun imzoli havola olishning yo'li yo'q.
+Himoya yoqilgach bunday video'ni ko'rib ham, yuklab ham bo'lmaydi.
+
+So'rov: `GET /files` va `GET /files/{id}` javobidagi har faylga `contentUrl` qo'shish.
+
+```jsonc
+{
+  "id": "8a0…", "category": 1, "originalName": "squat.mp4", "contentType": "video/mp4",
+  "contentUrl": "/files/8a0…/content?expires=…&signature=…"
+}
+```
+
+- Video (`category = 1`) uchun `contentUrl` imzoli, `videoUrl` bilan bir xil qoidada: kamida 6 soat yashaydi, `Authorization` siz ochiladi.
+- Rasm uchun oddiy `/files/{id}/content` (rasmlar ochiq).
+- Maydon nisbiy yo'l, panel uni `/api` bilan birlashtiradi.
+- Mavjud maydonlar o'zgarmaydi, shuning uchun eski klientlar buzilmaydi.
+
+Panelda: media sahifasi bog'lanmagan video uchun `videoUrl` o'rniga shu maydonni ishlatadi.
+`contentUrl` kelguncha bunday video'lar eski havola bilan ochiladi va himoya yoqilgach `previewFailed` holati ko'rinadi.
+Batafsil: [modules/media.md](modules/media.md).
+
+---
+
 ## Keyingi bosqich (backend modullari yozilgach)
 
 Shop, Payment, Gamification, Trainer, AI modullari hozir bo'sh. Ular yozilayotganda har biriga

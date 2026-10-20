@@ -47,3 +47,7 @@ no longer needed.
   `videoFileId`, and the exercise form can still replace a video.
 - Only exercise videos are guarded by the backend today; other owners (food images, avatars) are
   not checked yet.
+- Video protection (backend API v9.1): once it is on, `/files/{id}/content` of a video needs a signed link.
+  Only `videoUrl` from `GET /exercises` is signed, so a video that no exercise uses cannot be previewed or
+  downloaded until the backend adds `contentUrl` to `GET /files`; the request is in
+  [backend-requests.md](../backend-requests.md).
