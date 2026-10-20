@@ -63,6 +63,8 @@ export const ERRORS_RU: Dictionary['errors'] = {
       PriceNotSet: 'Тренер ещё не указал цену. Сначала тренер должен задать цену в своём профиле.',
       NotFound: 'Тренер не найден.',
       DisplayNameEmpty: 'Имя тренера обязательно.',
+      InvalidCommissionPercent:
+        'Комиссия должна быть от 0 до 100, не более 2 знаков после запятой.',
     },
     TrainerSubscription: {
       OtherTrainerActive:

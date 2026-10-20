@@ -30,6 +30,7 @@ const trainer = new Trainer(
   null,
   null,
   450000,
+  5,
   true,
   new Date('2026-10-02T09:00:00Z'),
 );

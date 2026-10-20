@@ -19,12 +19,14 @@ export const TRAINERS_RU = {
     empty: 'Тренеров пока нет.',
     add: 'Добавить тренера',
     price: '{amount} сум',
+    commission: '{percent}%',
     priceMissing: 'Не задана',
     columns: {
       trainer: 'Тренер',
       userId: 'ID пользователя',
       monthlyPrice: 'Цена в месяц',
       status: 'Статус',
+      commissionPercent: 'Комиссия',
       createdOn: 'Создан',
     },
     actions: {
@@ -33,6 +35,7 @@ export const TRAINERS_RU = {
       unpublish: 'Снять с публикации',
       edit: 'Редактировать',
       password: 'Сменить пароль',
+      commission: 'Изменить комиссию',
       delete: 'Удалить',
     },
     deleteWarning: 'Карточка тренера и его аккаунт в Keycloak будут удалены навсегда.',
@@ -100,6 +103,15 @@ export const TRAINERS_RU = {
     label: 'Новый пароль',
     hint: 'При следующем входе тренер использует этот пароль. Сообщите его тренеру сами.',
   },
+  commission: {
+    header: 'Комиссия «{name}»',
+    label: 'Комиссия платформы',
+    suffix: '%',
+    hint: 'От 0 до 100, не более 2 знаков после запятой (например, 7,5).',
+    futureOnly:
+      'Новый процент применяется только к следующим платежам. Прошлые платежи не меняются.',
+    error: 'Введите число от 0 до 100, не более 2 знаков после запятой.',
+  },
   grant: {
     header: 'Выдать подписку',
     save: 'Выдать подписку',
@@ -127,6 +139,7 @@ export const TRAINERS_RU = {
     ended: 'Подписка на тренера «{name}» завершена.',
     updated: 'Тренер «{name}» сохранён.',
     passwordChanged: 'Для «{name}» установлен новый пароль.',
+    commissionChanged: 'Комиссия «{name}» изменена.',
     deleted: 'Тренер «{name}» удалён.',
   },
 };

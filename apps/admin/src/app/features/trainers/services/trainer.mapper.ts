@@ -15,6 +15,7 @@ export function toTrainer(response: TrainerResponse, photoUrlOf: PhotoUrlOf): Tr
     photoFileId,
     photoFileId === null ? null : photoUrlOf(photoFileId),
     response.monthlyPrice,
+    response.commissionPercent,
     response.isPublished,
     new Date(response.createdOnUtc),
   );

@@ -8,6 +8,7 @@ const response: TrainerResponse = {
   bio: 'Kuch mashqlari',
   photoFileId: 'f1',
   monthlyPrice: 450000,
+  commissionPercent: 7.5,
   isPublished: true,
   createdOnUtc: '2026-10-02T09:00:00Z',
 };
@@ -24,6 +25,7 @@ describe('toTrainer', () => {
     expect(trainer.bio).toBe('Kuch mashqlari');
     expect(trainer.photoUrl).toBe('https://api.example/files/f1/content');
     expect(trainer.monthlyPrice).toBe(450000);
+    expect(trainer.commissionPercent).toBe(7.5);
     expect(trainer.isPublished).toBe(true);
     expect(trainer.createdOn).toEqual(new Date('2026-10-02T09:00:00Z'));
   });

@@ -17,10 +17,13 @@ The trainer panel (`/coach/*`) is not part of this app.
   - `GET /admin/users/{userId}`: only to fill the username, email and phone in the edit dialog, through
     `TrainerAccountsService` with its own DTO, never the accounts feature.
   - `PUT /admin/trainers/{id}/password` (`password` 8–128)
+  - `PUT /admin/trainers/{id}/commission` (`commissionPercent` 0–100, at most 2 decimals): the platform's
+    share of the trainer's subscription payments, 5% by default. The percent is written to each payment
+    when it is created, so a change applies only to later payments; the dialog says so.
   - `DELETE /admin/trainers/{id}`: drafts only; removes the card and the Keycloak account.
   - `POST /files` (`category` avatar) through the shared `app-file-upload`: the optional photo in the
     add-trainer dialog. The trainer can replace it later in the coach panel (`PUT /coach/profile`).
-  - `GET /admin/trainers` (paging, sort)
+  - `GET /admin/trainers` (paging, sort); each row carries `commissionPercent`
   - `POST /admin/trainers/{id}/publish`, `POST /admin/trainers/{id}/unpublish`
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`
   - `GET /admin/trainer-subscriptions` (paging, sort, `TrainerId`, `UserId`, `IsActive`)
@@ -31,14 +34,14 @@ The trainer panel (`/coach/*`) is not part of this app.
   `Trainer.PublishedCannotBeDeleted`, `Trainer.HasSubscriptions` (backend `messages`, toast),
   `TrainerSubscription.OtherTrainerActive`,
   `WorkoutPlan.TrainerProgramMissing`, `MealPlan.TrainerProgramMissing`; client side:
-  `Trainer.DisplayNameEmpty`, `User.InvalidUsername`, `TrainerSubscription.MonthsOutOfRange`, `UserId.Invalid`.
+  `Trainer.DisplayNameEmpty`, `Trainer.InvalidCommissionPercent`, `User.InvalidUsername`, `TrainerSubscription.MonthsOutOfRange`, `UserId.Invalid`.
   `User.UsernameTaken` and `User.EmailTaken` show under the username or email field, not as a toast:
   `TrainersStore.takenAccount` keeps the refused value and the form schema marks the field invalid while
   it still holds that value (case and spaces ignored), so the same name cannot be sent twice.
   `IdentityProvider.RoleNotFound` shows the backend's own localized `messages` as a toast. In both cases
   the dialog stays open.
 - The password field has a show/hide eye (`app-password-field`, `p-password` with `toggleMask`).
-- Row actions: edit and change password on every trainer; delete only on drafts (published trainers
+- Row actions (`TrainerRowActions`): edit, change password and change commission on every trainer; delete only on drafts (published trainers
   must be unpublished first), with a confirm that says the Keycloak account goes too.
 - The edit dialog waits for the account (`TrainersStore.loadAccount`) and closes itself if it cannot be
   read. Email, phone, name and bio rules are shared with the add dialog through `trainer-field.rules.ts`.
@@ -72,6 +75,10 @@ The trainer panel (`/coach/*`) is not part of this app.
 ## Traps
 - There is no endpoint to read one trainer, so there is no detail page.
 - Valid `SortField` values for subscriptions are not documented in Swagger; the table sorts by
-  `startsOnUtc` and `endsOnUtc` (sent as `starts_on_utc`, `ends_on_utc`); the trainers table sorts by `displayName`, `monthlyPrice` and `createdOnUtc`. Confirm with the backend.
+  `startsOnUtc` and `endsOnUtc` (sent as `starts_on_utc`, `ends_on_utc`); the trainers table sorts by `displayName`, `monthlyPrice`, `commissionPercent` (`commission_percent`) and `createdOnUtc`. Confirm with the backend.
 - The maximum `Rows` of `GET /admin/trainers` is unknown; options for the filter and dialog use 100.
+- The backend answers a bad commission with a plain `400`; its code is not documented, so the dialog and
+  `requireCommissionPercent` check the range and the two decimals first and send only valid values.
+- `GET /admin/payment-orders` also returns `commissionPercent` per order, but the panel has no payment
+  orders screen yet.
 - A trainer without a price stays a draft: only the trainer can set the price (`PUT /coach/profile`).
