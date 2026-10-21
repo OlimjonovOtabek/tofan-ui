@@ -5,7 +5,12 @@ import { toPagedQuery } from '@core/http/paging.mapper';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { ExerciseChoice } from '../models/exercise-choice';
 import { ExerciseResponse } from './exercise-video.dto';
-import { hasNoVideo, toExerciseChoice, toVideoUpdateRequest } from './exercise-video.mapper';
+import {
+  hasNoVideo,
+  toExerciseChoice,
+  toSignedVideoUrls,
+  toVideoUpdateRequest,
+} from './exercise-video.mapper';
 
 const EXERCISES = '/exercises';
 const BATCH_SIZE = 1000;
@@ -16,16 +21,13 @@ export class ExerciseVideosService {
   private readonly apiClient = inject(ApiClient);
 
   async listWithoutVideo(): Promise<ExerciseChoice[]> {
-    const choices: ExerciseChoice[] = [];
-    for (let first = 0; ; first += BATCH_SIZE) {
-      const page = await this.apiClient.get<PagedList<ExerciseResponse>>(EXERCISES, {
-        ...toPagedQuery({ first, rows: BATCH_SIZE, sortField: 'nameUz', sortDirection: 'asc' }),
-      });
-      choices.push(...page.data.filter(hasNoVideo).map(toExerciseChoice));
-      if (page.data.length === 0 || first + BATCH_SIZE >= page.totalCount) {
-        return choices;
-      }
-    }
+    const exercises = await this.readCatalog();
+    return exercises.filter(hasNoVideo).map(toExerciseChoice);
+  }
+
+  async listSignedVideoUrls(): Promise<ReadonlyMap<string, string>> {
+    const exercises = await this.readCatalog();
+    return toSignedVideoUrls(exercises, (path) => this.apiClient.url(path));
   }
 
   async attachVideo(exerciseId: string, videoFileId: string): Promise<void> {
@@ -35,5 +37,18 @@ export class ExerciseVideosService {
       throw new ConflictError('The exercise already has a video.', VIDEO_ALREADY_ATTACHED);
     }
     await this.apiClient.put(path, toVideoUpdateRequest(exercise, videoFileId));
+  }
+
+  private async readCatalog(): Promise<ExerciseResponse[]> {
+    const exercises: ExerciseResponse[] = [];
+    for (let first = 0; ; first += BATCH_SIZE) {
+      const page = await this.apiClient.get<PagedList<ExerciseResponse>>(EXERCISES, {
+        ...toPagedQuery({ first, rows: BATCH_SIZE, sortField: 'nameUz', sortDirection: 'asc' }),
+      });
+      exercises.push(...page.data);
+      if (page.data.length === 0 || first + BATCH_SIZE >= page.totalCount) {
+        return exercises;
+      }
+    }
   }
 }

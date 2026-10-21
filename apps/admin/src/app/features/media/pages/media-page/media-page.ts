@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { PageRequest } from '@shared/models/page';
 import { StoredFile } from '../../models/stored-file';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { ClipboardService } from '@core/feedback/clipboard.service';
@@ -19,7 +20,7 @@ import { Translator } from '@core/i18n/translator';
 
 @Component({
   selector: 'app-media-page',
-  imports: [DataTable, Button, Dialog, MediaUploadDialog, TranslatePipe],
+  imports: [CatalogHeader, DataTable, Button, Dialog, MediaUploadDialog, TranslatePipe],
   providers: [MediaStore],
   templateUrl: './media-page.html',
 })

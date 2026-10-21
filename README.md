@@ -23,6 +23,8 @@ Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 | `npm run start:staging` | Dev server, `/api` stend backend'iga uzatiladi                           |
 | `npm run start:coach`   | Coach dev server (`http://localhost:4300`), local backend proxy        |
 | `npm run start:coach:staging` | Coach dev server (`http://localhost:4300`), staging API proxy     |
+| `npm run start:prod`    | Dev server, `/api` `api.peaktofan.com` (API v9.1) ga uzatiladi           |
+| `npm run start:coach:prod` | Coach dev server (`http://localhost:4300`), `api.peaktofan.com` proxy |
 | `npm run build`         | Production build (`dist/tofan-ui/browser`)                               |
 | `npm run build:coach`   | Coach build (`dist/coach/browser`)                                      |
 | `npm test`              | Unit testlar (Vitest)                                                    |
@@ -167,7 +169,10 @@ ishlatiladi. Hajm va kengaytma cheklovlari backend qoidalari bilan bir xil
 
 Dev serverda `/api` `proxy.conf.json` orqali backend'ga uzatiladi (`http://localhost:5179`,
 prefiks olib tashlanadi). Shu sabab brauzerda CORS muammosi yo'q. Stendga ulanish uchun
-`npm run start:staging` ishlating (`proxy.staging.conf.json`, `https://api.157.90.117.20.sslip.io`).
+`npm run start:staging` ishlating (`proxy.staging.conf.json`, `https://api.157.90.117.20.sslip.io`, API v8.9).
+API v9.1 bilan ishlash uchun `npm run start:prod` / `npm run start:coach:prod` (`proxy.prod.conf.json`,
+`https://api.peaktofan.com`). Reliz kunigacha u prod ma'lumotining nusxasi, relizdan keyin esa haqiqiy prod,
+shuning uchun unda sinov ma'lumoti yaratmang.
 
 ## Deploy
 

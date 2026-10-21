@@ -1,18 +1,13 @@
-<div class="card">
-  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-        {{ 'notifications.templates.title' | t }}
-      </h1>
-      <span class="text-muted-color text-sm">
-        {{
-          'notifications.templates.total'
-            | t: { count: store.loadError() === null ? store.totalCount() : '—' }
-        }}
-      </span>
-    </div>
+<div class="card catalog-page">
+  <app-catalog-header
+    [title]="'notifications.templates.title' | t"
+    [subtitle]="
+      'notifications.templates.total'
+        | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+    "
+  >
     <p-button [label]="'notifications.templates.add' | t" icon="pi pi-plus" (onClick)="add()" />
-  </div>
+  </app-catalog-header>
 
   <app-data-table
     [columns]="columns()"

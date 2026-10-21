@@ -1,12 +1,10 @@
-<div class="card">
-  <div class="mb-4">
-    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-      {{ 'userSessions.title' | t }}
-    </h1>
-    <span class="text-muted-color text-sm">{{
+<div class="card catalog-page">
+  <app-catalog-header
+    [title]="'userSessions.title' | t"
+    [subtitle]="
       'userSessions.total' | t: { count: store.loadError() === null ? store.totalCount() : '—' }
-    }}</span>
-  </div>
+    "
+  />
 
   @if (store.userId(); as userId) {
     <div

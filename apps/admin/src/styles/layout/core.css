@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html {
   height: 100%;
   font-size: 14px;
@@ -5,9 +9,10 @@ html {
 }
 
 body {
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-family: 'Figtree', sans-serif;
   color: var(--text-color);
-  background-color: var(--surface-ground);
+  background: var(--surface-ground);
+  background-attachment: fixed;
   margin: 0;
   padding: 0;
   min-height: 100%;
@@ -17,8 +22,4 @@ body {
 
 a {
   text-decoration: none;
-}
-
-.layout-wrapper {
-  min-height: 100vh;
 }

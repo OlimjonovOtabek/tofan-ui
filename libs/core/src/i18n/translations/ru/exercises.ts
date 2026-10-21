@@ -31,6 +31,8 @@ export const EXERCISES_RU: Dictionary['exercises'] = {
     instructionsPlaceholder: 'Как выполнять упражнение',
     video: 'Видео',
     uploadedVideo: 'Загруженное видео',
+    videoPreviewFailed:
+      'Не удалось загрузить видео. Закройте и снова откройте упражнение, чтобы обновить ссылку.',
   },
   page: {
     title: 'Каталог упражнений',

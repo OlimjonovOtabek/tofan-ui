@@ -1,16 +1,12 @@
-<div class="card">
-  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-        {{ 'foods.page.title' | t }}
-      </h1>
-      <span class="text-muted-color text-sm">{{
-        'foods.page.totalCount'
-          | t: { count: store.loadError() === null ? store.totalCount() : '?' }
-      }}</span>
-    </div>
+<div class="card catalog-page">
+  <app-catalog-header
+    [title]="'foods.page.title' | t"
+    [subtitle]="
+      'foods.page.totalCount' | t: { count: store.loadError() === null ? store.totalCount() : '?' }
+    "
+  >
     <p-button [label]="'foods.page.add' | t" icon="pi pi-plus" (onClick)="add()" />
-  </div>
+  </app-catalog-header>
 
   <div class="mb-4 flex flex-wrap items-end gap-3">
     <app-food-filters (filterChange)="applyFilter($event)" />

@@ -7,12 +7,11 @@ import { SidebarMenuItem } from '@core/layout/components/sidebar-menu-item/sideb
   imports: [SidebarMenuItem],
   template: `
     <ul class="layout-menu">
-      @for (item of items; track item.label) {
-        @if (item.separator) {
+      @for (item of items; track item.label; let first = $first) {
+        @if (!first) {
           <li class="menu-separator"></li>
-        } @else {
-          <li app-sidebar-menu-item [item]="item" [root]="true"></li>
         }
+        <li app-sidebar-menu-item [item]="item" [root]="true"></li>
       }
     </ul>
   `,

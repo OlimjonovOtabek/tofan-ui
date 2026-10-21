@@ -23,6 +23,7 @@ const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
   selector: 'app-data-table',
   imports: [TableModule, NgTemplateOutlet, Button, TranslatePipe, MessagePipe],
   templateUrl: './data-table.html',
+  host: { class: 'catalog-table-host' },
 })
 export class DataTable<TItem> {
   readonly columns = input.required<readonly DataTableColumn[]>();

@@ -1,4 +1,7 @@
 <p-table
+  class="catalog-table"
+  [scrollable]="true"
+  scrollHeight="flex"
   [value]="value()"
   [lazy]="true"
   [loading]="loading()"
@@ -19,6 +22,7 @@
     <tr>
       @for (column of columns(); track column.field) {
         <th
+          class="whitespace-nowrap"
           [style.width]="column.width"
           [pSortableColumn]="column.sortable ? column.field : ''"
           [pSortableColumnDisabled]="!column.sortable"

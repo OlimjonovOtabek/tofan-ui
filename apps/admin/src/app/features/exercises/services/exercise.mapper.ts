@@ -9,7 +9,9 @@ import {
 } from '@shared/models/exercise-attributes.dto';
 import { CreateExerciseRequest, ExerciseResponse } from './exercise.dto';
 
-export function toExercise(response: ExerciseResponse): Exercise {
+export type ApiUrlOf = (path: string) => string;
+
+export function toExercise(response: ExerciseResponse, apiUrlOf: ApiUrlOf): Exercise {
   return new Exercise(
     response.id,
     { en: response.name, uz: response.nameUz, ru: response.nameRu },
@@ -23,6 +25,7 @@ export function toExercise(response: ExerciseResponse): Exercise {
     response.isActive,
     response.instructions ?? null,
     response.videoFileId ?? null,
+    response.videoUrl ? apiUrlOf(response.videoUrl) : null,
   );
 }
 

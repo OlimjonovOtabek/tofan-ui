@@ -15,6 +15,7 @@ import { InputNumber } from '@openng/optimus-ui/inputnumber';
       [showButtons]="showButtons()"
       [suffix]="suffix()"
       [useGrouping]="useGrouping()"
+      [maxFractionDigits]="maxFractionDigits()"
       [placeholder]="placeholder()"
       [fluid]="fluid()"
       [disabled]="disabled()"
@@ -36,6 +37,7 @@ export class NumberField implements FormValueControl<number | null> {
   readonly showButtons = input(false);
   readonly suffix = input('');
   readonly useGrouping = input(true);
+  readonly maxFractionDigits = input<number | undefined>(undefined);
   readonly placeholder = input('');
   readonly fluid = input(false);
 }

@@ -5,9 +5,11 @@ const response: TrainerResponse = {
   id: 't1',
   userId: 'u1',
   displayName: 'Jasur Karimov',
+  slug: 'jasur-karimov',
   bio: 'Kuch mashqlari',
   photoFileId: 'f1',
   monthlyPrice: 450000,
+  commissionPercent: 7.5,
   isPublished: true,
   createdOnUtc: '2026-10-02T09:00:00Z',
 };
@@ -21,11 +23,19 @@ describe('toTrainer', () => {
     expect(trainer.id).toBe('t1');
     expect(trainer.userId).toBe('u1');
     expect(trainer.displayName).toBe('Jasur Karimov');
+    expect(trainer.slug).toBe('jasur-karimov');
     expect(trainer.bio).toBe('Kuch mashqlari');
     expect(trainer.photoUrl).toBe('https://api.example/files/f1/content');
     expect(trainer.monthlyPrice).toBe(450000);
+    expect(trainer.commissionPercent).toBe(7.5);
     expect(trainer.isPublished).toBe(true);
     expect(trainer.createdOn).toEqual(new Date('2026-10-02T09:00:00Z'));
+  });
+
+  it('should leave the commission empty when the backend omits it', () => {
+    expect(
+      toTrainer({ ...response, commissionPercent: undefined }, photoUrlOf).commissionPercent,
+    ).toBeNull();
   });
 
   it('should leave the photo and the bio empty when the backend sends null', () => {
@@ -34,6 +44,11 @@ describe('toTrainer', () => {
     expect(trainer.bio).toBeNull();
     expect(trainer.photoFileId).toBeNull();
     expect(trainer.photoUrl).toBeNull();
+  });
+
+  it('should leave the slug empty when the backend sends none', () => {
+    expect(toTrainer({ ...response, slug: undefined }, photoUrlOf).slug).toBeNull();
+    expect(toTrainer({ ...response, slug: null }, photoUrlOf).slug).toBeNull();
   });
 
   it('should keep the photo file id next to its url when the trainer has a photo', () => {

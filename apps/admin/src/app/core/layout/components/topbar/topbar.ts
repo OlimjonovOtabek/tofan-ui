@@ -5,6 +5,7 @@ import { AppPaths } from '@core/config/app-paths';
 import { Logo } from '@shared/components/logo/logo';
 import { MenuItem } from '@openng/optimus-ui/api';
 import { Menu } from '@openng/optimus-ui/menu';
+import { Breadcrumb } from '@core/layout/components/breadcrumb/breadcrumb';
 import { LayoutService } from '@core/layout/layout.service';
 import { ThemeSwitcher } from '@core/layout/components/theme-switcher/theme-switcher';
 import { LanguageSwitcher } from '@core/layout/components/language-switcher/language-switcher';
@@ -13,7 +14,7 @@ import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-topbar',
-  imports: [RouterLink, Menu, Logo, ThemeSwitcher, LanguageSwitcher, TranslatePipe],
+  imports: [RouterLink, Menu, Logo, Breadcrumb, ThemeSwitcher, LanguageSwitcher, TranslatePipe],
   templateUrl: './topbar.html',
 })
 export class Topbar {
