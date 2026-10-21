@@ -6,6 +6,7 @@ import { TranslationKey } from '@core/i18n/dictionary';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { PageRequest } from '@shared/models/page';
 import { SoldierFilters } from '../../components/soldier-filters/soldier-filters';
@@ -22,7 +23,7 @@ import { SoldiersStore } from '../../soldiers.store';
 
 @Component({
   selector: 'app-soldiers-page',
-  imports: [DataTable, SoldierFilters, RouterLink, TranslatePipe],
+  imports: [CatalogHeader, DataTable, SoldierFilters, RouterLink, TranslatePipe],
   providers: [SoldiersStore],
   templateUrl: './soldiers-page.html',
 })

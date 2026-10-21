@@ -6,6 +6,7 @@ import { FoodFilter } from '../../models/food-filter';
 import { PageRequest } from '@shared/models/page';
 import { FOOD_SOURCE_LABELS, SERVING_UNIT_LABELS } from '../../models/food-labels';
 import { FoodsStore } from '../../foods.store';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { NotificationService } from '@core/feedback/notification.service';
@@ -23,6 +24,7 @@ import { LocaleStore } from '@core/i18n/locale.store';
   selector: 'app-foods-page',
   imports: [
     ReactiveFormsModule,
+    CatalogHeader,
     DataTable,
     FoodFilters,
     FoodFormDialog,
