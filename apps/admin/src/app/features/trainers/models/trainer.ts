@@ -11,7 +11,7 @@ export class Trainer {
     readonly photoFileId: string | null,
     readonly photoUrl: string | null,
     readonly monthlyPrice: number,
-    readonly commissionPercent: number,
+    readonly commissionPercent: number | null,
     readonly isPublished: boolean,
     readonly createdOn: Date,
     readonly slug: string | null = null,

@@ -32,6 +32,12 @@ describe('toTrainer', () => {
     expect(trainer.createdOn).toEqual(new Date('2026-10-02T09:00:00Z'));
   });
 
+  it('should leave the commission empty when the backend omits it', () => {
+    expect(
+      toTrainer({ ...response, commissionPercent: undefined }, photoUrlOf).commissionPercent,
+    ).toBeNull();
+  });
+
   it('should leave the photo and the bio empty when the backend sends null', () => {
     const trainer = toTrainer({ ...response, bio: null, photoFileId: null }, photoUrlOf);
 
