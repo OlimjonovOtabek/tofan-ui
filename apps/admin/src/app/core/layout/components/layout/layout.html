@@ -1,11 +1,13 @@
 <div class="layout-wrapper" [class]="containerClass()">
-  <app-topbar />
   <app-sidebar />
-  <div class="layout-main-container">
-    <main class="layout-main">
-      <router-outlet />
-    </main>
-    <app-footer />
+  <div class="layout-content-wrapper">
+    <div class="layout-content-wrapper-inside">
+      <app-topbar />
+      <main class="layout-content">
+        <router-outlet />
+      </main>
+      <app-footer />
+    </div>
   </div>
   <div class="layout-mask"></div>
 </div>
