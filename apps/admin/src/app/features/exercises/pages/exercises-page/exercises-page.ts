@@ -9,6 +9,7 @@ import {
   MUSCLE_GROUP_LABELS,
 } from '@shared/models/exercise-attribute-labels';
 import { ExercisesStore } from '../../exercises.store';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { Button } from '@openng/optimus-ui/button';
@@ -22,7 +23,15 @@ import { TranslatePipe } from '@core/i18n/translate.pipe';
 
 @Component({
   selector: 'app-exercises-page',
-  imports: [DataTable, ExerciseFilters, ExerciseFormDialog, Button, Tag, TranslatePipe],
+  imports: [
+    CatalogHeader,
+    DataTable,
+    ExerciseFilters,
+    ExerciseFormDialog,
+    Button,
+    Tag,
+    TranslatePipe,
+  ],
   providers: [ExercisesStore],
   templateUrl: './exercises-page.html',
 })

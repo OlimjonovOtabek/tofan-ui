@@ -9,6 +9,7 @@ import { NotificationTemplateDraft } from '../../models/notification-template-dr
 import { PageRequest } from '@shared/models/page';
 import { NOTIFICATION_TYPE_LABELS, TRAINER_STYLE_LABELS } from '../../models/notification-labels';
 import { NotificationTemplatesStore } from '../../notification-templates.store';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { Button } from '@openng/optimus-ui/button';
@@ -17,7 +18,7 @@ import { NotificationTemplateFormDialog } from '../../components/notification-te
 
 @Component({
   selector: 'app-notification-templates-page',
-  imports: [DataTable, NotificationTemplateFormDialog, Button, Tag, TranslatePipe],
+  imports: [CatalogHeader, DataTable, NotificationTemplateFormDialog, Button, Tag, TranslatePipe],
   providers: [NotificationTemplatesStore],
   templateUrl: './notification-templates-page.html',
 })

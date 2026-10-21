@@ -4,6 +4,7 @@ import { PageRequest } from '@shared/models/page';
 import { isUuid } from '@shared/utils/identifiers';
 import { UserSession, UserSessionStatus } from '../../models/user-session';
 import { AppPaths } from '@core/config/app-paths';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { ClipboardService } from '@core/feedback/clipboard.service';
 import { UserSessionsStore } from '../../user-sessions.store';
@@ -25,7 +26,7 @@ const STATUS_VIEW: Record<UserSessionStatus, { label: TranslationKey; severity: 
 
 @Component({
   selector: 'app-user-sessions-page',
-  imports: [DataTable, RouterLink, Button, Tag, TranslatePipe],
+  imports: [CatalogHeader, DataTable, RouterLink, Button, Tag, TranslatePipe],
   providers: [UserSessionsStore],
   templateUrl: './user-sessions-page.html',
 })

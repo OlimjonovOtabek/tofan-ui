@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
+import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { PageRequest } from '@shared/models/page';
 import { Tag } from '@openng/optimus-ui/tag';
@@ -16,7 +17,7 @@ import { AccountFilter } from '../../models/account-filter';
 
 @Component({
   selector: 'app-accounts-page',
-  imports: [DataTable, AccountFilters, RouterLink, Tag, TranslatePipe],
+  imports: [CatalogHeader, DataTable, AccountFilters, RouterLink, Tag, TranslatePipe],
   providers: [AccountsStore],
   templateUrl: './accounts-page.html',
 })
