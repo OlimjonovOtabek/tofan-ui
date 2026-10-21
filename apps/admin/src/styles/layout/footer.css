@@ -1,8 +1,25 @@
 .layout-footer {
+  height: 4rem;
+  padding: 2rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 1rem 0 1rem 0;
+  justify-content: space-between;
+}
+
+.layout-footer .footer-logo-container {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
-  border-top: 1px solid var(--surface-border);
+}
+
+.layout-footer .footer-app-name {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--app-name-color);
+}
+
+.layout-footer .footer-copyright {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
 }

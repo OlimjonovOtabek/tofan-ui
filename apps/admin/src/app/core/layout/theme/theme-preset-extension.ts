@@ -109,6 +109,29 @@ const DEFAULT_COLOR_SCHEME = {
   },
 };
 
+const SURFACE_SHADES = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+const LIGHT_SURFACE_WHITE_PERCENT = [100, 95, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
+const DARK_SURFACE_WHITE_PERCENT = [100, 95, 90, 80, 70, 60, 50, 40, 30, 20, 10, 5];
+
+function tintedSurface(base: string, whitePercent: readonly number[]): Record<number, string> {
+  return Object.fromEntries(
+    SURFACE_SHADES.map((shade, index) => [
+      shade,
+      `color-mix(in srgb, ${base}, white ${whitePercent[index]}%)`,
+    ]),
+  );
+}
+
+const TINTED_SURFACES = {
+  light: { surface: tintedSurface('{primary.900}', LIGHT_SURFACE_WHITE_PERCENT) },
+  dark: { surface: tintedSurface('var(--surface-ground)', DARK_SURFACE_WHITE_PERCENT) },
+};
+
+const OVERLAY_RADIUS = {
+  modal: { borderRadius: '1.5rem' },
+  popover: { borderRadius: '10px' },
+};
+
 export function buildPresetExtension(preset: ThemePresetName, primary: NamedPalette): Preset {
   if (primary.name === NOIR_PRIMARY) {
     return { semantic: { primary: NOIR_PRIMARY_SCALE, colorScheme: NOIR_COLOR_SCHEME } };
@@ -118,5 +141,14 @@ export function buildPresetExtension(preset: ThemePresetName, primary: NamedPale
 }
 
 function withPalette(palette: ColorPalette, colorScheme: typeof DEFAULT_COLOR_SCHEME): Preset {
-  return { semantic: { primary: palette, colorScheme } };
+  return {
+    semantic: {
+      primary: palette,
+      overlay: OVERLAY_RADIUS,
+      colorScheme: {
+        light: { ...colorScheme.light, ...TINTED_SURFACES.light },
+        dark: { ...colorScheme.dark, ...TINTED_SURFACES.dark },
+      },
+    },
+  };
 }
