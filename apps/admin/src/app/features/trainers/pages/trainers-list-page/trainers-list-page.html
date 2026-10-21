@@ -33,7 +33,7 @@
           </div>
         </div>
       </td>
-      <td class="text-muted-color font-mono text-sm">{{ trainer.slug ?? '-' }}</td>
+      <td class="text-muted-color font-mono text-sm">{{ trainer.slug ?? emptyCell }}</td>
       <td class="text-muted-color" [title]="trainer.userId">{{ shortId(trainer.userId) }}</td>
       <td>
         <span [class.text-muted-color]="!trainer.hasPrice()">{{ priceLabel(trainer) }}</span>

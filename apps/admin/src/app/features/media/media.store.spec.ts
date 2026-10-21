@@ -20,6 +20,8 @@ describe('MediaStore', () => {
     null,
   );
 
+  const image = new StoredFile('image', 'avatar', 'me.jpg', 'image/jpeg', 5, new Date(), null);
+
   let service: Pick<MediaService, 'list' | 'delete' | 'contentUrl'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
   let fileUploadService: Pick<FileUploadService, 'upload'>;
@@ -77,6 +79,17 @@ describe('MediaStore', () => {
     await store.load();
 
     expect(store.contentUrl(video)).toBe('/api/files/video/content');
+  });
+
+  it('should keep the plain content url for an image when the catalog has signed videos', async () => {
+    vi.mocked(exerciseVideos.listSignedVideoUrls).mockResolvedValue(
+      new Map([['video', '/api/files/video/content?signature=x']]),
+    );
+    const store = createStore();
+
+    await store.load();
+
+    expect(store.contentUrl(image)).toBe('/api/files/image/content');
   });
 
   it('should still list the files and use plain urls when the exercise catalog cannot be read', async () => {

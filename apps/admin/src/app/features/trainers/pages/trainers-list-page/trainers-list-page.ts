@@ -33,8 +33,6 @@ import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 
-const COMMISSION_MISSING_LABEL = '-';
-
 @Component({
   selector: 'app-trainers-list-page',
   imports: [
@@ -107,7 +105,7 @@ export class TrainersListPage {
 
   protected commissionLabel(trainer: Trainer): string {
     if (trainer.commissionPercent === null) {
-      return COMMISSION_MISSING_LABEL;
+      return this.emptyCell;
     }
     const percent = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()], {
       maximumFractionDigits: COMMISSION_PERCENT_FRACTION_DIGITS,
@@ -120,6 +118,7 @@ export class TrainersListPage {
   }
 
   protected readonly shortId = shortId;
+  protected readonly emptyCell = '-';
 
   protected add(): void {
     this.formVisible.set(true);
