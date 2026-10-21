@@ -62,6 +62,7 @@ export const ERRORS_UZ = {
         "Trener narxni hali belgilamagan. Avval trener o'z profilida narxni kiritishi kerak.",
       NotFound: 'Trener topilmadi.',
       DisplayNameEmpty: 'Trener ismi kiritilishi shart.',
+      InvalidCommissionPercent: "Komissiya 0 dan 100 gacha, ko'pi bilan 2 kasr bo'lishi kerak.",
     },
     TrainerSubscription: {
       OtherTrainerActive: 'Foydalanuvchida boshqa trenerga faol obuna bor — avval uni tugating.',

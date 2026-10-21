@@ -19,6 +19,7 @@ export class MediaStore {
 
   private readonly page = signal<Page<StoredFile>>(emptyPage<StoredFile>());
   private readonly currentRequest = signal<PageRequest>(firstPage());
+  private readonly signedVideoUrls = signal<ReadonlyMap<string, string>>(new Map());
 
   readonly files = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
@@ -37,7 +38,12 @@ export class MediaStore {
     this.loading.set(true);
     this.loadError.set(null);
     try {
-      this.page.set(await this.mediaService.list(request));
+      const [page, signedVideoUrls] = await Promise.all([
+        this.mediaService.list(request),
+        this.exerciseVideosService.listSignedVideoUrls().catch(keepPlainLinksWhenCatalogFails),
+      ]);
+      this.page.set(page);
+      this.signedVideoUrls.set(signedVideoUrls);
     } catch (error) {
       this.page.set(emptyPage<StoredFile>());
       this.loadError.set(toErrorMessage(error));
@@ -47,7 +53,7 @@ export class MediaStore {
   }
 
   contentUrl(file: StoredFile): string {
-    return this.mediaService.contentUrl(file.id);
+    return this.signedVideoUrls().get(file.id) ?? this.mediaService.contentUrl(file.id);
   }
 
   async loadExerciseChoices(): Promise<void> {
@@ -119,4 +125,8 @@ export class MediaStore {
 
 function reportTheAttachFailureInstead(): void {
   return;
+}
+
+function keepPlainLinksWhenCatalogFails(): ReadonlyMap<string, string> {
+  return new Map();
 }

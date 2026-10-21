@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { SubscriptionGrant, createSubscriptionGrant } from './models/subscription-grant';
 import { Trainer } from './models/trainer';
+import { requireCommissionPercent } from './models/trainer-commission';
 import {
   SentAccountValues,
   TakenTrainerAccount,
@@ -100,6 +101,22 @@ export class TrainersStore {
     try {
       await this.trainersService.changePassword(trainer.id, password);
       this.notifications.success('trainers.toast.passwordChanged', { name: trainer.displayName });
+      return true;
+    } catch (error) {
+      this.notifications.error(error);
+      return false;
+    } finally {
+      this.saving.set(false);
+    }
+  }
+
+  async changeCommission(trainer: Trainer, commissionPercent: number): Promise<boolean> {
+    this.saving.set(true);
+    try {
+      const percent = requireCommissionPercent(commissionPercent);
+      await this.trainersService.changeCommission(trainer.id, percent);
+      this.notifications.success('trainers.toast.commissionChanged', { name: trainer.displayName });
+      await this.load();
       return true;
     } catch (error) {
       this.notifications.error(error);

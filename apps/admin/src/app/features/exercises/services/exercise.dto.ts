@@ -21,6 +21,7 @@ export interface ExerciseResponse {
   isActive: boolean;
   instructions?: string | null;
   videoFileId?: string | null;
+  videoUrl?: string | null;
 }
 
 export interface CreateExerciseRequest {

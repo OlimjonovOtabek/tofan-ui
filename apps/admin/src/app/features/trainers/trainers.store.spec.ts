@@ -22,6 +22,7 @@ const trainer = new Trainer(
   null,
   null,
   450000,
+  5,
   false,
   new Date('2026-10-02T09:00:00Z'),
 );
@@ -54,7 +55,14 @@ const account: TrainerAccount = {
 describe('TrainersStore', () => {
   let trainers: Pick<
     TrainersService,
-    'list' | 'create' | 'publish' | 'unpublish' | 'update' | 'changePassword' | 'delete'
+    | 'list'
+    | 'create'
+    | 'publish'
+    | 'unpublish'
+    | 'update'
+    | 'changePassword'
+    | 'changeCommission'
+    | 'delete'
   >;
   let accounts: Pick<TrainerAccountsService, 'get'>;
   let subscriptions: Pick<TrainerSubscriptionsService, 'grant'>;
@@ -81,6 +89,7 @@ describe('TrainersStore', () => {
       unpublish: vi.fn().mockResolvedValue(undefined),
       update: vi.fn().mockResolvedValue(undefined),
       changePassword: vi.fn().mockResolvedValue(undefined),
+      changeCommission: vi.fn().mockResolvedValue(undefined),
       delete: vi.fn().mockResolvedValue(undefined),
     };
     accounts = { get: vi.fn().mockResolvedValue(account) };
@@ -140,6 +149,37 @@ describe('TrainersStore', () => {
     expect(notifications.success).toHaveBeenCalledWith('trainers.toast.passwordChanged', {
       name: 'Jasur Karimov',
     });
+  });
+
+  it('should send the percent, announce it and reload when the commission is changed', async () => {
+    const store = createStore();
+
+    await expect(store.changeCommission(trainer, 7.5)).resolves.toBe(true);
+
+    expect(trainers.changeCommission).toHaveBeenCalledWith('t1', 7.5);
+    expect(notifications.success).toHaveBeenCalledWith('trainers.toast.commissionChanged', {
+      name: 'Jasur Karimov',
+    });
+    expect(trainers.list).toHaveBeenCalled();
+  });
+
+  it('should not send the percent and report it when the commission is out of range', async () => {
+    const store = createStore();
+
+    await expect(store.changeCommission(trainer, 120)).resolves.toBe(false);
+
+    expect(trainers.changeCommission).not.toHaveBeenCalled();
+    expect(notifications.error).toHaveBeenCalled();
+  });
+
+  it('should report the refusal and not reload when the backend rejects the commission', async () => {
+    vi.mocked(trainers.changeCommission).mockRejectedValue(new ServiceUnavailableError());
+    const store = createStore();
+
+    await expect(store.changeCommission(trainer, 7.5)).resolves.toBe(false);
+
+    expect(notifications.error).toHaveBeenCalled();
+    expect(trainers.list).not.toHaveBeenCalled();
   });
 
   it('should delete, announce and reload when a draft is deleted', async () => {

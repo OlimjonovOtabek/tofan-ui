@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "https://api.peaktofan.com",
+    "secure": true,
+    "changeOrigin": true,
+    "ws": true,
+    "pathRewrite": { "^/api": "" }
+  }
+}

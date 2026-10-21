@@ -1,0 +1,21 @@
+<app-form-dialog [(visible)]="visible" [header]="header()" [saving]="saving()" (save)="submit()">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="trainerCommissionPercent" class="font-medium">{{
+        'trainers.commission.label' | t
+      }}</label>
+      <app-number-field
+        inputId="trainerCommissionPercent"
+        [suffix]="'trainers.commission.suffix' | t"
+        [maxFractionDigits]="fractionDigits"
+        [fluid]="true"
+        [formField]="form.commissionPercent"
+      />
+      <app-field-error [field]="form.commissionPercent()" />
+      <small class="text-muted-color">{{ 'trainers.commission.hint' | t }}</small>
+    </div>
+    <p-message severity="warn" icon="pi pi-info-circle">{{
+      'trainers.commission.futureOnly' | t
+    }}</p-message>
+  </div>
+</app-form-dialog>

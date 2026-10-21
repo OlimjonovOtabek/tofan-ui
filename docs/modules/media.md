@@ -35,6 +35,12 @@ no longer needed.
   `attachVideo` re-reads the exercise, refuses with `Exercise.VideoAlreadyAttached` (a panel code) if a
   video appeared meanwhile, and otherwise sends the full exercise back with `videoFileId`. If attaching
   fails, the uploaded file is deleted so no orphan is left.
+- Preview and download links (API v9.1): `MediaStore.load` reads the file page and, in parallel, the whole
+  exercise catalog through `ExerciseVideosService.listSignedVideoUrls`, which maps each `videoFileId` to its
+  signed `videoUrl`. `MediaStore.contentUrl` returns that signed link for a video an exercise uses and the plain
+  `/files/{id}/content` link for everything else (images are public, and so is any video no exercise uses).
+  If the catalog cannot be read the list still loads and every link is the plain one; when a plain video link
+  stops working the preview shows its existing `previewFailed` state.
 - The backend refuses to delete a file that is still used; the panel no longer checks usages itself.
 
 - The exercise picker shows each exercise in the admin's language and sorts with `localeCompare` for that language (`sortByName`), so Uzbek order follows the Uzbek alphabet (sh after s).
@@ -47,3 +53,7 @@ no longer needed.
   `videoFileId`, and the exercise form can still replace a video.
 - Only exercise videos are guarded by the backend today; other owners (food images, avatars) are
   not checked yet.
+- Video protection (backend API v9.1): once it is on, `/files/{id}/content` of a video needs a signed link.
+  Only `videoUrl` from `GET /exercises` is signed, so a video that no exercise uses cannot be previewed or
+  downloaded until the backend adds `contentUrl` to `GET /files`; the request is in
+  [backend-requests.md](../backend-requests.md).

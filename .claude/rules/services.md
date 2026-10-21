@@ -17,7 +17,7 @@ paths:
 ## Services (`features/<x>/services/`)
 - `<feature>.service.ts`: `@Injectable({ providedIn: 'root' })`, injects `ApiClient`, returns models.
   One service per backend resource. No state.
-- `*.dto.ts`: exact backend shape, hand-written from the staging Swagger; integer enums as TS `enum`.
+- `*.dto.ts`: exact backend shape, hand-written from the api.peaktofan.com Swagger; integer enums as TS `enum`.
   Never used outside `services/`.
 - `*.mapper.ts`: pure functions `toExercise(dto)`, `toCreateExerciseRequest(model)`, enum maps via
   `enumMap`. Unit tested.

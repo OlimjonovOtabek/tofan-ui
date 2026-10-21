@@ -6,7 +6,11 @@ import { Page, PageRequest } from '@shared/models/page';
 import { ApiClient } from '@core/http/api-client';
 import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
-import { ChangeTrainerPasswordRequest, TrainerResponse } from './trainer.dto';
+import {
+  ChangeTrainerCommissionRequest,
+  ChangeTrainerPasswordRequest,
+  TrainerResponse,
+} from './trainer.dto';
 import { toCreateTrainerRequest, toTrainer, toUpdateTrainerRequest } from './trainer.mapper';
 
 const TRAINERS = '/admin/trainers';
@@ -40,6 +44,11 @@ export class TrainersService {
   async changePassword(id: string, password: string): Promise<void> {
     const request: ChangeTrainerPasswordRequest = { password };
     await this.apiClient.put(`${trainerPath(id)}/password`, request);
+  }
+
+  async changeCommission(id: string, commissionPercent: number): Promise<void> {
+    const request: ChangeTrainerCommissionRequest = { commissionPercent };
+    await this.apiClient.put(`${trainerPath(id)}/commission`, request);
   }
 
   async delete(id: string): Promise<void> {

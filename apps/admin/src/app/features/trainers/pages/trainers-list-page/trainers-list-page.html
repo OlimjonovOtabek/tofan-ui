@@ -33,72 +33,27 @@
           </div>
         </div>
       </td>
+      <td class="text-muted-color font-mono text-sm">{{ trainer.slug ?? emptyCell }}</td>
       <td class="text-muted-color" [title]="trainer.userId">{{ shortId(trainer.userId) }}</td>
       <td>
         <span [class.text-muted-color]="!trainer.hasPrice()">{{ priceLabel(trainer) }}</span>
       </td>
+      <td class="whitespace-nowrap">{{ commissionLabel(trainer) }}</td>
       <td>
         <p-tag [value]="statusLabel(trainer)" [severity]="statusSeverity(trainer)" />
       </td>
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(trainer.createdOn) }}</td>
       <td class="text-right whitespace-nowrap">
-        <p-button
-          icon="pi pi-pencil"
-          severity="secondary"
-          [text]="true"
-          [rounded]="true"
-          [ariaLabel]="'trainers.list.actions.edit' | t"
-          [pTooltip]="'trainers.list.actions.edit' | t"
-          (onClick)="openEdit(trainer)"
+        <app-trainer-row-actions
+          [trainer]="trainer"
+          (edit)="openEdit(trainer)"
+          (changePassword)="openPassword(trainer)"
+          (changeCommission)="openCommission(trainer)"
+          (grant)="openGrant(trainer)"
+          (publish)="store.publish(trainer)"
+          (unpublish)="store.unpublish(trainer)"
+          (remove)="remove(trainer)"
         />
-        <p-button
-          icon="pi pi-key"
-          severity="secondary"
-          [text]="true"
-          [rounded]="true"
-          [ariaLabel]="'trainers.list.actions.password' | t"
-          [pTooltip]="'trainers.list.actions.password' | t"
-          (onClick)="openPassword(trainer)"
-        />
-        <p-button
-          icon="pi pi-user-plus"
-          severity="secondary"
-          [text]="true"
-          [rounded]="true"
-          [ariaLabel]="'trainers.list.actions.grant' | t"
-          [pTooltip]="'trainers.list.actions.grant' | t"
-          (onClick)="openGrant(trainer)"
-        />
-        @if (trainer.isPublished) {
-          <p-button
-            icon="pi pi-eye-slash"
-            severity="secondary"
-            [text]="true"
-            [rounded]="true"
-            [ariaLabel]="'trainers.list.actions.unpublish' | t"
-            [pTooltip]="'trainers.list.actions.unpublish' | t"
-            (onClick)="store.unpublish(trainer)"
-          />
-        } @else {
-          <p-button
-            icon="pi pi-eye"
-            severity="secondary"
-            [text]="true"
-            [rounded]="true"
-            [ariaLabel]="'trainers.list.actions.publish' | t"
-            [pTooltip]="'trainers.list.actions.publish' | t"
-            (onClick)="store.publish(trainer)"
-          />
-          <p-button
-            icon="pi pi-trash"
-            severity="danger"
-            [text]="true"
-            [rounded]="true"
-            [ariaLabel]="'trainers.list.actions.delete' | t"
-            [pTooltip]="'trainers.list.actions.delete' | t"
-            (onClick)="remove(trainer)"
-          />
-        }
       </td>
     </tr>
   </ng-template>
@@ -125,6 +80,13 @@
   [trainer]="passwordFor()"
   [saving]="store.saving()"
   (save)="changePassword($event)"
+/>
+
+<app-trainer-commission-dialog
+  [(visible)]="commissionVisible"
+  [trainer]="commissionFor()"
+  [saving]="store.saving()"
+  (save)="changeCommission($event)"
 />
 
 <app-subscription-grant-dialog
