@@ -1,20 +1,22 @@
 <div class="layout-topbar">
-  <div class="layout-topbar-logo-container">
+  <div class="topbar-left">
     <button
       type="button"
-      class="layout-menu-button layout-topbar-action"
+      class="menu-button layout-menu-button"
       [attr.aria-label]="'layout.topbar.toggleMenu' | t"
       (click)="layoutService.toggleMenu()"
     >
-      <i class="pi pi-bars"></i>
+      <i class="pi pi-chevron-left menu-button-collapse"></i>
+      <i class="pi pi-bars menu-button-open"></i>
     </button>
-    <a class="layout-topbar-logo" [routerLink]="dashboardPath">
-      <app-logo class="h-10" />
-      <span>TOFAN</span>
+    <span class="topbar-separator"></span>
+    <app-breadcrumb />
+    <a class="mobile-logo" [routerLink]="dashboardPath">
+      <app-logo class="h-8" />
     </a>
   </div>
 
-  <div class="layout-topbar-actions">
+  <div class="topbar-right">
     <app-theme-switcher />
     <app-language-switcher />
 

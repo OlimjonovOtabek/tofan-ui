@@ -1,5 +1,7 @@
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
 
+import { surfaceGroundFor } from './theme/surface-ground';
+
 export type MenuMode = 'static' | 'overlay';
 export type ThemePresetName = 'Aura' | 'Lara' | 'Nora';
 
@@ -28,7 +30,7 @@ export class LayoutService {
 
   private readonly config = signal<LayoutConfig>({
     preset: 'Aura',
-    primary: 'emerald',
+    primary: 'blue',
     surface: null,
     darkTheme: false,
     menuMode: 'static',
@@ -51,6 +53,7 @@ export class LayoutService {
 
   constructor() {
     effect(() => this.applyDarkTheme(this.config().darkTheme));
+    effect(() => this.applySurfaceGround(this.config()));
     effect(() =>
       this.document.body.classList.toggle(BLOCKED_SCROLL_CLASS, this.state().mobileMenuActive),
     );
@@ -87,6 +90,13 @@ export class LayoutService {
 
   private isDesktop(): boolean {
     return (this.document.defaultView?.innerWidth ?? DESKTOP_MIN_WIDTH) >= DESKTOP_MIN_WIDTH;
+  }
+
+  private applySurfaceGround({ primary, darkTheme }: LayoutConfig): void {
+    const { background, top } = surfaceGroundFor(primary, darkTheme);
+    const rootStyle = this.document.documentElement.style;
+    rootStyle.setProperty('--surface-ground', background);
+    rootStyle.setProperty('--surface-ground-top', top);
   }
 
   private applyDarkTheme(enabled: boolean): void {

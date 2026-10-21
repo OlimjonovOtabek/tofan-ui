@@ -1,6 +1,7 @@
 export const LAYOUT_UZ = {
   topbar: {
     toggleMenu: 'Menyuni ochish/yopish',
+    breadcrumb: "Navigatsiya yo'li",
     profile: 'Profil',
     logout: 'Chiqish',
     language: 'Til',

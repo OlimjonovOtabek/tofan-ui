@@ -3,6 +3,7 @@ import { Dictionary } from '../../dictionary';
 export const LAYOUT_EN: Dictionary['layout'] = {
   topbar: {
     toggleMenu: 'Toggle menu',
+    breadcrumb: 'Breadcrumb',
     profile: 'Profile',
     logout: 'Sign out',
     language: 'Language',
