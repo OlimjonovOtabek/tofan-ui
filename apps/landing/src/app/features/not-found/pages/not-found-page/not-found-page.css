@@ -1,0 +1,12 @@
+.content {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  min-height: 50vh;
+  align-content: center;
+  text-align: center;
+}
+
+.btn {
+  margin-top: 8px;
+}

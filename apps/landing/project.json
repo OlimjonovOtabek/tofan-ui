@@ -1,0 +1,29 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "landing",
+  "projectType": "application",
+  "root": "apps/landing",
+  "sourceRoot": "apps/landing/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng build landing" },
+      "outputs": ["{workspaceRoot}/dist/landing"]
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng serve landing" },
+      "cache": false
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng test landing --watch=false" },
+      "cache": true
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": { "command": "ng lint landing" },
+      "cache": true
+    }
+  }
+}

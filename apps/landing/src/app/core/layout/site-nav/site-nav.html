@@ -1,0 +1,56 @@
+<header class="nav">
+  <div class="container bar">
+    <a class="brand" [routerLink]="homeUrl()" [attr.aria-label]="'brand' | t" (click)="closeMenu()">
+      <landing-brand-logo />
+    </a>
+    <nav class="links" [attr.aria-label]="'nav.label' | t">
+      @for (link of links; track link.section) {
+        <a class="link" [routerLink]="homeUrl()" [fragment]="link.section">{{ link.label | t }}</a>
+      }
+    </nav>
+    <div class="actions">
+      <landing-language-switcher />
+      <a
+        class="btn btn-primary btn-compact download"
+        [routerLink]="homeUrl()"
+        [fragment]="downloadSection"
+      >
+        {{ 'nav.download' | t }}
+      </a>
+      <button
+        type="button"
+        class="menu-toggle"
+        aria-controls="mobile-menu"
+        [attr.aria-expanded]="menuOpen()"
+        [attr.aria-label]="(menuOpen() ? 'nav.closeMenu' : 'nav.openMenu') | t"
+        (click)="toggleMenu()"
+      >
+        <landing-icon [name]="menuOpen() ? 'close' : 'menu'" />
+      </button>
+    </div>
+  </div>
+  @if (menuOpen()) {
+    <nav id="mobile-menu" class="mobile-menu" [attr.aria-label]="'nav.label' | t">
+      <div class="container mobile-links">
+        @for (link of links; track link.section) {
+          <a
+            class="mobile-link"
+            [routerLink]="homeUrl()"
+            [fragment]="link.section"
+            (click)="closeMenu()"
+          >
+            {{ link.label | t }}
+          </a>
+        }
+        <a
+          class="btn btn-primary"
+          [routerLink]="homeUrl()"
+          [fragment]="downloadSection"
+          (click)="closeMenu()"
+        >
+          {{ 'nav.download' | t }}
+        </a>
+      </div>
+    </nav>
+  }
+</header>

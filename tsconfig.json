@@ -21,7 +21,8 @@
       "@features/*": ["./apps/admin/src/app/features/*"],
       "@environments/*": ["./apps/admin/src/environments/*"],
       "@coach/*": ["./apps/coach/src/app/*"],
-      "@coach-environments/*": ["./apps/coach/src/environments/*"]
+      "@coach-environments/*": ["./apps/coach/src/environments/*"],
+      "@landing/*": ["./apps/landing/src/app/*"]
     }
   },
   "angularCompilerOptions": {
@@ -43,6 +44,12 @@
     },
     {
       "path": "./apps/coach/tsconfig.spec.json"
+    },
+    {
+      "path": "./apps/landing/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/landing/tsconfig.spec.json"
     }
   ]
 }

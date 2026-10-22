@@ -1,0 +1,11 @@
+:host {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  :host {
+    justify-items: center;
+    text-align: center;
+  }
+}

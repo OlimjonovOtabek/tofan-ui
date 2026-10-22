@@ -1,0 +1,107 @@
+.hero {
+  padding-block: clamp(45px, calc(34.97px + 2.571vw), 72px);
+}
+
+.layout {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+}
+
+.copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  min-width: 0;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--landing-gold-soft);
+  color: var(--landing-gold);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.title {
+  font-size: clamp(38px, calc(26.86px + 2.857vw), 68px);
+  font-weight: 700;
+  line-height: clamp(44px, calc(32.11px + 3.048vw), 76px);
+}
+
+.text {
+  color: var(--landing-muted);
+  font-size: var(--landing-intro-size);
+  line-height: var(--landing-intro-line);
+}
+
+.coach {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--landing-muted);
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.coach-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--landing-gold);
+  font-weight: 700;
+  --icon-size: 16px;
+}
+
+.coach-link landing-icon {
+  transition: transform 0.15s ease;
+}
+
+.coach-link:hover landing-icon {
+  transform: translateX(3px);
+}
+
+.perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  color: var(--landing-muted);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.visual {
+  flex: 0 0 420px;
+}
+
+@media (max-width: 991px) {
+  .layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .visual {
+    flex-basis: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .copy {
+    gap: 18px;
+  }
+
+  .badge {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .perks {
+    column-gap: 14px;
+  }
+}

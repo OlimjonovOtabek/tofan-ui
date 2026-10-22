@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 30;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--landing-gold);
+  color: var(--landing-bg);
+  font-weight: 700;
+  cursor: pointer;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+main:focus {
+  outline: none;
+}
