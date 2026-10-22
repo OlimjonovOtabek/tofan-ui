@@ -229,6 +229,96 @@
           }
         }
       }
+    },
+    "landing": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/landing",
+      "sourceRoot": "apps/landing/src",
+      "prefix": "landing",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "apps/landing/src/main.ts",
+            "server": "apps/landing/src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "apps/landing/src/server.ts"
+            },
+            "outputPath": "dist/landing",
+            "tsConfig": "apps/landing/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "apps/landing/public"
+              }
+            ],
+            "styles": [
+              "apps/landing/src/styles.css"
+            ],
+            "security": {
+              "allowedHosts": [
+                "peaktofan.com",
+                "www.peaktofan.com",
+                "localhost",
+                "127.0.0.1"
+              ]
+            }
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "350kB",
+                  "maximumError": "500kB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4400
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "landing:build:production"
+            },
+            "development": {
+              "buildTarget": "landing:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/landing/**/*.ts",
+              "apps/landing/**/*.html"
+            ],
+            "eslintConfig": "apps/landing/eslint.config.js"
+          }
+        }
+      }
     }
   }
 }

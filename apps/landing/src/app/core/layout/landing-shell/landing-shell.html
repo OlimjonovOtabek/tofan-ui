@@ -1,0 +1,7 @@
+<landing-icon-sprite />
+<button type="button" class="skip-link" (click)="skipToContent()">{{ 'skipToContent' | t }}</button>
+<landing-site-nav />
+<main #main id="main" tabindex="-1">
+  <router-outlet />
+</main>
+<landing-site-footer />

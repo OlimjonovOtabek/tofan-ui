@@ -1,0 +1,28 @@
+<button
+  type="button"
+  class="trigger"
+  aria-controls="language-menu"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="'nav.language' | t"
+  (click)="toggle()"
+>
+  <landing-icon class="globe" name="globe" />
+  <span>{{ code() }}</span>
+</button>
+@if (open()) {
+  <ul id="language-menu" class="menu">
+    @for (option of options; track option.locale) {
+      <li>
+        <a
+          class="option"
+          [routerLink]="option.url"
+          [attr.lang]="option.locale"
+          [attr.hreflang]="option.locale"
+          [attr.aria-current]="option.locale === locale() ? 'page' : null"
+          (click)="close()"
+          >{{ option.name }}</a
+        >
+      </li>
+    }
+  </ul>
+}

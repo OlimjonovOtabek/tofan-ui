@@ -56,6 +56,8 @@ module.exports = defineConfig([
           './tsconfig.spec.json',
           './apps/coach/tsconfig.app.json',
           './apps/coach/tsconfig.spec.json',
+          './apps/landing/tsconfig.app.json',
+          './apps/landing/tsconfig.spec.json',
         ],
         tsconfigRootDir: __dirname,
       },

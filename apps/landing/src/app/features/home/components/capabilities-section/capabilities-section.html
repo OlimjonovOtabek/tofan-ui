@@ -1,0 +1,23 @@
+<section class="section section-surface" [id]="sectionId">
+  <div class="container content">
+    <landing-section-heading
+      eyebrow="features.eyebrow"
+      title="features.title"
+      text="features.text"
+    />
+    <ul class="grid">
+      @for (capability of capabilities; track capability.title) {
+        <li class="card">
+          <div class="card-top">
+            <span class="icon-tile"><landing-icon [name]="capability.icon" /></span>
+            @if (capability.comingSoon) {
+              <span class="soon">{{ 'features.soon' | t }}</span>
+            }
+          </div>
+          <h3 class="card-title">{{ capability.title | t }}</h3>
+          <p class="card-text">{{ capability.text | t }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

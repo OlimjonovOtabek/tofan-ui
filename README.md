@@ -1,4 +1,4 @@
-# Tofan UI — admin and coach panels
+# Tofan UI - admin, coach panels and landing
 
 Angular 22 · Node.js 24 · Optimus UI 2 · Sakai layout · Tailwind CSS v4 · Vitest
 
@@ -8,6 +8,7 @@ Angular 22 · Node.js 24 · Optimus UI 2 · Sakai layout · Tailwind CSS v4 · V
 npm install
 npm run start:staging       # Admin: http://localhost:4200
 npm run start:coach:staging # Coach: http://localhost:4300, ikkinchi terminalda
+npm run start:landing       # Landing: http://localhost:4400, backend kerak emas
 ```
 
 Ikkala app staging backend’ga ulanadi. Admin `4200`, Coach `4300` portda ochiladi; ikkalasini
@@ -25,10 +26,14 @@ Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 | `npm run start:coach:staging` | Coach dev server (`http://localhost:4300`), staging API proxy     |
 | `npm run start:prod`    | Dev server, `/api` `api.peaktofan.com` (API v9.1) ga uzatiladi           |
 | `npm run start:coach:prod` | Coach dev server (`http://localhost:4300`), `api.peaktofan.com` proxy |
+| `npm run start:landing` | Landing dev server (`http://localhost:4400`), SSR bilan |
 | `npm run build`         | Production build (`dist/tofan-ui/browser`)                               |
 | `npm run build:coach`   | Coach build (`dist/coach/browser`)                                      |
+| `npm run build:landing` | Landing build (`dist/landing`): SSR server + prerender qilingan `/`, `/ru`, `/en` |
+| `npm run serve:ssr:landing` | Build qilingan landing'ni production kabi ishga tushiradi (`http://localhost:4000`) |
 | `npm test`              | Unit testlar (Vitest)                                                    |
 | `npm run test:coach`    | Coach unit testlar (Vitest)                                             |
+| `npm run test:landing`  | Landing unit testlar (Vitest)                                           |
 | `npm run lint`          | ESLint + izohsizlik tekshiruvi + Sheriff (papkalar orasidagi bog'liqlik) |
 | `npm run format`        | Prettier                                                                 |
 
@@ -40,6 +45,7 @@ use case klasslari va mock servislar yo'q — bu UI loyiha.
 ```
 apps/admin/src/app/    # Existing admin routes, layout and features
 apps/coach/src/app/    # core/ (shell, guard, profile service), features/, routes/
+apps/landing/src/app/  # peaktofan.com: core/ (havolalar, lug'at, shell, SEO), shared/icon, features/, routes/
 libs/core/src/         # Shared auth, HTTP, feedback and i18n
 libs/shared/src/       # Shared components, models and utilities
 ```
@@ -68,9 +74,39 @@ Sheriff `apps/admin/src/main.ts` dan boshlab yuradi va test fayllarini ko'rmaydi
 - Servislar `@Injectable({ providedIn: 'root' })`; store'lar `@Injectable()` va sahifaning
   `providers` ida.
 - `inject()` ishlatiladi; `public` modifikatori yozilmaydi; template'ga kerakli a'zolar `protected`.
-- Import alias'lar: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`, `@coach-environments/*`.
+- Import alias'lar: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`, `@coach-environments/*`, `@landing/*`.
 - Admin stillari `apps/admin/src/styles/`; Coach stillari `apps/coach/src/`; Tailwind utility klasslari + `@openng/optimus-ui-tailwindcss`.
 - UI matnlari o'zbek tilida.
+
+## Landing (peaktofan.com)
+
+`apps/landing` - ochiq marketing sayti. Angular SSR bilan ishlaydi: `/` (o'zbekcha), `/ru` va `/en` build vaqtida
+statik HTML qilib prerender qilinadi, boshqa manzillar 404 sahifa bilan server'da render qilinadi.
+Backend'ga murojaat qilmaydi, Optimus UI ishlatmaydi, matnlari o'zining lug'atida
+(`apps/landing/src/app/core/i18n/translations/{uz,ru,en}.ts`). Dizayn: Figma, `Peaktofan.com` sahifasi.
+
+Lokal ishga tushirish:
+
+```bash
+npm install
+npm run start:landing                              # dev: http://localhost:4400, o'zgarishlar darhol ko'rinadi
+npm run build:landing && npm run serve:ssr:landing # production kabi: http://localhost:4000
+```
+
+Docker bilan:
+
+```bash
+docker build -f Dockerfile.landing -t ejakhangir/tofan-landing:<tag> .
+docker run --rm -p 4000:4000 ejakhangir/tofan-landing:<tag>
+curl -s http://localhost:4000/healthz   # ok
+```
+
+- Tashqi havolalar (App Store, Google Play, Telegram, trener paneli, ...) bitta joyda:
+  `apps/landing/src/app/core/config/external-links.ts`. `null` havola bosilmaydigan bo'lib ko'rinadi.
+- `/app` iPhone'dan ochilsa App Store'ga, boshqa qurilmadan Google Play'ga yo'naltiradi; QR kod shu manzilni ochadi.
+- SSR faqat `angular.json` dagi `security.allowedHosts` host'lariga javob beradi; yangi domen qo'shilsa, u yerga ham yozing.
+
+Batafsil (tuzilma, dizayndan farqlar, tuzoqlar): [docs/modules/landing.md](docs/modules/landing.md).
 
 ## Yangi feature qo'shish (masalan, "Foydalanuvchilar")
 
@@ -178,7 +214,8 @@ shuning uchun unda sinov ma'lumoti yaratmang.
 
 `Dockerfile` panelni yig'adi va `nginx` da beradi; `/api` shu nginx orqali `tofan-api:8080` ga
 uzatiladi, shuning uchun production'da ham CORS kerak emas. Server qadamlari (Swarm stack, tashqi
-nginx, sertifikat): [docs/deployment.md](docs/deployment.md).
+nginx, sertifikat): [docs/deployment.md](docs/deployment.md). Landing alohida image: `Dockerfile.landing`
+(Node SSR server, port 4000).
 
 ## UI kutubxonasi: Optimus UI
 

@@ -4,7 +4,7 @@ Tool-neutral guide for AI coding agents (Codex, Cursor, Copilot, Gemini, etc.).
 Claude Code reads `CLAUDE.md`; that file is the full source of truth. Keep both in sync.
 
 ## Project
-Admin and coach panels for the Tofan fitness ecosystem. Angular 22, TypeScript 6 strict, Optimus UI 2
+Admin and coach panels and the public landing site (`peaktofan.com`) for the Tofan fitness ecosystem. Angular 22, TypeScript 6 strict, Optimus UI 2
 (MIT fork of PrimeNG 21, same API; never add `primeng`), Signals. Sign-in goes through the backend,
 which returns Keycloak tokens. Backend: separate .NET 10 modular monolith.
 
@@ -15,13 +15,14 @@ which returns Keycloak tokens. Backend: separate .NET 10 modular monolith.
 - `npm run start:coach` / `npm run start:coach:staging` / `npm run start:coach:prod` — coach dev server
 - Contract source: `https://api.peaktofan.com/swagger/v1/swagger.json`
 - `npm run build:coach` — coach production build
+- `npm run start:landing` / `npm run build:landing` / `npm run test:landing` - landing (SSR) dev server, build and Vitest suite
 - `npm run lint` — must pass (ESLint + `lint:comments`, which rejects any comment in any project file,
   + `lint:boundaries`, Sheriff checking the folder dependency rules in `sheriff.config.ts`)
 - `npm test` — Vitest, must pass
 - `npm run test:coach` — coach Vitest suite
 - `npm run build` — must pass
 - `npm run format` — Prettier over `apps/` and `libs/`
-- After every task run `lint`, `test`, `test:coach`, `build` and `build:coach`; fix what you broke and never
+- After every task run `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` and `build:landing`; fix what you broke and never
   disable a rule to make it pass
 
 ## Architecture
@@ -37,6 +38,11 @@ apps/coach/src/app/
   core/          coach shell, profile guard and the shared coach profile service
   features/<x>/  auth, programs, content, profile, clients (same layout as admin features)
   routes/        coach app.routes.ts
+apps/landing/src/app/
+  core/          links, landing dictionary and locale routes, shell, SEO head
+  shared/        icon sprite and icon component
+  features/<x>/  home, not-found
+  routes/        app.routes.ts and app.routes.server.ts
 libs/core/src/   shared auth, http, feedback and i18n
 libs/shared/src/ reusable components, models and utilities
 ```
@@ -46,7 +52,9 @@ Admin features: `dashboard`, `auth`, `exercises`, `foods`, `media`, `soldiers`, 
 and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only uses `loadChildren`. Reference feature:
 `features/exercises`.
 
-Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`, `@coach-environments/*`.
+Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`, `@coach-environments/*`, `@landing/*`.
+The landing (`apps/landing`) is SSR with prerendered `/`, `/ru`, `/en`, calls no backend, uses no Optimus UI and keeps its
+own typed dictionary in `apps/landing/src/app/core/i18n`; see `docs/modules/landing.md`.
 Use relative imports inside a feature and aliases across boundaries.
 
 File placement and naming (no `.component` suffix): models and pure rules in `models/` (`exercise.ts`,
