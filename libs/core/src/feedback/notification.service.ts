@@ -30,6 +30,15 @@ export class NotificationService {
     });
   }
 
+  failure(detail: TranslationKey, params?: TranslationParams): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: this.translator.translate('common.toast.error'),
+      detail: this.translator.translate(detail, params),
+      life: ERROR_LIFETIME_MS,
+    });
+  }
+
   error(error: unknown): void {
     this.messageService.add({
       severity: 'error',

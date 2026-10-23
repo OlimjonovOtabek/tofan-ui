@@ -1,6 +1,6 @@
 import { LocalizedText, pickLocalized } from '@shared/models/localized-text';
 import { Dictionary, TranslationKey, TranslationParams } from './dictionary';
-import { AppLocale, DEFAULT_LOCALE } from './locale';
+import { AppLocale, DEFAULT_LOCALE, INTL_LOCALES } from './locale';
 import { interpolate, lookupText } from './translation-lookup';
 import { DICTIONARY_EN } from './translations/en';
 import { DICTIONARY_RU } from './translations/ru';
@@ -39,5 +39,5 @@ function textOf(locale: AppLocale, key: string, params?: TranslationParams): str
   if (text === undefined || params === undefined) {
     return text;
   }
-  return interpolate(text, params);
+  return interpolate(text, params, INTL_LOCALES[locale]);
 }
