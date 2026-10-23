@@ -1,0 +1,56 @@
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.who {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.info {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.info b {
+  flex: 1;
+  font-weight: 600;
+  text-align: end;
+}
+
+.session,
+.intake {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.macros {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pay {
+  padding: 12px 16px;
+}

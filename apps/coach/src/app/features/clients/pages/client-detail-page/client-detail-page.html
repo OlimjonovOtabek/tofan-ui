@@ -1,0 +1,271 @@
+<coach-app-bar [title]="'coachApp.clientDetail.title' | t" backLink="/clients" />
+<div class="coach-page coach-page--pushed coach-page--with-footer">
+  @if (view(); as view) {
+    @let detail = store.detail()!;
+    <div class="hero">
+      <coach-avatar [initials]="view.initials" [imageUrl]="detail.profile.photoUrl" size="large" />
+      <div class="who">
+        <h2 class="t-title2">{{ view.name }}</h2>
+        <div class="tags">
+          @if (view.goal) {
+            <span class="c-tag">{{ view.goal }}</span>
+          }
+          <span class="c-tag c-tag--{{ view.accessTone }}">{{ view.access }}</span>
+        </div>
+      </div>
+    </div>
+    @if (detail.client.status === 'ended') {
+      <coach-empty-state
+        icon="clock"
+        [title]="'coachApp.clientDetail.endedTitle' | t"
+        [message]="'coachApp.clientDetail.endedMessage' | t"
+      />
+    } @else {
+      <div class="coach-pair">
+        <coach-stat-tile
+          icon="scale"
+          [label]="'coachApp.clientDetail.weightLabel' | t"
+          [value]="view.weight"
+          [unit]="view.weightUnit"
+          [goal]="view.weightGoal"
+          [progress]="view.weightProgress"
+        />
+        <coach-stat-tile
+          icon="zap"
+          [tone]="view.adherenceTone"
+          [label]="'coachApp.clientDetail.adherenceLabel' | t"
+          [value]="view.adherence"
+          [unit]="detail.adherence ? '%' : null"
+          [goal]="view.adherenceGoal"
+          [progress]="detail.adherence ? detail.adherence.percent / 100 : null"
+        />
+      </div>
+      <div class="coach-pair">
+        <coach-stat-tile
+          icon="check-circle"
+          tone="info"
+          [label]="'coachApp.clientDetail.completionLabel' | t"
+          [value]="view.completed"
+          [unit]="view.scheduled"
+          [goal]="'coachApp.clientDetail.completionCaption' | t"
+          [progress]="view.completion"
+        />
+        <coach-stat-tile
+          icon="flame"
+          tone="warning"
+          [label]="'coachApp.clientDetail.caloriesLabel' | t"
+          [value]="view.calories"
+          [unit]="detail.nutrition ? ('coachApp.nutrition.kcal' | t) : null"
+          [goal]="view.caloriesGoal"
+          [progress]="view.intake"
+        />
+      </div>
+    }
+    @if (view.facts || view.goal || view.level || view.place || view.days) {
+      <coach-section-card [title]="'coachApp.clientDetail.questionnaireTitle' | t">
+        @if (view.facts) {
+          <p class="info">
+            <span class="tone-secondary">{{ 'coachApp.clientDetail.bodyLabel' | t }}</span
+            ><b>{{ view.facts }}</b>
+          </p>
+        }
+        @if (view.goal) {
+          <p class="info">
+            <span class="tone-secondary">{{ 'coachApp.clientDetail.goalLabel' | t }}</span
+            ><b>{{ view.goal }}</b>
+          </p>
+        }
+        @if (view.levelPlace) {
+          <p class="info">
+            <span class="tone-secondary">{{ 'coachApp.clientDetail.levelLabel' | t }}</span
+            ><b>{{ view.levelPlace }}</b>
+          </p>
+        }
+        @if (view.days) {
+          <p class="info">
+            <span class="tone-secondary">{{ 'coachApp.clientDetail.trainingLabel' | t }}</span
+            ><b>{{ 'coachApp.clientDetail.daysPerWeek' | t: { count: view.days } }}</b>
+          </p>
+        }
+      </coach-section-card>
+    }
+    @if (detail.client.status !== 'ended') {
+      <coach-section-header [title]="'coachApp.clientDetail.sessionsTitle' | t" />
+      @if (view.sessions; as sessions) {
+        @for (session of sessions; track session.id) {
+          <div class="c-card session">
+            <div class="line">
+              <span class="t-title4 coach-ellipsis">{{ session.title }}</span>
+              <span class="c-tag c-tag--{{ session.tone === 'info' ? '' : session.tone }}">{{
+                session.status
+              }}</span>
+            </div>
+            @if (session.meta) {
+              <span class="t-base5 tone-secondary">{{ session.meta }}</span>
+            }
+            <div class="c-card--nested c-card coach-pair">
+              <coach-metric-tile
+                type="plain"
+                size="medium"
+                [label]="'coachApp.clientDetail.volume' | t"
+                [value]="session.volume"
+                [unit]="'coachApp.units.kg' | t"
+              />
+              <coach-metric-tile
+                type="plain"
+                size="medium"
+                [label]="'coachApp.clientDetail.setsDone' | t"
+                [value]="session.sets"
+              />
+            </div>
+          </div>
+        } @empty {
+          <coach-empty-state
+            icon="dumbbell"
+            [title]="'coachApp.clientDetail.sessionsEmptyTitle' | t"
+            [message]="'coachApp.clientDetail.sessionsEmptyMessage' | t"
+          />
+        }
+      } @else {
+        <coach-empty-state
+          icon="alert-triangle"
+          [title]="'coachApp.clientDetail.sectionErrorTitle' | t"
+          [message]="'coachApp.clientDetail.sessionsError' | t"
+        />
+      }
+      <coach-section-header [title]="'coachApp.clientDetail.nutritionTitle' | t">
+        @if (detail.nutrition) {
+          <span class="t-base5 font-semibold tone-info">{{
+            'coachApp.clientDetail.mealsLogged' | t: { count: detail.nutrition.mealsLogged }
+          }}</span>
+        }
+      </coach-section-header>
+      @if (!detail.nutritionLoaded) {
+        <coach-empty-state
+          icon="alert-triangle"
+          [title]="'coachApp.clientDetail.sectionErrorTitle' | t"
+          [message]="'coachApp.clientDetail.nutritionError' | t"
+        />
+      } @else if (detail.nutrition; as nutrition) {
+        <div class="c-card intake">
+          <p class="line">
+            <span class="t-base3 tone-secondary">{{
+              'coachApp.clientDetail.dailyIntake' | t
+            }}</span>
+            <span class="t-title4"
+              >{{ count(nutrition.consumedCalories) }}
+              @if (nutrition.targetCalories > 0) {
+                <span class="t-base5 tone-secondary">{{
+                  'coachApp.clientDetail.kcalOf' | t: { target: count(nutrition.targetCalories) }
+                }}</span>
+              }
+            </span>
+          </p>
+          @if (nutrition.targetCalories > 0) {
+            <coach-progress [value]="nutrition.consumedCalories / nutrition.targetCalories" />
+          }
+          <div class="macros">
+            <coach-metric-tile
+              size="medium"
+              [label]="'coachApp.nutrition.protein' | t"
+              [value]="count(nutrition.proteinGrams)"
+              [unit]="'coachApp.nutrition.grams' | t"
+              [caption]="
+                nutrition.targetProteinGrams > 0
+                  ? ('coachApp.clientDetail.macroGoal'
+                    | t
+                      : {
+                          percent: count(
+                            (nutrition.proteinGrams / nutrition.targetProteinGrams) * 100
+                          ),
+                          goal: count(nutrition.targetProteinGrams),
+                        })
+                  : null
+              "
+            />
+            <coach-metric-tile
+              size="medium"
+              [label]="'coachApp.nutrition.carbs' | t"
+              [value]="count(nutrition.carbsGrams)"
+              [unit]="'coachApp.nutrition.grams' | t"
+              [caption]="
+                nutrition.targetCarbsGrams > 0
+                  ? ('coachApp.clientDetail.macroGoal'
+                    | t
+                      : {
+                          percent: count((nutrition.carbsGrams / nutrition.targetCarbsGrams) * 100),
+                          goal: count(nutrition.targetCarbsGrams),
+                        })
+                  : null
+              "
+            />
+            <coach-metric-tile
+              size="medium"
+              [label]="'coachApp.nutrition.fats' | t"
+              [value]="count(nutrition.fatGrams)"
+              [unit]="'coachApp.nutrition.grams' | t"
+              [caption]="
+                nutrition.targetFatGrams > 0
+                  ? ('coachApp.clientDetail.macroGoal'
+                    | t
+                      : {
+                          percent: count((nutrition.fatGrams / nutrition.targetFatGrams) * 100),
+                          goal: count(nutrition.targetFatGrams),
+                        })
+                  : null
+              "
+            />
+          </div>
+        </div>
+      } @else {
+        <coach-empty-state
+          icon="utensils"
+          [title]="'coachApp.clientDetail.nutritionEmptyTitle' | t"
+          [message]="'coachApp.clientDetail.nutritionEmptyMessage' | t"
+        />
+      }
+    }
+    <coach-section-header [title]="'coachApp.clientDetail.paymentsTitle' | t" />
+    @if (view.payments; as payments) {
+      @if (payments.length === 0) {
+        <coach-empty-state
+          icon="wallet"
+          [title]="'coachApp.clientDetail.paymentsTitle' | t"
+          [message]="'coachApp.clientDetail.paymentsEmpty' | t"
+        />
+      } @else {
+        <div class="c-card c-card--flush">
+          @for (payment of payments; track payment.id) {
+            @if (!$first) {
+              <hr class="c-divider" />
+            }
+            <coach-payment-row class="pay" [payment]="payment" />
+          }
+        </div>
+      }
+    } @else {
+      <coach-empty-state
+        icon="alert-triangle"
+        [title]="'coachApp.clientDetail.sectionErrorTitle' | t"
+        [message]="'coachApp.clientDetail.paymentsError' | t"
+      />
+    }
+    <div class="coach-footer">
+      <button coachButton="primary" type="button" (click)="openChat(view.name)">
+        <coach-icon name="message-circle" />{{ 'coachApp.clientDetail.write' | t }}
+      </button>
+    </div>
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.clientDetail.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load(userId())"
+    />
+  } @else {
+    <coach-shimmer [height]="112" />
+    <coach-shimmer [height]="128" />
+    <coach-shimmer [height]="160" />
+  }
+</div>
