@@ -1,14 +1,20 @@
-import { Card } from '@openng/optimus-ui/card';
-import { ButtonDirective } from '@openng/optimus-ui/button';
 import { Component, inject } from '@angular/core';
 import { AuthStore } from '@core/auth/auth.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
+import { StatusPage } from '../status-page/status-page';
 
 @Component({
   selector: 'coach-onboarding-page',
-  imports: [Card, ButtonDirective, TranslatePipe],
-  templateUrl: './coach-onboarding-page.html',
-  styleUrl: './coach-onboarding-page.css',
+  imports: [TranslatePipe, StatusPage],
+  template: `
+    <coach-status-page
+      icon="user"
+      [title]="'coachApp.access.missingProfileTitle' | t"
+      [message]="'coachApp.access.missingProfileMessage' | t"
+      [actionLabel]="'coachApp.logout.logout' | t"
+      (action)="signOut()"
+    />
+  `,
 })
 export class CoachOnboardingPage {
   private readonly auth = inject(AuthStore);

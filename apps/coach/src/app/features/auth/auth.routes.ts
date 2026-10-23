@@ -5,14 +5,14 @@ import { CoachLoginPage } from './pages/coach-login-page/coach-login-page';
 import { CoachOnboardingPage } from './pages/coach-onboarding-page/coach-onboarding-page';
 
 export const AUTH_ROUTES: Routes = [
-  { path: 'login', title: pageTitle('coach.titles.login'), component: CoachLoginPage },
+  { path: 'login', title: pageTitle('coachApp.titles.login'), component: CoachLoginPage },
   {
     path: 'access-denied',
-    title: pageTitle('coach.titles.accessDenied'),
+    title: pageTitle('coachApp.titles.accessDenied'),
     component: CoachAccessDeniedPage,
   },
 ];
 
 export const ONBOARDING_ROUTES: Routes = [
-  { path: '', title: pageTitle('coach.titles.onboarding'), component: CoachOnboardingPage },
+  { path: '', title: pageTitle('coachApp.titles.onboarding'), component: CoachOnboardingPage },
 ];
