@@ -1,0 +1,24 @@
+<dialog #dialog class="player" (close)="close()">
+  @if (source(); as source) {
+    @if (url() && !failed()) {
+      <video
+        [src]="url()"
+        [poster]="source.posterUrl ?? ''"
+        controls
+        autoplay
+        playsinline
+        (error)="failed.set(true)"
+      ></video>
+    } @else {
+      <p class="t-base3">{{ 'coachApp.video.error' | t }}</p>
+    }
+    <button
+      type="button"
+      class="close"
+      [attr.aria-label]="'coachApp.common.close' | t"
+      (click)="close()"
+    >
+      <coach-icon name="close" />
+    </button>
+  }
+</dialog>

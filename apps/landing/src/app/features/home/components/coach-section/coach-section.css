@@ -1,0 +1,101 @@
+.card {
+  display: grid;
+  gap: 32px;
+  padding: 56px;
+  border: 1.5px solid var(--landing-gold);
+  border-radius: 32px;
+  background: var(--landing-bg);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 56px;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.steps {
+  display: grid;
+  gap: 12px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--landing-surface);
+}
+
+.number {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--landing-gold);
+  color: var(--landing-bg);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+}
+
+.step-lines {
+  display: grid;
+  gap: 1px;
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+}
+
+.step-text {
+  color: var(--landing-muted);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.partners {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--landing-muted);
+  font-size: 14px;
+  line-height: 17px;
+  --icon-size: 18px;
+}
+
+@media (max-width: 991px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .card {
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

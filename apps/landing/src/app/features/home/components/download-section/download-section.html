@@ -1,0 +1,15 @@
+<section class="section section-surface" [id]="sectionId">
+  <div class="container">
+    <div class="card">
+      <div class="copy">
+        <h2 class="title">{{ 'download.title' | t }}</h2>
+        <p class="text">{{ 'download.text' | t }}</p>
+        <landing-store-badges tone="dark" />
+      </div>
+      <figure class="qr">
+        <img [src]="qrImage" width="150" height="150" [alt]="'download.qr' | t" />
+        <figcaption>{{ 'download.qr' | t }}</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,88 @@
+@if (editing(); as editing) {
+  <coach-app-bar
+    [title]="(editing.dayId === null ? 'coachApp.day.addTitle' : 'coachApp.day.editTitle') | t"
+    [backButton]="true"
+    (back)="closeEditor()"
+  />
+  <div class="coach-page coach-page--pushed coach-page--with-footer">
+    <coach-day-editor
+      [day]="editing.draft"
+      [published]="store.program()?.isPublished ?? false"
+      (saved)="saveDay($event)"
+    />
+  </div>
+} @else {
+  <coach-app-bar [title]="'coachApp.workoutProgram.detailTitle' | t" backLink="/programs" />
+  <div class="coach-page coach-page--pushed">
+    @if (store.program(); as program) {
+      @let busy = store.busy() !== null;
+      <coach-program-summary
+        [title]="program.name"
+        [published]="program.isPublished"
+        [goal]="goal()"
+        [meta]="meta()"
+        [editLabel]="'coachApp.workoutProgram.editDetails' | t"
+        (edit)="edit()"
+      />
+      <div>
+        <h2 class="t-title3">{{ 'coachApp.workoutProgram.daysTitle' | t }}</h2>
+        <p class="t-base3 tone-secondary">{{ 'coachApp.workoutProgram.daysLimit' | t }}</p>
+      </div>
+      @if (store.busy() === 'days') {
+        <coach-progress />
+      }
+      @if (program.days.length === 0) {
+        <coach-empty-state
+          icon="calendar"
+          [title]="'coachApp.workoutProgram.daysEmptyTitle' | t"
+          [message]="'coachApp.workoutProgram.daysEmptyMessage' | t"
+        />
+      } @else {
+        @for (day of program.days; track day.id; let i = $index) {
+          <coach-numbered-tile
+            [number]="i + 1"
+            [title]="dayTitle(day, i + 1)"
+            [subtitle]="daySubtitle(day)"
+            [hasMore]="true"
+            [disabled]="busy"
+            (open)="openDay(day)"
+            (more)="showMenu(program.days, i)"
+          >
+            @switch (readiness(day)) {
+              @case ('ready') {
+                <span class="c-tag c-tag--success">{{ 'coachApp.day.ready' | t }}</span>
+              }
+              @case ('empty') {
+                <span class="c-tag c-tag--warning">{{ 'coachApp.day.empty' | t }}</span>
+              }
+            }
+          </coach-numbered-tile>
+        }
+      }
+      @if (program.days.length < maxDays) {
+        <button coachButton="soft" type="button" [disabled]="busy" (click)="addDay()">
+          {{ 'coachApp.day.addButton' | t }}
+        </button>
+      }
+      <coach-publish-actions
+        [published]="program.isPublished"
+        [publishing]="store.busy() === 'publishing'"
+        [deleting]="store.busy() === 'deleting'"
+        (togglePublished)="togglePublished(program.isPublished, program.name)"
+        (delete)="delete()"
+      />
+    } @else if (store.loadError(); as error) {
+      <coach-empty-state
+        icon="alert-triangle"
+        [title]="'coachApp.workoutProgram.errorTitle' | t"
+        [message]="error | message"
+        [retryable]="true"
+        (retry)="store.load(id())"
+      />
+    } @else {
+      <coach-shimmer [height]="140" />
+      <coach-shimmer [height]="76" />
+      <coach-shimmer [height]="76" />
+    }
+  </div>
+}

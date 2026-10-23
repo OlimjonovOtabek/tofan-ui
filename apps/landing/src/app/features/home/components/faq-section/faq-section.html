@@ -1,0 +1,16 @@
+<section class="section" [id]="sectionId">
+  <div class="container content">
+    <landing-section-heading eyebrow="faq.eyebrow" title="faq.title" />
+    <div class="list">
+      @for (item of items; track item.question; let first = $first) {
+        <details class="item" [attr.name]="group" [open]="first">
+          <summary class="question">
+            <span>{{ item.question | t }}</span>
+            <landing-icon class="toggle" name="plus" />
+          </summary>
+          <p class="answer">{{ item.answer | t }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>

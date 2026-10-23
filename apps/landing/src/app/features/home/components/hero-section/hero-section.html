@@ -1,0 +1,23 @@
+<section class="hero">
+  <div class="container layout">
+    <div class="copy">
+      <p class="badge">{{ 'hero.badge' | t }}</p>
+      <h1 class="title">{{ 'hero.title' | t }}</h1>
+      <p class="text">{{ 'hero.text' | t }}</p>
+      <landing-store-badges />
+      <p class="coach">
+        <span>{{ 'hero.coachPrompt' | t }}</span>
+        <a class="coach-link" [routerLink]="homeUrl()" [fragment]="coachesSection">
+          {{ 'hero.coachLink' | t }}
+          <landing-icon name="arrow" />
+        </a>
+      </p>
+      <ul class="perks">
+        @for (perk of perks; track perk) {
+          <li>{{ perk | t }}</li>
+        }
+      </ul>
+    </div>
+    <landing-phone-preview class="visual" />
+  </div>
+</section>

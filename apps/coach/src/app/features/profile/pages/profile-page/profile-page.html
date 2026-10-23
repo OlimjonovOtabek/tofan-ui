@@ -1,0 +1,120 @@
+<div class="coach-page">
+  <h1 class="t-title1">{{ 'coachApp.profile.title' | t }}</h1>
+  @if (view(); as view) {
+    <div class="c-card c-card--hero identity">
+      <label class="photo c-pressable" [attr.aria-label]="'coachApp.profile.photoChange' | t">
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          hidden
+          (change)="chosen($event)"
+        />
+        <coach-avatar [initials]="view.initials" [imageUrl]="view.profile.photoUrl" size="xlarge" />
+        <span class="camera"><coach-icon name="camera" /></span>
+      </label>
+      <h2 class="t-title2 name">
+        {{ view.profile.displayName || ('coachApp.profile.nameMissing' | t) }}
+      </h2>
+      <p
+        class="t-base3 bio"
+        [class.tone-secondary]="view.profile.bio"
+        [class.tone-muted]="!view.profile.bio"
+      >
+        {{ view.profile.bio || ('coachApp.profile.bioEmpty' | t) }}
+      </p>
+      @if (view.profile.isPublished) {
+        <span class="c-tag c-tag--success">{{ 'coachApp.profile.published' | t }}</span>
+      } @else {
+        <span class="c-tag c-tag--warning">{{ 'coachApp.profile.hidden' | t }}</span>
+      }
+      <button coachButton="soft" type="button" class="wide" (click)="go('edit')">
+        {{ 'coachApp.profile.edit' | t }}
+      </button>
+    </div>
+    @if (view.link; as link) {
+      <div class="c-card link">
+        <div class="head">
+          <h2 class="t-base1 font-bold">{{ 'coachApp.profile.linkTitle' | t }}</h2>
+          @if (view.profile.isPublished) {
+            <span class="c-tag c-tag--success">{{ 'coachApp.profile.published' | t }}</span>
+          }
+        </div>
+        <div class="address">
+          <coach-icon name="globe" />
+          <span class="t-base3 font-medium coach-ellipsis">{{ link }}</span>
+          <button type="button" class="copy t-base3 font-semibold" (click)="copy(link)">
+            {{ 'coachApp.profile.linkCopy' | t }}
+          </button>
+        </div>
+        <div class="actions">
+          <button coachPill="neutral" type="button" (click)="share(link)">
+            {{ 'coachApp.profile.linkShare' | t }}
+          </button>
+          <button coachPill="neutral" type="button" (click)="go('edit')">
+            {{ 'coachApp.profile.linkChange' | t }}
+          </button>
+        </div>
+        @if (view.generated) {
+          <coach-note [plain]="true" [text]="'coachApp.profile.linkSuggest' | t" />
+        }
+      </div>
+    }
+    <div class="coach-pair">
+      <coach-metric-tile
+        [label]="'coachApp.profile.statClients' | t"
+        [value]="view.clients"
+        [caption]="'coachApp.profile.statClientsCaption' | t"
+      />
+      <coach-metric-tile
+        [label]="'coachApp.profile.statRevenue' | t"
+        [value]="view.revenue"
+        valueTone="info"
+        [caption]="'coachApp.profile.statRevenueCaption' | t"
+      />
+    </div>
+    <div class="coach-pair">
+      <coach-metric-tile
+        [label]="'coachApp.profile.statAdherence' | t"
+        [value]="view.adherence"
+        [unit]="view.adherence.length <= 3 && view.adherence !== '—' ? '%' : null"
+        [caption]="'coachApp.profile.statAverage' | t"
+      />
+      <coach-metric-tile
+        [label]="'coachApp.profile.statPrograms' | t"
+        [value]="view.programs"
+        [unit]="view.split ? ('coachApp.profile.programsActiveUnit' | t) : null"
+        [caption]="view.split"
+      />
+    </div>
+    <div class="c-card c-card--flush">
+      @for (row of rows(); track row.title) {
+        @if (!$first) {
+          <hr class="c-divider" />
+        }
+        <button type="button" class="setting c-row-button c-pressable" (click)="row.run()">
+          <span class="icon"><coach-icon [name]="row.icon" /></span>
+          <span class="text">
+            <span class="t-base2 font-semibold">{{ row.title | t }}</span>
+            <span class="t-base5 tone-secondary coach-ellipsis">{{ row.subtitle }}</span>
+          </span>
+          <coach-icon name="chevron-right" class="chevron" />
+        </button>
+      }
+    </div>
+    <button coachButton="destructive" type="button" [loading]="signingOut()" (click)="signOut()">
+      <coach-icon name="log-out" />{{ 'coachApp.logout.logout' | t }}
+    </button>
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.profile.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <coach-shimmer [height]="172" />
+    <coach-shimmer [height]="112" />
+    <coach-shimmer [height]="160" />
+  }
+</div>

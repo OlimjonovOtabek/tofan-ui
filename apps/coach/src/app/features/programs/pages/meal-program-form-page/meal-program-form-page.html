@@ -1,0 +1,77 @@
+@if (pickingFor() !== null) {
+  <coach-app-bar
+    [title]="'coachApp.foodPicker.title' | t"
+    [backButton]="true"
+    (back)="closePicker()"
+  />
+  <div class="coach-page coach-page--pushed">
+    <coach-food-picker (picked)="picked($event)" />
+  </div>
+} @else {
+  <coach-app-bar
+    [title]="
+      (id() === undefined ? 'coachApp.createMeal.title' : 'coachApp.meal.programEditTitle') | t
+    "
+    [backLink]="back()"
+  />
+  <div class="coach-page coach-page--pushed coach-page--with-footer">
+    @if (store.loadError(); as error) {
+      <coach-empty-state
+        icon="alert-triangle"
+        [title]="'coachApp.workoutProgram.errorTitle' | t"
+        [message]="error | message"
+        [retryable]="true"
+        (retry)="store.load(id() ?? null)"
+      />
+    } @else {
+      @if (store.published()) {
+        <coach-note [text]="'coachApp.workoutProgram.publishedNote' | t" />
+      }
+      <coach-text-field
+        [title]="'coachApp.createMeal.name' | t"
+        [markRequired]="true"
+        [hint]="'coachApp.createMeal.nameHint' | t"
+        [maxLength]="nameMax"
+        [value]="store.name()"
+        (valueChange)="store.name.set($event)"
+      />
+      <div>
+        <span class="c-label">{{ 'coachApp.createProgram.goal' | t }}</span>
+        <coach-choice-chips
+          [choices]="goals()"
+          [selected]="store.goal()"
+          (selectedChange)="store.goal.set($event)"
+        />
+        <p class="t-base5 tone-secondary hint">{{ 'coachApp.createMeal.goalHint' | t }}</p>
+      </div>
+      <div>
+        <h2 class="t-title3">{{ 'coachApp.createMeal.mealsTitle' | t }}</h2>
+        <p class="t-base5 tone-secondary">{{ 'coachApp.meal.optionsHint' | t }}</p>
+      </div>
+      @for (meal of store.meals(); track meal.key) {
+        <coach-meal-draft-card
+          [meal]="meal"
+          (addFood)="pick(meal.key, $event)"
+          (removeItem)="store.removeFood(meal.key, $event.option, $event.index)"
+          (addOption)="store.addOption(meal.key)"
+          (removeOption)="store.removeOption(meal.key, $event)"
+          (removeMeal)="store.removeMeal(meal.key)"
+        />
+      }
+      <button coachButton="soft" type="button" (click)="addMeal()">
+        {{ 'coachApp.createMeal.addMeal' | t }}
+      </button>
+    }
+    <div class="coach-footer">
+      <button
+        coachButton="primary"
+        type="button"
+        [disabled]="!store.canSubmit()"
+        [loading]="store.saving()"
+        (click)="submit()"
+      >
+        {{ (id() === undefined ? 'coachApp.createProgram.submit' : 'coachApp.common.save') | t }}
+      </button>
+    </div>
+  </div>
+}

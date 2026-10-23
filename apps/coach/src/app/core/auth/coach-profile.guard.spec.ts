@@ -28,7 +28,9 @@ describe('coachProfileGuard', () => {
   });
 
   it('should send a trainer without a card to the onboarding page', async () => {
-    vi.mocked(service.get).mockRejectedValue(new NotFoundError('Trainer card not found.', 'Trainer.NotFound'));
+    vi.mocked(service.get).mockRejectedValue(
+      new NotFoundError('Trainer card not found.', 'Trainer.NotFound'),
+    );
 
     const result = await TestBed.runInInjectionContext(() =>
       coachProfileGuard({} as never, { url: '/programs' } as never),

@@ -1,0 +1,42 @@
+.row {
+  gap: 12px;
+  padding: 14px;
+  color: inherit;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.preview {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--c-text-muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.preview.is-unread {
+  color: var(--c-text);
+  font-weight: 500;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.pill {
+  min-width: 22px;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+  text-align: center;
+}

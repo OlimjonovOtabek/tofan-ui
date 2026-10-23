@@ -1,0 +1,55 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 56px;
+  padding: clamp(28px, calc(14.63px + 3.429vw), 64px);
+  border-radius: 32px;
+  background: var(--landing-gold);
+  color: var(--landing-bg);
+}
+
+.copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-size: clamp(32px, calc(24.57px + 1.905vw), 52px);
+  font-weight: 700;
+  line-height: clamp(38px, calc(29.83px + 2.095vw), 60px);
+}
+
+.text {
+  color: var(--landing-on-gold-muted);
+  font-size: var(--landing-intro-size);
+  line-height: var(--landing-intro-line);
+}
+
+.qr {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--landing-text);
+}
+
+.qr img {
+  display: block;
+  border-radius: 8px;
+}
+
+.qr figcaption {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 15px;
+}
+
+@media (max-width: 767px) {
+  .qr {
+    display: none;
+  }
+}

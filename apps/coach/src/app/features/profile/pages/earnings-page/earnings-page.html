@@ -1,0 +1,60 @@
+<coach-app-bar [title]="'coachApp.earnings.title' | t" backLink="/profile" />
+<div class="coach-page coach-page--pushed">
+  <coach-segmented
+    [segments]="segments()"
+    [selected]="store.period()"
+    (selectedChange)="select($event)"
+  />
+  @if (view(); as view) {
+    <div class="c-card c-card--roomy summary">
+      <span class="t-base4 font-medium tone-secondary">{{ 'coachApp.earnings.netLabel' | t }}</span>
+      <span class="t-title1 tone-info coach-ellipsis">{{ view.net }}</span>
+      <span class="t-base5 tone-muted">{{ view.count }}</span>
+      @if (view.refunds) {
+        <span class="t-base5 tone-warning refunds">{{ view.refunds }}</span>
+      }
+    </div>
+    <div>
+      <p class="c-eyebrow">{{ 'coachApp.earnings.paymentsTitle' | t }}</p>
+      @if (view.payments.length === 0) {
+        <coach-empty-state
+          icon="wallet"
+          [title]="'coachApp.payments.emptyTitle' | t"
+          [message]="'coachApp.earnings.paymentsEmptyMessage' | t"
+        />
+      } @else {
+        <div class="c-card c-card--flush">
+          @for (payment of view.payments; track payment.id) {
+            @if (!$first) {
+              <hr class="c-divider" />
+            }
+            <coach-payment-row class="pay" [payment]="payment" [currencyCode]="view.currency" />
+          }
+        </div>
+      }
+    </div>
+    @if (store.canLoadMore()) {
+      <button
+        coachButton="secondary"
+        type="button"
+        [loading]="store.loadingMore()"
+        (click)="store.loadMore()"
+      >
+        {{ 'coachApp.earnings.loadMore' | t }}
+      </button>
+    }
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.earnings.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="select(store.period())"
+    />
+  } @else {
+    <coach-shimmer [height]="196" />
+    @for (row of [1, 2, 3, 4]; track row) {
+      <coach-shimmer [height]="64" [radius]="12" />
+    }
+  }
+</div>

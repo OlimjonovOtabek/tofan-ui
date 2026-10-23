@@ -1,0 +1,55 @@
+<div class="coach-page coach-page--with-footer">
+  <h1 class="t-title1">{{ 'coachApp.programs.title' | t }}</h1>
+  <coach-segmented
+    [segments]="segments()"
+    [selected]="activeKind()"
+    (selectedChange)="selectKind($event)"
+  />
+  @if (rows(); as rows) {
+    @if (rows.length === 0) {
+      @if (activeKind() === 'workout') {
+        <coach-empty-state
+          icon="dumbbell"
+          [title]="'coachApp.programs.emptyTitle' | t"
+          [message]="'coachApp.programs.emptyMessage' | t"
+        />
+      } @else {
+        <coach-empty-state
+          icon="utensils"
+          [title]="'coachApp.programs.mealProgramsEmptyTitle' | t"
+          [message]="'coachApp.programs.mealProgramsEmptyMessage' | t"
+        />
+      }
+    } @else {
+      @for (row of rows; track row.id) {
+        <coach-program-card
+          [title]="row.title"
+          [published]="row.published"
+          [goal]="row.goal"
+          [meta]="row.meta"
+          [publishing]="store.publishingId() === row.id"
+          (open)="open(row.id)"
+          (publish)="publish(row)"
+        />
+      }
+      <coach-note [text]="'coachApp.programs.publishNote' | t" />
+    }
+  } @else if (error(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.programs.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load(activeKind())"
+    />
+  } @else {
+    @for (block of [1, 2, 3]; track block) {
+      <coach-shimmer [height]="172" />
+    }
+  }
+  <div class="coach-footer">
+    <button coachButton="primary" type="button" (click)="create()">
+      {{ 'coachApp.programs.new' | t }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+:host {
+  --mark-size: 36px;
+  --icon-size: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mark {
+  display: inline-grid;
+  place-items: center;
+  width: var(--mark-size);
+  height: var(--mark-size);
+  border-radius: 10px;
+  background: var(--landing-gold);
+  color: var(--landing-bg);
+}
+
+.wordmark {
+  color: var(--landing-text);
+  font-size: 21.6px;
+  font-weight: 700;
+  line-height: 26px;
+  letter-spacing: 2px;
+}
+
+:host(.footer-logo) {
+  --mark-size: 32px;
+  --icon-size: 19px;
+}
+
+:host(.footer-logo) .wordmark {
+  font-size: 19.2px;
+  line-height: 23px;
+}
+
+@media (max-width: 767px) {
+  :host(:not(.footer-logo)) {
+    --mark-size: 30px;
+    --icon-size: 18px;
+  }
+
+  :host(:not(.footer-logo)) .wordmark {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

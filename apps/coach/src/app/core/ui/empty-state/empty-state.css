@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+coach-icon {
+  --icon-size: 28px;
+  color: var(--c-text-muted);
+}
+
+h3 {
+  margin-top: 12px;
+}
+
+p {
+  margin-top: 8px;
+}
+
+.retry {
+  margin-top: 16px;
+}

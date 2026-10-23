@@ -1,0 +1,96 @@
+@if (title(); as title) {
+  <label class="c-label" [attr.for]="fieldId">
+    {{ title }}
+    @if (markRequired()) {
+      <span class="tone-error"> *</span>
+    }
+  </label>
+}
+<div
+  class="box"
+  [class.is-focused]="focused()"
+  [class.is-error]="error() !== null"
+  [class.is-small]="small()"
+  [class.is-multiline]="rows() > 0"
+>
+  @if (leadingIcon(); as icon) {
+    <coach-icon class="leading" [name]="icon" />
+  }
+  @if (rows() > 0) {
+    <div class="multiline">
+      <textarea
+        [id]="fieldId"
+        [rows]="rows()"
+        [value]="value()"
+        [placeholder]="hint()"
+        [disabled]="disabled()"
+        [attr.maxlength]="maxLength()"
+        [attr.aria-label]="ariaLabel()"
+        [attr.aria-invalid]="error() !== null"
+        (input)="typed($event)"
+        (focus)="focused.set(true)"
+        (blur)="blurred()"
+      ></textarea>
+      @if (showCounter() && maxLength() !== undefined) {
+        <span class="counter t-base4"
+          ><span class="tone-secondary">{{ value().length }}</span
+          ><span class="tone-muted">/{{ maxLength() }}</span></span
+        >
+      }
+    </div>
+  } @else {
+    <input
+      #field
+      [id]="fieldId"
+      [type]="inputType()"
+      [value]="value()"
+      [placeholder]="hint()"
+      [disabled]="disabled()"
+      [attr.inputmode]="inputMode()"
+      [attr.autocomplete]="autocomplete()"
+      [attr.maxlength]="maxLength()"
+      [attr.aria-label]="ariaLabel()"
+      [attr.aria-invalid]="error() !== null"
+      (input)="typed($event)"
+      (focus)="focused.set(true)"
+      (blur)="blurred()"
+      (keydown.enter)="submitted.emit()"
+    />
+  }
+  @if (canClear()) {
+    <button
+      type="button"
+      class="trailing"
+      [attr.aria-label]="'coachApp.common.clear' | t"
+      (mousedown)="$event.preventDefault()"
+      (click)="clear()"
+    >
+      <coach-icon name="close" />
+    </button>
+  }
+  @if (type() === 'password') {
+    <button
+      type="button"
+      class="trailing"
+      [attr.aria-label]="
+        (revealed() ? 'coachApp.common.hidePassword' : 'coachApp.common.showPassword') | t
+      "
+      (click)="revealed.set(!revealed())"
+    >
+      <coach-icon [name]="revealed() ? 'eye-off' : 'eye'" />
+    </button>
+  }
+  @if (suffix(); as suffix) {
+    <span class="suffix t-base4 tone-secondary">{{ suffix }}</span>
+  }
+</div>
+@if (error() ?? caption(); as text) {
+  <p
+    class="caption t-base4"
+    [class.tone-error]="error() !== null"
+    [class.tone-secondary]="error() === null"
+    [attr.role]="error() === null ? null : 'alert'"
+  >
+    {{ text }}
+  </p>
+}

@@ -28,6 +28,7 @@ sozlanmaydi. API manzili image ichiga yozilmaydi, bitta image har qanday muhitda
 | ----------------------------- | ------------------------------------------------------------------- |
 | `Dockerfile`                  | `node:24-slim` da `npm ci` + `npm run build`, keyin nginx           |
 | `Dockerfile.coach`            | Coach app’ni alohida image qilib yig‘adi (`dist/coach/browser`)      |
+| `Dockerfile.landing`          | Landing'ni SSR Node server image qilib yig'adi (`dist/landing`, port 4000) |
 | `nginx/default.conf.template` | SPA, kesh, `/api` proxy; ishga tushganda env bilan to'ldiriladi     |
 | `nginx/security-headers.inc`  | `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`               |
 | `.dockerignore`               | `node_modules`, `dist`, `.git` va hujjatlarni kontekstdan chiqaradi |
@@ -65,7 +66,21 @@ docker run --rm -p 8081:8080 -e API_UPSTREAM=http://host.docker.internal:5179 ej
 Rollback: coach service image tag’ini oxirgi ishlagan `tofan-coach` tag’iga qaytaring. Admin service
 image’iga tegilmaydi.
 
-## Serverda
+## Landing image
+
+Landing (`peaktofan.com`) nginx emas, Angular SSR Express server bilan ishlaydi: `/`, `/ru`, `/en` build vaqtida prerender qilinadi, boshqa manzillar 404 sahifa bilan server'da render qilinadi.
+API'ga murojaat qilmaydi, shuning uchun `API_UPSTREAM` kerak emas.
+
+```bash
+docker build -f Dockerfile.landing -t ejakhangir/tofan-landing:v1.0 .
+docker run --rm -p 4000:4000 ejakhangir/tofan-landing:v1.0
+curl -s http://localhost:4000/healthz   # ok
+```
+
+SSR faqat `angular.json` dagi `security.allowedHosts` ro'yxatidagi host'larga javob beradi (`peaktofan.com`, `www.peaktofan.com`, localhost).
+Tashqi nginx `Host` header'ini o'zgartirmasdan uzatishi kerak (`proxy_set_header Host $host;`).
+
+
 
 ### 1. Env
 
@@ -150,6 +165,11 @@ server {
     }
 }
 ```
+
+Coach paneli chat uchun WebSocket (SignalR, `/api/hubs/chat`) ishlatadi. Tashqi nginx `proxy_params.inc`
+ichida `proxy_http_version 1.1;`, `proxy_set_header Upgrade $http_upgrade;` va
+`proxy_set_header Connection $connection_upgrade;` bo'lishi kerak (`map $http_upgrade $connection_upgrade`
+`http` darajasida e'lon qilinadi).
 
 ```bash
 docker exec $(docker ps -qf name=tofan_nginx) nginx -t

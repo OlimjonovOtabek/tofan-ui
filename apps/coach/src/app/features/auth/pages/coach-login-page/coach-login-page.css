@@ -1,50 +1,59 @@
-.login-page {
+:host {
+  display: block;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
   min-height: 100dvh;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  padding: 2rem 1.25rem;
+  padding: 24px;
 }
-.login-layout {
-  width: min(100%, 28rem);
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 440px;
 }
-.login-brand {
+
+.title {
+  margin: 20px 0 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.form coach-text-field + coach-text-field {
+  margin-top: 16px;
+}
+
+.forgot {
+  align-self: flex-end;
+  margin-top: 12px;
+}
+
+.remember {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-bottom: 2rem;
-  font-size: 1.65rem;
-  font-weight: 650;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 4px;
 }
-.login-logo {
-  display: block;
-  height: 3rem;
-  width: 2rem;
+
+.remember span {
+  flex: 1;
 }
-.brand-product {
-  color: var(--coach-muted);
-  font-weight: 450;
-  font-size: 1.1rem;
+
+.submit {
+  width: 100%;
+  margin-top: 20px;
 }
-.login-heading {
-  margin-bottom: 1.75rem;
-}
-.login-heading p {
-  margin-top: 0.75rem;
-  color: var(--coach-muted);
-}
-form {
-  display: grid;
-  gap: 1.25rem;
-}
-.login-submit {
-  justify-content: center;
-  margin-top: 0.5rem;
-}
-@media (max-width: 760px) {
-  .login-page {
-    align-content: start;
-    padding-top: 4rem;
+
+@media (min-width: 768px) {
+  .page {
+    align-items: center;
   }
 }

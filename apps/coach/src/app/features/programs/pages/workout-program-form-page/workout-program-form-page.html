@@ -1,0 +1,95 @@
+@if (editing(); as editing) {
+  <coach-app-bar
+    [title]="(editing.index === null ? 'coachApp.day.addTitle' : 'coachApp.day.editTitle') | t"
+    [backButton]="true"
+    (back)="closeEditor()"
+  />
+  <div class="coach-page coach-page--pushed coach-page--with-footer">
+    <coach-day-editor [day]="editing.draft" (saved)="saveDay($event)" />
+  </div>
+} @else {
+  <coach-app-bar
+    [title]="
+      (id() === undefined ? 'coachApp.createProgram.title' : 'coachApp.workoutProgram.editDetails')
+        | t
+    "
+    [backLink]="back()"
+  />
+  <div class="coach-page coach-page--pushed coach-page--with-footer">
+    @if (store.loadError(); as error) {
+      <coach-empty-state
+        icon="alert-triangle"
+        [title]="'coachApp.workoutProgram.errorTitle' | t"
+        [message]="error | message"
+        [retryable]="true"
+        (retry)="store.load(id() ?? null)"
+      />
+    } @else {
+      @if (store.published()) {
+        <coach-note [text]="'coachApp.workoutProgram.publishedNote' | t" />
+      }
+      <coach-text-field
+        [title]="'coachApp.createProgram.name' | t"
+        [hint]="'coachApp.createProgram.nameHint' | t"
+        [value]="store.form().name"
+        (valueChange)="store.patch({ name: $event })"
+      />
+      <div>
+        <span class="c-label">{{ 'coachApp.createProgram.goal' | t }}</span>
+        <coach-choice-chips
+          [choices]="goals()"
+          [selected]="store.form().goal"
+          (selectedChange)="store.patch({ goal: $event })"
+        />
+      </div>
+      <div>
+        <span class="c-label">{{ 'coachApp.createProgram.level' | t }}</span>
+        <coach-segmented
+          [segments]="levels()"
+          [selected]="store.form().experienceLevel"
+          (selectedChange)="store.patch({ experienceLevel: $event })"
+        />
+      </div>
+      <div>
+        <span class="c-label">{{ 'coachApp.createProgram.place' | t }}</span>
+        <coach-segmented
+          [segments]="places()"
+          [selected]="store.form().isHomeWorkout"
+          (selectedChange)="store.patch({ isHomeWorkout: $event })"
+        />
+      </div>
+      @if (id() === undefined) {
+        <div>
+          <h2 class="t-title3">{{ 'coachApp.workoutProgram.daysTitle' | t }}</h2>
+          <p class="t-base3 tone-secondary">{{ 'coachApp.createProgram.daysHint' | t }}</p>
+        </div>
+        @for (day of store.days(); track $index; let i = $index) {
+          <coach-numbered-tile
+            [number]="i + 1"
+            [title]="dayTitle(day, i + 1)"
+            [subtitle]="'coachApp.day.videoCount' | t: { count: day.videos.length }"
+            [hasMore]="true"
+            (open)="openDay(i)"
+            (more)="dayMenu(day, i)"
+          />
+        }
+        @if (store.canAddDay()) {
+          <button coachButton="soft" type="button" (click)="openDay(null)">
+            {{ 'coachApp.day.addButton' | t }}
+          </button>
+        }
+      }
+    }
+    <div class="coach-footer">
+      <button
+        coachButton="primary"
+        type="button"
+        [disabled]="!store.canSubmit()"
+        [loading]="store.saving()"
+        (click)="submit()"
+      >
+        {{ (id() === undefined ? 'coachApp.createProgram.submit' : 'coachApp.common.save') | t }}
+      </button>
+    </div>
+  </div>
+}

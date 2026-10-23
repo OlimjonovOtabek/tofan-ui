@@ -1,0 +1,48 @@
+<footer class="footer">
+  <div class="container">
+    <div class="top">
+      <div class="about">
+        <a class="brand" [routerLink]="homeUrl()" [attr.aria-label]="'brand' | t">
+          <landing-brand-logo variant="footer" />
+        </a>
+        <p class="tagline">{{ 'footer.tagline' | t }}</p>
+        <ul class="socials" [attr.aria-label]="'footer.social' | t">
+          @for (social of socials; track social.icon) {
+            <li>
+              <a
+                class="social"
+                target="_blank"
+                rel="noopener"
+                [attr.href]="social.href"
+                [attr.aria-label]="social.label | t"
+              >
+                <landing-icon [name]="social.icon" />
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+      @for (column of columns; track column.title) {
+        <nav class="column" [attr.aria-label]="column.title | t">
+          <h2 class="column-title">{{ column.title | t }}</h2>
+          <ul class="column-links">
+            @for (link of column.links; track link.label) {
+              <li>
+                @if (link.kind === 'section') {
+                  <a class="link" [routerLink]="homeUrl()" [fragment]="link.section">{{
+                    link.label | t
+                  }}</a>
+                } @else {
+                  <a class="link" target="_blank" rel="noopener" [attr.href]="link.href">{{
+                    link.label | t
+                  }}</a>
+                }
+              </li>
+            }
+          </ul>
+        </nav>
+      }
+    </div>
+    <p class="copyright">{{ 'footer.copyright' | t: { year } }}</p>
+  </div>
+</footer>

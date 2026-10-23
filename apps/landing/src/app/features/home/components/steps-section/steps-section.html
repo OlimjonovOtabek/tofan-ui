@@ -1,0 +1,14 @@
+<section class="section">
+  <div class="container content">
+    <landing-section-heading eyebrow="steps.eyebrow" title="steps.title" />
+    <ol class="grid">
+      @for (step of steps; track step.title; let number = $index) {
+        <li class="card">
+          <span class="number">{{ number + 1 }}</span>
+          <h3 class="card-title">{{ step.title | t }}</h3>
+          <p class="card-text">{{ step.text | t }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

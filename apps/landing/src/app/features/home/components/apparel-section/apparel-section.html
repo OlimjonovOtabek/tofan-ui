@@ -1,0 +1,31 @@
+<section class="section" [id]="sectionId">
+  <div class="container layout">
+    <div class="visual">
+      <landing-icon class="shirt" name="shirt" />
+      <span class="chip">
+        <landing-icon name="nfc" />
+        {{ 'apparel.chip' | t }}
+      </span>
+    </div>
+    <div class="copy">
+      <p class="eyebrow">{{ 'apparel.eyebrow' | t }}</p>
+      <h2 class="section-title">{{ 'apparel.title' | t }}</h2>
+      <p class="section-text">{{ 'apparel.text' | t }}</p>
+      <ul class="points">
+        @for (point of points; track point) {
+          <li class="point">
+            <landing-icon name="check" />
+            <span>{{ point | t }}</span>
+          </li>
+        }
+      </ul>
+      <div class="purchase">
+        <p class="price">{{ 'apparel.price' | t }}</p>
+        <a class="btn btn-primary" target="_blank" rel="noopener" [attr.href]="shopUrl">
+          <landing-icon name="bag" />
+          {{ 'apparel.buy' | t }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

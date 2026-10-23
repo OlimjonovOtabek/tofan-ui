@@ -1,0 +1,16 @@
+:host {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: var(--spinner-size, 22px);
+  height: var(--spinner-size, 22px);
+  border: 2.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

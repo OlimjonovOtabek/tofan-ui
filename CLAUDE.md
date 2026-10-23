@@ -8,7 +8,7 @@ Detailed rules live in `.claude/rules/` (loaded per file type) and `docs/` (read
 
 ## 1. Project identity
 
-Tofan is a fitness ecosystem. This repository contains separate admin and coach panels in one Nx workspace.
+Tofan is a fitness ecosystem. This repository contains separate admin and coach panels and the public landing site (`peaktofan.com`) in one Nx workspace.
 Backend (.NET 10, modular monolith, CQRS) lives in a separate repository.
 Backend contract details: `docs/backend-contract.md`. Architecture rationale: `docs/architecture.md`.
 
@@ -32,10 +32,14 @@ npm run start:coach   # coach via Nx; local backend proxy
 npm run start:coach:staging # coach via Nx; staging backend proxy
 npm run start:prod    # admin via Nx; api.peaktofan.com proxy (API v9.1)
 npm run start:coach:prod # coach via Nx; api.peaktofan.com proxy (API v9.1)
+npm run start:landing # landing via Nx (SSR dev server, port 4400)
 npm run build         # admin production build
 npm run build:coach   # coach production build
+npm run build:landing # landing production build (SSR, prerenders /, /ru, /en)
+npm run serve:ssr:landing # serve dist/landing on :4000
 npm test              # admin Vitest suite
 npm run test:coach    # coach Vitest suite
+npm run test:landing  # landing Vitest suite
 npm run format        # Prettier over apps/ and libs/
 npm run lint          # Nx lint targets + lint:comments + lint:boundaries
 npm run lint:comments # fails on any comment in any project file
@@ -43,7 +47,7 @@ npm run lint:boundaries # sheriff verify: fails on an import that breaks the tab
 npx ng g component apps/admin/src/app/features/<feature>/components/<name>
 ```
 
-After every task: run `lint`, `test`, `test:coach`, `build` and `build:coach`. Fix what you broke. Never disable a rule to make it pass.
+After every task: run `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` and `build:landing`. Fix what you broke. Never disable a rule to make it pass.
 There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
 `http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
 forwards to the old staging API `https://api.157.90.117.20.sslip.io` (API v8.9, becomes the stage server
@@ -55,9 +59,12 @@ data there. Signing in needs a Keycloak account with the realm role `admin`. Con
 
 Admin features live in `apps/admin/src/app/features`; Coach features live in `apps/coach/src/app/features`
 (same `pages/`, `components/`, `models/`, `services/` layout; coach-only shared code in `apps/coach/src/app/core`).
+The landing lives in `apps/landing`: SSR with prerendered `/`, `/ru`, `/en`, no backend calls, no Optimus UI, and its own
+typed dictionary in `apps/landing/src/app/core/i18n` (the panel dictionary is too heavy for a public page). Details and
+traps: `docs/modules/landing.md`.
 Shared auth, HTTP, feedback and i18n live in `libs/core`; shared UI, models and utilities live in
 `libs/shared`. Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`,
-`@coach-environments/*`. Admin styles live in `apps/admin/src/styles/`; Coach styles live in
+`@coach-environments/*`, `@landing/*`. Admin styles live in `apps/admin/src/styles/`; Coach styles live in
 `apps/coach/src/`. Both use Tailwind v4 utilities + `@openng/optimus-ui-tailwindcss`; admin layout is
 based on Sakai (sakai-ng). `AGENTS.md` is the tool-neutral copy of these rules; keep it in sync.
 
@@ -86,6 +93,11 @@ curl -s http://localhost:8080/healthz   # ok
   a new tag, setting `TOFAN_ADMIN_IMAGE` and re-running `docker stack deploy` (`start-first`, no downtime).
   Full steps, certificate and external nginx config: `docs/deployment.md`.
 
+### 2.2 Landing production
+
+`Dockerfile.landing` builds `dist/landing` and runs the Angular SSR Express server (`node dist/landing/server/server.mjs`)
+on port 4000; `GET /healthz` returns `ok`. SSR only answers the hosts in `security.allowedHosts` (`angular.json`).
+
 ## 3. Architecture (non-negotiable)
 
 Standard Angular feature-based structure. **No Clean Architecture layers** (no domain/application/
@@ -98,9 +110,14 @@ apps/admin/src/app/
   features/                # admin feature groups, lazy loaded
   routes/                  # admin app.routes.ts
 apps/coach/src/app/
-  core/                    # coach shell, profile guard and the shared coach profile service
-  features/                # auth, programs, content, profile, clients (lazy loaded)
+  core/                    # coach shell, ui primitives, formats, shared client, payment and video code, profile guard
+  features/                # auth, dashboard, programs, clients, chat, profile (lazy loaded)
   routes/                  # coach app.routes.ts
+apps/landing/src/app/
+  core/                    # links, landing dictionary and locale routes, shell, SEO head
+  shared/                  # icon sprite and icon component
+  features/                # home, not-found (lazy loaded)
+  routes/                  # landing app.routes.ts and app.routes.server.ts
 libs/core/src/             # shared auth, HTTP, feedback and i18n
 libs/shared/src/           # shared components, models and utilities
 ```
@@ -114,7 +131,7 @@ uses `loadChildren`.
 
 | Folder | May import | Must NOT import |
 |---|---|---|
-| apps/admin, apps/coach | own features, `libs/core`, `libs/shared` | each other |
+| apps/admin, apps/coach, apps/landing | own features, `libs/core`, `libs/shared` | each other |
 | libs/core | other core areas, `libs/shared` | app features |
 | libs/shared | shared code, core HTTP/feedback/i18n | app features, core layout |
 | feature/<x> | core, shared, own files | other features |
