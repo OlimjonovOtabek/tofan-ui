@@ -1,0 +1,46 @@
+.player {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--c-video);
+  color: var(--c-on-video);
+}
+
+.player[open] {
+  display: grid;
+  place-items: center;
+}
+
+.player::backdrop {
+  background: var(--c-video);
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+p {
+  padding: 24px;
+  text-align: center;
+}
+
+.close {
+  position: absolute;
+  top: calc(8px + env(safe-area-inset-top));
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-scrim);
+  color: var(--c-on-video);
+  --icon-size: 24px;
+}
