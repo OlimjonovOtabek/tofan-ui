@@ -1,0 +1,55 @@
+<div class="coach-page">
+  @if (store.dashboard(); as dashboard) {
+    <h1 class="t-title1">{{ 'coachApp.dashboard.title' | t }}</h1>
+    <coach-earnings-card [earnings]="dashboard.earnings" (open)="openEarnings()" />
+    @if (dashboard.subscribers; as subscribers) {
+      <coach-subscribers-grid [stats]="subscribers" (openClients)="openClients($event)" />
+    }
+    <coach-people-section
+      [title]="'coachApp.dashboard.expiringTitle' | t"
+      [people]="dashboard.expiring"
+      detail="endsOn"
+      [now]="now"
+      (seeAll)="openClients('expiring')"
+      (openPerson)="openClient($event)"
+    />
+    <coach-people-section
+      [title]="'coachApp.dashboard.lowActivityTitle' | t"
+      [people]="dashboard.lowActivity"
+      detail="lastWorkout"
+      [now]="now"
+      (seeAll)="openClients('lowActivity')"
+      (openPerson)="openClient($event)"
+    />
+    @if (dashboard.programs; as programs) {
+      <coach-programs-card [programs]="programs" (seeAll)="openPrograms()" />
+    }
+    <coach-section-card
+      [title]="'coachApp.dashboard.paymentsTitle' | t"
+      [actionLabel]="'coachApp.common.seeAll' | t"
+      (action)="openEarnings()"
+    >
+      @for (payment of dashboard.recentPayments; track payment.id) {
+        <coach-payment-row
+          [payment]="payment"
+          [currencyCode]="dashboard.earnings?.currencyCode ?? null"
+        />
+      } @empty {
+        <p class="t-base4 tone-secondary">{{ 'coachApp.payments.emptyTitle' | t }}</p>
+      }
+    </coach-section-card>
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.dashboard.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <coach-shimmer [height]="30" width="140px" [radius]="8" />
+    @for (block of [1, 2, 3]; track block) {
+      <coach-shimmer [height]="172" />
+    }
+  }
+</div>

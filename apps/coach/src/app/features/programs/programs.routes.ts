@@ -1,27 +1,48 @@
-import { pageTitle } from '@core/i18n/page-title';
 import { Routes } from '@angular/router';
-import {
-  canDeactivateMealEditor,
-  CoachMealEditorPage,
-} from './pages/coach-meal-editor-page/coach-meal-editor-page';
-import { CoachProgramsPage } from './pages/coach-programs-page/coach-programs-page';
-import {
-  canDeactivateWorkoutEditor,
-  CoachWorkoutEditorPage,
-} from './pages/coach-workout-editor-page/coach-workout-editor-page';
+import { pageTitle } from '@core/i18n/page-title';
+import { PUSHED_ROUTE } from '@coach/core/layout/coach-navigation';
+import { MealProgramFormPage } from './pages/meal-program-form-page/meal-program-form-page';
+import { MealProgramPage } from './pages/meal-program-page/meal-program-page';
+import { ProgramsPage } from './pages/programs-page/programs-page';
+import { WorkoutProgramFormPage } from './pages/workout-program-form-page/workout-program-form-page';
+import { WorkoutProgramPage } from './pages/workout-program-page/workout-program-page';
 
 export const PROGRAM_ROUTES: Routes = [
-  { path: '', title: pageTitle('coach.titles.programs'), component: CoachProgramsPage },
+  { path: '', title: pageTitle('coachApp.programs.title'), component: ProgramsPage },
+  {
+    path: 'workout/new',
+    title: pageTitle('coachApp.createProgram.title'),
+    data: { [PUSHED_ROUTE]: true },
+    component: WorkoutProgramFormPage,
+  },
+  {
+    path: 'workout/:id/edit',
+    title: pageTitle('coachApp.workoutProgram.editDetails'),
+    data: { [PUSHED_ROUTE]: true },
+    component: WorkoutProgramFormPage,
+  },
   {
     path: 'workout/:id',
-    title: pageTitle('coach.titles.workoutEditor'),
-    component: CoachWorkoutEditorPage,
-    canDeactivate: [canDeactivateWorkoutEditor],
+    title: pageTitle('coachApp.workoutProgram.detailTitle'),
+    data: { [PUSHED_ROUTE]: true },
+    component: WorkoutProgramPage,
+  },
+  {
+    path: 'meal/new',
+    title: pageTitle('coachApp.createMeal.title'),
+    data: { [PUSHED_ROUTE]: true },
+    component: MealProgramFormPage,
+  },
+  {
+    path: 'meal/:id/edit',
+    title: pageTitle('coachApp.meal.programEditTitle'),
+    data: { [PUSHED_ROUTE]: true },
+    component: MealProgramFormPage,
   },
   {
     path: 'meal/:id',
-    title: pageTitle('coach.titles.mealEditor'),
-    component: CoachMealEditorPage,
-    canDeactivate: [canDeactivateMealEditor],
+    title: pageTitle('coachApp.meal.programDetailTitle'),
+    data: { [PUSHED_ROUTE]: true },
+    component: MealProgramPage,
   },
 ];

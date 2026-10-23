@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+:host(.is-boxed) {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--c-border);
+  border-radius: 18px;
+  background: var(--c-surface);
+}

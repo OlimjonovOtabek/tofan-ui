@@ -1,0 +1,45 @@
+@let counts = stats();
+<div class="coach-pair">
+  <button type="button" class="tile c-pressable" (click)="openClients.emit('active')">
+    <coach-metric-tile
+      [label]="'coachApp.dashboard.stat.active' | t"
+      [value]="'' + counts.active"
+      [caption]="
+        counts.expiring > 0
+          ? ('coachApp.dashboard.stat.expiring' | t) + ': ' + counts.expiring
+          : null
+      "
+      captionTone="warning"
+    />
+  </button>
+  <button type="button" class="tile c-pressable" (click)="openClients.emit('all')">
+    <coach-metric-tile [label]="'coachApp.dashboard.stat.total' | t" [value]="'' + counts.total" />
+  </button>
+</div>
+<div class="coach-pair">
+  <coach-metric-tile
+    [label]="'coachApp.dashboard.stat.renewed' | t"
+    [value]="'' + counts.renewedThisMonth"
+    [caption]="'coachApp.dashboard.stat.thisMonth' | t"
+  />
+  <button type="button" class="tile c-pressable" (click)="openClients.emit('ended')">
+    <coach-metric-tile
+      [label]="'coachApp.dashboard.stat.churned' | t"
+      [value]="'' + counts.churnedThisMonth"
+      [caption]="'coachApp.dashboard.stat.thisMonth' | t"
+    />
+  </button>
+</div>
+<div class="coach-pair">
+  <coach-metric-tile
+    [label]="'coachApp.dashboard.stat.activeUsers' | t"
+    [value]="'' + counts.activeUsers"
+  />
+  <button type="button" class="tile c-pressable" (click)="openClients.emit('lowActivity')">
+    <coach-metric-tile
+      [label]="'coachApp.dashboard.stat.lowActivity' | t"
+      [value]="'' + counts.lowActivity"
+      [valueTone]="counts.lowActivity > 0 ? 'warning' : 'primary'"
+    />
+  </button>
+</div>

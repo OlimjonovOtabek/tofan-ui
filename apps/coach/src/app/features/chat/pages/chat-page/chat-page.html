@@ -1,0 +1,79 @@
+<div class="coach-page">
+  <h1 class="t-title1">{{ 'coachApp.chat.title' | t }}</h1>
+  @if (store.conversations(); as conversations) {
+    <coach-text-field
+      [small]="true"
+      leadingIcon="search"
+      [hint]="'coachApp.chat.searchHint' | t"
+      [value]="store.query()"
+      (valueChange)="store.query.set($event)"
+    />
+    <div class="c-chips c-chips--scroll">
+      @for (filter of filters; track filter.value) {
+        <button
+          type="button"
+          class="c-chip"
+          [class.is-selected]="store.filter() === filter.value"
+          (click)="select(filter.value)"
+        >
+          {{ filter.label | t }}
+        </button>
+      }
+    </div>
+    @if (conversations.length === 0) {
+      <coach-empty-state
+        icon="message-circle"
+        [title]="'coachApp.chat.emptyTitle' | t"
+        [message]="'coachApp.chat.emptyMessage' | t"
+      />
+    } @else if (rows().length === 0) {
+      <coach-empty-state
+        icon="search"
+        [title]="'coachApp.clients.noMatchesTitle' | t"
+        [message]="'coachApp.chat.noMatches' | t"
+      />
+    } @else {
+      <div class="c-card c-card--flush">
+        @for (row of rows(); track row.conversation.id) {
+          @if (!$first) {
+            <hr class="c-divider" />
+          }
+          <button
+            type="button"
+            class="row c-row-button c-pressable"
+            (click)="open(row.conversation)"
+          >
+            <coach-avatar [initials]="row.initials" [imageUrl]="row.conversation.photoUrl" />
+            <span class="text">
+              <span class="t-title4 coach-ellipsis">{{ row.name }}</span>
+              <span class="preview t-base3" [class.is-unread]="row.conversation.unreadCount > 0">{{
+                row.preview
+              }}</span>
+            </span>
+            <span class="meta">
+              @if (row.time) {
+                <span class="t-base5 tone-muted">{{ row.time }}</span>
+              }
+              @if (row.conversation.unreadCount > 0) {
+                <span class="pill t-base5 font-bold">{{
+                  row.conversation.unreadCount > 99 ? '99+' : row.conversation.unreadCount
+                }}</span>
+              }
+            </span>
+          </button>
+        }
+      </div>
+    }
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.chat.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <coach-shimmer [height]="44" [radius]="14" />
+    <coach-shimmer [height]="360" />
+  }
+</div>

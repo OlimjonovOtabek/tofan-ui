@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.remove,
+.drop {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-text);
+  --icon-size: 16px;
+}
+
+.drop {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-muted);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--c-radius-tile);
+  background: var(--c-bg);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}

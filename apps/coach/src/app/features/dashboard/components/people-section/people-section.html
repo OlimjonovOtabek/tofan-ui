@@ -1,0 +1,22 @@
+<coach-section-card
+  [title]="heading()"
+  [actionLabel]="'coachApp.common.seeAll' | t"
+  (action)="seeAll.emit()"
+>
+  @for (row of rows(); track row.person.userId) {
+    <button
+      type="button"
+      class="person c-row-button c-pressable"
+      (click)="openPerson.emit(row.person)"
+    >
+      <coach-avatar [initials]="row.person.initials" size="small" tone="warning" />
+      <span class="text">
+        <span class="t-base2 font-semibold coach-ellipsis">{{ row.person.fullName }}</span>
+        <span class="t-base4 tone-secondary coach-ellipsis">{{ row.detail }}</span>
+      </span>
+      <coach-icon name="chevron-right" />
+    </button>
+  } @empty {
+    <p class="t-base4 tone-secondary">{{ 'coachApp.dashboard.listEmpty' | t }}</p>
+  }
+</coach-section-card>

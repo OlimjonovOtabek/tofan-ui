@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.open {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 0;
+  color: inherit;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.publish {
+  align-self: flex-end;
+  margin-top: 12px;
+}

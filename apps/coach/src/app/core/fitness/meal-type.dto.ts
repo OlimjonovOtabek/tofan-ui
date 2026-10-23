@@ -8,6 +8,7 @@ export enum MealTypeDto {
   Snack = 4,
   PreWorkout = 5,
   PostWorkout = 6,
+  SecondBreakfast = 7,
 }
 
 export const mealTypes = enumMap<MealType, MealTypeDto>(MealTypeDto);

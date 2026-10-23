@@ -12,7 +12,7 @@ import { NOTIFICATIONS_UZ } from './notifications';
 import { ENUMS_UZ } from './enums';
 import { ERRORS_UZ } from './errors';
 import { LAYOUT_UZ } from './layout';
-import { COACH_UZ } from './coach';
+import { COACH_APP_UZ } from './coach-app';
 
 export const DICTIONARY_UZ = {
   common: COMMON_UZ,
@@ -29,5 +29,5 @@ export const DICTIONARY_UZ = {
   enums: ENUMS_UZ,
   errors: ERRORS_UZ,
   layout: LAYOUT_UZ,
-  coach: COACH_UZ,
+  coachApp: COACH_APP_UZ,
 };

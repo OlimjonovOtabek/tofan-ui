@@ -1,0 +1,113 @@
+<coach-app-bar [title]="'coachApp.meal.programDetailTitle' | t" backLink="/programs" />
+<div class="coach-page coach-page--pushed">
+  @if (store.program(); as program) {
+    <coach-program-summary
+      [title]="title()"
+      [published]="program.isPublished"
+      [meta]="meta()"
+      [editLabel]="'coachApp.meal.programEditTitle' | t"
+      (edit)="edit()"
+    />
+    @if (program.totals; as totals) {
+      <div>
+        <coach-section-header [title]="'coachApp.meal.programTotalsTitle' | t" />
+        @if (several()) {
+          <p class="t-base5 tone-secondary">{{ 'coachApp.meal.programTotalsFirstOption' | t }}</p>
+        }
+      </div>
+      <div class="c-card totals">
+        <div class="kcal">
+          <p class="t-title1">
+            {{ count(totals.calories) }}
+            <span class="t-base4 font-medium tone-secondary">{{
+              'coachApp.nutrition.kcal' | t
+            }}</span>
+          </p>
+          @if (totals.estimatedCost > 0) {
+            <span class="t-base4 font-semibold tone-info">{{ cost(totals.estimatedCost) }}</span>
+          }
+        </div>
+        <div class="macros">
+          <coach-metric-tile
+            size="medium"
+            [label]="'coachApp.nutrition.protein' | t"
+            [value]="count(totals.proteinGrams)"
+            [unit]="'coachApp.nutrition.grams' | t"
+          />
+          <coach-metric-tile
+            size="medium"
+            [label]="'coachApp.nutrition.carbs' | t"
+            [value]="count(totals.carbsGrams)"
+            [unit]="'coachApp.nutrition.grams' | t"
+          />
+          <coach-metric-tile
+            size="medium"
+            [label]="'coachApp.nutrition.fats' | t"
+            [value]="count(totals.fatGrams)"
+            [unit]="'coachApp.nutrition.grams' | t"
+          />
+        </div>
+      </div>
+    }
+    <coach-section-header [title]="'coachApp.createMeal.mealsTitle' | t" />
+    @for (meal of program.meals; track meal.id) {
+      @let options = this.options(meal);
+      <div class="c-card meal">
+        <div class="head">
+          <div class="text">
+            <span class="t-base1 font-bold">{{ mealTitle(meal) }}</span>
+            <span class="t-base5 tone-secondary">{{ mealSubtitle(meal) }}</span>
+          </div>
+          @if (options.length === 1 && options[0].calories > 0) {
+            <span class="t-base4 font-semibold tone-info">{{
+              'coachApp.meal.kcal' | t: { kcal: options[0].calories }
+            }}</span>
+          }
+        </div>
+        @if (options.length === 0) {
+          <p class="t-base4 tone-warning">{{ 'coachApp.createMeal.mealEmpty' | t }}</p>
+        }
+        @for (option of options; track option.number) {
+          @if (options.length > 1) {
+            <p class="t-base5 font-semibold tone-info">
+              {{ 'coachApp.meal.optionNumber' | t: { number: option.number } }}
+              @if (option.calories > 0) {
+                · {{ 'coachApp.meal.kcal' | t: { kcal: option.calories } }}
+              }
+            </p>
+          }
+          @for (item of option.items; track item.id) {
+            <div class="item">
+              <span class="t-base3 name">{{ itemName(item) }}</span>
+              <span class="t-base3 font-semibold tone-secondary">{{ itemPortion(item) }}</span>
+            </div>
+          }
+        }
+      </div>
+    } @empty {
+      <coach-empty-state
+        icon="utensils"
+        [title]="'coachApp.meal.programMealsEmptyTitle' | t"
+        [message]="'coachApp.meal.programMealsEmptyMessage' | t"
+      />
+    }
+    <coach-publish-actions
+      [published]="program.isPublished"
+      [publishing]="store.busy() === 'publishing'"
+      [deleting]="store.busy() === 'deleting'"
+      (togglePublished)="togglePublished(program.isPublished)"
+      (delete)="delete()"
+    />
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.workoutProgram.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load(id())"
+    />
+  } @else {
+    <coach-shimmer [height]="140" />
+    <coach-shimmer [height]="160" />
+  }
+</div>

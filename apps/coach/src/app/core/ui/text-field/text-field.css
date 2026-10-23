@@ -1,0 +1,100 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+:host(.is-disabled) {
+  opacity: 0.5;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--c-radius-input);
+  background: var(--c-surface);
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.box.is-small {
+  height: 44px;
+}
+
+.box.is-multiline {
+  align-items: flex-start;
+  height: auto;
+  padding: 12px 16px;
+}
+
+.box.is-focused {
+  border-color: var(--c-primary);
+  box-shadow: inset 0 0 0 1px var(--c-primary);
+}
+
+.box.is-error {
+  border-color: var(--c-danger);
+}
+
+input,
+textarea {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--c-text-muted);
+  font-size: 15px;
+}
+
+textarea {
+  width: 100%;
+  resize: none;
+}
+
+.multiline {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.leading,
+.trailing {
+  color: var(--c-text-muted);
+  --icon-size: 16px;
+}
+
+.trailing {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  --icon-size: 20px;
+}
+
+.suffix {
+  flex: 0 0 auto;
+}
+
+.caption {
+  padding: 6px 8px 0;
+}
+
+.c-label span {
+  font-weight: 500;
+}

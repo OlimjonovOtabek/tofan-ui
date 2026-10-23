@@ -1,0 +1,82 @@
+<coach-text-field
+  [small]="true"
+  leadingIcon="search"
+  [hint]="'coachApp.foodPicker.searchHint' | t"
+  [autofocus]="true"
+  [value]="query()"
+  (valueChange)="typed($event)"
+/>
+@if (store.foods(); as foods) {
+  @if (foods.length === 0) {
+    <coach-empty-state
+      icon="search"
+      [title]="'coachApp.foodPicker.emptyTitle' | t"
+      [message]="'coachApp.foodPicker.emptyMessage' | t"
+    />
+  } @else {
+    <div class="list">
+      @for (food of foods; track food.id) {
+        <button type="button" class="food c-card c-pressable" (click)="choose(food)">
+          <span class="text">
+            <span class="t-base2 font-medium coach-ellipsis">{{ nameOf(food) }}</span>
+            <span class="t-base5 tone-secondary">{{ portion(food) }}</span>
+          </span>
+          <span class="plus tone-info t-title3">+</span>
+        </button>
+      }
+    </div>
+  }
+} @else if (store.error(); as error) {
+  <coach-empty-state
+    icon="alert-triangle"
+    [title]="'coachApp.foodPicker.errorTitle' | t"
+    [message]="error | message"
+    [retryable]="true"
+    (retry)="store.search(query())"
+  />
+} @else {
+  <div class="loading"><coach-spinner /></div>
+}
+<coach-sheet
+  [open]="sheetOpen()"
+  (openChange)="closeSheet($event)"
+  [title]="chosen() ? nameOf(chosen()!) : ''"
+>
+  @if (chosen()) {
+    <div class="portion">
+      @if (unitChoices().length > 1) {
+        <div>
+          <span class="c-label">{{ 'coachApp.foodPicker.unit' | t }}</span>
+          <coach-choice-chips
+            [choices]="unitChoices()"
+            [selected]="unit()"
+            (selectedChange)="selectUnit($event)"
+          />
+        </div>
+      }
+      <coach-text-field
+        [title]="'coachApp.foodPicker.grams' | t"
+        [suffix]="unitSuffix()"
+        inputMode="decimal"
+        [allowed]="allowedChars"
+        [clearable]="false"
+        [value]="amount()"
+        (valueChange)="amount.set($event)"
+        (submitted)="confirm()"
+      />
+      @if (kcal(); as kcal) {
+        <span class="t-base4 font-medium tone-info">{{
+          'coachApp.meal.kcal' | t: { kcal: kcal }
+        }}</span>
+      }
+      <button
+        coachButton="primary"
+        type="button"
+        [disabled]="quantity() === null"
+        (click)="confirm()"
+      >
+        {{ 'coachApp.foodPicker.add' | t }}
+      </button>
+    </div>
+  }
+</coach-sheet>

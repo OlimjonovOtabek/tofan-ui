@@ -1,0 +1,32 @@
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: var(--c-content-width);
+  height: 56px;
+  margin: 0 auto;
+  padding: 0 var(--c-gutter);
+  background: var(--c-bg);
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-text);
+  --icon-size: 20px;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+}

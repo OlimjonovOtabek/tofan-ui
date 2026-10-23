@@ -1,0 +1,49 @@
+<div class="head">
+  <div class="text">
+    <span class="t-base1 font-bold">{{ meal().title }}</span>
+    @if (kcal() > 0) {
+      <span class="t-base5 font-semibold tone-info">{{
+        'coachApp.meal.kcal' | t: { kcal: kcal() }
+      }}</span>
+    }
+  </div>
+  <button
+    type="button"
+    class="remove"
+    [attr.aria-label]="'coachApp.day.delete' | t"
+    (click)="removeMeal.emit()"
+  >
+    <coach-icon name="close" />
+  </button>
+</div>
+<coach-choice-chips [choices]="choices()" [selected]="option()" (selectedChange)="select($event)" />
+@if (items().length === 0) {
+  <p class="t-base4 tone-warning">{{ 'coachApp.createMeal.mealEmpty' | t }}</p>
+}
+@for (item of items(); track $index; let i = $index) {
+  <div class="item">
+    <span class="t-base3 coach-ellipsis name">{{ nameOf(item) }}</span>
+    <span class="t-base3 font-semibold tone-secondary">{{ portion(item) }}</span>
+    <button
+      type="button"
+      class="drop"
+      [attr.aria-label]="'coachApp.day.videoRemove' | t"
+      (click)="removeItem.emit({ option: option(), index: i })"
+    >
+      <coach-icon name="close" />
+    </button>
+  </div>
+}
+<div class="actions">
+  <button coachTextButton type="button" (click)="addFood.emit(option())">
+    {{ 'coachApp.createMeal.addFood' | t }}<coach-icon name="plus" />
+  </button>
+  <button coachTextButton type="button" (click)="grow()">
+    {{ 'coachApp.meal.optionAdd' | t }}<coach-icon name="plus" />
+  </button>
+  @if (meal().options.length > 1) {
+    <button coachTextButton type="button" (click)="removeOption.emit(option())">
+      {{ 'coachApp.meal.optionRemove' | t }}
+    </button>
+  }
+</div>

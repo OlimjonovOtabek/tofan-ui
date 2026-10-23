@@ -1,10 +1,19 @@
-import { CoachProfile, CoachProfileResponse, UpdateCoachProfileRequest } from './coach-profile.dto';
+import {
+  CoachProfile,
+  CoachProfileChange,
+  CoachProfileResponse,
+  UpdateCoachProfileRequest,
+} from './coach-profile.dto';
 
-export function toCoachProfile(response: CoachProfileResponse, photoUrlOf: (fileId: string) => string): CoachProfile {
+export function toCoachProfile(
+  response: CoachProfileResponse,
+  photoUrlOf: (fileId: string) => string,
+): CoachProfile {
   return {
     id: response.id,
     userId: response.userId,
     displayName: response.displayName,
+    slug: response.slug,
     bio: response.bio,
     photoFileId: response.photoFileId,
     photoUrl: response.photoFileId === null ? null : photoUrlOf(response.photoFileId),
@@ -13,11 +22,27 @@ export function toCoachProfile(response: CoachProfileResponse, photoUrlOf: (file
   };
 }
 
-export function toUpdateCoachProfileRequest(value: UpdateCoachProfileRequest): UpdateCoachProfileRequest {
+export function toCoachProfileChange(
+  profile: CoachProfile,
+  change: Partial<CoachProfileChange> = {},
+): CoachProfileChange {
+  return {
+    displayName: profile.displayName,
+    bio: profile.bio,
+    photoFileId: profile.photoFileId,
+    monthlyPrice: profile.monthlyPrice,
+    ...change,
+  };
+}
+
+export function toUpdateCoachProfileRequest(value: CoachProfileChange): UpdateCoachProfileRequest {
+  const bio = value.bio?.trim() ?? '';
+  const slug = value.slug?.trim() ?? '';
   return {
     displayName: value.displayName.trim(),
-    bio: value.bio?.trim() || null,
-    photoFileId: value.photoFileId,
-    monthlyPrice: value.monthlyPrice,
+    ...(bio === '' ? {} : { bio }),
+    ...(value.photoFileId === null ? {} : { photoFileId: value.photoFileId }),
+    ...(value.monthlyPrice === null ? {} : { monthlyPrice: value.monthlyPrice }),
+    ...(slug === '' ? {} : { slug }),
   };
 }

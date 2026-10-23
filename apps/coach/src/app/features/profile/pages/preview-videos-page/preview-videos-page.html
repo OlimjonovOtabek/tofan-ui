@@ -1,0 +1,96 @@
+<coach-app-bar [title]="'coachApp.previewVideos.title' | t" backLink="/profile" />
+<div class="coach-page coach-page--pushed">
+  @if (store.videos(); as videos) {
+    <div>
+      <p class="t-base5 tone-secondary">{{ 'coachApp.previewVideos.hint' | t }}</p>
+      <p class="t-base4 font-semibold tone-info count">
+        {{ 'coachApp.previewVideos.count' | t: { count: videos.length, max: max } }}
+      </p>
+    </div>
+    @if (videos.length === 0 && store.uploadProgress() === null) {
+      <coach-empty-state
+        icon="play"
+        [title]="'coachApp.previewVideos.emptyTitle' | t"
+        [message]="'coachApp.previewVideos.emptyMessage' | t"
+      />
+    }
+    <div
+      class="list"
+      cdkDropList
+      [cdkDropListDisabled]="store.working()"
+      (cdkDropListDropped)="drop($event)"
+    >
+      @for (video of videos; track video.id; let i = $index) {
+        <div class="c-card tile" cdkDrag>
+          <coach-icon name="list" class="handle" />
+          <span class="t-base2 font-semibold coach-ellipsis name">{{ title(video, i) }}</span>
+          @if (status(video) === 'pending') {
+            <span class="c-tag">{{ 'coachApp.video.statusProcessing' | t }}</span>
+          } @else if (status(video) === 'failed') {
+            <span class="c-tag c-tag--warning">{{ 'coachApp.video.statusFailed' | t }}</span>
+          }
+          @if (watchable(video)) {
+            <button
+              type="button"
+              class="round"
+              [attr.aria-label]="'coachApp.day.videoWatch' | t"
+              (click)="watch(video)"
+            >
+              <coach-icon name="play" />
+            </button>
+          }
+          <button
+            type="button"
+            class="round"
+            [disabled]="store.working()"
+            [attr.aria-label]="'coachApp.day.videoRename' | t"
+            (click)="rename(video)"
+          >
+            <coach-icon name="edit" />
+          </button>
+          <button
+            type="button"
+            class="round"
+            [disabled]="store.working()"
+            [attr.aria-label]="'coachApp.previewVideos.delete' | t"
+            (click)="remove(video)"
+          >
+            <coach-icon name="close" />
+          </button>
+        </div>
+      }
+    </div>
+    @if (store.uploadProgress(); as progress) {
+      <div class="c-card upload">
+        <span class="t-base4 font-medium tone-secondary">{{
+          'coachApp.day.videoUploading' | t: { percent: percent() }
+        }}</span>
+        <coach-progress [value]="progress" />
+      </div>
+    }
+    @if (store.full()) {
+      <p class="t-base5 tone-secondary full">{{ 'coachApp.previewVideos.limit' | t }}</p>
+    } @else {
+      <label class="add c-pressable" [class.is-disabled]="store.working()">
+        <input
+          type="file"
+          accept="video/mp4,video/quicktime,video/webm,.mp4,.m4v,.mov,.webm"
+          hidden
+          [disabled]="store.working()"
+          (change)="chosen($event)"
+        />
+        <span class="t-base1 font-semibold">{{ 'coachApp.previewVideos.add' | t }}</span>
+      </label>
+    }
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.previewVideos.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <div class="loading"><coach-spinner /></div>
+  }
+</div>

@@ -1,0 +1,151 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.names {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chat {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--c-content-width);
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.center {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding: 16px;
+  color: var(--c-primary);
+}
+
+.messages {
+  display: flex;
+  flex: 1;
+  flex-direction: column-reverse;
+  gap: 6px;
+  min-height: 0;
+  padding: 8px 16px 12px;
+  overflow-y: auto;
+}
+
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.day {
+  align-self: center;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: var(--c-surface-2);
+}
+
+.bubble {
+  align-self: flex-start;
+  max-width: 78%;
+  padding: 8px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: 18px 18px 18px 6px;
+  background: var(--c-surface);
+}
+
+.bubble.is-mine {
+  align-self: flex-end;
+  border-color: transparent;
+  border-radius: 18px 18px 6px;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.bubble p {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 2px;
+  opacity: 0.75;
+}
+
+.ticks {
+  display: inline-flex;
+  --icon-size: 16px;
+}
+
+.second {
+  margin-left: -11px;
+}
+
+.empty,
+.older {
+  align-self: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--c-border);
+  background: var(--c-bg);
+}
+
+.input {
+  flex: 1;
+  min-height: 44px;
+  max-height: 140px;
+  padding: 11px 14px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--c-radius-input);
+  outline: 0;
+  background: var(--c-surface);
+  font-size: 15px;
+  line-height: 20px;
+  resize: none;
+  field-sizing: content;
+}
+
+.input:focus {
+  border-color: var(--c-primary);
+}
+
+.send {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+  --icon-size: 20px;
+}
+
+.send:disabled {
+  opacity: 0.5;
+}

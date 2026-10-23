@@ -1,0 +1,50 @@
+:host {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--c-surface-2);
+  --fill: var(--c-primary);
+}
+
+:host(.tone-warning) {
+  --fill: var(--c-warning);
+}
+
+:host(.tone-success) {
+  --fill: var(--c-success);
+}
+
+:host(.tone-muted) {
+  --fill: var(--c-text-muted);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--fill);
+  animation: grow 900ms cubic-bezier(0.33, 1, 0.68, 1);
+  transition: width 400ms ease;
+}
+
+.fill.is-indeterminate {
+  position: absolute;
+  animation: slide 1.2s ease-in-out infinite;
+}
+
+@keyframes grow {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes slide {
+  from {
+    left: -30%;
+  }
+  to {
+    left: 100%;
+  }
+}

@@ -13,8 +13,6 @@ export const coachProfileGuard: CanActivateFn = async (_route, state) => {
     await service.get();
     return true;
   } catch (error) {
-    return error instanceof NotFoundError
-      ? router.createUrlTree(['/onboarding'])
-      : true;
+    return error instanceof NotFoundError ? router.createUrlTree(['/onboarding']) : true;
   }
 };

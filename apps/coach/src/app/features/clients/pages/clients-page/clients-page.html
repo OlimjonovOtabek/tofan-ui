@@ -1,0 +1,85 @@
+<div class="coach-page">
+  <div class="title">
+    <h1 class="t-title1">{{ 'coachApp.clients.title' | t }}</h1>
+    @if (store.clients(); as clients) {
+      <span class="c-tag">{{ clients.length }}</span>
+    }
+  </div>
+  @if (store.clients(); as clients) {
+    <coach-text-field
+      [small]="true"
+      leadingIcon="search"
+      [hint]="'coachApp.clients.searchHint' | t"
+      [value]="store.query()"
+      (valueChange)="store.query.set($event)"
+    />
+    <div class="c-chips c-chips--scroll" role="tablist">
+      @for (filter of filters; track filter) {
+        <button
+          type="button"
+          class="c-chip"
+          [class.is-selected]="store.filter() === filter"
+          (click)="select(filter)"
+        >
+          {{ label(filter) }}
+        </button>
+      }
+    </div>
+    @if (clients.length === 0) {
+      <coach-empty-state
+        icon="user"
+        [title]="'coachApp.clients.emptyTitle' | t"
+        [message]="'coachApp.clients.emptyMessage' | t"
+      />
+    } @else if (rows().length === 0) {
+      <coach-empty-state
+        icon="search"
+        [title]="'coachApp.clients.noMatchesTitle' | t"
+        [message]="'coachApp.clients.noMatchesMessage' | t"
+      />
+    } @else {
+      <div class="c-card c-card--flush">
+        @for (row of rows(); track row.client.userId) {
+          @if (!$first) {
+            <hr class="c-divider" />
+          }
+          <button type="button" class="row c-row-button c-pressable" (click)="open(row.client)">
+            <coach-avatar [initials]="row.initials" />
+            <span class="text">
+              <span class="line">
+                <span class="t-title4 coach-ellipsis">{{ row.name }}</span>
+                @if (row.review) {
+                  <span class="c-tag c-tag--warning">{{
+                    'coachApp.clients.statusNeedsReview' | t
+                  }}</span>
+                }
+              </span>
+              <span class="t-base4 font-medium coach-ellipsis" [class]="row.accessTone">{{
+                row.access
+              }}</span>
+            </span>
+            <span
+              class="t-base5"
+              [class.tone-warning]="row.lowActivity"
+              [class.tone-muted]="!row.lowActivity"
+              >{{ row.activity }}</span
+            >
+          </button>
+        }
+      </div>
+    }
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.clients.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <coach-shimmer [height]="44" [radius]="14" />
+    @for (block of [1, 2, 3]; track block) {
+      <coach-shimmer [height]="72" />
+    }
+  }
+</div>

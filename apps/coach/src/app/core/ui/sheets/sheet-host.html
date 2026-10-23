@@ -1,0 +1,58 @@
+<coach-sheet [open]="request() !== null" (openChange)="openChanged($event)" [title]="title()">
+  @if (confirmSheet(); as request) {
+    @if (request.sheet.message; as message) {
+      <p class="message t-base3 tone-secondary">{{ message }}</p>
+    }
+    <div class="buttons">
+      <button
+        [coachButton]="request.sheet.destructive ? 'destructive' : 'primary'"
+        type="button"
+        (click)="confirm(true)"
+      >
+        {{ request.sheet.confirmLabel }}
+      </button>
+      <button coachButton="secondary" type="button" (click)="confirm(false)">
+        {{ request.sheet.cancelLabel }}
+      </button>
+    </div>
+  }
+  @if (actionSheet(); as request) {
+    @for (action of request.actions; track action.label) {
+      <button
+        type="button"
+        class="action c-row-button c-pressable"
+        [class.is-destructive]="action.destructive"
+        (click)="run(action)"
+      >
+        <coach-icon [name]="action.icon" />
+        <span class="t-base1 font-medium">{{ action.label }}</span>
+      </button>
+    }
+  }
+  @if (choiceSheet(); as request) {
+    <div class="choices">
+      @for (choice of request.choices; track $index) {
+        <coach-option-tile
+          [title]="choice.title"
+          [subtitle]="choice.subtitle ?? null"
+          [selected]="choice.selected ?? false"
+          (pick)="choose(choice)"
+        />
+      }
+    </div>
+  }
+  @if (promptSheet(); as request) {
+    <div class="prompt">
+      <coach-text-field
+        [(value)]="promptText"
+        [hint]="request.sheet.hint"
+        [maxLength]="request.sheet.maxLength"
+        [autofocus]="true"
+        (submitted)="save()"
+      />
+      <button coachButton="primary" type="button" (click)="save()">
+        {{ request.sheet.actionLabel }}
+      </button>
+    </div>
+  }
+</coach-sheet>

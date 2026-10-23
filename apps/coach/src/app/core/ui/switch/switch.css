@@ -1,0 +1,35 @@
+:host {
+  display: inline-flex;
+}
+
+.track {
+  width: 48px;
+  height: 28px;
+  padding: 2px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--c-surface-2);
+  transition: background-color 180ms ease;
+}
+
+.track.is-on {
+  background: var(--c-primary);
+}
+
+.track:disabled {
+  background: var(--c-border);
+  cursor: default;
+}
+
+.thumb {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--c-on-video);
+  transition: transform 180ms ease-out;
+}
+
+.track.is-on .thumb {
+  transform: translateX(20px);
+}

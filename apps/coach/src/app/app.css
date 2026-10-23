@@ -2,3 +2,23 @@
   display: block;
   min-height: 100dvh;
 }
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  --icon-size: 20px;
+}
+
+.toast span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
