@@ -1,0 +1,119 @@
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.photo {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.camera {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--c-surface);
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+  --icon-size: 16px;
+}
+
+.bio {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.identity .c-tag {
+  margin-top: 10px;
+}
+
+.wide {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.head h2 {
+  flex: 1;
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--c-radius-input);
+  background: var(--c-bg);
+  --icon-size: 16px;
+}
+
+.address span {
+  flex: 1;
+  min-width: 0;
+}
+
+.copy {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-primary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.setting {
+  gap: 12px;
+  padding: 14px;
+  color: inherit;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  --icon-size: 16px;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chevron {
+  color: var(--c-text-muted);
+  --icon-size: 16px;
+}
