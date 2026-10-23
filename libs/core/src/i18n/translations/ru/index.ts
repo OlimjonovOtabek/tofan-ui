@@ -13,7 +13,7 @@ import { NOTIFICATIONS_RU } from './notifications';
 import { ENUMS_RU } from './enums';
 import { ERRORS_RU } from './errors';
 import { LAYOUT_RU } from './layout';
-import { COACH_RU } from './coach';
+import { COACH_APP_RU } from './coach-app';
 
 export const DICTIONARY_RU: Dictionary = {
   common: COMMON_RU,
@@ -30,5 +30,5 @@ export const DICTIONARY_RU: Dictionary = {
   enums: ENUMS_RU,
   errors: ERRORS_RU,
   layout: LAYOUT_RU,
-  coach: COACH_RU,
+  coachApp: COACH_APP_RU,
 };
