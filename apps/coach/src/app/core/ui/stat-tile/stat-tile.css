@@ -1,0 +1,41 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.head span {
+  flex: 1;
+  min-width: 0;
+}
+
+coach-icon {
+  --icon-size: 20px;
+}
+
+coach-icon.tone-primary {
+  color: var(--c-primary);
+}
+
+coach-icon.tone-muted {
+  color: var(--c-text-muted);
+}
+
+.body {
+  padding-top: 16px;
+}
+
+.goal {
+  margin-top: 4px;
+}
+
+.bar {
+  margin-top: 12px;
+}

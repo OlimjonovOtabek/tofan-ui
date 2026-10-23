@@ -1,0 +1,51 @@
+:host {
+  display: block;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  height: 44px;
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--c-surface-2);
+}
+
+.thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  background: var(--c-surface);
+  transition:
+    transform 220ms cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 220ms ease;
+}
+
+.thumb.is-hidden {
+  opacity: 0;
+}
+
+.segment {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-muted);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 220ms ease;
+}
+
+.segment.is-selected {
+  color: var(--c-text);
+  font-weight: 600;
+}

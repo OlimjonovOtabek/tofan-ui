@@ -1,0 +1,45 @@
+:host {
+  display: block;
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: var(--c-surface);
+  text-align: start;
+  transition: border-color 200ms ease;
+}
+
+.tile.is-selected {
+  border-color: var(--c-primary);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.indicator {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--c-surface-2);
+  color: var(--c-on-primary);
+  transition: background-color 180ms ease;
+  --icon-size: 16px;
+}
+
+.indicator.is-on {
+  background: var(--c-primary);
+}

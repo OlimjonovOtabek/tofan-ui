@@ -1,0 +1,33 @@
+.message {
+  margin-top: -8px;
+}
+
+.buttons,
+.prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.prompt {
+  gap: 16px;
+  margin-top: 0;
+}
+
+.action {
+  gap: 12px;
+  padding: 12px 0;
+  color: var(--c-text);
+  --icon-size: 20px;
+}
+
+.action.is-destructive {
+  color: var(--c-danger);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
