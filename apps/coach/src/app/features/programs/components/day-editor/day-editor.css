@@ -1,0 +1,84 @@
+:host {
+  display: block;
+}
+
+.videos {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.video {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: var(--c-surface);
+}
+
+.thumb {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--c-video);
+  color: var(--c-on-video);
+  --icon-size: 16px;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.retry {
+  border: 0;
+}
+
+.more {
+  display: grid;
+  place-items: center;
+  padding: 0 0 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-muted);
+  --icon-size: 20px;
+}
+
+.add {
+  display: grid;
+  place-items: center;
+  height: 54px;
+  border-radius: var(--c-radius-button);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  cursor: pointer;
+}
+
+.note {
+  text-align: center;
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 10px 28px var(--c-shadow);
+}

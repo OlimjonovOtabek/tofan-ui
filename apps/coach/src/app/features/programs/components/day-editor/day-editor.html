@@ -1,0 +1,104 @@
+<div class="coach-stack">
+  @if (published()) {
+    <coach-note [text]="'coachApp.workoutProgram.publishedNote' | t" />
+  }
+  @if (store.droppedExerciseCount() > 0) {
+    <coach-note
+      icon="alert-triangle"
+      [text]="'coachApp.day.legacyNote' | t: { count: store.droppedExerciseCount() }"
+    />
+  }
+  <coach-text-field
+    [title]="'coachApp.day.title' | t"
+    [markRequired]="true"
+    [hint]="'coachApp.day.titleHint' | t"
+    [value]="store.title()"
+    (valueChange)="store.title.set($event)"
+  />
+  <coach-text-field
+    [title]="'coachApp.day.description' | t"
+    [hint]="'coachApp.day.descriptionHint' | t"
+    [rows]="3"
+    [maxLength]="descriptionMax"
+    [clearable]="false"
+    [value]="store.description()"
+    (valueChange)="store.description.set($event)"
+  />
+  <section class="videos">
+    <header>
+      <h2 class="t-base2 font-bold">{{ 'coachApp.day.videos' | t }}</h2>
+      @if (store.videos().length > 0) {
+        <span class="t-base4 tone-secondary">
+          {{
+            'coachApp.day.videosProgress' | t: { done: uploaded(), total: store.videos().length }
+          }}
+        </span>
+      }
+    </header>
+    @if (store.videos().length === 0) {
+      <p class="t-base4 tone-warning">{{ 'coachApp.day.videosEmpty' | t }}</p>
+    }
+    <div class="list" cdkDropList (cdkDropListDropped)="drop($event)">
+      @for (video of store.videos(); track video.key; let i = $index) {
+        <div class="video" cdkDrag>
+          <button
+            type="button"
+            class="thumb"
+            [disabled]="!watchable(video)"
+            (click)="watch(video)"
+            aria-hidden="true"
+          >
+            <coach-icon name="play" />
+          </button>
+          <div class="text">
+            <span class="t-base2 font-semibold coach-ellipsis">{{ displayName(video, i) }}</span>
+            @if (duration(video); as duration) {
+              @if (!uploading(video)) {
+                <span class="t-base5 tone-muted">{{ duration }}</span>
+              }
+            }
+            @if (uploading(video)) {
+              <coach-progress [value]="video.progress" />
+            }
+          </div>
+          @if (video.uploadFailed) {
+            <button type="button" class="retry c-tag" (click)="store.retry(video.key)">
+              {{ 'coachApp.day.videoRetry' | t }}
+            </button>
+          } @else if (uploading(video)) {
+            <span class="t-base4 font-semibold tone-info">{{ percent(video) }}%</span>
+          } @else {
+            <coach-video-status-tag [status]="status(video)" />
+          }
+          <button
+            type="button"
+            class="more"
+            [attr.aria-label]="'coachApp.common.more' | t"
+            (click)="menu(video, i)"
+          >
+            <coach-icon name="more-horizontal" />
+          </button>
+        </div>
+      }
+    </div>
+    <label class="add c-pressable">
+      <input
+        type="file"
+        accept="video/mp4,video/quicktime,video/webm,.mp4,.m4v,.mov,.webm"
+        multiple
+        hidden
+        (change)="chosen($event)"
+      />
+      <span class="t-base1 font-semibold">{{ 'coachApp.day.addVideo' | t }}</span>
+    </label>
+    <p class="c-hint-box">{{ 'coachApp.day.videosHint' | t }}</p>
+  </section>
+  <div class="coach-footer">
+    @if (store.uploading()) {
+      <p class="t-base5 tone-secondary note">{{ 'coachApp.day.uploadsPending' | t }}</p>
+    }
+    <button coachButton="primary" type="button" [disabled]="!store.canSave()" (click)="save()">
+      {{ 'coachApp.day.save' | t }}
+    </button>
+  </div>
+</div>

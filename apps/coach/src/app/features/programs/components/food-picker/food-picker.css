@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.food {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  text-align: start;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  color: var(--c-primary);
+}
+
+.portion {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
