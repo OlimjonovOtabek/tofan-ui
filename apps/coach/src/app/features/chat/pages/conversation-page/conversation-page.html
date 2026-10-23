@@ -1,0 +1,85 @@
+<coach-app-bar backLink="/chat">
+  <div class="who">
+    <coach-avatar [initials]="initials()" [imageUrl]="store.photoUrl()" size="small" />
+    <div class="names">
+      <span class="t-title4 coach-ellipsis">{{ title() }}</span>
+      @if (presence(); as presence) {
+        <span
+          class="t-base5 coach-ellipsis"
+          [class.tone-info]="live()"
+          [class.tone-secondary]="!live()"
+          >{{ presence }}</span
+        >
+      }
+    </div>
+  </div>
+</coach-app-bar>
+<div class="chat">
+  @if (store.loadError(); as error) {
+    <div class="center">
+      <coach-empty-state
+        icon="alert-triangle"
+        [title]="'coachApp.conversation.errorTitle' | t"
+        [message]="error | message"
+        [retryable]="true"
+        (retry)="store.open({ userId: userId(), conversationId: conversationId(), name: name() })"
+      />
+    </div>
+  } @else if (store.loading()) {
+    <div class="center"><coach-spinner /></div>
+  } @else {
+    <div #scroller class="messages" (scroll)="scrolled()">
+      @for (row of rows(); track row.message.id) {
+        <div class="entry">
+          @if (row.day) {
+            <span class="day t-base5 font-medium tone-secondary">{{ row.day }}</span>
+          }
+          <div class="bubble" [class.is-mine]="row.mine">
+            <p class="t-base2">{{ row.message.text }}</p>
+            <span class="meta t-base6">
+              {{ row.time }}
+              @if (row.mine) {
+                <span class="ticks"
+                  ><coach-icon name="check" />
+                  @if (row.read) {
+                    <coach-icon name="check" class="second" />
+                  }
+                </span>
+              }
+            </span>
+          </div>
+        </div>
+      } @empty {
+        <p class="empty t-base3 tone-secondary">{{ 'coachApp.conversation.empty' | t }}</p>
+      }
+      @if (store.loadingOlder()) {
+        <div class="older"><coach-spinner /></div>
+      }
+    </div>
+    @if (store.canWrite()) {
+      <form class="composer" (submit)="$event.preventDefault(); send()">
+        <textarea
+          rows="1"
+          class="input"
+          [attr.maxlength]="store.maxLength"
+          [placeholder]="'coachApp.conversation.inputHint' | t"
+          [value]="draft()"
+          (input)="typed($event)"
+          (keydown.enter)="enter($event)"
+        ></textarea>
+        <button
+          type="submit"
+          class="send"
+          [disabled]="!canSend()"
+          [attr.aria-label]="'coachApp.conversation.send' | t"
+        >
+          <coach-icon name="arrow-up" />
+        </button>
+      </form>
+    } @else {
+      <div class="composer">
+        <coach-note icon="lock" [text]="'coachApp.conversation.readOnly' | t" />
+      </div>
+    }
+  }
+</div>
