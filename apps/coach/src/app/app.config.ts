@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './routes/app.routes';
 import { provideHttp } from '@core/http/http.providers';
 import { provideI18n } from '@core/i18n/i18n.providers';
@@ -16,7 +16,7 @@ const APP_NAME = 'Tofan Coach';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideHttp(environment.apiBaseUrl),
     provideOptimus({
       theme: { preset: COACH_THEME, options: { darkModeSelector: '.app-dark' } },

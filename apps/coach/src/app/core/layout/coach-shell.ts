@@ -1,69 +1,27 @@
-import { Component, DOCUMENT, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Button, ButtonDirective, ButtonLabel } from '@openng/optimus-ui/button';
-import { Menu } from '@openng/optimus-ui/menu';
-import { MenuItem } from '@openng/optimus-ui/api';
-import { Avatar } from '@openng/optimus-ui/avatar';
-import { AuthStore } from '@core/auth/auth.store';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
-import { TranslationKey } from '@core/i18n/dictionary';
-import { LocaleStore } from '@core/i18n/locale.store';
-import { APP_LOCALES, LOCALE_NAMES } from '@core/i18n/locale';
-import { Logo } from '@shared/components/logo/logo';
-
-interface CoachNavItem {
-  path: string;
-  label: TranslationKey;
-  icon: string;
-}
+import { filter, map } from 'rxjs';
+import { Icon } from '../ui/icon/icon';
+import { BrandLogo } from './brand-logo';
+import { COACH_TABS, isPushedRoute } from './coach-navigation';
 
 @Component({
   selector: 'coach-shell',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    TranslatePipe,
-    Button,
-    ButtonDirective,
-    ButtonLabel,
-    Menu,
-    Avatar,
-    Logo,
-  ],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe, Icon, BrandLogo],
   templateUrl: './coach-shell.html',
   styleUrl: './coach-shell.css',
 })
 export class CoachShell {
-  private readonly document = inject(DOCUMENT);
-  protected readonly auth = inject(AuthStore);
-  protected readonly locale = inject(LocaleStore);
-  protected readonly darkMode = signal(
-    this.document.documentElement.classList.contains('app-dark'),
-  );
-  protected readonly languageMenuOpen = signal(false);
-  protected readonly languageCode = computed(() => this.locale.locale().toUpperCase());
-  protected readonly languageName = computed(() => LOCALE_NAMES[this.locale.locale()]);
-  protected readonly languages = computed<MenuItem[]>(() =>
-    APP_LOCALES.map((locale) => ({
-      label: LOCALE_NAMES[locale],
-      icon: locale === this.locale.locale() ? 'pi pi-check' : 'pi pi-fw',
-      command: () => this.locale.setLocale(locale),
-    })),
-  );
-  protected readonly navigation: readonly CoachNavItem[] = [
-    { path: '/programs', label: 'coach.navigation.programs', icon: 'pi pi-book' },
-    { path: '/clients', label: 'coach.navigation.clients', icon: 'pi pi-users' },
-    { path: '/content', label: 'coach.navigation.content', icon: 'pi pi-folder' },
-    { path: '/profile', label: 'coach.navigation.profile', icon: 'pi pi-user' },
-  ];
+  private readonly router = inject(Router);
 
-  protected toggleTheme(): void {
-    this.darkMode.update((dark) => !dark);
-    this.document.documentElement.classList.toggle('app-dark', this.darkMode());
-  }
-
-  protected signOut(): void {
-    void this.auth.logout();
-  }
+  protected readonly tabs = COACH_TABS;
+  protected readonly pushed = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => isPushedRoute(this.router.routerState.snapshot.root)),
+    ),
+    { initialValue: isPushedRoute(this.router.routerState.snapshot.root) },
+  );
 }

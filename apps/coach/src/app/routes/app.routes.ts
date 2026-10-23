@@ -18,7 +18,12 @@ export const routes: Routes = [
     component: CoachShell,
     canActivate: [coachGuard, coachProfileGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'programs' },
+      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+      {
+        path: 'dashboard',
+        loadChildren: () =>
+          import('@coach/features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
+      },
       {
         path: 'programs',
         loadChildren: () =>
@@ -35,11 +40,10 @@ export const routes: Routes = [
           import('@coach/features/clients/clients.routes').then((m) => m.CLIENT_ROUTES),
       },
       {
-        path: 'content',
-        loadChildren: () =>
-          import('@coach/features/content/content.routes').then((m) => m.CONTENT_ROUTES),
+        path: 'chat',
+        loadChildren: () => import('@coach/features/chat/chat.routes').then((m) => m.CHAT_ROUTES),
       },
     ],
   },
-  { path: '**', redirectTo: 'programs' },
+  { path: '**', redirectTo: 'dashboard' },
 ];

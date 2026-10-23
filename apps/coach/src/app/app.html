@@ -1,3 +1,13 @@
+<coach-icon-sprite />
 <router-outlet />
-<p-toast />
+<p-toast position="top-center" [preventOpenDuplicates]="true">
+  <ng-template #headless let-message let-closeFn="closeFn">
+    <button type="button" class="toast" (click)="closeFn($event)">
+      <coach-icon [name]="toastIcon(message.severity)" />
+      <span class="t-base2 font-medium">{{ message.detail }}</span>
+    </button>
+  </ng-template>
+</p-toast>
 <p-confirmdialog />
+<coach-sheet-host />
+<coach-video-player />
