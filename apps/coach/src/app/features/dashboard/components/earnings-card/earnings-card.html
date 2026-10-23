@@ -1,0 +1,15 @@
+@if (earnings(); as earnings) {
+  <coach-segmented [segments]="segments()" [(selected)]="period" />
+  <div class="hero">
+    <span class="t-base3 font-medium">{{ heading() }}</span>
+    <span class="t-display2 coach-ellipsis">{{
+      total()?.netAmount ?? 0 | money: earnings.currencyCode
+    }}</span>
+    <span class="t-base5">{{ meta() }}</span>
+    <button type="button" class="open c-pressable t-base1 font-semibold" (click)="open.emit()">
+      {{ 'coachApp.dashboard.earnings.open' | t }}
+    </button>
+  </div>
+} @else {
+  <coach-note icon="alert-triangle" [text]="'coachApp.dashboard.earnings.unavailable' | t" />
+}
