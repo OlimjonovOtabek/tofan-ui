@@ -166,6 +166,11 @@ server {
 }
 ```
 
+Coach paneli chat uchun WebSocket (SignalR, `/api/hubs/chat`) ishlatadi. Tashqi nginx `proxy_params.inc`
+ichida `proxy_http_version 1.1;`, `proxy_set_header Upgrade $http_upgrade;` va
+`proxy_set_header Connection $connection_upgrade;` bo'lishi kerak (`map $http_upgrade $connection_upgrade`
+`http` darajasida e'lon qilinadi).
+
 ```bash
 docker exec $(docker ps -qf name=tofan_nginx) nginx -t
 docker service update --force tofan_nginx
