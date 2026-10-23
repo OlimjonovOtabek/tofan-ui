@@ -3,21 +3,23 @@ import { toSelectOptions } from '@shared/models/select-option';
 
 export const MEAL_TYPES = [
   'breakfast',
+  'secondBreakfast',
   'lunch',
-  'dinner',
   'snack',
+  'dinner',
   'preWorkout',
   'postWorkout',
 ] as const;
 export type MealType = (typeof MEAL_TYPES)[number];
 
 export const MEAL_TYPE_LABELS: Record<MealType, TranslationKey> = {
-  breakfast: 'coach.clients.mealTypes.breakfast',
-  lunch: 'coach.clients.mealTypes.lunch',
-  dinner: 'coach.clients.mealTypes.dinner',
-  snack: 'coach.clients.mealTypes.snack',
-  preWorkout: 'coach.clients.mealTypes.preWorkout',
-  postWorkout: 'coach.clients.mealTypes.postWorkout',
+  breakfast: 'coachApp.meal.breakfast',
+  secondBreakfast: 'coachApp.meal.secondBreakfast',
+  lunch: 'coachApp.meal.lunch',
+  snack: 'coachApp.meal.snack',
+  dinner: 'coachApp.meal.dinner',
+  preWorkout: 'coachApp.meal.preWorkout',
+  postWorkout: 'coachApp.meal.postWorkout',
 };
 
 export const MEAL_TYPE_OPTIONS = toSelectOptions(MEAL_TYPES, MEAL_TYPE_LABELS);
