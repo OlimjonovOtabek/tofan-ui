@@ -324,6 +324,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     noMatchesMessage: 'No clients match this search or filter.',
     searchHint: 'Search by name',
     statusNeedsReview: 'Needs review',
+    tierVip: 'VIP',
     accessExpired: 'Expired',
     accessLeft: '{count, plural, one{{count} day left} other{{count} days left}}',
     accessUnknown: 'No end date',
@@ -412,7 +413,8 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     lastSeen: 'last seen {time}',
     today: 'Today',
     inputHint: 'Message',
-    readOnly: 'The subscription ended — the history stays open, but you can’t write.',
+    readOnly:
+      'Chat is open only to athletes with an active VIP subscription. The history stays, but you can’t write.',
     empty: 'No messages yet. Say hello!',
     errorTitle: "Couldn't open the chat",
     send: 'Send',
@@ -464,6 +466,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     statClientsCaption: 'Subscribed now',
     statPrograms: 'Programs',
     title: 'Coach Profile',
+    vipPrice: 'VIP {price}',
     statAdherence: 'Adherence',
     statAverage: 'Average',
     statRevenue: 'Revenue',
@@ -474,6 +477,11 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     note: 'Athletes pay this price every month for your coaching.',
     saved: 'Price updated',
     title: 'Subscription price',
+    vipHint: 'e.g. 500000',
+    vipInvalid: 'The VIP price must be above zero',
+    vipLabel: 'VIP price (optional)',
+    vipNote:
+      'VIP athletes can message you in chat. Leave it empty to sell Standard only - current VIP athletes keep chat until their subscription ends.',
   },
   earnings: {
     entrySubtitle: 'Net income and payments',

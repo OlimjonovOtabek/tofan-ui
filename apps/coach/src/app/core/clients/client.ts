@@ -1,4 +1,5 @@
 import { FitnessGoal } from '@coach/core/fitness/fitness-goal';
+import { Tier } from '@shared/models/tier';
 import { daysSinceWorkout, initialsOf } from './client-activity';
 import { ClientFilter } from './client-filter';
 
@@ -19,6 +20,7 @@ export interface Client {
   readonly subscribedOn: Date | null;
   readonly subscriptionEndsOn: Date | null;
   readonly status: SubscriptionStatus;
+  readonly tier: Tier;
   readonly lastWorkoutOn: Date | null;
   readonly adherencePercent: number | null;
 }
@@ -46,6 +48,14 @@ export function adherenceLevel(percent: number | null): AdherenceLevel | null {
     return 'high';
   }
   return percent >= REVIEW_ADHERENCE ? 'good' : 'low';
+}
+
+export function isVip(client: Pick<Client, 'tier'>): boolean {
+  return client.tier === 'vip';
+}
+
+export function canMessage(client: Pick<Client, 'status' | 'tier'>): boolean {
+  return client.status !== 'ended' && isVip(client);
 }
 
 export function needsReview(client: Client): boolean {

@@ -48,6 +48,9 @@
             <span class="text">
               <span class="line">
                 <span class="t-title4 coach-ellipsis">{{ row.name }}</span>
+                @if (row.vip) {
+                  <span class="c-tag c-tag--success">{{ 'coachApp.clients.tierVip' | t }}</span>
+                }
                 @if (row.review) {
                   <span class="c-tag c-tag--warning">{{
                     'coachApp.clients.statusNeedsReview' | t

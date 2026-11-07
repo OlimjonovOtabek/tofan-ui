@@ -44,12 +44,29 @@
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(subscription.startsOn) }}</td>
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(subscription.endsOn) }}</td>
       <td>
+        <p-tag
+          [value]="tierLabel(subscription.tier)"
+          [severity]="tierSeverity(subscription.tier)"
+        />
+      </td>
+      <td>
         <p-tag [value]="statusLabel(subscription)" [severity]="statusSeverity(subscription)" />
         @if (subscription.endedOn; as endedOn) {
           <div class="text-muted-color mt-1 text-sm">{{ endedLabel(endedOn) }}</div>
         }
       </td>
       <td class="text-right whitespace-nowrap">
+        @if (subscription.canChangeTier(now())) {
+          <p-button
+            [icon]="changeTierIcon(subscription)"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="changeTierLabel(subscription)"
+            [pTooltip]="changeTierLabel(subscription)"
+            (onClick)="changeTier(subscription)"
+          />
+        }
         @if (subscription.canEnd(now())) {
           <p-button
             icon="pi pi-ban"
