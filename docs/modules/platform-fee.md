@@ -3,7 +3,8 @@
 ## Purpose
 
 The admin sees and changes the global Platform fee.
-It is the commission amount, the tax percent and the payment provider percent that Tofan adds on top of a Trainer's or a Tariff's price.
+It is the commission amount, the tax percent and the payment provider percent added on top of a Trainer subscription price.
+Tofan tariffs (Free, Standard, VIP) get none of them since the 2026-11-05 backend decision, so the page says so in its subtitle.
 It is one page in the "Narxlar" menu group.
 It replaces the old per-Trainer commission percent, which was removed from the `trainers` feature together with its endpoint.
 
@@ -19,8 +20,8 @@ It replaces the old per-Trainer commission percent, which was removed from the `
 - Error codes handled: none by code.
   A refusal arrives as ProblemDetails or a failed `Result`.
   `toErrorMessage` shows the backend's own `messages`, or the joined validation issues, in the toast.
-- Contract source: `admin-ui-platform-fee-v1.md` and the stage Swagger.
-  The provider fee formula is not documented yet, so the page shows no sample calculation.
+- Contract source: `admin-ui-platform-fee-v1.md`, `admin-ui-platform-fee-v1.1.md` and the stage Swagger.
+  `providerFeePercent` is required in the `PUT`: a missing value becomes `0`.
 
 ## Screens
 
@@ -45,7 +46,17 @@ It replaces the old per-Trainer commission percent, which was removed from the `
   `createPlatformFeeDraft` in `models/platform-fee-draft.ts` applies them in `PlatformFeeStore.save`, so the store refuses an invalid draft with a `ValidationError` (shown as an error toast, nothing is sent) even if a caller skips the form.
   `components/platform-fee-form/platform-fee.schema.ts` applies them with `required`, `min`, `max` and a decimals check, each with a typed message key.
 
+- `components/platform-fee-sample` shows a sample Trainer payment for a 200 000 price (`SAMPLE_TRAINER_PRICE`) under the fields.
+  It uses the values in the form before they are saved and hides while the form is not valid.
+  `models/trainer-price-breakdown.ts` follows the backend formula (`PlatformFee.TaxOn`, `ProviderFeeOn`, `TotalFor`):
+  `tax = round((price + commission) * taxPercent / 100)`, `provider = round((price + commission + tax) * providerFeePercent / 100)`, `total = price + commission + tax + provider`.
+  Each step is rounded on its own to a whole sum, half up.
+
 ## Traps
+
+- The breakdown counts in cents and basis points, never with float percents.
+  `Math.round(375 * 9.2 / 100)` gives 34 because the float is 34.49999…, while the backend gives 35.
+  `trainer-price-breakdown.spec.ts` keeps that case.
 
 - Never read `currency`; the field is `currencyCode`.
 - `PUT` returns no data.
