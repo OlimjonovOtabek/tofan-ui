@@ -7,6 +7,7 @@ import { MEDIA_RU } from './media';
 import { GARMENTS_RU } from './garments';
 import { TARIFFS_RU } from './tariffs';
 import { TRAINERS_RU } from './trainers';
+import { PLATFORM_FEE_RU } from './platform-fee';
 import { SOLDIERS_RU } from './soldiers';
 import { ACCOUNTS_RU } from './accounts';
 import { USER_SESSIONS_RU } from './user-sessions';
@@ -25,6 +26,7 @@ export const DICTIONARY_RU: Dictionary = {
   garments: GARMENTS_RU,
   tariffs: TARIFFS_RU,
   trainers: TRAINERS_RU,
+  platformFee: PLATFORM_FEE_RU,
   soldiers: SOLDIERS_RU,
   accounts: ACCOUNTS_RU,
   userSessions: USER_SESSIONS_RU,

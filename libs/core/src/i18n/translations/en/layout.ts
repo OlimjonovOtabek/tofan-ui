@@ -33,6 +33,7 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     sendPush: 'Send push',
     pricing: 'Pricing',
     tariffs: 'Tofan tariffs',
+    platformFee: 'Platform fee',
   },
   titles: {
     login: 'Sign in',
@@ -51,6 +52,7 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     garmentDrops: 'Drops',
     trainers: 'Trainers',
     trainerSubscriptions: 'Trainer subscriptions',
+    platformFee: 'Platform fee',
     userSessions: 'Sign-in log',
     notificationTemplates: 'Notification templates',
     sendNotification: 'Send push',

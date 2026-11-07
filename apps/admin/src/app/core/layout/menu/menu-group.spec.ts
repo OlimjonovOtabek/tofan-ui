@@ -14,6 +14,10 @@ describe('findMenuGroupLabel', () => {
     expect(findMenuGroupLabel('/tariffs')).toBe('layout.menu.pricing');
   });
 
+  it('should return the pricing group when the url is the platform fee page', () => {
+    expect(findMenuGroupLabel('/platform-fee')).toBe('layout.menu.pricing');
+  });
+
   it('should return the dashboard group only for the root url', () => {
     expect(findMenuGroupLabel('/')).toBe('layout.menu.main');
     expect(findMenuGroupLabel('/unknown')).toBeUndefined();

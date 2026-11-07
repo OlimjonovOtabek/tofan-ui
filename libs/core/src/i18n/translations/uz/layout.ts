@@ -31,6 +31,7 @@ export const LAYOUT_UZ = {
     sendPush: 'Push yuborish',
     pricing: 'Narxlar',
     tariffs: 'Tofan tariflari',
+    platformFee: 'Platform fee',
   },
   titles: {
     login: 'Kirish',
@@ -49,6 +50,7 @@ export const LAYOUT_UZ = {
     garmentDrops: 'Droplar',
     trainers: 'Trenerlar',
     trainerSubscriptions: 'Trener obunalari',
+    platformFee: 'Platform fee',
     userSessions: 'Kirishlar jurnali',
     notificationTemplates: 'Bildirishnoma shablonlari',
     sendNotification: 'Push yuborish',

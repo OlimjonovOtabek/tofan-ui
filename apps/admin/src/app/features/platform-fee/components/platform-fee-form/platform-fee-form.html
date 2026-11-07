@@ -1,0 +1,59 @@
+<form class="flex max-w-xl flex-col gap-5" [formRoot]="form">
+  <div class="flex flex-col gap-1">
+    <label for="platformFeeCommissionAmount" class="font-medium">{{
+      'platformFee.form.commissionAmount' | t
+    }}</label>
+    <app-number-field
+      inputId="platformFeeCommissionAmount"
+      [suffix]="currencySuffix()"
+      [maxFractionDigits]="fractionDigits"
+      [fluid]="true"
+      [formField]="form.commissionAmount"
+    />
+    <app-field-error [field]="form.commissionAmount()" />
+    <small class="text-muted-color">{{ 'platformFee.form.commissionHint' | t }}</small>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="platformFeeTaxPercent" class="font-medium">{{
+      'platformFee.form.taxPercent' | t
+    }}</label>
+    <app-number-field
+      inputId="platformFeeTaxPercent"
+      [suffix]="'platformFee.form.percentSuffix' | t"
+      [maxFractionDigits]="fractionDigits"
+      [fluid]="true"
+      [formField]="form.taxPercent"
+    />
+    <app-field-error [field]="form.taxPercent()" />
+    <small class="text-muted-color">{{ 'platformFee.form.taxHint' | t }}</small>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="platformFeeProviderFeePercent" class="font-medium">{{
+      'platformFee.form.providerFeePercent' | t
+    }}</label>
+    <app-number-field
+      inputId="platformFeeProviderFeePercent"
+      [suffix]="'platformFee.form.percentSuffix' | t"
+      [maxFractionDigits]="fractionDigits"
+      [fluid]="true"
+      [formField]="form.providerFeePercent"
+    />
+    <app-field-error [field]="form.providerFeePercent()" />
+    <small class="text-muted-color">{{ 'platformFee.form.providerFeeHint' | t }}</small>
+  </div>
+
+  <p-message severity="warn" icon="pi pi-info-circle">{{
+    'platformFee.form.futureOnly' | t
+  }}</p-message>
+
+  <div>
+    <p-button
+      type="submit"
+      [label]="'common.actions.save' | t"
+      icon="pi pi-check"
+      [loading]="saving()"
+    />
+  </div>
+</form>

@@ -12,6 +12,7 @@ export const AppPaths = {
   userSessions: '/user-sessions',
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',
+  platformFee: '/platform-fee',
   login: '/auth/login',
   accessDenied: '/auth/access-denied',
   error: '/auth/error',
