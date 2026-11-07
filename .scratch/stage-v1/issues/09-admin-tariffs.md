@@ -26,3 +26,5 @@ Hamma maydon har doim yuboriladi.
 New admin feature `tariffs` (`/tariffs`, menu group "Narxlar" > "Tofan tariflari"): Free, Standard and VIP cards sorted by type with price, total price, limits in words, AI chat and read-only Benefits, plus a Signal Forms edit dialog with a toggle per nullable limit, a locked Free price and all seven fields on every PUT.
 A shared `app-multiselect-field` wrapper serves the meal types, and the `Tariff.*` backend codes have texts in uz, ru and en.
 The two stage-only boxes (scan limit round trip and manual E2E, merge) stay open because nobody here has stage passwords.
+
+Commit: 5d59038 (branch feat/stage-v1-09-admin-tariffs).
