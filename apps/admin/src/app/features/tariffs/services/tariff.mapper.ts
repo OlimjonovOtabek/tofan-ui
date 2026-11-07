@@ -1,20 +1,18 @@
 import { Benefit } from '@shared/models/benefit';
+import { mealTypes } from '@shared/models/meal-type.dto';
 import { enumMap } from '@shared/utils/enum-map';
-import { MealType } from '../models/meal-type';
 import { Tariff } from '../models/tariff';
 import { TariffDraft } from '../models/tariff-draft';
 import { TariffType, compareTariffTypes } from '../models/tariff-type';
 import {
   ChangeTariffBenefitsRequest,
   ChangeTariffRequest,
-  MealType as ApiMealType,
   TariffBenefitResponse,
   TariffResponse,
   TariffType as ApiTariffType,
 } from './tariff.dto';
 
 export const tariffTypes = enumMap<TariffType, ApiTariffType>(ApiTariffType);
-const mealTypes = enumMap<MealType, ApiMealType>(ApiMealType);
 
 export function toTariff(response: TariffResponse): Tariff {
   return {

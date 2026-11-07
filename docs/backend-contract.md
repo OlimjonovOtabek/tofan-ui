@@ -131,6 +131,7 @@ An enum that two features or both apps use lives in `libs/shared/src/models`, be
 The Trainer subscription Tier is the example: `tier.ts` holds the `Tier` union (`standard`, `vip`) and `TIERS`.
 `tier.dto.ts` holds `TierDto` (`Standard` 1, `Vip` 2) and the `tiers` enum map, and `tier-labels.ts` holds `TIER_LABELS`, the `enums.tier.*` translation keys.
 The DTO member must be `Vip`, not `VIP`, because `enumMap` finds the member by capitalizing the domain string.
+The meal type is the second example: `meal-type.ts`, `meal-type.dto.ts` (`MealTypeDto` 1 to 7, `mealTypes`) and `meal-type-labels.ts` (`enums.mealType.*`) serve both the Coach meal programs and the admin tariffs.
 Use `tiers.toDomain` where the backend always sends the Tier, and `tiers.toDomainOrNull` where an older backend may leave it out.
 
 ## Error codes by feature

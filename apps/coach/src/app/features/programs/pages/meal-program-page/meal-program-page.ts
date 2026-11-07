@@ -4,7 +4,7 @@ import { LocaleStore } from '@core/i18n/locale.store';
 import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
-import { MEAL_TYPE_LABELS } from '@coach/core/fitness/meal-type';
+import { MEAL_TYPE_LABELS } from '@shared/models/meal-type-labels';
 import { SERVING_UNIT_LABELS } from '@coach/core/fitness/serving-unit';
 import { formatCount, formatMoneyShort } from '@coach/core/format/formats';
 import { AppBar } from '@coach/core/ui/app-bar/app-bar';

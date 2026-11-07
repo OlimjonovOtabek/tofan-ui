@@ -251,13 +251,6 @@ export const COACH_APP_UZ = {
     error: "Videoni yuklab bo'lmadi",
   },
   meal: {
-    breakfast: 'Nonushta',
-    secondBreakfast: '2-nonushta',
-    lunch: 'Tushlik',
-    snack: 'Yengil taom',
-    dinner: 'Kechki ovqat',
-    preWorkout: "Mashg'ulotdan oldin",
-    postWorkout: "Mashg'ulotdan keyin",
     itemPortionKcal: '{portion} · {kcal} kkal',
     kcal: '{kcal} kkal',
     optionAdd: 'Variant qo‘shish',

@@ -28,10 +28,12 @@ The menu item "Tofan tariflari" sits in the "Narxlar" group (`layout.menu.pricin
 
 - `services/tariffs.service.ts` has `list()`, `change(type, draft)` and `changeBenefits(type, benefits)`.
   `list()` sorts by type (Free, Standard, VIP) in `toTariffs`, so the card order never depends on the response order.
-- The tariff type and the meal type are union types in `models/`.
-  The DTO enums (`TariffType` 1 to 3, `MealType` 1 to 7) live in `services/tariff.dto.ts` and `enumMap` in `services/tariff.mapper.ts` maps them by name.
+- The tariff type is a union type in `models/`.
+  Its DTO enum (`TariffType` 1 to 3) lives in `services/tariff.dto.ts` and `enumMap` in `services/tariff.mapper.ts` maps it by name.
   The member must be `Vip`, not `VIP`, because `enumMap.toApi('vip')` capitalizes the first letter only.
-  The admin has its own meal type code here because apps cannot import each other (the Coach panel has its own copy).
+- The meal type (`MealType` 1 to 7) is shared with the Coach panel, so it lives in `libs/shared/src/models`:
+  `meal-type.ts` (union and `MEAL_TYPES`), `meal-type.dto.ts` (`MealTypeDto` and the `mealTypes` enum map) and `meal-type-labels.ts` (`MEAL_TYPE_LABELS`, `MEAL_TYPE_OPTIONS`, the `enums.mealType.*` texts).
+  The tariff DTO uses `MealTypeDto` and the mapper uses `mealTypes`.
 - The backend sends a Benefit as `{ name, nameRu, nameUz }` without an id.
   The mapper turns it into the shared `Benefit` model from `libs/shared` (`name` is the English text) and the card shows `pickLocalized` in the admin's language.
   `toChangeTariffBenefitsRequest` maps the other way, so the request body is `{ benefits: [{ name, nameRu, nameUz }] }` in the order of the list.

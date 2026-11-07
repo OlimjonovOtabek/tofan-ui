@@ -1,5 +1,5 @@
 import { ValidationError, ValidationIssue } from '@shared/models/errors/validation.error';
-import { MealType } from './meal-type';
+import { MealType } from '@shared/models/meal-type';
 import { TariffType, isFreeTariff } from './tariff-type';
 
 export const MIN_FOOD_SCAN_LIMIT = 0;

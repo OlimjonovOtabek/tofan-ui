@@ -6,8 +6,9 @@ import { Translator } from '@core/i18n/translator';
 import { Button } from '@openng/optimus-ui/button';
 import { Tag } from '@openng/optimus-ui/tag';
 import { pickLocalized } from '@shared/models/localized-text';
+import { MEAL_TYPE_LABELS } from '@shared/models/meal-type-labels';
 import { Tariff } from '../../models/tariff';
-import { MEAL_TYPE_LABELS, TARIFF_TYPE_LABELS } from '../../models/tariff-labels';
+import { TARIFF_TYPE_LABELS } from '../../models/tariff-labels';
 import { TariffLimitLine, tariffLimitLines } from '../../models/tariff-limits';
 
 interface TariffLimitRow extends TariffLimitLine {

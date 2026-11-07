@@ -17,9 +17,10 @@ import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { MultiselectField } from '@shared/components/multiselect-field/multiselect-field';
 import { NumberField } from '@shared/components/number-field/number-field';
 import { ToggleField } from '@shared/components/toggle-field/toggle-field';
+import { MEAL_TYPE_OPTIONS } from '@shared/models/meal-type-labels';
 import { Tariff } from '../../models/tariff';
 import { TariffDraft } from '../../models/tariff-draft';
-import { MEAL_TYPE_OPTIONS, TARIFF_TYPE_LABELS } from '../../models/tariff-labels';
+import { TARIFF_TYPE_LABELS } from '../../models/tariff-labels';
 import { isFreeTariff } from '../../models/tariff-type';
 import {
   TariffFormValue,

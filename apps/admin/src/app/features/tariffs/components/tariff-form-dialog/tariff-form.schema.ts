@@ -11,7 +11,7 @@ import {
   schema,
   validate,
 } from '@angular/forms/signals';
-import { MEAL_TYPES, MealType } from '../../models/meal-type';
+import { MEAL_TYPES, MealType } from '@shared/models/meal-type';
 import { Tariff } from '../../models/tariff';
 import {
   MIN_DIET_CHANGE_DAYS,

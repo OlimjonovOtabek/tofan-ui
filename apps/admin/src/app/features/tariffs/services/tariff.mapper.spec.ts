@@ -1,5 +1,6 @@
+import { MealTypeDto } from '@shared/models/meal-type.dto';
 import { TariffDraft } from '../models/tariff-draft';
-import { MealType as ApiMealType, TariffResponse, TariffType as ApiTariffType } from './tariff.dto';
+import { TariffResponse, TariffType as ApiTariffType } from './tariff.dto';
 import {
   tariffTypes,
   toChangeTariffBenefitsRequest,
@@ -16,7 +17,7 @@ function response(overrides: Partial<TariffResponse> = {}): TariffResponse {
     totalPrice: 99000,
     foodScanLimit: 15,
     workoutVideoLimit: 30,
-    dietMealTypes: [ApiMealType.Lunch, ApiMealType.SecondBreakfast],
+    dietMealTypes: [MealTypeDto.Lunch, MealTypeDto.SecondBreakfast],
     workoutChangeMonths: 3,
     dietChangeDays: 7,
     hasAiTrainerChat: true,
@@ -97,7 +98,7 @@ describe('toChangeTariffRequest', () => {
       monthlyPrice: 49000,
       foodScanLimit: 15,
       workoutVideoLimit: 30,
-      dietMealTypes: [ApiMealType.Lunch, ApiMealType.SecondBreakfast],
+      dietMealTypes: [MealTypeDto.Lunch, MealTypeDto.SecondBreakfast],
       workoutChangeMonths: 3,
       dietChangeDays: 7,
       hasAiTrainerChat: true,
