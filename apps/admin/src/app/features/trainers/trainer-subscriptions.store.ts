@@ -1,6 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { SubscriptionFilter } from './models/subscription-filter';
 import { SubscriptionGrant, createSubscriptionGrant } from './models/subscription-grant';
+import { TIER_CHANGE_TOASTS } from './models/subscription-tier-labels';
 import { Trainer } from './models/trainer';
 import { TrainerSubscription } from './models/trainer-subscription';
 import { TrainerSubscriptionsService } from './services/trainer-subscriptions.service';
@@ -82,6 +83,19 @@ export class TrainerSubscriptionsStore {
     try {
       await this.subscriptionsService.end(subscription.id);
       this.notifications.success('trainers.toast.ended', {
+        name: subscription.trainerDisplayName,
+      });
+      await this.load();
+    } catch (error) {
+      this.notifications.error(error);
+    }
+  }
+
+  async changeTier(subscription: TrainerSubscription): Promise<void> {
+    const tier = subscription.targetTier();
+    try {
+      await this.subscriptionsService.changeTier(subscription.id, tier);
+      this.notifications.success(TIER_CHANGE_TOASTS[tier], {
         name: subscription.trainerDisplayName,
       });
       await this.load();

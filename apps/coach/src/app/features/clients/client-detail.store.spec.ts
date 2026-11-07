@@ -13,6 +13,7 @@ const client = (status: Client['status']): Client => ({
   subscribedOn: null,
   subscriptionEndsOn: null,
   status,
+  tier: 'standard',
   lastWorkoutOn: null,
   adherencePercent: null,
 });
@@ -53,6 +54,14 @@ describe('ClientDetailStore', () => {
 
     expect(store.detail()?.client.adherencePercent).toBe(75);
     expect(store.detail()?.nutritionLoaded).toBe(true);
+  });
+
+  it('should keep the tier of the client when the detail is loaded', async () => {
+    service.findClient.mockResolvedValue({ ...client('active'), tier: 'vip' });
+
+    await store.load('u');
+
+    expect(store.detail()?.client.tier).toBe('vip');
   });
 
   it('should skip activity sections when the subscription ended', async () => {

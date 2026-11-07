@@ -6,6 +6,7 @@ export interface CoachProfileResponse {
   bio: string | null;
   photoFileId: string | null;
   monthlyPrice: number | null;
+  vipMonthlyPrice: number | null;
   isPublished: boolean;
   createdOnUtc: string;
 }
@@ -15,6 +16,7 @@ export interface UpdateCoachProfileRequest {
   bio?: string;
   photoFileId?: string;
   monthlyPrice?: number;
+  vipMonthlyPrice: number | null;
   slug?: string;
 }
 
@@ -27,6 +29,7 @@ export interface CoachProfile {
   photoFileId: string | null;
   photoUrl: string | null;
   monthlyPrice: number | null;
+  vipMonthlyPrice: number | null;
   isPublished: boolean;
 }
 
@@ -35,5 +38,6 @@ export interface CoachProfileChange {
   bio: string | null;
   photoFileId: string | null;
   monthlyPrice: number | null;
+  vipMonthlyPrice: number | null;
   slug?: string | null;
 }

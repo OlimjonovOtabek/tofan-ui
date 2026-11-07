@@ -20,15 +20,14 @@ export const TRAINERS_EN = {
     empty: 'There are no trainers yet.',
     add: 'Add trainer',
     price: '{amount} UZS',
-    commission: '{percent}%',
     priceMissing: 'Not set',
     columns: {
       trainer: 'Trainer',
       slug: 'Link',
       userId: 'User ID',
       monthlyPrice: 'Monthly price',
+      vipPrice: 'VIP price',
       status: 'Status',
-      commissionPercent: 'Commission',
       createdOn: 'Created',
     },
     actions: {
@@ -37,7 +36,6 @@ export const TRAINERS_EN = {
       unpublish: 'Unpublish',
       edit: 'Edit',
       password: 'Change password',
-      commission: 'Change commission',
       delete: 'Delete',
     },
     deleteWarning: 'The trainer card and its Keycloak account will be deleted for good.',
@@ -53,12 +51,19 @@ export const TRAINERS_EN = {
       startsOn: 'Started',
       endsOn: 'Ends',
       status: 'Status',
+      tier: 'Tier',
     },
     actions: {
       end: 'End subscription',
+      makeVip: 'Make VIP',
+      makeStandard: 'Make Standard',
     },
     confirmEnd:
       'End the subscription to "{name}"? The user goes back to their own workout and meal plan.',
+    confirmMakeVip:
+      'Make the subscription to "{name}" VIP? The dates do not change and the user can chat with the trainer.',
+    confirmMakeStandard:
+      'Make the subscription to "{name}" Standard? The dates do not change and the user can no longer chat with the trainer.',
   },
   filters: {
     trainer: 'Trainer',
@@ -94,25 +99,19 @@ export const TRAINERS_EN = {
     monthlyPrice: 'Monthly price',
     priceSuffix: ' UZS',
     priceHint: '0 means no price is set. A published trainer cannot have a price of 0.',
+    vipPrice: 'VIP price (optional)',
+    vipPriceHint: 'Leave empty to sell Standard only.',
     currentPhoto: 'Current photo',
     loading: 'Loading the account details…',
     errors: {
       monthlyPrice: 'Enter a price of 0 or more.',
+      vipPrice: 'The VIP price must be above 0, or leave the field empty.',
     },
   },
   password: {
     header: 'New password for "{name}"',
     label: 'New password',
     hint: 'The trainer uses this password the next time they sign in. Pass it on to them yourself.',
-  },
-  commission: {
-    header: '"{name}" commission',
-    label: 'Platform commission',
-    suffix: '%',
-    hint: 'From 0 to 100, at most 2 decimals (for example 7.5).',
-    futureOnly:
-      'The new percent applies only to payments made from now on. Past payments do not change.',
-    error: 'Enter a number from 0 to 100 with at most 2 decimals.',
   },
   grant: {
     header: 'Grant subscription',
@@ -125,6 +124,8 @@ export const TRAINERS_EN = {
     months: 'Length',
     suffix: ' mo',
     hint: 'From 1 to 12 months. If the user already has an active subscription to this trainer, it is extended.',
+    tierHint:
+      'A subscription is always opened as Standard. To give VIP, change the subscription with the "Make VIP" button in the table.',
     errors: {
       trainer: 'Choose a trainer.',
       userId: 'Choose a user.',
@@ -139,9 +140,10 @@ export const TRAINERS_EN = {
     unpublished: 'Trainer "{name}" was unpublished.',
     granted: 'A subscription to "{name}" was granted.',
     ended: 'The subscription to "{name}" was ended.',
+    tierChangedToVip: 'The subscription to "{name}" was made VIP.',
+    tierChangedToStandard: 'The subscription to "{name}" was made Standard.',
     updated: 'Trainer "{name}" was saved.',
     passwordChanged: 'A new password was set for "{name}".',
-    commissionChanged: '"{name}" commission changed.',
     deleted: 'Trainer "{name}" was deleted.',
   },
   tiers: {

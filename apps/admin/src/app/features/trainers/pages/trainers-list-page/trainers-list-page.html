@@ -38,7 +38,9 @@
       <td>
         <span [class.text-muted-color]="!trainer.hasPrice()">{{ priceLabel(trainer) }}</span>
       </td>
-      <td class="whitespace-nowrap">{{ commissionLabel(trainer) }}</td>
+      <td [class.text-muted-color]="!trainer.hasVipPrice()">
+        {{ trainer.hasVipPrice() ? amountLabel(trainer.vipMonthlyPrice) : emptyCell }}
+      </td>
       <td>
         <p-tag [value]="statusLabel(trainer)" [severity]="statusSeverity(trainer)" />
       </td>
@@ -48,7 +50,6 @@
           [trainer]="trainer"
           (edit)="openEdit(trainer)"
           (changePassword)="openPassword(trainer)"
-          (changeCommission)="openCommission(trainer)"
           (grant)="openGrant(trainer)"
           (publish)="store.publish(trainer)"
           (unpublish)="store.unpublish(trainer)"
@@ -80,13 +81,6 @@
   [trainer]="passwordFor()"
   [saving]="store.saving()"
   (save)="changePassword($event)"
-/>
-
-<app-trainer-commission-dialog
-  [(visible)]="commissionVisible"
-  [trainer]="commissionFor()"
-  [saving]="store.saving()"
-  (save)="changeCommission($event)"
 />
 
 <app-subscription-grant-dialog

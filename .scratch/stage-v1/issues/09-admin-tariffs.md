@@ -8,15 +8,23 @@ Hamma maydon har doim yuboriladi.
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Kartalar Free, Standard, VIP tartibida, telefonda ustma-ust.
-- [ ] Toggle yoqilsa raqam maydoni o'chadi va `null` yuboriladi; ovqat turlari toggle o'chsa kamida bittasi tanlanadi.
-- [ ] Free narxi qulf, Standard va VIP narxi 0 dan katta; `Tariff.*` kodlari tushunarli matn bilan.
-- [ ] Umumiy narx faqat ko'rsatiladi, saqlashdan keyin ro'yxat qayta yuklanadi.
-- [ ] Service testi: yettala maydon tanada, `null` limitlar bilan; mapper, forma qiymati va store testlari.
+- [x] Kartalar Free, Standard, VIP tartibida, telefonda ustma-ust.
+- [x] Toggle yoqilsa raqam maydoni o'chadi va `null` yuboriladi; ovqat turlari toggle o'chsa kamida bittasi tanlanadi.
+- [x] Free narxi qulf, Standard va VIP narxi 0 dan katta; `Tariff.*` kodlari tushunarli matn bilan.
+- [x] Umumiy narx faqat ko'rsatiladi, saqlashdan keyin ro'yxat qayta yuklanadi.
+- [x] Service testi: yettala maydon tanada, `null` limitlar bilan; mapper, forma qiymati va store testlari.
 - [ ] Stage'da Standard'ning scan limiti "Cheksiz" qilindi, `GET /tariffs` da `null`, keyin qaytarildi.
-- [ ] Menyu guruhi 05 bilan bir xil, qaysi biri oldin merge bo'lsa o'sha yaratadi.
-- [ ] Yangi feature hujjati.
-- [ ] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
+- [x] Menyu guruhi 05 bilan bir xil, qaysi biri oldin merge bo'lsa o'sha yaratadi.
+- [x] Yangi feature hujjati.
+- [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.
+
+## Answer
+
+New admin feature `tariffs` (`/tariffs`, menu group "Narxlar" > "Tofan tariflari"): Free, Standard and VIP cards sorted by type with price, total price, limits in words, AI chat and read-only Benefits, plus a Signal Forms edit dialog with a toggle per nullable limit, a locked Free price and all seven fields on every PUT.
+A shared `app-multiselect-field` wrapper serves the meal types, and the `Tariff.*` backend codes have texts in uz, ru and en.
+The two stage-only boxes (scan limit round trip and manual E2E, merge) stay open because nobody here has stage passwords.
+
+Commit: 5d59038 (branch feat/stage-v1-09-admin-tariffs).

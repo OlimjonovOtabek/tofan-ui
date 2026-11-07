@@ -59,6 +59,20 @@
       </div>
 
       <div class="flex flex-col gap-1">
+        <label for="editTrainerVipPrice" class="font-medium">{{
+          'trainers.edit.vipPrice' | t
+        }}</label>
+        <app-number-field
+          inputId="editTrainerVipPrice"
+          [suffix]="'trainers.edit.priceSuffix' | t"
+          [fluid]="true"
+          [formField]="form.vipMonthlyPrice"
+        />
+        <app-field-error [field]="form.vipMonthlyPrice()" />
+        <small class="text-muted-color">{{ 'trainers.edit.vipPriceHint' | t }}</small>
+      </div>
+
+      <div class="flex flex-col gap-1">
         <label for="editTrainerEmail" class="font-medium">{{ 'trainers.form.email' | t }}</label>
         <app-text-field inputId="editTrainerEmail" autocomplete="off" [formField]="form.email" />
         <app-field-error [field]="form.email()" />

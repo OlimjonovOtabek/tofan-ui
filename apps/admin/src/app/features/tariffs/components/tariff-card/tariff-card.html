@@ -1,0 +1,60 @@
+<article
+  class="border-surface-200 dark:border-surface-700 flex h-full flex-col gap-5 rounded-xl border p-4"
+>
+  <header class="flex items-center justify-between gap-3">
+    <h2 class="m-0 text-lg font-semibold">{{ title() }}</h2>
+    <p-button
+      [label]="'common.actions.edit' | t"
+      icon="pi pi-pencil"
+      severity="secondary"
+      [outlined]="true"
+      size="small"
+      (onClick)="edit.emit()"
+    />
+  </header>
+
+  <dl class="m-0 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+    <div>
+      <dt class="text-muted-color text-sm">{{ 'tariffs.card.monthlyPrice' | t }}</dt>
+      <dd class="m-0 text-xl font-semibold">{{ monthlyPrice() }}</dd>
+    </div>
+    <div>
+      <dt class="text-muted-color text-sm">{{ 'tariffs.card.totalPrice' | t }}</dt>
+      <dd class="m-0 text-xl font-semibold">{{ totalPrice() }}</dd>
+    </div>
+  </dl>
+
+  <section>
+    <h3 class="m-0 mb-2 text-base font-semibold">{{ 'tariffs.card.limits' | t }}</h3>
+    <dl class="m-0 flex flex-col gap-2">
+      @for (row of rows(); track row.label) {
+        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+          <dt class="text-muted-color text-sm">{{ row.label | t }}</dt>
+          <dd class="m-0 flex flex-col items-end gap-1 text-right">
+            <span>{{ row.value | t: row.params }}</span>
+            @if (row.mealTypeLabels.length > 0) {
+              <span class="flex flex-wrap justify-end gap-1">
+                @for (label of row.mealTypeLabels; track label) {
+                  <p-tag [value]="label" severity="secondary" />
+                }
+              </span>
+            }
+          </dd>
+        </div>
+      }
+    </dl>
+  </section>
+
+  <section>
+    <h3 class="m-0 mb-2 text-base font-semibold">{{ 'tariffs.card.benefits' | t }}</h3>
+    @if (benefits().length === 0) {
+      <p class="text-muted-color m-0 text-sm">{{ 'tariffs.card.noBenefits' | t }}</p>
+    } @else {
+      <ul class="m-0 flex list-disc flex-col gap-1 pl-5">
+        @for (benefit of benefits(); track $index) {
+          <li>{{ benefit }}</li>
+        }
+      </ul>
+    }
+  </section>
+</article>

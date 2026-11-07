@@ -4,6 +4,13 @@ import { Tag } from '@openng/optimus-ui/tag';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { SubscriptionFilter } from '../../models/subscription-filter';
 import { SubscriptionStatus } from '../../models/subscription-status';
+import {
+  SUBSCRIPTION_TIER_SEVERITIES,
+  SubscriptionTierSeverity,
+  TIER_CHANGE_ACTION_LABELS,
+  TIER_CHANGE_CONFIRMATIONS,
+  TIER_CHANGE_ICONS,
+} from '../../models/subscription-tier-labels';
 import { TrainerSubscription } from '../../models/trainer-subscription';
 import {
   SUBSCRIPTION_STATUS_LABELS,
@@ -20,6 +27,8 @@ import {
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { PageRequest } from '@shared/models/page';
 import { SelectOption } from '@shared/models/select-option';
+import { Tier } from '@shared/models/tier';
+import { TIER_LABELS } from '@shared/models/tier-labels';
 import { shortId } from '@shared/utils/identifiers';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { formatDate, formatDateTime } from '@core/i18n/date-format';
@@ -57,8 +66,9 @@ export class TrainerSubscriptionsPage implements OnInit {
     { field: 'userId', header: this.column('userId') },
     { field: 'startsOnUtc', header: this.column('startsOn'), sortable: true, width: '10rem' },
     { field: 'endsOnUtc', header: this.column('endsOn'), sortable: true, width: '10rem' },
+    { field: 'tier', header: this.column('tier'), width: '8rem' },
     { field: 'status', header: this.column('status'), width: '14rem' },
-    { field: 'actions', header: '', width: '6rem' },
+    { field: 'actions', header: '', width: '8rem' },
   ]);
   protected readonly trainerOptions = computed<readonly SelectOption<string>[]>(() =>
     this.store.trainers().map((trainer) => ({ value: trainer.id, label: trainer.displayName })),
@@ -85,6 +95,22 @@ export class TrainerSubscriptionsPage implements OnInit {
 
   protected statusSeverity(subscription: TrainerSubscription): TrainerTagSeverity {
     return SUBSCRIPTION_STATUS_SEVERITIES[this.statusOf(subscription)];
+  }
+
+  protected tierLabel(tier: Tier): string {
+    return this.translator.translate(TIER_LABELS[tier]);
+  }
+
+  protected tierSeverity(tier: Tier): SubscriptionTierSeverity {
+    return SUBSCRIPTION_TIER_SEVERITIES[tier];
+  }
+
+  protected changeTierLabel(subscription: TrainerSubscription): string {
+    return this.translator.translate(TIER_CHANGE_ACTION_LABELS[subscription.targetTier()]);
+  }
+
+  protected changeTierIcon(subscription: TrainerSubscription): string {
+    return TIER_CHANGE_ICONS[subscription.targetTier()];
   }
 
   protected endedLabel(endedOn: Date): string {
@@ -118,6 +144,17 @@ export class TrainerSubscriptionsPage implements OnInit {
     );
     if (confirmed) {
       await this.store.end(subscription);
+    }
+  }
+
+  protected async changeTier(subscription: TrainerSubscription): Promise<void> {
+    const tier = subscription.targetTier();
+    const confirmed = await this.confirmations.confirm(
+      { key: TIER_CHANGE_CONFIRMATIONS[tier], params: { name: subscription.trainerDisplayName } },
+      TIER_CHANGE_ACTION_LABELS[tier],
+    );
+    if (confirmed) {
+      await this.store.changeTier(subscription);
     }
   }
 

@@ -53,6 +53,12 @@ describe('toErrorMessage', () => {
     );
   });
 
+  it('should explain the VIP only chat when access is refused for the subscription tier', () => {
+    const error = new AccessDeniedError('refused', 'Chat.SubscriptionRequired', BACKEND_TEXT);
+
+    expect(toErrorMessage(error)).toBe('errors.backend.Chat.SubscriptionRequired');
+  });
+
   it('should map BusinessRuleError to its message', () => {
     expect(toErrorMessage(new BusinessRuleError('errors.backend.Plan.Locked', 'Plan.Locked'))).toBe(
       'errors.backend.Plan.Locked',
@@ -63,6 +69,18 @@ describe('toErrorMessage', () => {
     expect(toErrorMessage(new ServiceUnavailableError())).toBe('errors.classes.network');
   });
 
+  it('should name the missing subscription when the backend cannot find it', () => {
+    const error = new NotFoundError('gone', 'TrainerSubscription.NotFound');
+
+    expect(toErrorMessage(error)).toBe('errors.backend.TrainerSubscription.NotFound');
+  });
+
+  it('should name the inactive subscription when the backend refuses a tier change', () => {
+    const error = new BusinessRuleError('ended', 'TrainerSubscription.NotActive');
+
+    expect(toErrorMessage(error)).toBe('errors.backend.TrainerSubscription.NotActive');
+  });
+
   it('should prefer the dictionary over the backend text when the code is known', () => {
     const error = new NotFoundError('gone', 'User.NotFound', BACKEND_TEXT);
 
@@ -71,6 +89,16 @@ describe('toErrorMessage', () => {
 
   it('should return the backend text in every language when the code is unknown', () => {
     const error = new ConflictError('exists', 'Workout.PlanLocked', BACKEND_TEXT);
+
+    expect(toErrorMessage(error)).toEqual(BACKEND_TEXT);
+  });
+
+  it('should return the backend text when the retired commission code arrives', () => {
+    const error = new BusinessRuleError(
+      'The commission is not valid.',
+      'Trainer.InvalidCommissionPercent',
+      BACKEND_TEXT,
+    );
 
     expect(toErrorMessage(error)).toEqual(BACKEND_TEXT);
   });
