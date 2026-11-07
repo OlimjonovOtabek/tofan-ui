@@ -63,6 +63,18 @@ describe('toErrorMessage', () => {
     expect(toErrorMessage(new ServiceUnavailableError())).toBe('errors.classes.network');
   });
 
+  it('should name the missing subscription when the backend cannot find it', () => {
+    const error = new NotFoundError('gone', 'TrainerSubscription.NotFound');
+
+    expect(toErrorMessage(error)).toBe('errors.backend.TrainerSubscription.NotFound');
+  });
+
+  it('should name the inactive subscription when the backend refuses a tier change', () => {
+    const error = new BusinessRuleError('ended', 'TrainerSubscription.NotActive');
+
+    expect(toErrorMessage(error)).toBe('errors.backend.TrainerSubscription.NotActive');
+  });
+
   it('should prefer the dictionary over the backend text when the code is known', () => {
     const error = new NotFoundError('gone', 'User.NotFound', BACKEND_TEXT);
 

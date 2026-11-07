@@ -67,6 +67,8 @@ export const ERRORS_UZ = {
     TrainerSubscription: {
       OtherTrainerActive: 'Foydalanuvchida boshqa trenerga faol obuna bor — avval uni tugating.',
       MonthsOutOfRange: "Obuna muddati 1 oydan 12 oygacha bo'lishi kerak.",
+      NotFound: "Obuna topilmadi. Ro'yxatni yangilab, qayta urinib ko'ring.",
+      NotActive: "Obuna faol emas, shuning uchun uning Tier'ini o'zgartirib bo'lmaydi.",
     },
     WorkoutPlan: {
       TrainerProgramMissing: "Trener hali mashq dasturini e'lon qilmagan.",

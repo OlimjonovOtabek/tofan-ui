@@ -55,6 +55,8 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Trainer.InvalidCommissionPercent': 'errors.backend.Trainer.InvalidCommissionPercent',
   'TrainerSubscription.OtherTrainerActive': 'errors.backend.TrainerSubscription.OtherTrainerActive',
   'TrainerSubscription.MonthsOutOfRange': 'errors.backend.TrainerSubscription.MonthsOutOfRange',
+  'TrainerSubscription.NotFound': 'errors.backend.TrainerSubscription.NotFound',
+  'TrainerSubscription.NotActive': 'errors.backend.TrainerSubscription.NotActive',
   'WorkoutPlan.TrainerProgramMissing': 'errors.backend.WorkoutPlan.TrainerProgramMissing',
   'MealPlan.TrainerProgramMissing': 'errors.backend.MealPlan.TrainerProgramMissing',
 };

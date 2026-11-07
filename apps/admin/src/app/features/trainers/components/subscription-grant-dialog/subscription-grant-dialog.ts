@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import { InputText } from '@openng/optimus-ui/inputtext';
+import { Message } from '@openng/optimus-ui/message';
 import { TranslationKey } from '@core/i18n/dictionary';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { FieldError } from '@shared/components/field-error/field-error';
@@ -37,6 +38,7 @@ export interface SubscriptionGrantRequest {
   imports: [
     FormField,
     InputText,
+    Message,
     FormDialog,
     FieldError,
     NumberField,
