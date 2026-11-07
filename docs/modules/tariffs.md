@@ -69,6 +69,8 @@ The menu item "Tofan tariflari" sits in the "Narxlar" group (`layout.menu.pricin
 - `workoutVideoLimit` counts exercises over the whole plan, not per day (backend `docs/tariffs-v1.md`, "Videolar").
   The first N exercises with a video, in day and exercise order, keep their video; an exercise repeated on another day counts once.
   `null` opens every video and `0` closes every video, so `0` has its own card text ("Hamma video yopiq") like the scan limit.
+- On release day the Free video and meal limits may have to be switched off until the new mobile version ships.
+  It is a data step in this page, not code: follow `docs/release-day.md`.
 - `GET /tariffs` answers 401 without a token, so the page relies on the session interceptor like every other screen.
 - `PUT /admin/tariffs/{type}/benefits` replaces the whole list, so an empty list removes every Benefit of that tariff.
   A Benefit has no id, so the dialog sends every row again, including the ones the admin did not touch.
