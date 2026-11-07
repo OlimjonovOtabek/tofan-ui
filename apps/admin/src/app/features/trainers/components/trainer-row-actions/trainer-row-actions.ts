@@ -14,7 +14,6 @@ export class TrainerRowActions {
 
   readonly edit = output<void>();
   readonly changePassword = output<void>();
-  readonly changeCommission = output<void>();
   readonly grant = output<void>();
   readonly publish = output<void>();
   readonly unpublish = output<void>();
