@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { isBusinessCode, toDomainError } from '@core/http/api-error.mapper';
 import { AuthPaths } from './auth-paths';
 import { catchError, from, switchMap, throwError } from 'rxjs';
 import { AuthStore } from './auth.store';
@@ -12,7 +13,9 @@ export const sessionInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request).pipe(
     catchError((error: unknown) => {
       if (hasStatus(error, HttpStatusCode.Forbidden)) {
-        void router.navigateByUrl(AuthPaths.accessDenied);
+        if (!carriesBusinessCode(error)) {
+          void router.navigateByUrl(AuthPaths.accessDenied);
+        }
         return throwError(() => error);
       }
       if (!hasStatus(error, HttpStatusCode.Unauthorized) || !authStore.hasSession()) {
@@ -29,6 +32,10 @@ export const sessionInterceptor: HttpInterceptorFn = (request, next) => {
     }),
   );
 };
+
+function carriesBusinessCode(error: unknown): boolean {
+  return isBusinessCode(toDomainError(error).code);
+}
 
 function hasStatus(error: unknown, status: HttpStatusCode): boolean {
   return error instanceof HttpErrorResponse && error.status === status;

@@ -50,12 +50,19 @@ export const TRAINERS_EN = {
       startsOn: 'Started',
       endsOn: 'Ends',
       status: 'Status',
+      tier: 'Tier',
     },
     actions: {
       end: 'End subscription',
+      makeVip: 'Make VIP',
+      makeStandard: 'Make Standard',
     },
     confirmEnd:
       'End the subscription to "{name}"? The user goes back to their own workout and meal plan.',
+    confirmMakeVip:
+      'Make the subscription to "{name}" VIP? The dates do not change and the user can chat with the trainer.',
+    confirmMakeStandard:
+      'Make the subscription to "{name}" Standard? The dates do not change and the user can no longer chat with the trainer.',
   },
   filters: {
     trainer: 'Trainer',
@@ -116,6 +123,8 @@ export const TRAINERS_EN = {
     months: 'Length',
     suffix: ' mo',
     hint: 'From 1 to 12 months. If the user already has an active subscription to this trainer, it is extended.',
+    tierHint:
+      'A subscription is always opened as Standard. To give VIP, change the subscription with the "Make VIP" button in the table.',
     errors: {
       trainer: 'Choose a trainer.',
       userId: 'Choose a user.',
@@ -130,6 +139,8 @@ export const TRAINERS_EN = {
     unpublished: 'Trainer "{name}" was unpublished.',
     granted: 'A subscription to "{name}" was granted.',
     ended: 'The subscription to "{name}" was ended.',
+    tierChangedToVip: 'The subscription to "{name}" was made VIP.',
+    tierChangedToStandard: 'The subscription to "{name}" was made Standard.',
     updated: 'Trainer "{name}" was saved.',
     passwordChanged: 'A new password was set for "{name}".',
     deleted: 'Trainer "{name}" was deleted.',

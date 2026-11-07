@@ -9,6 +9,9 @@ export const ERRORS_EN: Dictionary['errors'] = {
     IdentityProvider: {
       UserNotFound: 'User not found.',
     },
+    Chat: {
+      SubscriptionRequired: 'Chat is open only to athletes with an active VIP subscription.',
+    },
     NotificationTemplate: {
       Conflict: 'An active template already exists for this type and style. Deactivate it first.',
       NoActiveTemplate: "No active template matches this type and the user's style.",
@@ -67,6 +70,8 @@ export const ERRORS_EN: Dictionary['errors'] = {
       OtherTrainerActive:
         'The user already has an active subscription to another trainer — end it first.',
       MonthsOutOfRange: 'The subscription length must be between 1 and 12 months.',
+      NotFound: 'The subscription was not found. Refresh the list and try again.',
+      NotActive: 'The subscription is not active, so its Tier cannot be changed.',
     },
     WorkoutPlan: {
       TrainerProgramMissing: 'The trainer has not published a workout program yet.',

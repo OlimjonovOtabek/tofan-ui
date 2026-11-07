@@ -9,6 +9,9 @@ export const ERRORS_RU: Dictionary['errors'] = {
     IdentityProvider: {
       UserNotFound: 'Пользователь не найден.',
     },
+    Chat: {
+      SubscriptionRequired: 'Чат открыт только для спортсменов с активной VIP-подпиской.',
+    },
     NotificationTemplate: {
       Conflict: 'Для этого типа и стиля уже есть активный шаблон. Сначала деактивируйте его.',
       NoActiveTemplate: 'Для этого типа нет активного шаблона в стиле пользователя.',
@@ -68,6 +71,8 @@ export const ERRORS_RU: Dictionary['errors'] = {
       OtherTrainerActive:
         'У пользователя уже есть активная подписка на другого тренера — сначала завершите её.',
       MonthsOutOfRange: 'Срок подписки должен быть от 1 до 12 месяцев.',
+      NotFound: 'Подписка не найдена. Обновите список и попробуйте ещё раз.',
+      NotActive: 'Подписка не активна, поэтому изменить её уровень нельзя.',
     },
     WorkoutPlan: {
       TrainerProgramMissing: 'Тренер ещё не опубликовал программу тренировок.',

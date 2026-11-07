@@ -1,6 +1,12 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { Router } from '@angular/router';
-import { adherenceLevel, fullNameOf, initialsOfClient } from '@coach/core/clients/client';
+import {
+  adherenceLevel,
+  canMessage,
+  fullNameOf,
+  initialsOfClient,
+  isVip,
+} from '@coach/core/clients/client';
 import { accessLeftText } from '@coach/core/clients/client-text';
 import { EXPERIENCE_LEVEL_LABELS, placeLabel } from '@coach/core/fitness/experience-level';
 import { FITNESS_GOAL_LABELS } from '@coach/core/fitness/fitness-goal';
@@ -97,6 +103,8 @@ export class ClientDetailPage {
       initials: initialsOfClient({ firstName: profile.firstName, lastName: profile.lastName }),
       goal: profile.goal === null ? null : t(FITNESS_GOAL_LABELS[profile.goal]),
       access: t(access.key, access.params),
+      vip: isVip(client),
+      canMessage: canMessage(client),
       accessTone:
         client.status === 'ended'
           ? 'neutral'
