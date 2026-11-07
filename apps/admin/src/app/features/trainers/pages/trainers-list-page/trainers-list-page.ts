@@ -3,7 +3,6 @@ import { Avatar } from '@openng/optimus-ui/avatar';
 import { Button } from '@openng/optimus-ui/button';
 import { Tag } from '@openng/optimus-ui/tag';
 import { Trainer } from '../../models/trainer';
-import { COMMISSION_PERCENT_FRACTION_DIGITS } from '../../models/trainer-commission';
 import { TrainerDraft } from '../../models/trainer-draft';
 import {
   TRAINER_PUBLISH_LABELS,
@@ -16,7 +15,6 @@ import {
   SubscriptionGrantRequest,
   SubscriptionGrantDialog,
 } from '../../components/subscription-grant-dialog/subscription-grant-dialog';
-import { TrainerCommissionDialog } from '../../components/trainer-commission-dialog/trainer-commission-dialog';
 import { TrainerEditDialog } from '../../components/trainer-edit-dialog/trainer-edit-dialog';
 import { TrainerFormDialog } from '../../components/trainer-form-dialog/trainer-form-dialog';
 import { TrainerPasswordDialog } from '../../components/trainer-password-dialog/trainer-password-dialog';
@@ -40,7 +38,6 @@ import { Translator } from '@core/i18n/translator';
     TrainerFormDialog,
     TrainerEditDialog,
     TrainerPasswordDialog,
-    TrainerCommissionDialog,
     TrainerRowActions,
     SubscriptionGrantDialog,
     Avatar,
@@ -64,12 +61,6 @@ export class TrainersListPage {
     { field: 'slug', header: this.column('slug') },
     { field: 'userId', header: this.column('userId') },
     { field: 'monthlyPrice', header: this.column('monthlyPrice'), sortable: true, width: '12rem' },
-    {
-      field: 'commissionPercent',
-      header: this.column('commissionPercent'),
-      sortable: true,
-      width: '8rem',
-    },
     { field: 'status', header: this.column('status'), width: '12rem' },
     { field: 'createdOnUtc', header: this.column('createdOn'), sortable: true, width: '10rem' },
     { field: 'actions', header: '', width: '14rem' },
@@ -82,8 +73,6 @@ export class TrainersListPage {
   protected readonly editVisible = signal(false);
   protected readonly passwordFor = signal<Trainer | null>(null);
   protected readonly passwordVisible = signal(false);
-  protected readonly commissionFor = signal<Trainer | null>(null);
-  protected readonly commissionVisible = signal(false);
 
   protected statusLabel(trainer: Trainer): string {
     return this.translator.translate(TRAINER_PUBLISH_LABELS[trainer.publishState()]);
@@ -101,16 +90,6 @@ export class TrainersListPage {
       trainer.monthlyPrice,
     );
     return this.translator.translate('trainers.list.price', { amount });
-  }
-
-  protected commissionLabel(trainer: Trainer): string {
-    if (trainer.commissionPercent === null) {
-      return this.emptyCell;
-    }
-    const percent = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()], {
-      maximumFractionDigits: COMMISSION_PERCENT_FRACTION_DIGITS,
-    }).format(trainer.commissionPercent);
-    return this.translator.translate('trainers.list.commission', { percent });
   }
 
   protected dateLabel(date: Date): string {
@@ -154,18 +133,6 @@ export class TrainersListPage {
     const trainer = this.passwordFor();
     if (trainer !== null && (await this.store.changePassword(trainer, password))) {
       this.passwordVisible.set(false);
-    }
-  }
-
-  protected openCommission(trainer: Trainer): void {
-    this.commissionFor.set(trainer);
-    this.commissionVisible.set(true);
-  }
-
-  protected async changeCommission(percent: number): Promise<void> {
-    const trainer = this.commissionFor();
-    if (trainer !== null && (await this.store.changeCommission(trainer, percent))) {
-      this.commissionVisible.set(false);
     }
   }
 
