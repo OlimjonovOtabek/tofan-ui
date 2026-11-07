@@ -47,6 +47,10 @@ export const ENUMS_UZ = {
     male: 'Erkak',
     female: 'Ayol',
   },
+  tier: {
+    standard: 'Standard',
+    vip: 'VIP',
+  },
   servingUnit: {
     grams: 'gramm',
     milliliters: 'ml',
