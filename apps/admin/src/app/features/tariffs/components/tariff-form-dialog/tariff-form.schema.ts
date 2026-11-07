@@ -34,6 +34,45 @@ const ERRORS = {
 const FREE_PRICE = 0;
 
 type LimitPath = SchemaPath<number | null, SchemaPathRules.Supported, PathKind.Child>;
+type SwitchPath = SchemaPath<boolean, SchemaPathRules.Supported, PathKind.Child>;
+
+type LimitKey = 'foodScanLimit' | 'workoutVideoLimit' | 'workoutChangeMonths' | 'dietChangeDays';
+type SwitchKey =
+  'foodScanUnlimited' | 'workoutVideoUnlimited' | 'workoutNeverChanges' | 'dietNeverChanges';
+
+interface LimitField {
+  readonly limit: LimitKey;
+  readonly switchedOn: SwitchKey;
+  readonly minimum: number;
+  readonly message: TranslationKey;
+}
+
+const LIMIT_FIELDS: readonly LimitField[] = [
+  {
+    limit: 'foodScanLimit',
+    switchedOn: 'foodScanUnlimited',
+    minimum: MIN_FOOD_SCAN_LIMIT,
+    message: ERRORS.scanLimit,
+  },
+  {
+    limit: 'workoutVideoLimit',
+    switchedOn: 'workoutVideoUnlimited',
+    minimum: MIN_WORKOUT_VIDEO_LIMIT,
+    message: ERRORS.videoLimit,
+  },
+  {
+    limit: 'workoutChangeMonths',
+    switchedOn: 'workoutNeverChanges',
+    minimum: MIN_WORKOUT_CHANGE_MONTHS,
+    message: ERRORS.changeMonths,
+  },
+  {
+    limit: 'dietChangeDays',
+    switchedOn: 'dietNeverChanges',
+    minimum: MIN_DIET_CHANGE_DAYS,
+    message: ERRORS.changeDays,
+  },
+];
 
 export interface TariffFormValue {
   monthlyPrice: number | null;
@@ -109,20 +148,9 @@ export function tariffFormSchema(typeOf: () => TariffType): Schema<TariffFormVal
       (value() ?? 0) > FREE_PRICE ? null : { kind: 'positive', message: ERRORS.price },
     );
 
-    limitRules(path.foodScanLimit, path.foodScanUnlimited, MIN_FOOD_SCAN_LIMIT, ERRORS.scanLimit);
-    limitRules(
-      path.workoutVideoLimit,
-      path.workoutVideoUnlimited,
-      MIN_WORKOUT_VIDEO_LIMIT,
-      ERRORS.videoLimit,
-    );
-    limitRules(
-      path.workoutChangeMonths,
-      path.workoutNeverChanges,
-      MIN_WORKOUT_CHANGE_MONTHS,
-      ERRORS.changeMonths,
-    );
-    limitRules(path.dietChangeDays, path.dietNeverChanges, MIN_DIET_CHANGE_DAYS, ERRORS.changeDays);
+    for (const field of LIMIT_FIELDS) {
+      limitRules(path[field.limit], path[field.switchedOn], field);
+    }
 
     disabled(path.mealTypes, { when: ({ valueOf }) => valueOf(path.allMealTypes) });
     minLength(path.mealTypes, 1, { message: ERRORS.mealTypes });
@@ -131,9 +159,8 @@ export function tariffFormSchema(typeOf: () => TariffType): Schema<TariffFormVal
 
 function limitRules(
   limit: LimitPath,
-  switchedOn: SchemaPath<boolean, SchemaPathRules.Supported, PathKind.Child>,
-  minimum: number,
-  message: TranslationKey,
+  switchedOn: SwitchPath,
+  { minimum, message }: LimitField,
 ): void {
   disabled(limit, { when: ({ valueOf }) => valueOf(switchedOn) });
   required(limit, { message });
@@ -147,10 +174,7 @@ function limitOf(switchedOn: boolean, limit: number | null): number | null {
 function isFilled(value: TariffFormValue, type: TariffType): boolean {
   return (
     (isFreeTariff(type) || value.monthlyPrice !== null) &&
-    (value.foodScanUnlimited || value.foodScanLimit !== null) &&
-    (value.workoutVideoUnlimited || value.workoutVideoLimit !== null) &&
     (value.allMealTypes || value.mealTypes.length > 0) &&
-    (value.workoutNeverChanges || value.workoutChangeMonths !== null) &&
-    (value.dietNeverChanges || value.dietChangeDays !== null)
+    LIMIT_FIELDS.every((field) => value[field.switchedOn] || value[field.limit] !== null)
   );
 }
