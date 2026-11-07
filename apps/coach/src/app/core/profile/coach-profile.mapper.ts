@@ -18,6 +18,7 @@ export function toCoachProfile(
     photoFileId: response.photoFileId,
     photoUrl: response.photoFileId === null ? null : photoUrlOf(response.photoFileId),
     monthlyPrice: response.monthlyPrice,
+    vipMonthlyPrice: response.vipMonthlyPrice,
     isPublished: response.isPublished,
   };
 }
@@ -31,6 +32,7 @@ export function toCoachProfileChange(
     bio: profile.bio,
     photoFileId: profile.photoFileId,
     monthlyPrice: profile.monthlyPrice,
+    vipMonthlyPrice: profile.vipMonthlyPrice,
     ...change,
   };
 }
@@ -43,6 +45,7 @@ export function toUpdateCoachProfileRequest(value: CoachProfileChange): UpdateCo
     ...(bio === '' ? {} : { bio }),
     ...(value.photoFileId === null ? {} : { photoFileId: value.photoFileId }),
     ...(value.monthlyPrice === null ? {} : { monthlyPrice: value.monthlyPrice }),
+    vipMonthlyPrice: value.vipMonthlyPrice,
     ...(slug === '' ? {} : { slug }),
   };
 }

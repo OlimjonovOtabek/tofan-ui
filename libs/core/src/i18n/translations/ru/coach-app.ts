@@ -258,13 +258,6 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     error: 'Не удалось загрузить видео',
   },
   meal: {
-    breakfast: 'Завтрак',
-    secondBreakfast: 'Второй завтрак',
-    lunch: 'Обед',
-    snack: 'Перекус',
-    dinner: 'Ужин',
-    preWorkout: 'Перед тренировкой',
-    postWorkout: 'После тренировки',
     itemPortionKcal: '{portion} · {kcal} ккал',
     kcal: '{kcal} ккал',
     optionAdd: 'Добавить вариант',
@@ -328,6 +321,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     noMatchesMessage: 'Нет клиентов по этому поиску или фильтру.',
     searchHint: 'Поиск по имени',
     statusNeedsReview: 'Требует внимания',
+    tierVip: 'VIP',
     accessExpired: 'Истекла',
     accessLeft:
       '{count, plural, one{Остался {count} день} few{Осталось {count} дня} many{Осталось {count} дней} other{Осталось {count} дня}}',
@@ -418,10 +412,12 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     lastSeen: 'был(а) в сети {time}',
     today: 'Сегодня',
     inputHint: 'Сообщение',
-    readOnly: 'Подписка закончилась — история открыта, но писать нельзя.',
+    readOnly:
+      'Чат открыт только для спортсменов с активной VIP-подпиской. История остаётся, но писать нельзя.',
     empty: 'Сообщений пока нет. Напишите первым!',
     errorTitle: 'Не удалось открыть чат',
     send: 'Отправить',
+    unsent: 'Неотправленное сообщение',
   },
   profile: {
     editTitle: 'Редактировать профиль',
@@ -470,6 +466,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     statClientsCaption: 'Подписаны сейчас',
     statPrograms: 'Программы',
     title: 'Профиль тренера',
+    vipPrice: 'VIP {price}',
     statAdherence: 'Дисциплина',
     statAverage: 'В среднем',
     statRevenue: 'Доход',
@@ -480,6 +477,11 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     note: 'Спортсмены платят эту цену каждый месяц за ваши тренировки.',
     saved: 'Цена обновлена',
     title: 'Цена подписки',
+    vipHint: 'например, 500000',
+    vipInvalid: 'Цена VIP должна быть больше нуля',
+    vipLabel: 'Цена VIP (необязательно)',
+    vipNote:
+      'VIP-спортсмены могут переписываться с вами в чате. Оставьте пустым, чтобы продавать только Standard, - у текущих VIP-спортсменов чат работает до конца подписки.',
   },
   earnings: {
     entrySubtitle: 'Чистый доход и платежи',

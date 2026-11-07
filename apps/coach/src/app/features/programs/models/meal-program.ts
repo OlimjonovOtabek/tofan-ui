@@ -1,5 +1,5 @@
 import { FitnessGoal } from '@coach/core/fitness/fitness-goal';
-import { MealType } from '@coach/core/fitness/meal-type';
+import { MealType } from '@shared/models/meal-type';
 import { ServingUnit } from '@coach/core/fitness/serving-unit';
 import { LocalizedText } from '@shared/models/localized-text';
 

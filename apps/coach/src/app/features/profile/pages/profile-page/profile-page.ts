@@ -7,8 +7,8 @@ import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { TranslationKey } from '@core/i18n/dictionary';
-import { COACH_SUPPORT_URL, TRAINER_PAGE_URL } from '@coach/core/layout/coach-links';
-import { formatCount, formatMoneyShort } from '@coach/core/format/formats';
+import { COACH_SUPPORT_URL } from '@coach/core/layout/coach-links';
+import { formatCount } from '@coach/core/format/formats';
 import { PushStore } from '@coach/core/push/push.store';
 import { ThemeStore } from '@coach/core/theme/theme.store';
 import { Avatar } from '@coach/core/ui/avatar/avatar';
@@ -21,9 +21,9 @@ import { Note } from '@coach/core/ui/note/note';
 import { PillButton } from '@coach/core/ui/pill-button/pill-button';
 import { Sheets } from '@coach/core/ui/sheets/sheets.service';
 import { Shimmer } from '@coach/core/ui/shimmer/shimmer';
-import { initialsOf } from '@coach/core/clients/client-activity';
 import { ProfileStore } from '../../profile.store';
-import { isGeneratedSlug, monthlyRevenue, publishedPrograms } from '../../models/profile-overview';
+import { profilePriceLabel } from '../../models/profile-price';
+import { toProfileView } from '../../models/profile-view';
 import { ProfilePreferencesSheets, THEME_LABELS } from './profile-preferences-sheets';
 
 interface SettingRow {
@@ -69,40 +69,15 @@ export class ProfilePage {
   protected readonly signingOut = signal(false);
   protected readonly view = computed(() => {
     const overview = this.store.overview();
-    if (overview === null) {
-      return null;
-    }
-    const locale = this.localeStore.locale();
-    const unknown = this.t('coachApp.common.unknown');
-    const { profile } = overview;
-    const revenue = monthlyRevenue(overview);
-    const programs = publishedPrograms(overview);
-    const words = profile.displayName.trim().split(/\s+/);
-    return {
-      profile,
-      initials: initialsOf(words[0], words.length > 1 ? words[words.length - 1] : null),
-      link: profile.slug ? `${TRAINER_PAGE_URL}${profile.slug}` : null,
-      generated: profile.slug !== null && isGeneratedSlug(profile.slug),
-      clients: overview.clientCount === null ? unknown : String(overview.clientCount),
-      revenue: revenue === null ? unknown : formatMoneyShort(revenue, locale),
-      adherence: overview.averageAdherence === null ? unknown : String(overview.averageAdherence),
-      programs: programs === null ? unknown : String(programs),
-      split:
-        programs === null
-          ? null
-          : this.t('coachApp.profile.programsSplit', {
-              workout: overview.publishedWorkoutPrograms ?? 0,
-              meal: overview.publishedMealPrograms ?? 0,
-            }),
-    };
+    return overview === null ? null : toProfileView(overview, this.localeStore.locale(), this.t);
   });
   protected readonly rows = computed<SettingRow[]>(() => {
     const profile = this.store.overview()?.profile;
     const locale = this.localeStore.locale();
     const price =
-      profile?.monthlyPrice == null
+      profile === undefined
         ? this.t('coachApp.profile.priceUnset')
-        : `${formatCount(profile.monthlyPrice, locale)} ${this.t('coachApp.profile.priceUnit')}`;
+        : profilePriceLabel(profile, (value) => formatCount(value, locale), this.t);
     return [
       {
         icon: 'credit-card',

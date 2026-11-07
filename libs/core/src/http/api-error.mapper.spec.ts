@@ -6,7 +6,7 @@ import { ConflictError } from '@shared/models/errors/conflict.error';
 import { NotFoundError } from '@shared/models/errors/not-found.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ValidationError } from '@shared/models/errors/validation.error';
-import { toDomainError, toDomainErrorFromApiError } from './api-error.mapper';
+import { isBusinessCode, toDomainError, toDomainErrorFromApiError } from './api-error.mapper';
 import { ErrorType } from './api.dto';
 
 function problem(status: number, body: unknown): HttpErrorResponse {
@@ -75,6 +75,40 @@ describe('toDomainError', () => {
     expect(toDomainError(problem(500, null))).toBeInstanceOf(ServiceUnavailableError);
   });
 
+  it('should keep the backend code and translations when access is refused by a business rule', () => {
+    const messages = { en: 'VIP only.', uz: 'Faqat VIP.', ru: 'Только VIP.' };
+
+    const error = toDomainError(
+      problem(403, { title: 'Chat.SubscriptionRequired', detail: 'VIP required', messages }),
+    );
+
+    expect(error).toBeInstanceOf(AccessDeniedError);
+    expect(error.code).toBe('Chat.SubscriptionRequired');
+    expect(error.messages).toEqual(messages);
+  });
+
+  it('should read the backend code when a refusal arrives as a result envelope', () => {
+    const messages = { en: 'VIP only.', uz: 'Faqat VIP.', ru: 'Только VIP.' };
+
+    const error = toDomainError(
+      problem(403, {
+        data: null,
+        isSuccess: false,
+        isFailure: true,
+        error: {
+          code: 'Chat.SubscriptionRequired',
+          message: 'VIP required',
+          messages,
+          type: ErrorType.Forbidden,
+        },
+      }),
+    );
+
+    expect(error).toBeInstanceOf(AccessDeniedError);
+    expect(error.code).toBe('Chat.SubscriptionRequired');
+    expect(error.messages).toEqual(messages);
+  });
+
   it('should keep the backend title when the server fails', () => {
     const error = toDomainError(problem(500, { title: 'GetUsersQuery', detail: 'Keycloak down' }));
 
@@ -117,5 +151,26 @@ describe('toDomainErrorFromApiError', () => {
       }),
     ).toBeInstanceOf(BusinessRuleError);
     expect(toDomainErrorFromApiError(undefined)).toBeInstanceOf(ServiceUnavailableError);
+  });
+
+  it('should keep the code and translations when a result envelope is forbidden', () => {
+    const messages = { en: 'VIP only.', uz: 'Faqat VIP.', ru: 'Только VIP.' };
+
+    const error = toDomainErrorFromApiError({
+      code: 'Chat.SubscriptionRequired',
+      message: 'VIP required',
+      messages,
+      type: ErrorType.Forbidden,
+    });
+
+    expect(error).toBeInstanceOf(AccessDeniedError);
+    expect(error.code).toBe('Chat.SubscriptionRequired');
+    expect(error.messages).toEqual(messages);
+  });
+
+  it('should recognise a business code only when it names a backend rule', () => {
+    expect(isBusinessCode('Chat.SubscriptionRequired')).toBe(true);
+    expect(isBusinessCode('Forbidden')).toBe(false);
+    expect(isBusinessCode('')).toBe(false);
   });
 });

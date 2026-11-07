@@ -49,4 +49,12 @@ describe('TextField', () => {
 
     expect(touched).toHaveBeenCalled();
   });
+
+  it('should focus the input when focus is requested', async () => {
+    const { input, field } = await render({});
+
+    field.focus();
+
+    expect(document.activeElement).toBe(input);
+  });
 });

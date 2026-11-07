@@ -49,6 +49,10 @@ export const routes: Routes = [
           import('@features/trainers/trainers.routes').then((m) => m.TRAINER_ROUTES),
       },
       {
+        path: 'tariffs',
+        loadChildren: () => import('@features/tariffs/tariffs.routes').then((m) => m.TARIFF_ROUTES),
+      },
+      {
         path: 'user-sessions',
         loadChildren: () =>
           import('@features/user-sessions/user-sessions.routes').then((m) => m.USER_SESSION_ROUTES),
@@ -57,6 +61,11 @@ export const routes: Routes = [
         path: 'notifications',
         loadChildren: () =>
           import('@features/notifications/notifications.routes').then((m) => m.NOTIFICATION_ROUTES),
+      },
+      {
+        path: 'platform-fee',
+        loadChildren: () =>
+          import('@features/platform-fee/platform-fee.routes').then((m) => m.PLATFORM_FEE_ROUTES),
       },
     ],
   },

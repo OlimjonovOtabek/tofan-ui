@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { FitnessGoal } from '@coach/core/fitness/fitness-goal';
-import { MealType } from '@coach/core/fitness/meal-type';
+import { MealType } from '@shared/models/meal-type';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { PickedFood } from './models/food';

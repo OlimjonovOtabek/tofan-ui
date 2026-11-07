@@ -7,7 +7,7 @@ import { AppPaths } from '@core/config/app-paths';
 import { TranslationKey } from '@core/i18n/dictionary';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 
-type TrainersTab = 'trainers' | 'subscriptions';
+type TrainersTab = 'trainers' | 'subscriptions' | 'tiers';
 
 interface TabLink {
   readonly value: TrainersTab;
@@ -29,9 +29,18 @@ const TAB_LINKS: readonly TabLink[] = [
     label: 'trainers.page.tabs.subscriptions',
     icon: 'pi pi-calendar-clock',
   },
+  {
+    value: 'tiers',
+    path: AppPaths.trainerTiers,
+    label: 'trainers.page.tabs.tiers',
+    icon: 'pi pi-star',
+  },
 ];
 
 function tabOf(url: string): TrainersTab {
+  if (url.startsWith(AppPaths.trainerTiers)) {
+    return 'tiers';
+  }
   return url.startsWith(AppPaths.trainerSubscriptions) ? 'subscriptions' : 'trainers';
 }
 

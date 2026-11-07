@@ -1,8 +1,9 @@
 {
   "/api": {
-    "target": "https://api.157.90.117.20.sslip.io",
+    "target": "https://api.stage.peaktofan.com",
     "secure": true,
     "changeOrigin": true,
+    "ws": true,
     "pathRewrite": { "^/api": "" }
   }
 }

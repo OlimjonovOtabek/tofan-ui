@@ -44,6 +44,27 @@ export const COMMON_EN: Dictionary['common'] = {
     required: '{label} ({hint}) is required',
     tooLong: '{label} ({hint}) must be at most {max} characters',
   },
+  benefits: {
+    languages: {
+      en: 'English',
+      ru: 'Russian',
+      uz: 'Uzbek',
+    },
+    row: 'Benefit {number}',
+    count: '{count} / {max}',
+    add: 'Add benefit',
+    remove: 'Remove benefit {number}',
+    moveUp: 'Move benefit {number} up',
+    moveDown: 'Move benefit {number} down',
+    drag: 'Drag to reorder',
+    empty: 'No benefits yet. Press Add.',
+    plainTextWarning:
+      'Benefits are plain text and do not follow limit changes. After changing a limit, update texts such as "15 per month" by hand.',
+    errors: {
+      required: 'Enter the text.',
+      tooLong: 'At most {max} characters.',
+    },
+  },
   clipboard: {
     copied: '{what} copied.',
     failed: 'Could not copy. {what}: {text}',

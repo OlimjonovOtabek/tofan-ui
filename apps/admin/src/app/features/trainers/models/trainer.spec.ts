@@ -1,6 +1,10 @@
 import { Trainer } from './trainer';
 
-function trainerWith(displayName: string, monthlyPrice: number): Trainer {
+function trainerWith(
+  displayName: string,
+  monthlyPrice: number,
+  vipMonthlyPrice: number | null = null,
+): Trainer {
   return new Trainer(
     '1',
     'u1',
@@ -9,9 +13,10 @@ function trainerWith(displayName: string, monthlyPrice: number): Trainer {
     null,
     null,
     monthlyPrice,
-    5,
     false,
     new Date('2026-10-02T09:00:00Z'),
+    null,
+    vipMonthlyPrice,
   );
 }
 
@@ -22,6 +27,18 @@ describe('Trainer', () => {
 
   it('should have no price when the monthly price is zero', () => {
     expect(trainerWith('Jasur Karimov', 0).hasPrice()).toBe(false);
+  });
+
+  it('should sell VIP when the VIP price is above zero', () => {
+    expect(trainerWith('Jasur Karimov', 450000, 900000).hasVipPrice()).toBe(true);
+  });
+
+  it('should not sell VIP when the VIP price is empty', () => {
+    expect(trainerWith('Jasur Karimov', 450000, null).hasVipPrice()).toBe(false);
+  });
+
+  it('should show the stored VIP price when it is zero so the invalid value is not hidden', () => {
+    expect(trainerWith('Jasur Karimov', 450000, 0).hasVipPrice()).toBe(true);
   });
 
   it('should take the first letters of the first two words when the name is long', () => {

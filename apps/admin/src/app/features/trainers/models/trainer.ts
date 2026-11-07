@@ -11,10 +11,10 @@ export class Trainer {
     readonly photoFileId: string | null,
     readonly photoUrl: string | null,
     readonly monthlyPrice: number,
-    readonly commissionPercent: number | null,
     readonly isPublished: boolean,
     readonly createdOn: Date,
-    readonly slug: string | null = null,
+    readonly slug: string | null,
+    readonly vipMonthlyPrice: number | null,
   ) {}
 
   publishState(): TrainerPublishState {
@@ -23,6 +23,10 @@ export class Trainer {
 
   hasPrice(): boolean {
     return this.monthlyPrice > 0;
+  }
+
+  hasVipPrice(): boolean {
+    return this.vipMonthlyPrice !== null;
   }
 
   initials(): string {

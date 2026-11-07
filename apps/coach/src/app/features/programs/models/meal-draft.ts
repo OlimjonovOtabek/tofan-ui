@@ -1,4 +1,4 @@
-import { MEAL_TYPES, MealType } from '@coach/core/fitness/meal-type';
+import { MEAL_TYPES, MealType } from '@shared/models/meal-type';
 import { Food, PickedFood, caloriesFor } from './food';
 import { Meal, MealItem } from './meal-program';
 

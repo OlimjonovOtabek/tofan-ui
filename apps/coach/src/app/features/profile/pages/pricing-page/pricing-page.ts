@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal, untracked } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
@@ -8,6 +8,7 @@ import { EmptyState } from '@coach/core/ui/empty-state/empty-state';
 import { Note } from '@coach/core/ui/note/note';
 import { TextField } from '@coach/core/ui/text-field/text-field';
 import { ProfileEditStore } from '../../profile-edit.store';
+import { isVipPriceInputValid, priceInputOf, vipPriceOfInput } from '../../models/profile-price';
 
 const DIGITS = /[0-9]/;
 
@@ -42,6 +43,18 @@ const DIGITS = /[0-9]/;
           (submitted)="save()"
         />
         <coach-note [text]="'coachApp.pricing.note' | t" />
+        <coach-text-field
+          [title]="'coachApp.pricing.vipLabel' | t"
+          [hint]="'coachApp.pricing.vipHint' | t"
+          [suffix]="'coachApp.profile.priceUnit' | t"
+          inputMode="numeric"
+          [allowed]="digits"
+          [fieldError]="vipInvalid() ? ('coachApp.pricing.vipInvalid' | t) : null"
+          [value]="vipPrice()"
+          (valueChange)="vipPrice.set($event)"
+          (submitted)="save()"
+        />
+        <coach-note icon="message-circle" [text]="'coachApp.pricing.vipNote' | t" />
       }
       <div class="coach-footer">
         <button coachButton="primary" type="button" [loading]="store.saving()" (click)="save()">
@@ -57,26 +70,33 @@ export class PricingPage {
 
   protected readonly digits = DIGITS;
   protected readonly price = signal('');
+  protected readonly vipPrice = signal('');
   protected readonly submitted = signal(false);
+  protected readonly vipInvalid = computed(
+    () => this.submitted() && !isVipPriceInputValid(this.vipPrice()),
+  );
 
   constructor() {
     void this.store.load();
     effect(() => {
       const profile = this.store.profile();
-      untracked(() =>
-        this.price.set(
-          profile?.monthlyPrice == null ? '' : String(Math.round(profile.monthlyPrice)),
-        ),
-      );
+      untracked(() => {
+        this.price.set(priceInputOf(profile?.monthlyPrice ?? null));
+        this.vipPrice.set(priceInputOf(profile?.vipMonthlyPrice ?? null));
+      });
     });
   }
 
   protected async save(): Promise<void> {
     this.submitted.set(true);
-    if (this.price() === '') {
+    if (this.price() === '' || !isVipPriceInputValid(this.vipPrice())) {
       return;
     }
-    if (await this.store.save({ monthlyPrice: Number(this.price()) }, 'coachApp.pricing.saved')) {
+    const saved = await this.store.save(
+      { monthlyPrice: Number(this.price()), vipMonthlyPrice: vipPriceOfInput(this.vipPrice()) },
+      'coachApp.pricing.saved',
+    );
+    if (saved) {
       await this.router.navigateByUrl('/profile');
     }
   }

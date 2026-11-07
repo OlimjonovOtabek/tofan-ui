@@ -5,7 +5,9 @@ import { EXERCISES_EN } from './exercises';
 import { FOODS_EN } from './foods';
 import { MEDIA_EN } from './media';
 import { GARMENTS_EN } from './garments';
+import { TARIFFS_EN } from './tariffs';
 import { TRAINERS_EN } from './trainers';
+import { PLATFORM_FEE_EN } from './platform-fee';
 import { SOLDIERS_EN } from './soldiers';
 import { ACCOUNTS_EN } from './accounts';
 import { USER_SESSIONS_EN } from './user-sessions';
@@ -22,7 +24,9 @@ export const DICTIONARY_EN: Dictionary = {
   foods: FOODS_EN,
   media: MEDIA_EN,
   garments: GARMENTS_EN,
+  tariffs: TARIFFS_EN,
   trainers: TRAINERS_EN,
+  platformFee: PLATFORM_FEE_EN,
   soldiers: SOLDIERS_EN,
   accounts: ACCOUNTS_EN,
   userSessions: USER_SESSIONS_EN,
