@@ -39,5 +39,6 @@ export const PAYMENT_ORDERS_UZ = {
     userId: 'Foydalanuvchi ID',
     referenceId: 'Trener yoki tarif ID',
     idInvalid: "To'liq UUID kiriting.",
+    idPlaceholder: 'UUID',
   },
 };

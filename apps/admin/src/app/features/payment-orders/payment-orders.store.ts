@@ -19,17 +19,27 @@ export class PaymentOrdersStore {
   readonly loadError = signal<ErrorMessage | null>(null);
   readonly first = computed(() => this.currentRequest()?.first ?? 0);
 
+  private latestLoad = 0;
+
   async load(request: PageRequest = this.currentRequest() ?? firstPage()): Promise<void> {
+    const loadNumber = ++this.latestLoad;
     this.currentRequest.set(request);
     this.loading.set(true);
     this.loadError.set(null);
     try {
-      this.page.set(await this.paymentOrdersService.list(this.currentFilter(), request));
+      const page = await this.paymentOrdersService.list(this.currentFilter(), request);
+      if (loadNumber === this.latestLoad) {
+        this.page.set(page);
+      }
     } catch (error) {
-      this.page.set(emptyPage<PaymentOrder>());
-      this.loadError.set(toErrorMessage(error));
+      if (loadNumber === this.latestLoad) {
+        this.page.set(emptyPage<PaymentOrder>());
+        this.loadError.set(toErrorMessage(error));
+      }
     } finally {
-      this.loading.set(false);
+      if (loadNumber === this.latestLoad) {
+        this.loading.set(false);
+      }
     }
   }
 

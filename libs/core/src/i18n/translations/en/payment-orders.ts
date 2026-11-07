@@ -41,5 +41,6 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
     userId: 'User ID',
     referenceId: 'Trainer or tariff ID',
     idInvalid: 'Enter a full UUID.',
+    idPlaceholder: 'UUID',
   },
 };

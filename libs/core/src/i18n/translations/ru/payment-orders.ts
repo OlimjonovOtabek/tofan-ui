@@ -41,5 +41,6 @@ export const PAYMENT_ORDERS_RU: Dictionary['paymentOrders'] = {
     userId: 'ID пользователя',
     referenceId: 'ID тренера или тарифа',
     idInvalid: 'Введите полный UUID.',
+    idPlaceholder: 'UUID',
   },
 };

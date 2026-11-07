@@ -21,7 +21,7 @@
       id="paymentOrderUserId"
       type="search"
       [formField]="form.userId"
-      placeholder="UUID"
+      [placeholder]="'paymentOrders.filters.idPlaceholder' | t"
     />
     @if (userIdInvalid()) {
       <small class="text-red-500">{{ 'paymentOrders.filters.idInvalid' | t }}</small>
@@ -37,7 +37,7 @@
       id="paymentOrderReferenceId"
       type="search"
       [formField]="form.referenceId"
-      placeholder="UUID"
+      [placeholder]="'paymentOrders.filters.idPlaceholder' | t"
     />
     @if (referenceIdInvalid()) {
       <small class="text-red-500">{{ 'paymentOrders.filters.idInvalid' | t }}</small>

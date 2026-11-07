@@ -84,6 +84,24 @@ describe('PaymentOrdersStore', () => {
     expect(service.list).toHaveBeenCalledWith({ userId: 'u1' }, { first: 0, rows: 25 });
   });
 
+  it('should keep the newest page when an older answer arrives late', async () => {
+    let answerFirst: (page: { items: PaymentOrder[]; totalCount: number }) => void = () =>
+      undefined;
+    service.list
+      .mockImplementationOnce(() => new Promise((resolve) => (answerFirst = resolve)))
+      .mockResolvedValueOnce({ items: [], totalCount: 0 });
+    const store = createStore();
+
+    const first = store.load({ first: 0, rows: 25 });
+    await store.load({ first: 25, rows: 25 });
+    answerFirst({ items: [order], totalCount: 1 });
+    await first;
+
+    expect(store.orders()).toEqual([]);
+    expect(store.totalCount()).toBe(0);
+    expect(store.loading()).toBe(false);
+  });
+
   it('should reload the current page with the current filter when retried', async () => {
     const store = createStore();
     await store.load({ first: 25, rows: 25 });
