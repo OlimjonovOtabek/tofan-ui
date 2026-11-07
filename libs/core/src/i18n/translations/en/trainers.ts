@@ -4,6 +4,7 @@ export const TRAINERS_EN = {
     tabs: {
       trainers: 'Trainers',
       subscriptions: 'Subscriptions',
+      tiers: 'Tiers',
     },
   },
   status: {
@@ -142,5 +143,14 @@ export const TRAINERS_EN = {
     passwordChanged: 'A new password was set for "{name}".',
     commissionChanged: '"{name}" commission changed.',
     deleted: 'Trainer "{name}" was deleted.',
+  },
+  tiers: {
+    subtitle:
+      'The two tiers of a trainer subscription. Students read the benefits on the trainer page.',
+    loading: 'Loading…',
+    edit: 'Benefits',
+    empty: 'No benefits are set for this tier.',
+    dialogHeader: '{tier} tier benefits',
+    saved: 'Benefits saved.',
   },
 };

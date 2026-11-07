@@ -4,6 +4,7 @@ export const TRAINERS_UZ = {
     tabs: {
       trainers: 'Trenerlar',
       subscriptions: 'Obunalar',
+      tiers: 'Darajalar',
     },
   },
   status: {
@@ -142,5 +143,14 @@ export const TRAINERS_UZ = {
     passwordChanged: '"{name}" uchun yangi parol o\'rnatildi.',
     commissionChanged: '"{name}" komissiyasi o\'zgartirildi.',
     deleted: '"{name}" o\'chirildi.',
+  },
+  tiers: {
+    subtitle:
+      "Trener obunasining ikki darajasi. O'quvchilar imtiyozlarni trener sahifasida ko'radi.",
+    loading: 'Yuklanmoqda…',
+    edit: 'Imtiyozlar',
+    empty: 'Bu daraja uchun imtiyoz kiritilmagan.',
+    dialogHeader: '{tier} darajasi imtiyozlari',
+    saved: 'Imtiyozlar saqlandi.',
   },
 };

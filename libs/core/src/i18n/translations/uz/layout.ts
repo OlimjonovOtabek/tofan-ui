@@ -46,6 +46,7 @@ export const LAYOUT_UZ = {
     garments: 'NFC futbolkalar',
     garmentDrops: 'Droplar',
     trainers: 'Trenerlar',
+    trainerTiers: 'Trener darajalari',
     trainerSubscriptions: 'Trener obunalari',
     userSessions: 'Kirishlar jurnali',
     notificationTemplates: 'Bildirishnoma shablonlari',

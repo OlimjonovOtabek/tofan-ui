@@ -4,6 +4,7 @@ export const TRAINERS_RU = {
     tabs: {
       trainers: 'Тренеры',
       subscriptions: 'Подписки',
+      tiers: 'Уровни',
     },
   },
   status: {
@@ -142,5 +143,13 @@ export const TRAINERS_RU = {
     passwordChanged: 'Для «{name}» установлен новый пароль.',
     commissionChanged: 'Комиссия «{name}» изменена.',
     deleted: 'Тренер «{name}» удалён.',
+  },
+  tiers: {
+    subtitle: 'Два уровня подписки на тренера. Ученики видят преимущества на странице тренера.',
+    loading: 'Загрузка…',
+    edit: 'Преимущества',
+    empty: 'Для этого уровня преимущества не заданы.',
+    dialogHeader: 'Преимущества уровня {tier}',
+    saved: 'Преимущества сохранены.',
   },
 };
