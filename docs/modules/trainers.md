@@ -3,7 +3,10 @@
 ## Purpose
 The admin registers trainers (a new Keycloak account, the `trainer` role and the card in one request),
 edits them, sets a new password, deletes drafts, publishes or unpublishes them, grants a user a
-subscription to a trainer and ends a subscription. One section, two tabs: "Trenerlar" and "Obunalar".
+subscription to a trainer and ends a subscription. One section, three tabs: "Trenerlar", "Obunalar"
+and "Darajalar".
+The "Darajalar" tab shows the two Trainer subscription Tiers (Standard and VIP) with their Benefits and
+lets the admin edit each Tier's Benefits.
 The trainer panel (`/coach/*`) is not part of this app.
 
 ## Backend
@@ -30,6 +33,12 @@ The trainer panel (`/coach/*`) is not part of this app.
   - `POST /admin/trainer-subscriptions/{id}/end`
   - `PUT /admin/trainer-subscriptions/{id}/tier` (`tier` `1` or `2`): changes the Tier of an active subscription and leaves its dates alone
   - `GET /admin/soldiers` (`Search`, 10 rows): only for the soldier autocomplete in the grant dialog
+  - `GET /public/trainer-tier-benefits`: both Tiers with their Benefits (no token needed, the panel calls
+    it through `ApiClient` like every other endpoint). Each row is `{ tier: 1 | 2, benefits: [{ name, nameRu, nameUz }] }`;
+    `name` is the English text and a Benefit has no id.
+  - `PUT /admin/trainer-tier-benefits/{tier}` (path `1` Standard, `2` VIP): body `{ benefits: [{ name, nameRu, nameUz }] }`,
+    always the whole ordered list; every text is required and at most 200 characters, at most 20 Benefits.
+    An empty list removes all Benefits of the Tier.
 - Access (backend policy): `Policies.Admin`.
 - Error codes handled: `Trainer.PriceNotSet`, `Trainer.NotFound`, `Trainer.PublishedPriceRequired`,
   `Trainer.PublishedCannotBeDeleted`, `Trainer.HasSubscriptions` (backend `messages`, toast),
@@ -67,6 +76,7 @@ The trainer panel (`/coach/*`) is not part of this app.
 |---|---|---|
 | `/trainers` | `TrainersPage` (title, tab bar) with child `TrainersListPage` | admin |
 | `/trainers/subscriptions` | `TrainersPage` with child `TrainerSubscriptionsPage` | admin |
+| `/trainers/tiers` | `TrainersPage` with child `TrainerTiersPage` | admin |
 
 ## Structure notes
 - The tabs are routed children of `TrainersPage`, so each tab has its own address and its own store
@@ -76,7 +86,7 @@ The trainer panel (`/coach/*`) is not part of this app.
   tab it is chosen. Both stores prepare the grant with `createSubscriptionGrant`.
 - Subscription status is derived: active when it was not ended and `endsOn` is later than now.
   The backend has one `endedOnUtc` for admin and expiry job, so "ended by admin" cannot be shown.
-- The menu item uses a subset route match so it stays active on both tabs.
+- The menu item uses a subset route match so it stays active on every tab.
 - The subscriptions table has a "Tier" column (tag: Standard grey, VIP amber).
   An active subscription gets one icon action next to "End subscription".
   It reads "VIP qilish" on a Standard subscription and "Standard qilish" on a VIP one (`TrainerSubscription.targetTier()`).
@@ -94,6 +104,20 @@ The trainer panel (`/coach/*`) is not part of this app.
   `SoldierSearchStore` is provided by each page; the dialog emits `soldierSearch` and the page forwards it.
   The dialog asks for the first 10 soldiers when it opens, and the field asks again on focus and on typing.
   Reading `/admin/soldiers` goes through `SoldierLookupService` with its own DTO, never the soldiers feature.
+
+### Tiers tab ("Darajalar")
+- `TrainerTiersPage` provides `TrainerTiersStore` and shows one `TierCard` per Tier, Standard first, then VIP.
+  Each card lists the Tier's Benefits in the admin's current language (`pickLocalized`: the other languages are the fallback when a text is blank) and has an "Imtiyozlar" button.
+- The button opens the shared `app-benefits-dialog` with that Tier's Benefits.
+  The dialog contract, limits and traps are in `docs/modules/benefits-dialog.md`.
+  The page calls `TrainerTiersStore.changeBenefits(tier, benefits)` with the emitted list and closes the dialog only when it returns `true`.
+- `Tier` and its integer enum come from `libs/shared/src/models/tier*.ts`; the feature never imports another feature.
+- `TierBenefitsService` reads and writes through `ApiClient`.
+  `tier-benefit.mapper.ts` converts `{ name, nameRu, nameUz }` to the shared `Benefit` (`{ en, ru, uz }`) and back, and always returns both Tiers in the order Standard, VIP.
+  A Tier the backend omits shows an empty list, and a Tier this panel does not know is skipped.
+- After a successful save the store reloads the list from `GET /public/trainer-tier-benefits`, so the cards show what the backend stored.
+  A failed save keeps the dialog open with the typed rows and shows the backend error as a toast.
+- A failed load shows an inline error with a retry; it never looks like an empty Tier.
 
 ## Traps
 - There is no endpoint to read one trainer, so there is no detail page.
@@ -117,3 +141,9 @@ The trainer panel (`/coach/*`) is not part of this app.
 - A backend without Tiers (the API v9.1 proxy before the release day) sends no `tier`.
   The mapper reads that as Standard so the table still loads.
   The tier action only works against the stage API.
+- Tier Benefits have no id on the wire.
+  The order of the array is the only order, so the whole list is sent on every save and the saved order must equal the order shown in the dialog.
+- `GET /public/trainer-tier-benefits` is anonymous and `PUT /admin/trainer-tier-benefits/{tier}` is admin only.
+  Swagger lists no 404 for the PUT.
+- Benefits are plain text.
+  They do not follow limit changes, which is why the dialog always shows the plain text warning.

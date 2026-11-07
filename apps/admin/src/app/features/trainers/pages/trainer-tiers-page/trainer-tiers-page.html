@@ -1,0 +1,35 @@
+<p class="text-muted-color mt-0 mb-4 text-sm">{{ 'trainers.tiers.subtitle' | t }}</p>
+
+@if (store.loadError(); as error) {
+  <p-message severity="error">
+    <div class="flex flex-wrap items-center gap-3">
+      <span>{{ error | message }}</span>
+      <p-button
+        [label]="'common.actions.retry' | t"
+        icon="pi pi-refresh"
+        severity="secondary"
+        [outlined]="true"
+        size="small"
+        (onClick)="store.load()"
+      />
+    </div>
+  </p-message>
+} @else if (store.loading() && cards().length === 0) {
+  <span class="text-muted-color text-sm">
+    <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i>{{ 'trainers.tiers.loading' | t }}
+  </span>
+} @else {
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    @for (card of cards(); track card.tier) {
+      <app-tier-card [tier]="card.tier" [benefits]="card.benefits" (edit)="edit(card.tier)" />
+    }
+  </div>
+}
+
+<app-benefits-dialog
+  [(visible)]="dialogVisible"
+  [header]="dialogHeader()"
+  [benefits]="editingBenefits()"
+  [saving]="store.saving()"
+  (save)="save($event)"
+/>

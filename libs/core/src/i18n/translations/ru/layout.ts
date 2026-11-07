@@ -51,6 +51,7 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     garments: 'NFC-футболки',
     garmentDrops: 'Дропы',
     trainers: 'Тренеры',
+    trainerTiers: 'Уровни тренеров',
     trainerSubscriptions: 'Подписки на тренеров',
     platformFee: 'Platform fee',
     userSessions: 'Журнал входов',

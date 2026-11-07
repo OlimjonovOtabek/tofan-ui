@@ -51,6 +51,7 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     garments: 'NFC shirts',
     garmentDrops: 'Drops',
     trainers: 'Trainers',
+    trainerTiers: 'Trainer tiers',
     trainerSubscriptions: 'Trainer subscriptions',
     platformFee: 'Platform fee',
     userSessions: 'Sign-in log',

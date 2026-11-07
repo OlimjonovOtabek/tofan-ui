@@ -9,6 +9,7 @@ export const AppPaths = {
   garmentDrops: '/garments/drops',
   trainers: '/trainers',
   trainerSubscriptions: '/trainers/subscriptions',
+  trainerTiers: '/trainers/tiers',
   userSessions: '/user-sessions',
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',
