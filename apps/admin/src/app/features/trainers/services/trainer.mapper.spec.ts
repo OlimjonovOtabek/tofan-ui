@@ -9,6 +9,7 @@ const response: TrainerResponse = {
   bio: 'Kuch mashqlari',
   photoFileId: 'f1',
   monthlyPrice: 450000,
+  vipMonthlyPrice: 900000,
   isPublished: true,
   createdOnUtc: '2026-10-02T09:00:00Z',
 };
@@ -26,6 +27,7 @@ describe('toTrainer', () => {
     expect(trainer.bio).toBe('Kuch mashqlari');
     expect(trainer.photoUrl).toBe('https://api.example/files/f1/content');
     expect(trainer.monthlyPrice).toBe(450000);
+    expect(trainer.vipMonthlyPrice).toBe(900000);
     expect(trainer.isPublished).toBe(true);
     expect(trainer.createdOn).toEqual(new Date('2026-10-02T09:00:00Z'));
   });
@@ -41,6 +43,15 @@ describe('toTrainer', () => {
   it('should leave the slug empty when the backend sends none', () => {
     expect(toTrainer({ ...response, slug: undefined }, photoUrlOf).slug).toBeNull();
     expect(toTrainer({ ...response, slug: null }, photoUrlOf).slug).toBeNull();
+  });
+
+  it('should leave the VIP price empty when the backend sends null or nothing', () => {
+    expect(
+      toTrainer({ ...response, vipMonthlyPrice: null }, photoUrlOf).vipMonthlyPrice,
+    ).toBeNull();
+    expect(
+      toTrainer({ ...response, vipMonthlyPrice: undefined }, photoUrlOf).vipMonthlyPrice,
+    ).toBeNull();
   });
 
   it('should keep the photo file id next to its url when the trainer has a photo', () => {
@@ -73,8 +84,24 @@ describe('toUpdateTrainerRequest', () => {
       bio: null,
       photoFileId: null,
       monthlyPrice: 350000,
+      vipMonthlyPrice: 700000,
     };
 
     expect(toUpdateTrainerRequest(draft)).toEqual(draft);
+  });
+
+  it('should send the VIP price key as null when the trainer sells Standard only', () => {
+    const request = toUpdateTrainerRequest({
+      email: 'jasur@example.com',
+      phoneNumber: null,
+      displayName: 'Jasur',
+      bio: null,
+      photoFileId: null,
+      monthlyPrice: 350000,
+      vipMonthlyPrice: null,
+    });
+
+    expect(Object.keys(request)).toContain('vipMonthlyPrice');
+    expect(request.vipMonthlyPrice).toBeNull();
   });
 });

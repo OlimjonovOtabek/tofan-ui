@@ -38,6 +38,9 @@
       <td>
         <span [class.text-muted-color]="!trainer.hasPrice()">{{ priceLabel(trainer) }}</span>
       </td>
+      <td [class.text-muted-color]="!trainer.hasVipPrice()">
+        {{ trainer.hasVipPrice() ? amountLabel(trainer.vipMonthlyPrice) : emptyCell }}
+      </td>
       <td>
         <p-tag [value]="statusLabel(trainer)" [severity]="statusSeverity(trainer)" />
       </td>

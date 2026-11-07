@@ -25,6 +25,7 @@ export const TRAINERS_UZ = {
       slug: 'Havola',
       userId: 'Foydalanuvchi ID',
       monthlyPrice: 'Oylik narx',
+      vipPrice: 'VIP narxi',
       status: 'Holati',
       createdOn: 'Yaratilgan',
     },
@@ -90,10 +91,13 @@ export const TRAINERS_UZ = {
     monthlyPrice: 'Oylik narx',
     priceSuffix: " so'm",
     priceHint: "0 — narx belgilanmagan. E'lon qilingan trenerning narxi 0 bo'lishi mumkin emas.",
+    vipPrice: 'VIP narxi (ixtiyoriy)',
+    vipPriceHint: "Bo'sh qoldirilsa, trener faqat Standard sotadi.",
     currentPhoto: 'Joriy rasm',
     loading: "Hisob ma'lumotlari yuklanmoqda…",
     errors: {
       monthlyPrice: 'Narxni kiriting, 0 yoki undan katta.',
+      vipPrice: "VIP narxi 0 dan katta bo'lishi kerak yoki maydonni bo'sh qoldiring.",
     },
   },
   password: {

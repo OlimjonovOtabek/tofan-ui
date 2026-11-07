@@ -18,6 +18,7 @@ export function toTrainer(response: TrainerResponse, photoUrlOf: PhotoUrlOf): Tr
     response.isPublished,
     new Date(response.createdOnUtc),
     response.slug ?? null,
+    response.vipMonthlyPrice ?? null,
   );
 }
 
@@ -41,5 +42,6 @@ export function toUpdateTrainerRequest(draft: TrainerEditDraft): UpdateTrainerRe
     bio: draft.bio,
     photoFileId: draft.photoFileId,
     monthlyPrice: draft.monthlyPrice,
+    vipMonthlyPrice: draft.vipMonthlyPrice,
   };
 }

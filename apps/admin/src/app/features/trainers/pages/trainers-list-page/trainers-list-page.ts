@@ -61,6 +61,7 @@ export class TrainersListPage {
     { field: 'slug', header: this.column('slug') },
     { field: 'userId', header: this.column('userId') },
     { field: 'monthlyPrice', header: this.column('monthlyPrice'), sortable: true, width: '12rem' },
+    { field: 'vipMonthlyPrice', header: this.column('vipPrice'), width: '12rem' },
     { field: 'status', header: this.column('status'), width: '12rem' },
     { field: 'createdOnUtc', header: this.column('createdOn'), sortable: true, width: '10rem' },
     { field: 'actions', header: '', width: '14rem' },
@@ -86,9 +87,11 @@ export class TrainersListPage {
     if (!trainer.hasPrice()) {
       return this.translator.translate('trainers.list.priceMissing');
     }
-    const amount = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()]).format(
-      trainer.monthlyPrice,
-    );
+    return this.amountLabel(trainer.monthlyPrice);
+  }
+
+  protected amountLabel(price: number): string {
+    const amount = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()]).format(price);
     return this.translator.translate('trainers.list.price', { amount });
   }
 

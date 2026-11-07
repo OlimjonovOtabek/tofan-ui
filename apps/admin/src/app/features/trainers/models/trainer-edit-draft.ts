@@ -7,6 +7,7 @@ export interface TrainerEditDraft {
   readonly bio: string | null;
   readonly photoFileId: string | null;
   readonly monthlyPrice: number;
+  readonly vipMonthlyPrice: number | null;
 }
 
 export function createTrainerEditDraft(draft: TrainerEditDraft): TrainerEditDraft {
@@ -17,5 +18,6 @@ export function createTrainerEditDraft(draft: TrainerEditDraft): TrainerEditDraf
     bio: toOptionalText(draft.bio),
     photoFileId: draft.photoFileId,
     monthlyPrice: draft.monthlyPrice,
+    vipMonthlyPrice: draft.vipMonthlyPrice,
   };
 }
