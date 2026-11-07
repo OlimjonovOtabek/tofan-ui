@@ -55,7 +55,7 @@ Features are removable: deleting `features/x` breaks only its route entry and me
 2. `routes/app.routes.ts` has three groups:
    - `''` renders the `Layout` shell (sidebar, topbar) behind `authGuard`; its children lazy-load
      `dashboard`, `exercises`, `foods`, `media`, `soldiers`, `accounts`, `garments`, `user-sessions`,
-     `notifications`.
+     `notifications`, `platform-fee`.
    - `auth` (login, access denied, error) and `not-found`, outside the shell.
    - `**` redirects to `not-found`.
 3. Every feature has its own `<feature>.routes.ts` and sets titles with `pageTitle('layout.titles.x')`,

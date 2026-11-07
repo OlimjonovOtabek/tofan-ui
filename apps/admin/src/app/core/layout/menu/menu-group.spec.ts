@@ -10,6 +10,10 @@ describe('findMenuGroupLabel', () => {
     expect(findMenuGroupLabel('/soldiers/42?tab=1')).toBe('layout.menu.users');
   });
 
+  it('should return the pricing group when the url is the platform fee page', () => {
+    expect(findMenuGroupLabel('/platform-fee')).toBe('layout.menu.pricing');
+  });
+
   it('should return the dashboard group only for the root url', () => {
     expect(findMenuGroupLabel('/')).toBe('layout.menu.main');
     expect(findMenuGroupLabel('/unknown')).toBeUndefined();

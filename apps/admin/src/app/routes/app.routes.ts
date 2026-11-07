@@ -58,6 +58,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('@features/notifications/notifications.routes').then((m) => m.NOTIFICATION_ROUTES),
       },
+      {
+        path: 'platform-fee',
+        loadChildren: () =>
+          import('@features/platform-fee/platform-fee.routes').then((m) => m.PLATFORM_FEE_ROUTES),
+      },
     ],
   },
   {
