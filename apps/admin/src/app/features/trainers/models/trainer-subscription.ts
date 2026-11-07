@@ -1,3 +1,4 @@
+import { Tier } from '@shared/models/tier';
 import { SubscriptionStatus } from './subscription-status';
 
 export class TrainerSubscription {
@@ -11,6 +12,7 @@ export class TrainerSubscription {
     readonly endedOn: Date | null,
     readonly grantedBy: string,
     readonly createdOn: Date,
+    readonly tier: Tier,
   ) {}
 
   status(now: Date): SubscriptionStatus {
@@ -19,5 +21,13 @@ export class TrainerSubscription {
 
   canEnd(now: Date): boolean {
     return this.status(now) === 'active';
+  }
+
+  canChangeTier(now: Date): boolean {
+    return this.status(now) === 'active';
+  }
+
+  targetTier(): Tier {
+    return this.tier === 'vip' ? 'standard' : 'vip';
   }
 }

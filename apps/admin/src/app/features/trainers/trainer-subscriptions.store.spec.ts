@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
+import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { Trainer } from './models/trainer';
@@ -20,6 +21,20 @@ const subscription = new TrainerSubscription(
   null,
   'a1',
   new Date('2026-10-01T10:00:00Z'),
+  'standard',
+);
+
+const vipSubscription = new TrainerSubscription(
+  's2',
+  't1',
+  'Jasur Karimov',
+  USER_ID,
+  new Date('2026-10-01T10:00:00Z'),
+  new Date('2026-11-01T10:00:00Z'),
+  null,
+  'a1',
+  new Date('2026-10-01T10:00:00Z'),
+  'vip',
 );
 
 const trainer = new Trainer(
@@ -35,7 +50,7 @@ const trainer = new Trainer(
 );
 
 describe('TrainerSubscriptionsStore', () => {
-  let subscriptions: Pick<TrainerSubscriptionsService, 'list' | 'grant' | 'end'>;
+  let subscriptions: Pick<TrainerSubscriptionsService, 'list' | 'grant' | 'end' | 'changeTier'>;
   let trainers: Pick<TrainersService, 'list'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
 
@@ -56,6 +71,7 @@ describe('TrainerSubscriptionsStore', () => {
       list: vi.fn().mockResolvedValue({ items: [subscription], totalCount: 1 }),
       grant: vi.fn().mockResolvedValue('s2'),
       end: vi.fn().mockResolvedValue(undefined),
+      changeTier: vi.fn().mockResolvedValue(undefined),
     };
     trainers = { list: vi.fn().mockResolvedValue({ items: [trainer], totalCount: 1 }) };
     notifications = { success: vi.fn(), error: vi.fn() };
@@ -192,6 +208,42 @@ describe('TrainerSubscriptionsStore', () => {
     await store.end(subscription);
 
     expect(notifications.error).toHaveBeenCalledWith(failure);
+    expect(subscriptions.list).not.toHaveBeenCalled();
+  });
+
+  it('should make a standard subscription vip, announce it and reload when the admin confirms', async () => {
+    const store = createStore();
+
+    await store.changeTier(subscription);
+
+    expect(subscriptions.changeTier).toHaveBeenCalledWith('s1', 'vip');
+    expect(notifications.success).toHaveBeenCalledWith('trainers.toast.tierChangedToVip', {
+      name: 'Jasur Karimov',
+    });
+    expect(subscriptions.list).toHaveBeenCalled();
+  });
+
+  it('should make a vip subscription standard, announce it and reload when the admin confirms', async () => {
+    const store = createStore();
+
+    await store.changeTier(vipSubscription);
+
+    expect(subscriptions.changeTier).toHaveBeenCalledWith('s2', 'standard');
+    expect(notifications.success).toHaveBeenCalledWith('trainers.toast.tierChangedToStandard', {
+      name: 'Jasur Karimov',
+    });
+    expect(subscriptions.list).toHaveBeenCalled();
+  });
+
+  it('should report the refusal and not reload when the backend refuses the tier change', async () => {
+    const refusal = new BusinessRuleError('not active', 'TrainerSubscription.NotActive');
+    vi.mocked(subscriptions.changeTier).mockRejectedValue(refusal);
+    const store = createStore();
+
+    await store.changeTier(subscription);
+
+    expect(notifications.error).toHaveBeenCalledWith(refusal);
+    expect(notifications.success).not.toHaveBeenCalled();
     expect(subscriptions.list).not.toHaveBeenCalled();
   });
 });

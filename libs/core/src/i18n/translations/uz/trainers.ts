@@ -49,12 +49,19 @@ export const TRAINERS_UZ = {
       startsOn: 'Boshlangan',
       endsOn: 'Tugaydi',
       status: 'Holati',
+      tier: 'Tier',
     },
     actions: {
       end: 'Obunani tugatish',
+      makeVip: 'VIP qilish',
+      makeStandard: 'Standard qilish',
     },
     confirmEnd:
       '"{name}" trenerining obunasi tugatilsinmi? Foydalanuvchi o\'z mashq va ovqatlanish rejasiga qaytadi.',
+    confirmMakeVip:
+      "\"{name}\" trenerining o'quvchisi obunasi VIP qilinsinmi? Muddat o'zgarmaydi, o'quvchi trener bilan chatda yoza oladi.",
+    confirmMakeStandard:
+      "\"{name}\" trenerining o'quvchisi obunasi Standard qilinsinmi? Muddat o'zgarmaydi, o'quvchi trener bilan chatda yoza olmaydi.",
   },
   filters: {
     trainer: 'Trener',
@@ -112,6 +119,8 @@ export const TRAINERS_UZ = {
     months: 'Muddat',
     suffix: ' oy',
     hint: "1 dan 12 oygacha. Shu trenerga faol obuna bo'lsa muddat uzayadi.",
+    tierHint:
+      'Obuna doim Standard Tier bilan ochiladi. VIP berish uchun obunani jadvaldagi "VIP qilish" tugmasi bilan o\'zgartiring.',
     errors: {
       trainer: 'Trenerni tanlang.',
       userId: 'Foydalanuvchini tanlang.',
@@ -126,6 +135,8 @@ export const TRAINERS_UZ = {
     unpublished: '"{name}" ro\'yxatdan olindi.',
     granted: '"{name}" trenerining obunasi berildi.',
     ended: '"{name}" trenerining obunasi tugatildi.',
+    tierChangedToVip: '"{name}" trenerining obunasi VIP qilindi.',
+    tierChangedToStandard: '"{name}" trenerining obunasi Standard qilindi.',
     updated: '"{name}" saqlandi.',
     passwordChanged: '"{name}" uchun yangi parol o\'rnatildi.',
     deleted: '"{name}" o\'chirildi.',
