@@ -5,6 +5,7 @@ import {
   fullNameOf,
   initialsOfClient,
   isLowActivity,
+  isVip,
   needsReview,
 } from '@coach/core/clients/client';
 import { CLIENT_FILTERS, ClientFilter, toClientFilter } from '@coach/core/clients/client-filter';
@@ -32,6 +33,7 @@ interface ClientRow {
   readonly activity: string;
   readonly lowActivity: boolean;
   readonly review: boolean;
+  readonly vip: boolean;
 }
 
 @Component({
@@ -65,6 +67,7 @@ export class ClientsPage {
       activity: this.text(lastActivityShortText(client, now)),
       lowActivity: isLowActivity(client, now),
       review: needsReview(client) && client.status !== 'ended',
+      vip: isVip(client),
     }));
   });
 

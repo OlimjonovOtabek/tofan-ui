@@ -9,6 +9,9 @@ export const ERRORS_EN: Dictionary['errors'] = {
     IdentityProvider: {
       UserNotFound: 'User not found.',
     },
+    Chat: {
+      SubscriptionRequired: 'Chat is open only to athletes with an active VIP subscription.',
+    },
     NotificationTemplate: {
       Conflict: 'An active template already exists for this type and style. Deactivate it first.',
       NoActiveTemplate: "No active template matches this type and the user's style.",
@@ -62,7 +65,6 @@ export const ERRORS_EN: Dictionary['errors'] = {
         'The trainer has not set a price yet. The trainer must enter it in their profile first.',
       NotFound: 'Trainer not found.',
       DisplayNameEmpty: 'The trainer name is required.',
-      InvalidCommissionPercent: 'The commission must be from 0 to 100 with at most 2 decimals.',
     },
     TrainerSubscription: {
       OtherTrainerActive:

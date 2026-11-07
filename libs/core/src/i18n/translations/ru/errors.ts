@@ -9,6 +9,9 @@ export const ERRORS_RU: Dictionary['errors'] = {
     IdentityProvider: {
       UserNotFound: 'Пользователь не найден.',
     },
+    Chat: {
+      SubscriptionRequired: 'Чат открыт только для спортсменов с активной VIP-подпиской.',
+    },
     NotificationTemplate: {
       Conflict: 'Для этого типа и стиля уже есть активный шаблон. Сначала деактивируйте его.',
       NoActiveTemplate: 'Для этого типа нет активного шаблона в стиле пользователя.',
@@ -63,8 +66,6 @@ export const ERRORS_RU: Dictionary['errors'] = {
       PriceNotSet: 'Тренер ещё не указал цену. Сначала тренер должен задать цену в своём профиле.',
       NotFound: 'Тренер не найден.',
       DisplayNameEmpty: 'Имя тренера обязательно.',
-      InvalidCommissionPercent:
-        'Комиссия должна быть от 0 до 100, не более 2 знаков после запятой.',
     },
     TrainerSubscription: {
       OtherTrainerActive:

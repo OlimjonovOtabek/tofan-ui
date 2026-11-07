@@ -19,7 +19,6 @@ export const TRAINERS_EN = {
     empty: 'There are no trainers yet.',
     add: 'Add trainer',
     price: '{amount} UZS',
-    commission: '{percent}%',
     priceMissing: 'Not set',
     columns: {
       trainer: 'Trainer',
@@ -27,7 +26,6 @@ export const TRAINERS_EN = {
       userId: 'User ID',
       monthlyPrice: 'Monthly price',
       status: 'Status',
-      commissionPercent: 'Commission',
       createdOn: 'Created',
     },
     actions: {
@@ -36,7 +34,6 @@ export const TRAINERS_EN = {
       unpublish: 'Unpublish',
       edit: 'Edit',
       password: 'Change password',
-      commission: 'Change commission',
       delete: 'Delete',
     },
     deleteWarning: 'The trainer card and its Keycloak account will be deleted for good.',
@@ -111,15 +108,6 @@ export const TRAINERS_EN = {
     label: 'New password',
     hint: 'The trainer uses this password the next time they sign in. Pass it on to them yourself.',
   },
-  commission: {
-    header: '"{name}" commission',
-    label: 'Platform commission',
-    suffix: '%',
-    hint: 'From 0 to 100, at most 2 decimals (for example 7.5).',
-    futureOnly:
-      'The new percent applies only to payments made from now on. Past payments do not change.',
-    error: 'Enter a number from 0 to 100 with at most 2 decimals.',
-  },
   grant: {
     header: 'Grant subscription',
     save: 'Grant subscription',
@@ -151,7 +139,6 @@ export const TRAINERS_EN = {
     tierChangedToStandard: 'The subscription to "{name}" was made Standard.',
     updated: 'Trainer "{name}" was saved.',
     passwordChanged: 'A new password was set for "{name}".',
-    commissionChanged: '"{name}" commission changed.',
     deleted: 'Trainer "{name}" was deleted.',
   },
 };

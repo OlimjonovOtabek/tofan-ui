@@ -19,6 +19,7 @@ const profile = {
   bio: null,
   photoFileId: null,
   monthlyPrice: 1000,
+  vipMonthlyPrice: 4000,
   slug: 'aziz',
   isPublished: true,
   photoUrl: null,
@@ -108,6 +109,21 @@ describe('profile stores', () => {
     expect(store.uploadingPhoto()).toBe(false);
   });
 
+  it('should keep the VIP price when the avatar is changed', async () => {
+    profiles.get.mockResolvedValue(profile);
+    clients.list.mockResolvedValue([]);
+    stats.publishedProgramCounts.mockResolvedValue({ workout: 0, meal: 0 });
+    uploads.upload.mockResolvedValue('file-9');
+    const store = TestBed.inject(ProfileStore);
+    await store.load();
+
+    await store.changePhoto(new File(['x'], 'a.png'));
+
+    expect(profiles.update).toHaveBeenCalledWith(
+      expect.objectContaining({ photoFileId: 'file-9', vipMonthlyPrice: 4000 }),
+    );
+  });
+
   it('should save a profile change and keep the old values for the rest', async () => {
     profiles.get.mockResolvedValue(profile);
     const store = TestBed.inject(ProfileEditStore);
@@ -120,7 +136,54 @@ describe('profile stores', () => {
       bio: null,
       photoFileId: null,
       monthlyPrice: 2000,
+      vipMonthlyPrice: 4000,
     });
+  });
+
+  it('should keep the VIP price when the name, bio and link are saved', async () => {
+    profiles.get.mockResolvedValue(profile);
+    const store = TestBed.inject(ProfileEditStore);
+    await store.load();
+
+    expect(
+      await store.save(
+        { displayName: 'Aziz K', bio: 'Coach', slug: 'aziz-k' },
+        'coachApp.common.saved',
+      ),
+    ).toBe(true);
+
+    expect(profiles.update).toHaveBeenCalledWith({
+      displayName: 'Aziz K',
+      bio: 'Coach',
+      photoFileId: null,
+      monthlyPrice: 1000,
+      vipMonthlyPrice: 4000,
+      slug: 'aziz-k',
+    });
+  });
+
+  it('should save both prices when the pricing page changes them', async () => {
+    profiles.get.mockResolvedValue(profile);
+    const store = TestBed.inject(ProfileEditStore);
+    await store.load();
+
+    await store.save({ monthlyPrice: 2000, vipMonthlyPrice: 5000 }, 'coachApp.pricing.saved');
+
+    expect(profiles.update).toHaveBeenCalledWith(
+      expect.objectContaining({ monthlyPrice: 2000, vipMonthlyPrice: 5000 }),
+    );
+  });
+
+  it('should clear the VIP price when the pricing page saves it empty', async () => {
+    profiles.get.mockResolvedValue(profile);
+    const store = TestBed.inject(ProfileEditStore);
+    await store.load();
+
+    await store.save({ monthlyPrice: 1000, vipMonthlyPrice: null }, 'coachApp.pricing.saved');
+
+    expect(profiles.update).toHaveBeenCalledWith(
+      expect.objectContaining({ monthlyPrice: 1000, vipMonthlyPrice: null }),
+    );
   });
 
   it('should ignore a late earnings answer when another period was chosen', async () => {
