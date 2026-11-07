@@ -10,10 +10,10 @@ which returns Keycloak tokens. Backend: separate .NET 10 modular monolith.
 
 ## Commands
 - `npm start` — dev server; `/api` is proxied to the local backend (no mock backend)
-- `npm run start:staging` — dev server; `/api` is proxied to the old staging API (`proxy.staging.conf.json`, API v8.9, becomes the stage server after the release)
+- `npm run start:staging` — dev server; `/api` is proxied to the stage API `https://api.stage.peaktofan.com` (`proxy.staging.conf.json`, `ws: true`); new backend work is tested there and reaches production only on the release day
 - `npm run start:prod` — dev server; `/api` is proxied to `https://api.peaktofan.com` (`proxy.prod.conf.json`, API v9.1, `ws: true`); it is production after the release, so never create test data there
 - `npm run start:coach` / `npm run start:coach:staging` / `npm run start:coach:prod` — coach dev server
-- Contract source: `https://api.peaktofan.com/swagger/v1/swagger.json`
+- Contract source: `https://api.peaktofan.com/swagger/v1/swagger.json`; for work not released yet, `https://api.stage.peaktofan.com/swagger/v1/swagger.json`
 - `npm run build:coach` — coach production build
 - `npm run start:landing` / `npm run build:landing` / `npm run test:landing` - landing (SSR) dev server, build and Vitest suite
 - `npm run lint` — must pass (ESLint + `lint:comments`, which rejects any comment in any project file,

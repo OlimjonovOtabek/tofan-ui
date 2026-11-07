@@ -50,12 +50,15 @@ npx ng g component apps/admin/src/app/features/<feature>/components/<name>
 After every task: run `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` and `build:landing`. Fix what you broke. Never disable a rule to make it pass.
 There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
 `http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
-forwards to the old staging API `https://api.157.90.117.20.sslip.io` (API v8.9, becomes the stage server
-after the release). `npm run start:prod` uses `proxy.prod.conf.json`, which forwards to
+forwards to the stage API `https://api.stage.peaktofan.com` (with `ws: true` for SignalR; the old
+`*.157.90.117.20.sslip.io` addresses are closed). New backend work is tested on stage first and reaches
+production only together on the release day, so do not deploy unreleased screens to the production panels.
+`npm run start:prod` uses `proxy.prod.conf.json`, which forwards to
 `https://api.peaktofan.com` (API v9.1, with `ws: true` for SignalR). Until the release day it is a copy of
 production data that is re-copied on release day; after the release it is production, so never create test
 data there. Signing in needs a Keycloak account with the realm role `admin`. Contract source: the Swagger of
-`api.peaktofan.com` (`https://api.peaktofan.com/swagger/v1/swagger.json`).
+`api.peaktofan.com` (`https://api.peaktofan.com/swagger/v1/swagger.json`); for work not released yet, the
+stage Swagger (`https://api.stage.peaktofan.com/swagger/v1/swagger.json`).
 
 Admin features live in `apps/admin/src/app/features`; Coach features live in `apps/coach/src/app/features`
 (same `pages/`, `components/`, `models/`, `services/` layout; coach-only shared code in `apps/coach/src/app/core`).
