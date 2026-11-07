@@ -464,6 +464,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     statClientsCaption: 'Subscribed now',
     statPrograms: 'Programs',
     title: 'Coach Profile',
+    vipPrice: 'VIP {price}',
     statAdherence: 'Adherence',
     statAverage: 'Average',
     statRevenue: 'Revenue',
@@ -474,6 +475,11 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     note: 'Athletes pay this price every month for your coaching.',
     saved: 'Price updated',
     title: 'Subscription price',
+    vipHint: 'e.g. 500000',
+    vipInvalid: 'The VIP price must be above zero',
+    vipLabel: 'VIP price (optional)',
+    vipNote:
+      'VIP athletes can message you in chat. Leave it empty to sell Standard only - current VIP athletes keep chat until their subscription ends.',
   },
   earnings: {
     entrySubtitle: 'Net income and payments',
