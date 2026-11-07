@@ -104,7 +104,7 @@ The trainer panel (`/coach/*`) is not part of this app.
   (it answers `404`) and `commissionPercent` is gone from the trainer row; the panel dropped the column,
   its sort, the row action, the dialog and `Trainer.InvalidCommissionPercent`. The commission is now one
   global Platform fee (commission amount, tax and payment provider fee) managed on the admin Platform fee
-  page, not per trainer.
+  page (`docs/modules/platform-fee.md`), not per trainer.
 - `GET /admin/payment-orders` also returns `commissionPercent` per order, but the panel has no payment
   orders screen yet.
 - Always send `vipMonthlyPrice` in `PUT /admin/trainers/{id}`: the backend treats a missing key as `null`, so an
