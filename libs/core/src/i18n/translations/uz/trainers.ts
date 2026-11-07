@@ -51,7 +51,7 @@ export const TRAINERS_UZ = {
       startsOn: 'Boshlangan',
       endsOn: 'Tugaydi',
       status: 'Holati',
-      tier: 'Tier',
+      tier: 'Daraja',
     },
     actions: {
       end: 'Obunani tugatish',
@@ -125,7 +125,7 @@ export const TRAINERS_UZ = {
     suffix: ' oy',
     hint: "1 dan 12 oygacha. Shu trenerga faol obuna bo'lsa muddat uzayadi.",
     tierHint:
-      'Obuna doim Standard Tier bilan ochiladi. VIP berish uchun obunani jadvaldagi "VIP qilish" tugmasi bilan o\'zgartiring.',
+      'Obuna doim Standard darajasi bilan ochiladi. VIP berish uchun obunani jadvaldagi "VIP qilish" tugmasi bilan o\'zgartiring.',
     errors: {
       trainer: 'Trenerni tanlang.',
       userId: 'Foydalanuvchini tanlang.',
