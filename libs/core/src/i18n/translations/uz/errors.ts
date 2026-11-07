@@ -74,6 +74,11 @@ export const ERRORS_UZ = {
     MealPlan: {
       TrainerProgramMissing: "Trener hali ovqatlanish dasturini e'lon qilmagan.",
     },
+    Tariff: {
+      FreeMustStayFree: "Free tarif doim bepul bo'lishi kerak. Narxni 0 qoldiring.",
+      PaidPriceRequired: "Standard va VIP tariflarning narxi 0 dan katta bo'lishi kerak.",
+      NotFound: 'Tarif topilmadi.',
+    },
     GetUsersQuery:
       'Hisoblarni Keycloak’dan o‘qib bo‘lmadi. Rol filtri tanlangan bo‘lsa, u hozircha ishlamasligi mumkin (Keycloak sozlamasi kerak).',
   },

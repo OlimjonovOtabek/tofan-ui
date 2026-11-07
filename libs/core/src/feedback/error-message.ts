@@ -57,6 +57,9 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'TrainerSubscription.MonthsOutOfRange': 'errors.backend.TrainerSubscription.MonthsOutOfRange',
   'WorkoutPlan.TrainerProgramMissing': 'errors.backend.WorkoutPlan.TrainerProgramMissing',
   'MealPlan.TrainerProgramMissing': 'errors.backend.MealPlan.TrainerProgramMissing',
+  'Tariff.FreeMustStayFree': 'errors.backend.Tariff.FreeMustStayFree',
+  'Tariff.PaidPriceRequired': 'errors.backend.Tariff.PaidPriceRequired',
+  'Tariff.NotFound': 'errors.backend.Tariff.NotFound',
 };
 
 export function toErrorMessage(error: unknown): ErrorMessage {

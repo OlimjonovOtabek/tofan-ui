@@ -15,5 +15,6 @@ export const AppPaths = {
   login: '/auth/login',
   accessDenied: '/auth/access-denied',
   error: '/auth/error',
+  tariffs: '/tariffs',
   notFound: '/not-found',
 } as const;

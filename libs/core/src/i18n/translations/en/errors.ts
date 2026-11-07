@@ -75,6 +75,11 @@ export const ERRORS_EN: Dictionary['errors'] = {
     MealPlan: {
       TrainerProgramMissing: 'The trainer has not published a meal program yet.',
     },
+    Tariff: {
+      FreeMustStayFree: 'The Free tariff must always stay free. Keep the price at 0.',
+      PaidPriceRequired: 'The price of Standard and VIP tariffs must be above 0.',
+      NotFound: 'Tariff not found.',
+    },
     GetUsersQuery:
       'Could not read accounts from Keycloak. If a role filter is selected, it may not work yet (Keycloak needs configuring).',
   },
