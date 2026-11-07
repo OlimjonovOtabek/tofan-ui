@@ -82,7 +82,7 @@ describe('TrainerTiersPage', () => {
     notifications = { success: vi.fn(), error: vi.fn() };
   });
 
-  it('should show a card for Standard and one for VIP in that order', async () => {
+  it('should show a card for Standard and one for VIP in that order when the tiers are loaded', async () => {
     const fixture = await render();
 
     const headings = cards(fixture).map((card) => card.querySelector('h2')?.textContent?.trim());
@@ -90,7 +90,7 @@ describe('TrainerTiersPage', () => {
     expect(headings).toEqual(['Standard', 'VIP']);
   });
 
-  it('should list each tier benefits in the admin language', async () => {
+  it('should list each tier benefits in the admin language when the page is rendered', async () => {
     const fixture = await render();
 
     const [standard, vip] = cards(fixture);
@@ -123,7 +123,7 @@ describe('TrainerTiersPage', () => {
     expect(cards(fixture)).toHaveLength(2);
   });
 
-  it('should open the benefits of the pressed tier in the dialog', async () => {
+  it('should open the benefits of the pressed tier in the dialog when its edit button is pressed', async () => {
     const fixture = await render();
 
     buttonIn(cards(fixture)[1], translate('trainers.tiers.edit')).click();
@@ -139,7 +139,7 @@ describe('TrainerTiersPage', () => {
     );
   });
 
-  it('should save the whole reordered list for the pressed tier', async () => {
+  it('should save the whole reordered list for the pressed tier when the admin saves after moving a row', async () => {
     const fixture = await render();
     buttonIn(cards(fixture)[0], translate('trainers.tiers.edit')).click();
     await settle(fixture);

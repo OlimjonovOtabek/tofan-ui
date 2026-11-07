@@ -94,7 +94,7 @@ describe('PlatformFeePage', () => {
     expect((fixture.nativeElement as HTMLElement).querySelector('form')).not.toBeNull();
   });
 
-  it('should ask for confirmation before saving the changed fee', async () => {
+  it('should ask for confirmation before saving when the fee form is submitted', async () => {
     const fixture = await render();
 
     await submit(fixture);

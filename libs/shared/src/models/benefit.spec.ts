@@ -7,7 +7,7 @@ import {
 } from './benefit';
 
 describe('benefit limits', () => {
-  it('should allow 200 characters per text and 20 benefits', () => {
+  it('should allow 200 characters per text and 20 benefits when reading the limits', () => {
     expect(BENEFIT_TEXT_MAX_LENGTH).toBe(200);
     expect(BENEFITS_MAX_COUNT).toBe(20);
   });
@@ -26,7 +26,7 @@ describe('benefitTextProblem', () => {
     expect(benefitTextProblem('   ')).toBe('required');
   });
 
-  it('should accept a text of exactly 200 characters', () => {
+  it('should accept a text when it has exactly 200 characters', () => {
     expect(benefitTextProblem('a'.repeat(200))).toBeNull();
   });
 

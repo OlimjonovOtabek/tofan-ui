@@ -16,7 +16,7 @@ function text(fixture: ComponentFixture<TierCard>): string {
 }
 
 describe('TierCard', () => {
-  it('should show the tier name as the heading', () => {
+  it('should show the tier name as the heading when the card is rendered', () => {
     const fixture = render('vip', []);
 
     const heading = (fixture.nativeElement as HTMLElement).querySelector('h2');
@@ -24,7 +24,7 @@ describe('TierCard', () => {
     expect(heading?.textContent?.trim()).toBe('VIP');
   });
 
-  it('should list the benefits in the given order', () => {
+  it('should list the benefits in the given order when the card has several', () => {
     const fixture = render('standard', ['Birinchi', 'Ikkinchi']);
 
     const items = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('li')).map(

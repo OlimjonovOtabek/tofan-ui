@@ -74,7 +74,7 @@ describe('platformFeeFormSchema', () => {
     expect(fields.providerFeePercent().invalid()).toBe(true);
   });
 
-  it('should explain the limit in the error message of the field', () => {
+  it('should explain the limit in the error message when the value is out of range', () => {
     const fields = validate({ ...VALID, commissionAmount: -5, taxPercent: 101 });
 
     expect(

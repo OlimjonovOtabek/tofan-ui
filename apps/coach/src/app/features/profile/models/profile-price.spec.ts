@@ -42,25 +42,25 @@ describe('profile price label', () => {
 });
 
 describe('VIP price input', () => {
-  it('should treat an empty field as no VIP price', () => {
+  it('should treat an empty field as no VIP price when the input is blank', () => {
     expect(vipPriceOfInput('')).toBeNull();
     expect(vipPriceOfInput('   ')).toBeNull();
     expect(isVipPriceInputValid('')).toBe(true);
   });
 
-  it('should read the digits as the VIP price', () => {
+  it('should read the digits as the VIP price when the input has a number', () => {
     expect(vipPriceOfInput('400000')).toBe(400000);
     expect(isVipPriceInputValid('400000')).toBe(true);
   });
 
-  it('should reject a VIP price of zero', () => {
+  it('should reject a VIP price of zero when the input is zero', () => {
     expect(isVipPriceInputValid('0')).toBe(false);
     expect(isVipPriceInputValid('000')).toBe(false);
   });
 });
 
 describe('price input', () => {
-  it('should show a stored price as whole digits and a missing one as empty', () => {
+  it('should show a stored price as whole digits when the price is set and as empty when it is missing', () => {
     expect(priceInputOf(400000)).toBe('400000');
     expect(priceInputOf(199999.6)).toBe('200000');
     expect(priceInputOf(null)).toBe('');

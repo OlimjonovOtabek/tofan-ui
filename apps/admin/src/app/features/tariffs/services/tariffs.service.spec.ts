@@ -82,7 +82,7 @@ describe('TariffsService', () => {
     await done;
   });
 
-  it('should put the tariff type as an integer and the meal types as integers', async () => {
+  it('should put the tariff type as an integer and the meal types as integers when changing a tariff', async () => {
     const draft: TariffDraft = {
       monthlyPrice: 99000,
       foodScanLimit: 0,

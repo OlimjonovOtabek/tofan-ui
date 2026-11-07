@@ -48,7 +48,7 @@ describe('TrainerTiersStore', () => {
     expect(store.loadError()).toBeNull();
   });
 
-  it('should be loading while the service has not answered', async () => {
+  it('should be loading when the service has not answered', async () => {
     let answer: (value: TierBenefits[]) => void = () => undefined;
     vi.mocked(service.list).mockReturnValue(new Promise((resolve) => (answer = resolve)));
     const store = createStore();
@@ -114,7 +114,7 @@ describe('TrainerTiersStore', () => {
     expect(store.saving()).toBe(false);
   });
 
-  it('should be saving while the write has not finished', async () => {
+  it('should be saving when the write has not finished', async () => {
     let finish: () => void = () => undefined;
     vi.mocked(service.change).mockReturnValue(new Promise((resolve) => (finish = () => resolve())));
     const store = createStore();

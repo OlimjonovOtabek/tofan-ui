@@ -76,7 +76,7 @@ describe('PlatformFeeStore', () => {
     expect(store.fee()).toEqual(fee);
   });
 
-  it('should report the loading state while the fee is requested', async () => {
+  it('should report the loading state when the fee is requested', async () => {
     const store = createStore();
 
     const loading = store.load();
@@ -127,7 +127,7 @@ describe('PlatformFeeStore', () => {
     expect(store.fee()).toBeNull();
   });
 
-  it('should report the saving state while the change is sent', async () => {
+  it('should report the saving state when the change is sent', async () => {
     const store = createStore();
     await store.load();
 

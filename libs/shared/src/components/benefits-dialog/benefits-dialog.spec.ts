@@ -98,7 +98,7 @@ function saveButton(): HTMLButtonElement {
 }
 
 describe('BenefitsDialog', () => {
-  it('should show the given benefits in their order with all three texts', async () => {
+  it('should show the given benefits in their order with all three texts when the dialog opens', async () => {
     await open([FIRST, SECOND]);
 
     expect(rows()).toHaveLength(2);
@@ -107,13 +107,13 @@ describe('BenefitsDialog', () => {
     expect(texts(2)).toEqual(['Birinchi', 'Ikkinchi']);
   });
 
-  it('should show the plain text warning', async () => {
+  it('should show the plain text warning when the dialog opens', async () => {
     await open();
 
     expect(document.body.textContent).toContain(translate('common.benefits.plainTextWarning'));
   });
 
-  it('should show how many benefits exist out of the maximum', async () => {
+  it('should show how many benefits exist out of the maximum when the dialog opens', async () => {
     await open();
 
     expect(document.body.textContent).toContain('3 / 20');
@@ -221,7 +221,7 @@ describe('BenefitsDialog', () => {
     expect(saved).toHaveBeenCalledWith([FIRST, THIRD, SECOND]);
   });
 
-  it('should not offer to move the first row up or the last row down', async () => {
+  it('should not offer to move the first row up or the last row down when the list is shown', async () => {
     await open();
 
     expect(moveUpButton(1).disabled).toBe(true);
@@ -255,7 +255,7 @@ describe('BenefitsDialog', () => {
     expect(saved).toHaveBeenCalledWith([SECOND, { ...FIRST, ru: 'Изменено' }, THIRD]);
   });
 
-  it('should keep the same input in the page while the admin types so focus is not lost', async () => {
+  it('should keep the same input in the page when the admin types so focus is not lost', async () => {
     const { fixture } = await open([FIRST]);
     const input = inputsOf(rows()[0])[0];
 
@@ -300,7 +300,7 @@ describe('BenefitsDialog', () => {
     );
   });
 
-  it('should accept a text of exactly 200 characters', async () => {
+  it('should accept a text when it has exactly 200 characters', async () => {
     const { fixture, saved } = await open();
     type(inputsOf(rows()[0])[0], 'a'.repeat(200));
 
@@ -310,7 +310,7 @@ describe('BenefitsDialog', () => {
     expect(saved).toHaveBeenCalledWith([{ ...FIRST, en: 'a'.repeat(200) }, SECOND, THIRD]);
   });
 
-  it('should emit the texts without surrounding spaces', async () => {
+  it('should emit the texts without surrounding spaces when they were typed with spaces', async () => {
     const { fixture, saved } = await open([FIRST]);
     type(inputsOf(rows()[0])[0], '  Padded  ');
 

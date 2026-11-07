@@ -107,7 +107,7 @@ describe('toCoachProfileChange', () => {
     expect(toCoachProfileChange(vipProfile, { monthlyPrice: 500000 }).vipMonthlyPrice).toBe(800000);
   });
 
-  it('should let the change replace or clear the VIP price on purpose', () => {
+  it('should let the change replace or clear the VIP price when the change names it', () => {
     expect(toCoachProfileChange(vipProfile, { vipMonthlyPrice: 900000 }).vipMonthlyPrice).toBe(
       900000,
     );
