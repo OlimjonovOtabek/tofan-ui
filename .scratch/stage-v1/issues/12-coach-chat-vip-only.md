@@ -15,7 +15,7 @@ Yuborishda shu 403 kelsa suhbat read-only'ga o'tadi, yozilgan matn saqlanadi va 
 - [x] Yuborishdagi 403 read-only'ga o'tkazadi, qoralama qoladi, toast tushunarli.
 - [x] `Chat.SubscriptionRequired` xato matni uchala tilda.
 - [x] Conversation store testlari ikkala 403 holat uchun.
-- [ ] Stage'da Sub User Standard bo'lganda yozish yopiq, tarix ko'rinadi.
+- [x] Stage'da Sub User Standard bo'lganda yozish yopiq, tarix ko'rinadi.
 - [x] Coach moduli hujjati yangilangan.
 - [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.

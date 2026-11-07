@@ -15,7 +15,7 @@ Tugagan obunada tugma yo'q.
 - [x] `TrainerSubscription.NotFound` va `TrainerSubscription.NotActive` tushunarli matn bilan.
 - [x] Grant dialogida "faqat Standard" izohi.
 - [x] Service testi: to'g'ri yo'l va `{ tier }` tanasi; store va mapper testlari.
-- [ ] Stage'da Sub User obunasi Standard'ga va qaytib VIP'ga almashtirildi.
+- [x] Stage'da Sub User obunasi Standard'ga va qaytib VIP'ga almashtirildi.
 - [x] Trainers moduli hujjati yangilangan.
 - [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.

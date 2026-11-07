@@ -12,7 +12,7 @@ Matnlar Flutter ilovasidan olinadi.
 - [x] Ro'yxat qatorida va Client sahifasida VIP tag.
 - [x] "Xabar yozish" faqat faol VIP Client'da.
 - [x] Mapper testi: `tier` o'qiladi; "xabar yozsa bo'ladimi" qoidasi testlangan.
-- [ ] Stage'da Sub User VIP holatida tugma bor, Standard'da yo'q.
+- [x] Stage'da Sub User VIP holatida tugma bor, Standard'da yo'q.
 - [x] Coach moduli hujjati yangilangan.
 - [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.

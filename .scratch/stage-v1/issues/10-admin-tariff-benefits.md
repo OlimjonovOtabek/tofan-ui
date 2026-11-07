@@ -11,7 +11,7 @@ Tartib saqlanadi, karta yangilangan ro'yxatni ko'rsatadi.
 - [x] Tariff kartasida "Imtiyozlar" tugmasi umumiy dialogni ochadi.
 - [x] Saqlashda butun tartiblangan ro'yxat yuboriladi, karta yangilanadi.
 - [x] Service va store testlari.
-- [ ] Backend 7-ssenariysi Tariff uchun stage'da o'tdi.
+- [x] Backend 7-ssenariysi Tariff uchun stage'da o'tdi.
 - [x] Tariffs feature hujjati yangilangan.
 - [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.

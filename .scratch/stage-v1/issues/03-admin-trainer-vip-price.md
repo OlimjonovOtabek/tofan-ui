@@ -14,7 +14,7 @@ Bo'sh maydon "faqat Standard" degani.
 - [x] 0 yoki manfiy VIP narxi formada rad etiladi.
 - [x] Service testi: yangilash so'rovi tanasida `vipMonthlyPrice` har doim bor, bo'sh bo'lsa `null`.
 - [x] Mapper va draft testlari VIP price'ni o'tkazadi.
-- [ ] Backend 1, 2, 3 ssenariylari stage'da o'tdi.
+- [x] Backend 1, 2, 3 ssenariylari stage'da o'tdi.
 - [x] Trainers moduli hujjati yangilangan.
 - [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.

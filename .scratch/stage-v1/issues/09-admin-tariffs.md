@@ -15,7 +15,7 @@ Hamma maydon har doim yuboriladi.
 - [x] Free narxi qulf, Standard va VIP narxi 0 dan katta; `Tariff.*` kodlari tushunarli matn bilan.
 - [x] Umumiy narx faqat ko'rsatiladi, saqlashdan keyin ro'yxat qayta yuklanadi.
 - [x] Service testi: yettala maydon tanada, `null` limitlar bilan; mapper, forma qiymati va store testlari.
-- [ ] Stage'da Standard'ning scan limiti "Cheksiz" qilindi, `GET /tariffs` da `null`, keyin qaytarildi.
+- [x] Stage'da Standard'ning scan limiti "Cheksiz" qilindi, `GET /tariffs` da `null`, keyin qaytarildi.
 - [x] Menyu guruhi 05 bilan bir xil, qaysi biri oldin merge bo'lsa o'sha yaratadi.
 - [x] Yangi feature hujjati.
 - [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
