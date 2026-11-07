@@ -97,7 +97,26 @@ function saveButton(): HTMLButtonElement {
   return button;
 }
 
+function rowOf(element: Element | null): HTMLElement | null {
+  return element === null ? null : element.closest('li');
+}
+
 describe('BenefitsDialog', () => {
+  let scrollIntoView: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    scrollIntoView = vi.fn();
+    Object.defineProperty(Element.prototype, 'scrollIntoView', {
+      configurable: true,
+      writable: true,
+      value: scrollIntoView,
+    });
+  });
+
+  afterEach(() => {
+    Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+  });
+
   it('should show the given benefits in their order with all three texts when the dialog opens', async () => {
     await open([FIRST, SECOND]);
 
@@ -354,5 +373,142 @@ describe('BenefitsDialog', () => {
     await settle(fixture);
 
     expect(english()).toEqual(['Second', 'Third']);
+  });
+
+  it('should keep focus on the down button of the moved row when the down button is pressed', async () => {
+    const { fixture } = await open();
+    const movedRow = rows()[0];
+    moveDownButton(1).focus();
+
+    moveDownButton(1).click();
+    await settle(fixture);
+
+    expect(document.activeElement).toBe(moveDownButton(2));
+    expect(rowOf(document.activeElement)).toBe(movedRow);
+    expect(inputsOf(movedRow)[0].value).toBe('First');
+  });
+
+  it('should keep focus on the up button of the moved row when the up button is pressed', async () => {
+    const { fixture } = await open();
+    const movedRow = rows()[2];
+    moveUpButton(3).focus();
+
+    moveUpButton(3).click();
+    await settle(fixture);
+
+    expect(document.activeElement).toBe(moveUpButton(2));
+    expect(rowOf(document.activeElement)).toBe(movedRow);
+  });
+
+  it('should keep focus on the same button when the button is pressed again and again', async () => {
+    const { fixture } = await open([
+      FIRST,
+      SECOND,
+      THIRD,
+      { en: 'Fourth', ru: 'Четвертый', uz: "To'rtinchi" },
+    ]);
+    moveDownButton(1).focus();
+
+    moveDownButton(1).click();
+    await settle(fixture);
+    (document.activeElement as HTMLButtonElement).click();
+    await settle(fixture);
+
+    expect(document.activeElement).toBe(moveDownButton(3));
+    expect(english()).toEqual(['Second', 'Third', 'First', 'Fourth']);
+  });
+
+  it('should focus the up button when the down button moved the row to the last place', async () => {
+    const { fixture } = await open();
+    const movedRow = rows()[1];
+    moveDownButton(2).focus();
+
+    moveDownButton(2).click();
+    await settle(fixture);
+
+    expect(moveDownButton(3).disabled).toBe(true);
+    expect(document.activeElement).toBe(moveUpButton(3));
+    expect(rowOf(document.activeElement)).toBe(movedRow);
+  });
+
+  it('should focus the down button when the up button moved the row to the first place', async () => {
+    const { fixture } = await open();
+    const movedRow = rows()[1];
+    moveUpButton(2).focus();
+
+    moveUpButton(2).click();
+    await settle(fixture);
+
+    expect(moveUpButton(1).disabled).toBe(true);
+    expect(document.activeElement).toBe(moveDownButton(1));
+    expect(rowOf(document.activeElement)).toBe(movedRow);
+  });
+
+  it('should not move focus when a row is dragged to another place', async () => {
+    const { fixture } = await open();
+    const list = fixture.debugElement.query(By.directive(CdkDropList));
+    const input = inputsOf(rows()[0])[0];
+    input.focus();
+
+    list.triggerEventHandler('cdkDropListDropped', { previousIndex: 0, currentIndex: 1 });
+    await settle(fixture);
+
+    expect(document.activeElement).toBe(input);
+  });
+
+  it('should reuse the row elements without warning when rows are moved', async () => {
+    const warn = vi.spyOn(console, 'warn');
+    const { fixture } = await open();
+    const before = rows();
+
+    moveDownButton(1).click();
+    await settle(fixture);
+    moveUpButton(3).click();
+    await settle(fixture);
+
+    expect(rows()).toHaveLength(3);
+    expect(rows().every((row) => before.includes(row))).toBe(true);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('should bring the first invalid field into view and focus it when saving is blocked', async () => {
+    const { fixture, saved } = await open();
+    addButton().click();
+    await settle(fixture);
+    const [firstInput] = inputsOf(rows()[3]);
+
+    saveButton().click();
+    await settle(fixture);
+
+    expect(saved).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(firstInput);
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    expect(rows()[3].contains(scrollIntoView.mock.contexts[0] as Node)).toBe(true);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center' });
+  });
+
+  it('should focus the first invalid field in reading order when several fields are invalid', async () => {
+    const { fixture } = await open();
+    type(inputsOf(rows()[2])[0], '');
+    type(inputsOf(rows()[1])[1], '');
+    const expected = inputsOf(rows()[1])[1];
+
+    saveButton().click();
+    await settle(fixture);
+
+    expect(document.activeElement).toBe(expected);
+    expect(rows()[1].contains(scrollIntoView.mock.contexts[0] as Node)).toBe(true);
+  });
+
+  it('should not move focus or scroll when every row is valid', async () => {
+    const { fixture, saved } = await open();
+    saveButton().focus();
+
+    saveButton().click();
+    await settle(fixture);
+
+    expect(saved).toHaveBeenCalled();
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(saveButton());
   });
 });
