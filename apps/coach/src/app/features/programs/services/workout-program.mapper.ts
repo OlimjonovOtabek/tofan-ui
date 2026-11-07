@@ -78,17 +78,21 @@ function toDayVideo(item: DayExerciseResponse, urlOf: ApiUrlOf): DayVideo[] {
   ];
 }
 
-export function toDayRequest(draft: DayDraft): WorkoutProgramDayRequest {
+export function toDayRequest(
+  draft: DayDraft,
+  uploaded: Readonly<Record<string, string>> = {},
+): WorkoutProgramDayRequest {
   const description = draft.description.trim();
   return {
     title: draft.title.trim(),
     ...(description === '' ? {} : { description }),
     videos: draft.videos.flatMap((video) => {
-      if (video.fileId === null) {
+      const fileId = video.fileId ?? uploaded[video.key];
+      if (fileId === undefined) {
         return [];
       }
       const name = video.name.trim();
-      return [name === '' ? { fileId: video.fileId } : { fileId: video.fileId, name }];
+      return [name === '' ? { fileId } : { fileId, name }];
     }),
   };
 }
@@ -110,6 +114,10 @@ export function toUpdateWorkoutProgramRequest(
 export function toCreateWorkoutProgramRequest(
   form: WorkoutProgramForm,
   days: readonly DayDraft[],
+  uploaded: Readonly<Record<string, string>> = {},
 ): CreateWorkoutProgramRequest {
-  return { ...toUpdateWorkoutProgramRequest(form), days: days.map(toDayRequest) };
+  return {
+    ...toUpdateWorkoutProgramRequest(form),
+    days: days.map((day) => toDayRequest(day, uploaded)),
+  };
 }

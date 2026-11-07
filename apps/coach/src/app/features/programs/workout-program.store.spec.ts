@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
-import { EMPTY_DAY_DRAFT } from './models/day-draft';
+import { VideoUploadSaveResult } from '@coach/core/videos/video-upload';
+import { VideoUploadsStore } from '@coach/core/videos/video-uploads.store';
+import { Subject } from 'rxjs';
+import { EMPTY_DAY_DRAFT, pendingVideoDraft } from './models/day-draft';
 import { WorkoutDay, WorkoutProgramDetail } from './models/workout-program';
 import { WorkoutProgramsService } from './services/workout-programs.service';
 import { WorkoutProgramStore } from './workout-program.store';
@@ -36,7 +39,9 @@ describe('WorkoutProgramStore', () => {
     deleteDay: vi.fn(),
     reorderDays: vi.fn(),
   };
-  const notifications = { success: vi.fn(), error: vi.fn() };
+  const notifications = { success: vi.fn(), error: vi.fn(), info: vi.fn() };
+  const saves = new Subject<VideoUploadSaveResult>();
+  const uploads = { saves$: saves, saveWhenUploaded: vi.fn() };
   let store: WorkoutProgramStore;
 
   beforeEach(async () => {
@@ -46,11 +51,37 @@ describe('WorkoutProgramStore', () => {
         WorkoutProgramStore,
         { provide: WorkoutProgramsService, useValue: service },
         { provide: NotificationService, useValue: notifications },
+        { provide: VideoUploadsStore, useValue: uploads },
       ],
     });
     store = TestBed.inject(WorkoutProgramStore);
     service.get.mockResolvedValue(program);
     await store.load('w1');
+  });
+
+  it('should queue a day and add it after its videos are stored', async () => {
+    const draft = { ...EMPTY_DAY_DRAFT, title: 'Push', videos: [pendingVideoDraft('u1', 'x')] };
+
+    expect(await store.addDay(draft)).toBe(true);
+
+    expect(service.addDay).not.toHaveBeenCalled();
+    const queued = uploads.saveWhenUploaded.mock.calls[0][0] as {
+      save(ids: Record<string, string>): Promise<unknown>;
+      ids: string[];
+      tag: string;
+    };
+    expect(queued.ids).toEqual(['u1']);
+    expect(queued.tag).toBe('w1');
+    await queued.save({ u1: 'f1' });
+    expect(service.addDay).toHaveBeenCalledWith('w1', draft, { u1: 'f1' });
+  });
+
+  it('should reload the program when its queued day was saved', async () => {
+    service.get.mockClear();
+
+    saves.next({ group: 'workout-day', tag: 'w1', failure: null, succeeded: true });
+
+    await vi.waitFor(() => expect(service.get).toHaveBeenCalledWith('w1'));
   });
 
   it('should publish a draft and reload it', async () => {

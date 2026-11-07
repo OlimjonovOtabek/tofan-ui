@@ -60,12 +60,13 @@
         </div>
       }
     </div>
-    @if (store.uploadProgress(); as progress) {
+    @if (store.uploadProgress() !== null) {
       <div class="c-card upload">
         <span class="t-base4 font-medium tone-secondary">{{
-          'coachApp.day.videoUploading' | t: { percent: percent() }
+          (store.preparing() ? 'coachApp.day.videoPreparing' : 'coachApp.day.videoUploading')
+            | t: { percent: percent() }
         }}</span>
-        <coach-progress [value]="progress" />
+        <coach-progress [value]="store.uploadProgress()" />
       </div>
     }
     @if (store.full()) {

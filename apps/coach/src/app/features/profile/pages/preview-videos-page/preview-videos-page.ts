@@ -46,7 +46,7 @@ export class PreviewVideosPage {
   protected chosen(event: Event): void {
     const input = event.target;
     if (input instanceof HTMLInputElement && input.files?.[0]) {
-      void this.store.add(input.files[0]);
+      this.store.add(input.files[0]);
       input.value = '';
     }
   }

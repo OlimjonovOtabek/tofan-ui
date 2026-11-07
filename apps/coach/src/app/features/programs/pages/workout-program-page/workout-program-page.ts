@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+  viewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { MessagePipe } from '@core/i18n/message.pipe';
@@ -18,6 +27,7 @@ import { ProgramSummary } from '../../components/program-summary/program-summary
 import { dayReadiness, MAX_PROGRAM_DAYS, WorkoutDay } from '../../models/workout-program';
 import { goalText, workoutMeta } from '../../models/program-text';
 import { WorkoutProgramStore } from '../../workout-program.store';
+import { WorkoutProgramConfirmations } from './workout-program-confirmations';
 
 @Component({
   selector: 'coach-workout-program-page',
@@ -34,13 +44,14 @@ import { WorkoutProgramStore } from '../../workout-program.store';
     PublishActions,
     ProgramSummary,
   ],
-  providers: [WorkoutProgramStore],
+  providers: [WorkoutProgramStore, WorkoutProgramConfirmations],
   templateUrl: './workout-program-page.html',
 })
 export class WorkoutProgramPage {
   protected readonly store = inject(WorkoutProgramStore);
   private readonly router = inject(Router);
   private readonly sheets = inject(Sheets);
+  private readonly confirmations = inject(WorkoutProgramConfirmations);
   private readonly translator = inject(Translator);
   protected readonly locale = inject(LocaleStore).locale;
 
@@ -52,6 +63,7 @@ export class WorkoutProgramPage {
   } | null>(null);
 
   protected readonly maxDays = MAX_PROGRAM_DAYS;
+  private readonly dayEditor = viewChild(DayEditor);
   protected readonly goal = computed(() => {
     const program = this.store.program();
     return program === null
@@ -84,14 +96,30 @@ export class WorkoutProgramPage {
     this.editing.set({ dayId: day.id, draft: dayDraftOf(day, this.locale()) });
   }
 
-  protected closeEditor(): void {
-    this.editing.set(null);
+  protected closeEditor(): Promise<boolean> {
+    return this.canLeave();
   }
 
-  protected async saveDay(draft: DayDraft): Promise<void> {
+  async canLeave(): Promise<boolean> {
+    const editor = this.dayEditor();
+    if (editor === undefined) {
+      return true;
+    }
+    const leaving = await editor.leaving();
+    if (leaving.kind === 'stay') {
+      return false;
+    }
+    if (leaving.kind === 'save') {
+      return this.saveDay(leaving.draft);
+    }
+    this.editing.set(null);
+    return true;
+  }
+
+  protected async saveDay(draft: DayDraft): Promise<boolean> {
     const editing = this.editing();
     if (editing === null) {
-      return;
+      return true;
     }
     const saved =
       editing.dayId === null
@@ -100,6 +128,7 @@ export class WorkoutProgramPage {
     if (saved) {
       this.editing.set(null);
     }
+    return saved;
   }
 
   protected dayTitle(day: WorkoutDay, number: number): string {
@@ -151,50 +180,19 @@ export class WorkoutProgramPage {
   }
 
   protected async togglePublished(published: boolean, name: string): Promise<void> {
-    const t = this.translator.translate.bind(this.translator);
-    const confirmed = await this.sheets.confirm({
-      title: t(
-        published
-          ? 'coachApp.workoutProgram.unpublishConfirmTitle'
-          : 'coachApp.programs.publishConfirmTitle',
-      ),
-      message: published
-        ? t('coachApp.workoutProgram.lastPublishedWarning')
-        : t('coachApp.programs.publishConfirmMessage', { name }),
-      confirmLabel: t(
-        published ? 'coachApp.workoutProgram.unpublish' : 'coachApp.programs.publish',
-      ),
-      cancelLabel: t('coachApp.common.cancel'),
-    });
-    if (confirmed) {
+    if (await this.confirmations.togglePublished(published, name)) {
       await this.store.togglePublished();
     }
   }
 
   protected async delete(): Promise<void> {
-    const t = this.translator.translate.bind(this.translator);
-    const confirmed = await this.sheets.confirm({
-      title: t('coachApp.workoutProgram.deleteConfirmTitle'),
-      message: t('coachApp.workoutProgram.deleteConfirmMessage'),
-      confirmLabel: t('coachApp.workoutProgram.delete'),
-      cancelLabel: t('coachApp.common.cancel'),
-      destructive: true,
-    });
-    if (confirmed && (await this.store.delete())) {
+    if ((await this.confirmations.deleteProgram()) && (await this.store.delete())) {
       await this.router.navigate(['/programs'], { queryParams: { kind: 'workout' } });
     }
   }
 
   private async deleteDay(day: WorkoutDay, number: number): Promise<void> {
-    const t = this.translator.translate.bind(this.translator);
-    const confirmed = await this.sheets.confirm({
-      title: t('coachApp.day.deleteConfirmTitle', { day: t('coachApp.day.number', { number }) }),
-      message: t('coachApp.workoutProgram.deleteConfirmMessage'),
-      confirmLabel: t('coachApp.day.delete'),
-      cancelLabel: t('coachApp.common.cancel'),
-      destructive: true,
-    });
-    if (confirmed) {
+    if (await this.confirmations.deleteDay(number)) {
       await this.store.deleteDay(day.id);
     }
   }

@@ -155,6 +155,10 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     daysHint: 'Добавьте дни сейчас или позже на странице программы.',
     submit: 'Создать черновик',
     success: 'Черновик создан',
+    leaveMessage:
+      'Видео этой программы ещё загружаются. Если выйти сейчас, загрузка остановится, а программа не будет создана.',
+    savedAfterUpload:
+      'Программа будет создана, как только её видео загрузятся. Не закрывайте эту вкладку.',
   },
   workoutProgram: {
     detailTitle: 'Программа тренировок',
@@ -197,7 +201,8 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     save: 'Сохранить день',
     title: 'Название дня',
     titleHint: 'например, Жимовой',
-    uploadsPending: 'Дождитесь окончания загрузки видео.',
+    uploadsPending:
+      'Видео загружаются. Можно сохранить день и продолжать работу, но не закрывайте эту вкладку.',
     videoCount: '{count} видео',
     videoNameHint: 'например, Жим штанги лёжа',
     videoNameSave: 'Сохранить',
@@ -207,7 +212,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     videoRemove: 'Удалить видео',
     videoRename: 'Переименовать',
     videoRetry: 'Повторить',
-    videoTooLarge: 'Видео больше 200 МБ. Выберите покороче.',
+    videoTooLarge: 'Видео больше 1 ГБ. Выберите покороче.',
     videoWatch: 'Смотреть',
     videos: 'Видео',
     videosEmpty: 'В дне должно быть хотя бы одно видео.',
@@ -216,6 +221,36 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     videosProgress: 'Загружено {done} из {total}',
     videoUploading: 'Загрузка… {percent}%',
     restDay: 'День отдыха',
+    discardConfirm: 'Выйти без сохранения',
+    discardMessage:
+      'Для сохранения у дня должно быть название и хотя бы одно видео. Если выйти сейчас, изменения пропадут.',
+    discardTitle: 'Отменить изменения?',
+    leaveConfirm: 'Выйти',
+    leaveMessage:
+      'Видео ещё загружаются. Если выйти сейчас, загрузка остановится, а изменения этого дня не сохранятся.',
+    leaveStay: 'Остаться',
+    leaveTitle: 'Загрузка прервётся',
+    savedAfterUpload:
+      'День сохранится, как только его видео загрузятся. Не закрывайте эту вкладку.',
+    videoPreparing: 'Подготовка… {percent}%',
+  },
+  videoUpload: {
+    lostInDraft:
+      'Некоторые видео не удалось загрузить. Откройте день, чтобы повторить попытку или удалить их.',
+    preparing: 'Подготовка видео',
+    progressMany: 'Видео: {count} · {percent}%',
+    saveFailed: 'Не удалось загрузить видео, поэтому изменения не сохранены.',
+    savedBody: 'Изменения сохранены.',
+    saving: 'Сохранение',
+    sending: 'Загрузка видео',
+  },
+  push: {
+    denied: 'В этом браузере уведомления заблокированы. Разрешите их в настройках сайта.',
+    off: 'Выключены',
+    on: 'Включены',
+    title: 'Уведомления',
+    videoFailed: 'Не удалось обработать видео. Загрузите его заново.',
+    working: 'Подождите…',
   },
   video: {
     statusProcessing: 'Обрабатывается',

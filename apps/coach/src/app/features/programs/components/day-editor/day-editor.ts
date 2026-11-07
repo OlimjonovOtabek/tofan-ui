@@ -21,6 +21,11 @@ import {
   uploadedCount,
 } from '../../models/day-draft';
 
+export type DayLeaving =
+  | { readonly kind: 'leave' }
+  | { readonly kind: 'stay' }
+  | { readonly kind: 'save'; readonly draft: DayDraft };
+
 @Component({
   selector: 'coach-day-editor',
   imports: [DragDropModule, TranslatePipe, Button, Icon, Note, Progress, TextField, VideoStatusTag],
@@ -115,8 +120,27 @@ export class DayEditor {
 
   protected save(): void {
     if (this.store.canSave()) {
-      this.saved.emit(this.store.draft());
+      this.saved.emit(this.store.finish());
     }
+  }
+
+  async leaving(): Promise<DayLeaving> {
+    if (!this.store.hasChanges()) {
+      return { kind: 'leave' };
+    }
+    if (this.store.canSave()) {
+      return { kind: 'save', draft: this.store.finish() };
+    }
+    const t = this.translator.translate.bind(this.translator);
+    const uploading = this.store.uploading();
+    const confirmed = await this.sheets.confirm({
+      title: t(uploading ? 'coachApp.day.leaveTitle' : 'coachApp.day.discardTitle'),
+      message: t(uploading ? 'coachApp.day.leaveMessage' : 'coachApp.day.discardMessage'),
+      confirmLabel: t(uploading ? 'coachApp.day.leaveConfirm' : 'coachApp.day.discardConfirm'),
+      cancelLabel: t(uploading ? 'coachApp.day.leaveStay' : 'coachApp.common.cancel'),
+      destructive: true,
+    });
+    return confirmed ? { kind: 'leave' } : { kind: 'stay' };
   }
 
   private async rename(video: DayVideoDraft): Promise<void> {

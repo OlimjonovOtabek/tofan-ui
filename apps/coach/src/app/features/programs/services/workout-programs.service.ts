@@ -14,6 +14,8 @@ import {
 
 const PROGRAMS = '/coach/workout-programs';
 
+type UploadedFileIds = Readonly<Record<string, string>>;
+
 @Injectable({ providedIn: 'root' })
 export class WorkoutProgramsService {
   private readonly api = inject(ApiClient);
@@ -27,8 +29,12 @@ export class WorkoutProgramsService {
     return toWorkoutProgramDetail(response, (path) => (path ? this.api.url(path) : null));
   }
 
-  create(form: WorkoutProgramForm, days: readonly DayDraft[]): Promise<string> {
-    return this.api.post<string>(PROGRAMS, toCreateWorkoutProgramRequest(form, days));
+  create(
+    form: WorkoutProgramForm,
+    days: readonly DayDraft[],
+    uploaded: UploadedFileIds = {},
+  ): Promise<string> {
+    return this.api.post<string>(PROGRAMS, toCreateWorkoutProgramRequest(form, days, uploaded));
   }
 
   async update(id: string, form: WorkoutProgramForm): Promise<void> {
@@ -47,12 +53,20 @@ export class WorkoutProgramsService {
     await this.api.delete(programPath(id));
   }
 
-  addDay(id: string, day: DayDraft): Promise<string> {
-    return this.api.post<string>(`${programPath(id)}/days`, toDayRequest(day));
+  addDay(id: string, day: DayDraft, uploaded: UploadedFileIds = {}): Promise<string> {
+    return this.api.post<string>(`${programPath(id)}/days`, toDayRequest(day, uploaded));
   }
 
-  async updateDay(id: string, dayId: string, day: DayDraft): Promise<void> {
-    await this.api.put(`${programPath(id)}/days/${encodeURIComponent(dayId)}`, toDayRequest(day));
+  async updateDay(
+    id: string,
+    dayId: string,
+    day: DayDraft,
+    uploaded: UploadedFileIds = {},
+  ): Promise<void> {
+    await this.api.put(
+      `${programPath(id)}/days/${encodeURIComponent(dayId)}`,
+      toDayRequest(day, uploaded),
+    );
   }
 
   async deleteDay(id: string, dayId: string): Promise<void> {

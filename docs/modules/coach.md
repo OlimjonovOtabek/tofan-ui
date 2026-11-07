@@ -40,8 +40,32 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
 - Client adherence is graded high (85+), good (70+) or low. Low shows the needs-review tag.
   Low activity means no workout for 7 days or ever. Ended subscriptions skip activity sections.
 - Preview videos: at most 5, can be reordered by drag.
-- Video uploads use the shared multipart `FileUploadService` (200 MB limit). Mobile compresses videos first and uses tus; the web does neither.
-  Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending.
+- Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending.
+
+## Video uploads
+
+Program days and preview videos go through `VideoUploadsStore` (`core/videos`), which is global so an upload outlives the screen that started it.
+It follows the mobile `VideoUploadManager` on the `dev` branch of `tofan_trainer`.
+Avatars and other images stay on the shared multipart `FileUploadService`.
+
+- **Limit:** 1 GB per video, checked after compression. The server answers `StoredFile.TooLarge` above it.
+- **Transport:** tus on `/files/uploads` in 8 MB chunks, then `POST /files/uploads/{id}/complete`. `POST /files/uploads` is not in Swagger; the contract comes from the mobile client.
+- **Resume:** a dropped chunk is retried up to 5 times with a growing wait, after reading the offset with `HEAD`. A retry of the same file continues from the server's offset. The open upload is kept in memory, so closing the tab starts it again.
+- **Progress:** it moves per chunk, because `withFetch()` reports no upload progress inside a request.
+- **Compression:** `video-compressor.service.ts` makes a copy with Mediabunny (WebCodecs) in the origin private file system: at most 1920 on the longer side, 30 fps, 8 Mbit/s H.264, 128 kbit/s AAC, MP4. A video at most 1080p and 200 MB is sent as it is. Any failure, or a copy that is not smaller, sends the source. HDR sources are sent untouched, because the browser has no tone mapping like the mobile iOS transcoder.
+- **Queued saves:** a day can be saved while its videos upload. `saveWhenUploaded` sends the day, the new program or the preview video once they are stored, and gives the save up when one of them is lost. `VideoUploadBar` in the shell shows the progress and leads to the screen.
+- **Leaving:** `programLeaveGuard` and the back button save a day that can be saved. Otherwise they ask first (`Upload will stop` or `Discard changes?`) and stop the uploads of that edit. `beforeunload` warns while anything uploads, because a closed tab stops the uploads, unlike the mobile background upload.
+
+## Push notifications
+
+`core/push` registers the browser's Firebase token with `PUT /device-tokens/me` (`platform` 3, Web) and removes it on sign-out with `DELETE /device-tokens/me`.
+The coach turns it on in Profile, since browsers ask for permission on a user action.
+`public/push-worker.js` is a plain service worker without the Firebase SDK: it shows the notification, or tells a visible tab, and a tap opens the screen from `pushLinkOf` (the same routes as mobile).
+
+The Firebase web app config lives in `push` in `apps/coach/src/environments/environment*.ts`; these values are public identifiers, not secrets.
+Set `push` to `null` to hide the feature.
+No `vapidKey` is set, so the Firebase default key is used.
+Delivery from the backend to a browser has not been checked yet; turning on, turning off, sign-out and the worker logic have.
 
 ## Structure
 
@@ -53,7 +77,8 @@ apps/coach/src/app/
   core/format      locale aware numbers, money and dates (Uzbek month names are written out)
   core/clients     client model and rules shared by dashboard, clients and profile
   core/payments    payment model and row
-  core/videos      video status, tag and the full screen player
+  core/videos      video status, tag, full screen player, tus uploads, compression and the upload queue
+  core/push        browser push token and the screen a tapped push opens
   core/theme       light, dark, system theme store
   features/<x>     auth, dashboard, programs, clients, chat, profile
 ```

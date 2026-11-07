@@ -4,13 +4,12 @@ import { AuthStore } from '@core/auth/auth.store';
 import { ClipboardService } from '@core/feedback/clipboard.service';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { MessagePipe } from '@core/i18n/message.pipe';
-import { APP_LOCALES, AppLocale } from '@core/i18n/locale';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { TranslationKey } from '@core/i18n/dictionary';
 import { COACH_SUPPORT_URL, TRAINER_PAGE_URL } from '@coach/core/layout/coach-links';
 import { formatCount, formatMoneyShort } from '@coach/core/format/formats';
-import { THEME_MODES, ThemeMode } from '@coach/core/theme/theme-mode';
+import { PushStore } from '@coach/core/push/push.store';
 import { ThemeStore } from '@coach/core/theme/theme.store';
 import { Avatar } from '@coach/core/ui/avatar/avatar';
 import { Button } from '@coach/core/ui/button/button';
@@ -25,6 +24,7 @@ import { Shimmer } from '@coach/core/ui/shimmer/shimmer';
 import { initialsOf } from '@coach/core/clients/client-activity';
 import { ProfileStore } from '../../profile.store';
 import { isGeneratedSlug, monthlyRevenue, publishedPrograms } from '../../models/profile-overview';
+import { ProfilePreferencesSheets, THEME_LABELS } from './profile-preferences-sheets';
 
 interface SettingRow {
   readonly icon: IconName;
@@ -32,12 +32,6 @@ interface SettingRow {
   readonly subtitle: string;
   readonly run: () => void;
 }
-
-const THEME_LABELS: Readonly<Record<ThemeMode, TranslationKey>> = {
-  system: 'coachApp.theme.system',
-  light: 'coachApp.theme.light',
-  dark: 'coachApp.theme.dark',
-};
 
 @Component({
   selector: 'coach-profile-page',
@@ -53,7 +47,7 @@ const THEME_LABELS: Readonly<Record<ThemeMode, TranslationKey>> = {
     PillButton,
     Shimmer,
   ],
-  providers: [ProfileStore],
+  providers: [ProfileStore, ProfilePreferencesSheets],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css',
 })
@@ -66,6 +60,8 @@ export class ProfilePage {
   private readonly localeStore = inject(LocaleStore);
   private readonly clipboard = inject(ClipboardService);
   private readonly translator = inject(Translator);
+  private readonly push = inject(PushStore);
+  private readonly preferences = inject(ProfilePreferencesSheets);
 
   private readonly t = (key: TranslationKey, params?: Record<string, string | number>) =>
     this.translator.translate(key, params);
@@ -130,14 +126,15 @@ export class ProfilePage {
         icon: 'globe',
         title: 'coachApp.profile.language',
         subtitle: this.t(`coachApp.languages.${locale}`),
-        run: () => void this.pickLanguage(),
+        run: () => void this.preferences.pickLanguage(),
       },
       {
         icon: 'moon',
         title: 'coachApp.profile.theme',
         subtitle: this.t(THEME_LABELS[this.theme.mode()]),
-        run: () => void this.pickTheme(),
+        run: () => void this.preferences.pickTheme(),
       },
+      ...(this.push.supported() ? [this.pushRow()] : []),
       {
         icon: 'message-circle',
         title: 'coachApp.profile.supportTitle',
@@ -185,37 +182,29 @@ export class ProfilePage {
     });
     if (confirmed) {
       this.signingOut.set(true);
+      await this.push.disable().catch(keepSigningOutWhenTokenStays);
       await this.auth.logout();
       this.signingOut.set(false);
     }
   }
 
-  private async pickLanguage(): Promise<void> {
-    const locale = await this.sheets.choose<AppLocale>(
-      this.t('coachApp.profile.languageSheetTitle'),
-      APP_LOCALES.map((value) => ({
-        value,
-        title: this.t(`coachApp.languages.${value}`),
-        selected: value === this.localeStore.locale(),
-      })),
-    );
-    if (locale !== null) {
-      this.localeStore.setLocale(locale);
+  private pushStatus(): TranslationKey {
+    if (this.push.busy()) {
+      return 'coachApp.push.working';
     }
+    return this.push.enabled() ? 'coachApp.push.on' : 'coachApp.push.off';
   }
 
-  private async pickTheme(): Promise<void> {
-    const mode = await this.sheets.choose<ThemeMode>(
-      this.t('coachApp.profile.themeSheetTitle'),
-      THEME_MODES.map((value) => ({
-        value,
-        title: this.t(THEME_LABELS[value]),
-        subtitle: value === 'system' ? this.t('coachApp.theme.systemHint') : undefined,
-        selected: value === this.theme.mode(),
-      })),
-    );
-    if (mode !== null) {
-      this.theme.setMode(mode);
-    }
+  private pushRow(): SettingRow {
+    return {
+      icon: 'bell',
+      title: 'coachApp.push.title',
+      subtitle: this.t(this.pushStatus()),
+      run: () => void this.push.toggle(),
+    };
   }
+}
+
+function keepSigningOutWhenTokenStays(): void {
+  return;
 }

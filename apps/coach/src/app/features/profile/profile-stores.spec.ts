@@ -4,6 +4,9 @@ import { CoachProfileService } from '@coach/core/profile/coach-profile.service';
 import { VideoStatusService } from '@coach/core/videos/video-status.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { FileUploadService } from '@shared/components/file-upload/file-upload.service';
+import { signal } from '@angular/core';
+import { VideoUploadsStore } from '@coach/core/videos/video-uploads.store';
+import { Subject } from 'rxjs';
 import { EarningsStore } from './earnings.store';
 import { PreviewVideosStore } from './preview-videos.store';
 import { ProfileEditStore } from './profile-edit.store';
@@ -36,6 +39,11 @@ describe('profile stores', () => {
     reorderPreviewVideos: vi.fn(),
   };
   const uploads = { upload: vi.fn() };
+  const videoUploads = {
+    start: vi.fn(),
+    saveWhenUploaded: vi.fn(),
+    saves: new Subject<{ group: string }>(),
+  };
   const statuses = { read: vi.fn() };
   const notifications = { success: vi.fn(), error: vi.fn(), failure: vi.fn() };
 
@@ -52,6 +60,16 @@ describe('profile stores', () => {
         { provide: ClientsService, useValue: clients },
         { provide: ProfileService, useValue: stats },
         { provide: FileUploadService, useValue: uploads },
+        {
+          provide: VideoUploadsStore,
+          useValue: {
+            start: videoUploads.start,
+            saveWhenUploaded: videoUploads.saveWhenUploaded,
+            saves$: videoUploads.saves,
+            uploads: signal({}),
+            progressIn: () => null,
+          },
+        },
         { provide: VideoStatusService, useValue: statuses },
         { provide: NotificationService, useValue: notifications },
       ],
@@ -133,21 +151,38 @@ describe('profile stores', () => {
     expect(store.canLoadMore()).toBe(false);
   });
 
-  it('should add a preview video after the upload and block a sixth one', async () => {
+  it('should add a preview video once it is stored and block a sixth one', async () => {
     stats.previewVideos.mockResolvedValue([]);
-    uploads.upload.mockResolvedValue('f1');
+    videoUploads.start.mockReturnValue('u1');
     stats.addPreviewVideo.mockResolvedValue('v1');
     const store = TestBed.inject(PreviewVideosStore);
     await store.load();
 
-    await store.add(new File(['x'], 'a.mp4'));
+    store.add(new File(['x'], 'a.mp4'));
 
+    const queued = videoUploads.saveWhenUploaded.mock.calls[0][0] as {
+      ids: string[];
+      save(fileIds: Record<string, string>): Promise<unknown>;
+    };
+    expect(queued.ids).toEqual(['u1']);
+    await queued.save({ u1: 'f1' });
     expect(stats.addPreviewVideo).toHaveBeenCalledWith('f1');
     stats.previewVideos.mockResolvedValue(new Array(5).fill({ id: 'x', fileId: 'f' }));
     await store.load();
-    uploads.upload.mockClear();
-    await store.add(new File(['x'], 'b.mp4'));
-    expect(uploads.upload).not.toHaveBeenCalled();
+    videoUploads.start.mockClear();
+    store.add(new File(['x'], 'b.mp4'));
+    expect(videoUploads.start).not.toHaveBeenCalled();
+  });
+
+  it('should read the list again when the queued video was saved', async () => {
+    stats.previewVideos.mockResolvedValue([]);
+    const store = TestBed.inject(PreviewVideosStore);
+    await store.load();
+    stats.previewVideos.mockClear();
+
+    videoUploads.saves.next({ group: 'preview-videos' });
+
+    await vi.waitFor(() => expect(stats.previewVideos).toHaveBeenCalled());
   });
 
   it('should restore the order when saving the new order fails', async () => {

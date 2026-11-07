@@ -1,6 +1,9 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
+import { VideoUploadsStore } from '@coach/core/videos/video-uploads.store';
+import { NEW_PROGRAM_UPLOAD_GROUP } from './models/day-draft';
 import { MealProgram } from './models/meal-program';
 import { ProgramKind } from './models/program-kind';
 import { WorkoutProgram, publishedFirst } from './models/workout-program';
@@ -18,6 +21,16 @@ export class ProgramsListStore {
   readonly meals = signal<MealProgram[] | null>(null);
   readonly mealsError = signal<ErrorMessage | null>(null);
   readonly publishingId = signal<string | null>(null);
+
+  constructor() {
+    inject(VideoUploadsStore)
+      .saves$.pipe(takeUntilDestroyed(inject(DestroyRef)))
+      .subscribe((result) => {
+        if (result.succeeded && result.group === NEW_PROGRAM_UPLOAD_GROUP) {
+          void this.loadWorkouts();
+        }
+      });
+  }
 
   async load(kind: ProgramKind): Promise<void> {
     if (kind === 'workout') {
