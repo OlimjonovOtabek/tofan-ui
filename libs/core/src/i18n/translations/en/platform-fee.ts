@@ -1,0 +1,29 @@
+import { Dictionary } from '../../dictionary';
+
+export const PLATFORM_FEE_EN: Dictionary['platformFee'] = {
+  title: 'Platform fee',
+  subtitle: 'The commission, tax and payment provider fee Tofan adds on top of every payment.',
+  loading: 'Loading...',
+  form: {
+    commissionAmount: 'Commission amount',
+    commissionHint: 'A fixed amount added to every payment. Not below 0, at most 2 decimals.',
+    taxPercent: 'Tax percent',
+    taxHint: 'From 0 to 100, at most 2 decimals (for example 12).',
+    providerFeePercent: 'Payment provider percent',
+    providerFeeHint: 'From 0 to 100, at most 2 decimals (for example 2.5).',
+    percentSuffix: '%',
+    futureOnly:
+      'A change affects only payments opened after you save it. Earlier payments do not change.',
+  },
+  errors: {
+    commissionAmount: 'Enter a number from 0 up with at most 2 decimals.',
+    percent: 'Enter a number from 0 to 100 with at most 2 decimals.',
+  },
+  confirm: {
+    header: 'Change the Platform fee',
+    message: 'Change the Platform fee? The new values apply to prices from the next payments only.',
+  },
+  toast: {
+    saved: 'Platform fee saved.',
+  },
+};

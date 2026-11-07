@@ -1,4 +1,5 @@
 <div class="layout" [class.has-tabbar]="!pushed()">
+  <coach-video-upload-bar [raised]="pushed()" />
   <aside class="sidebar">
     <a class="brand" routerLink="/dashboard"><coach-brand-logo /></a>
     <nav class="side-nav" [attr.aria-label]="'coachApp.nav.label' | t">

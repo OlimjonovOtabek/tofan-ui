@@ -42,6 +42,7 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'User.NotBlocked': 'errors.backend.User.NotBlocked',
   'User.CannotBlockSelf': 'errors.backend.User.CannotBlockSelf',
   'User.InvalidUsername': 'errors.backend.User.InvalidUsername',
+  'Chat.SubscriptionRequired': 'errors.backend.Chat.SubscriptionRequired',
   GetUsersQuery: 'errors.backend.GetUsersQuery',
   'Garment.NotFound': 'errors.backend.Garment.NotFound',
   'Garment.ManufacturedInFuture': 'errors.backend.Garment.ManufacturedInFuture',
@@ -52,11 +53,15 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Trainer.PriceNotSet': 'errors.backend.Trainer.PriceNotSet',
   'Trainer.NotFound': 'errors.backend.Trainer.NotFound',
   'Trainer.DisplayNameEmpty': 'errors.backend.Trainer.DisplayNameEmpty',
-  'Trainer.InvalidCommissionPercent': 'errors.backend.Trainer.InvalidCommissionPercent',
   'TrainerSubscription.OtherTrainerActive': 'errors.backend.TrainerSubscription.OtherTrainerActive',
   'TrainerSubscription.MonthsOutOfRange': 'errors.backend.TrainerSubscription.MonthsOutOfRange',
+  'TrainerSubscription.NotFound': 'errors.backend.TrainerSubscription.NotFound',
+  'TrainerSubscription.NotActive': 'errors.backend.TrainerSubscription.NotActive',
   'WorkoutPlan.TrainerProgramMissing': 'errors.backend.WorkoutPlan.TrainerProgramMissing',
   'MealPlan.TrainerProgramMissing': 'errors.backend.MealPlan.TrainerProgramMissing',
+  'Tariff.FreeMustStayFree': 'errors.backend.Tariff.FreeMustStayFree',
+  'Tariff.PaidPriceRequired': 'errors.backend.Tariff.PaidPriceRequired',
+  'Tariff.NotFound': 'errors.backend.Tariff.NotFound',
 };
 
 export function toErrorMessage(error: unknown): ErrorMessage {

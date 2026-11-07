@@ -1,8 +1,10 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { TranslationKey } from '@core/i18n/dictionary';
-import { DayDraft } from './models/day-draft';
+import { VideoUploadsStore } from '@coach/core/videos/video-uploads.store';
+import { DAY_UPLOAD_GROUP, DayDraft, pendingUploadsOf } from './models/day-draft';
 import { WorkoutProgramDetail, moveItem } from './models/workout-program';
 import { WorkoutProgramsService } from './services/workout-programs.service';
 
@@ -12,11 +14,20 @@ export type WorkoutProgramBusy = 'publishing' | 'deleting' | 'days' | null;
 export class WorkoutProgramStore {
   private readonly service = inject(WorkoutProgramsService);
   private readonly notifications = inject(NotificationService);
+  private readonly uploads = inject(VideoUploadsStore);
   private programId = '';
 
   readonly program = signal<WorkoutProgramDetail | null>(null);
   readonly loadError = signal<ErrorMessage | null>(null);
   readonly busy = signal<WorkoutProgramBusy>(null);
+
+  constructor() {
+    this.uploads.saves$.pipe(takeUntilDestroyed(inject(DestroyRef))).subscribe((result) => {
+      if (result.succeeded && result.group === DAY_UPLOAD_GROUP && result.tag === this.programId) {
+        void this.reload();
+      }
+    });
+  }
 
   async load(id: string): Promise<void> {
     this.programId = id;
@@ -49,11 +60,21 @@ export class WorkoutProgramStore {
   }
 
   addDay(day: DayDraft): Promise<boolean> {
-    return this.run('days', () => this.service.addDay(this.programId, day));
+    const programId = this.programId;
+    return this.queueWhileUploading(day, (uploaded) =>
+      this.service.addDay(programId, day, uploaded),
+    )
+      ? Promise.resolve(true)
+      : this.run('days', () => this.service.addDay(programId, day));
   }
 
   updateDay(dayId: string, day: DayDraft): Promise<boolean> {
-    return this.run('days', () => this.service.updateDay(this.programId, dayId, day));
+    const programId = this.programId;
+    return this.queueWhileUploading(day, (uploaded) =>
+      this.service.updateDay(programId, dayId, day, uploaded),
+    )
+      ? Promise.resolve(true)
+      : this.run('days', () => this.service.updateDay(programId, dayId, day));
   }
 
   deleteDay(dayId: string): Promise<boolean> {
@@ -68,6 +89,25 @@ export class WorkoutProgramStore {
     }
     const ids = moveItem(days, index, target).map((day) => day.id);
     return this.run('days', () => this.service.reorderDays(this.programId, ids));
+  }
+
+  private queueWhileUploading(
+    day: DayDraft,
+    save: (uploaded: Readonly<Record<string, string>>) => Promise<unknown>,
+  ): boolean {
+    const ids = pendingUploadsOf([day]);
+    if (ids.length === 0) {
+      return false;
+    }
+    this.uploads.saveWhenUploaded({
+      ids,
+      save,
+      group: DAY_UPLOAD_GROUP,
+      tag: this.programId,
+      link: `/programs/workout/${this.programId}`,
+    });
+    this.notifications.info('coachApp.day.savedAfterUpload');
+    return true;
   }
 
   private async run(

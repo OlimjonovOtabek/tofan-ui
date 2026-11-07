@@ -11,6 +11,7 @@ export type IconName =
   | 'clock'
   | 'close'
   | 'credit-card'
+  | 'bell'
   | 'dumbbell'
   | 'edit'
   | 'eye'

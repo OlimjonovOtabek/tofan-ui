@@ -65,6 +65,10 @@
             <button type="button" class="retry c-tag" (click)="store.retry(video.key)">
               {{ 'coachApp.day.videoRetry' | t }}
             </button>
+          } @else if (video.preparing) {
+            <span class="t-base5 font-semibold tone-info">{{
+              'coachApp.day.videoPreparing' | t: { percent: percent(video) }
+            }}</span>
           } @else if (uploading(video)) {
             <span class="t-base4 font-semibold tone-info">{{ percent(video) }}%</span>
           } @else {

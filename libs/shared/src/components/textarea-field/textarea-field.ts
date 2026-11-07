@@ -10,6 +10,7 @@ import { Textarea } from '@openng/optimus-ui/textarea';
     <textarea
       pTextarea
       [id]="inputId()"
+      [fluid]="true"
       [(ngModel)]="value"
       [ngModelOptions]="{ standalone: true }"
       [rows]="rows()"

@@ -47,6 +47,19 @@ export const ENUMS_UZ = {
     male: 'Erkak',
     female: 'Ayol',
   },
+  tier: {
+    standard: 'Standard',
+    vip: 'VIP',
+  },
+  mealType: {
+    breakfast: 'Nonushta',
+    secondBreakfast: '2-nonushta',
+    lunch: 'Tushlik',
+    snack: 'Yengil taom',
+    dinner: 'Kechki ovqat',
+    preWorkout: "Mashg'ulotdan oldin",
+    postWorkout: "Mashg'ulotdan keyin",
+  },
   servingUnit: {
     grams: 'gramm',
     milliliters: 'ml',

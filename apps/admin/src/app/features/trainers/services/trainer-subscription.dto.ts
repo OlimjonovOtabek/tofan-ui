@@ -1,3 +1,5 @@
+import { TierDto } from '@shared/models/tier.dto';
+
 export interface TrainerSubscriptionResponse {
   id: string;
   trainerId: string;
@@ -8,9 +10,14 @@ export interface TrainerSubscriptionResponse {
   endedOnUtc: string | null;
   grantedBy: string;
   createdOnUtc: string;
+  tier: TierDto;
 }
 
 export interface GrantTrainerSubscriptionRequest {
   userId: string;
   months: number;
+}
+
+export interface ChangeTrainerSubscriptionTierRequest {
+  tier: TierDto;
 }

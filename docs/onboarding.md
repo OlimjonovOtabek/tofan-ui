@@ -54,8 +54,8 @@ Features are removable: deleting `features/x` breaks only its route entry and me
    (interceptors), `provideUi` (Optimus UI theme) and `provideI18n` (Optimus translations follow the locale).
 2. `routes/app.routes.ts` has three groups:
    - `''` renders the `Layout` shell (sidebar, topbar) behind `authGuard`; its children lazy-load
-     `dashboard`, `exercises`, `foods`, `media`, `soldiers`, `accounts`, `garments`, `user-sessions`,
-     `notifications`.
+     `dashboard`, `exercises`, `foods`, `media`, `soldiers`, `accounts`, `garments`, `tariffs`, `user-sessions`,
+     `notifications`, `platform-fee`.
    - `auth` (login, access denied, error) and `not-found`, outside the shell.
    - `**` redirects to `not-found`.
 3. Every feature has its own `<feature>.routes.ts` and sets titles with `pageTitle('layout.titles.x')`,
@@ -100,6 +100,7 @@ Per-request behaviour (interceptors, order `sessionInterceptor`, then `authToken
 request ──> authTokenInterceptor: adds "Authorization: Bearer <token>" only for API_BASE_URL URLs
         <── sessionInterceptor:
               403           -> navigate to /auth/access-denied
+                               (not when the body carries a business code, e.g. Chat.SubscriptionRequired)
               401 + session -> AuthStore.renewSession() (one shared refresh at a time, POST /auth/refresh)
                                -> retry the request once
                                -> refresh fails -> logout() and go to /auth/login
@@ -184,7 +185,7 @@ use tokens and Tailwind utilities, no inline colours. Optimus components are imp
 |---|---|
 | `data-table` | server-paged, sortable list; `pageChange` → store; error and retry built in |
 | `form-dialog` | dialog shell for create/edit forms |
-| `text-field`, `select-field`, `number-field`, `date-field`, `choice-field`, `color-field` | Signal Forms wrappers over Optimus inputs |
+| `text-field`, `select-field`, `multiselect-field`, `number-field`, `date-field`, `choice-field`, `color-field` | Signal Forms wrappers over Optimus inputs |
 | `localized-text-field` | three-language text input |
 | `file-upload` | uploads with progress (the one component that may do HTTP, through its service) |
 | `field-error` | shows form validation messages |
@@ -198,6 +199,7 @@ use tokens and Tailwind utilities, no inline colours. Optimus components are imp
 | foods | `/foods` | `/diet/foods` | food catalog, search by barcode, create/edit/delete |
 | media | `/media` | `/files` | browse, preview, upload and delete stored files |
 | garments | `/garments` | `/admin/garments` | NFC garments: create (server-made ULID serial), status, extend, export chip links |
+| tariffs | `/tariffs` | `/tariffs`, `/admin/tariffs` | Tofan tariffs (Free, Standard, VIP): price, limits, AI chat, read-only Benefits |
 | soldiers | `/soldiers` | `/admin/soldiers` | read-only user cards with weight chart |
 | accounts | `/accounts` | `/admin/users` | Keycloak accounts: roles, block/unblock, sign out everywhere |
 | user-sessions | `/user-sessions` | `/user-sessions` | read-only login journal |

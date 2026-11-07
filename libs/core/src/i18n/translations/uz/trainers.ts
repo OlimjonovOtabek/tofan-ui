@@ -4,6 +4,7 @@ export const TRAINERS_UZ = {
     tabs: {
       trainers: 'Trenerlar',
       subscriptions: 'Obunalar',
+      tiers: 'Darajalar',
     },
   },
   status: {
@@ -19,15 +20,14 @@ export const TRAINERS_UZ = {
     empty: "Hozircha trener yo'q.",
     add: "Trener qo'shish",
     price: "{amount} so'm",
-    commission: '{percent}%',
     priceMissing: 'Belgilanmagan',
     columns: {
       trainer: 'Trener',
       slug: 'Havola',
       userId: 'Foydalanuvchi ID',
       monthlyPrice: 'Oylik narx',
+      vipPrice: 'VIP narxi',
       status: 'Holati',
-      commissionPercent: 'Komissiya',
       createdOn: 'Yaratilgan',
     },
     actions: {
@@ -36,7 +36,6 @@ export const TRAINERS_UZ = {
       unpublish: "Ro'yxatdan olish",
       edit: 'Tahrirlash',
       password: 'Parolni almashtirish',
-      commission: "Komissiyani o'zgartirish",
       delete: "O'chirish",
     },
     deleteWarning: "Trener kartasi va uning Keycloak hisobi butunlay o'chadi.",
@@ -52,12 +51,19 @@ export const TRAINERS_UZ = {
       startsOn: 'Boshlangan',
       endsOn: 'Tugaydi',
       status: 'Holati',
+      tier: 'Daraja',
     },
     actions: {
       end: 'Obunani tugatish',
+      makeVip: 'VIP qilish',
+      makeStandard: 'Standard qilish',
     },
     confirmEnd:
       '"{name}" trenerining obunasi tugatilsinmi? Foydalanuvchi o\'z mashq va ovqatlanish rejasiga qaytadi.',
+    confirmMakeVip:
+      "\"{name}\" trenerining o'quvchisi obunasi VIP qilinsinmi? Muddat o'zgarmaydi, o'quvchi trener bilan chatda yoza oladi.",
+    confirmMakeStandard:
+      "\"{name}\" trenerining o'quvchisi obunasi Standard qilinsinmi? Muddat o'zgarmaydi, o'quvchi trener bilan chatda yoza olmaydi.",
   },
   filters: {
     trainer: 'Trener',
@@ -93,25 +99,19 @@ export const TRAINERS_UZ = {
     monthlyPrice: 'Oylik narx',
     priceSuffix: " so'm",
     priceHint: "0 — narx belgilanmagan. E'lon qilingan trenerning narxi 0 bo'lishi mumkin emas.",
+    vipPrice: 'VIP narxi (ixtiyoriy)',
+    vipPriceHint: "Bo'sh qoldirilsa, trener faqat Standard sotadi.",
     currentPhoto: 'Joriy rasm',
     loading: "Hisob ma'lumotlari yuklanmoqda…",
     errors: {
       monthlyPrice: 'Narxni kiriting, 0 yoki undan katta.',
+      vipPrice: "VIP narxi 0 dan katta bo'lishi kerak yoki maydonni bo'sh qoldiring.",
     },
   },
   password: {
     header: '"{name}" uchun yangi parol',
     label: 'Yangi parol',
     hint: "Trener keyingi kirishda shu paroldan foydalanadi. Parolni trenerga o'zingiz yetkazing.",
-  },
-  commission: {
-    header: '"{name}" komissiyasi',
-    label: 'Platforma komissiyasi',
-    suffix: '%',
-    hint: "0 dan 100 gacha, ko'pi bilan 2 kasr (masalan 7,5).",
-    futureOnly:
-      "Yangi foiz faqat bundan keyingi to'lovlarga qo'llanadi. Avvalgi to'lovlar o'zgarmaydi.",
-    error: "0 dan 100 gacha, ko'pi bilan 2 kasrli son kiriting.",
   },
   grant: {
     header: 'Obuna berish',
@@ -124,6 +124,8 @@ export const TRAINERS_UZ = {
     months: 'Muddat',
     suffix: ' oy',
     hint: "1 dan 12 oygacha. Shu trenerga faol obuna bo'lsa muddat uzayadi.",
+    tierHint:
+      'Obuna doim Standard darajasi bilan ochiladi. VIP berish uchun obunani jadvaldagi "VIP qilish" tugmasi bilan o\'zgartiring.',
     errors: {
       trainer: 'Trenerni tanlang.',
       userId: 'Foydalanuvchini tanlang.',
@@ -138,9 +140,19 @@ export const TRAINERS_UZ = {
     unpublished: '"{name}" ro\'yxatdan olindi.',
     granted: '"{name}" trenerining obunasi berildi.',
     ended: '"{name}" trenerining obunasi tugatildi.',
+    tierChangedToVip: '"{name}" trenerining obunasi VIP qilindi.',
+    tierChangedToStandard: '"{name}" trenerining obunasi Standard qilindi.',
     updated: '"{name}" saqlandi.',
     passwordChanged: '"{name}" uchun yangi parol o\'rnatildi.',
-    commissionChanged: '"{name}" komissiyasi o\'zgartirildi.',
     deleted: '"{name}" o\'chirildi.',
+  },
+  tiers: {
+    subtitle:
+      "Trener obunasining ikki darajasi. O'quvchilar imtiyozlarni trener sahifasida ko'radi.",
+    loading: 'Yuklanmoqda…',
+    edit: 'Imtiyozlar',
+    empty: 'Bu daraja uchun imtiyoz kiritilmagan.',
+    dialogHeader: '{tier} darajasi imtiyozlari',
+    saved: 'Imtiyozlar saqlandi.',
   },
 };

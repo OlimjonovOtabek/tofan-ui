@@ -25,6 +25,7 @@ const EMPTY_VALUE: TrainerEditFormValue = {
   displayName: '',
   bio: '',
   monthlyPrice: 0,
+  vipMonthlyPrice: null,
 };
 
 @Component({

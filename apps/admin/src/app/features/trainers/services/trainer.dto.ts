@@ -6,7 +6,7 @@ export interface TrainerResponse {
   bio: string | null;
   photoFileId: string | null;
   monthlyPrice: number;
-  commissionPercent?: number | null;
+  vipMonthlyPrice?: number | null;
   isPublished: boolean;
   createdOnUtc: string;
 }
@@ -28,12 +28,9 @@ export interface UpdateTrainerRequest {
   bio: string | null;
   photoFileId: string | null;
   monthlyPrice: number;
+  vipMonthlyPrice: number | null;
 }
 
 export interface ChangeTrainerPasswordRequest {
   password: string;
-}
-
-export interface ChangeTrainerCommissionRequest {
-  commissionPercent: number;
 }

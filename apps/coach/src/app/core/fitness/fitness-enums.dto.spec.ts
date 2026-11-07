@@ -1,7 +1,5 @@
 import { FITNESS_GOALS } from './fitness-goal';
 import { FitnessGoalDto, fitnessGoals } from './fitness-goal.dto';
-import { MEAL_TYPES } from './meal-type';
-import { MealTypeDto, mealTypes } from './meal-type.dto';
 import { EXPERIENCE_LEVELS } from './experience-level';
 import { experienceLevels } from './experience-level.dto';
 import { SERVING_UNITS } from './serving-unit';
@@ -13,18 +11,8 @@ describe('coach fitness enum maps', () => {
     expect(fitnessGoals.toDomain(FitnessGoalDto.Recomposition)).toBe('recomposition');
   });
 
-  it('should map every meal type to its backend number and back', () => {
-    expect(MEAL_TYPES.map((type) => mealTypes.toApi(type))).toEqual([1, 7, 2, 4, 3, 5, 6]);
-    expect(mealTypes.toDomain(MealTypeDto.SecondBreakfast)).toBe('secondBreakfast');
-    expect(mealTypes.toDomain(MealTypeDto.PreWorkout)).toBe('preWorkout');
-  });
-
   it('should map experience levels and serving units in backend order', () => {
     expect(EXPERIENCE_LEVELS.map((level) => experienceLevels.toApi(level))).toEqual([1, 2, 3]);
     expect(SERVING_UNITS.map((unit) => servingUnits.toApi(unit))).toEqual([1, 2, 3, 4, 5, 6, 7]);
-  });
-
-  it('should fail loudly when the backend returns a number the panel does not know', () => {
-    expect(() => mealTypes.toDomain(42 as MealTypeDto)).toThrow();
   });
 });

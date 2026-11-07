@@ -28,6 +28,9 @@
       @if (store.published()) {
         <coach-note [text]="'coachApp.workoutProgram.publishedNote' | t" />
       }
+      @if (store.lostUploads()) {
+        <coach-note icon="alert-triangle" [text]="'coachApp.videoUpload.lostInDraft' | t" />
+      }
       <coach-text-field
         [title]="'coachApp.createProgram.name' | t"
         [hint]="'coachApp.createProgram.nameHint' | t"

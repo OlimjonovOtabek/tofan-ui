@@ -68,6 +68,21 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
     ],
   },
   {
+    label: 'layout.menu.pricing',
+    items: [
+      {
+        label: 'layout.menu.tariffs',
+        icon: 'pi pi-fw pi-wallet',
+        routerLink: [AppPaths.tariffs],
+      },
+      {
+        label: 'layout.menu.platformFee',
+        icon: 'pi pi-fw pi-percentage',
+        routerLink: [AppPaths.platformFee],
+      },
+    ],
+  },
+  {
     label: 'layout.menu.notifications',
     items: [
       {

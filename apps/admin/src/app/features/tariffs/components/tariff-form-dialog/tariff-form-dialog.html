@@ -1,0 +1,135 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="header()"
+  [saving]="saving()"
+  width="36rem"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-1">
+    <label for="tariffPrice" class="font-medium">{{ 'tariffs.form.monthlyPrice' | t }}</label>
+    <app-number-field
+      inputId="tariffPrice"
+      [formField]="form.monthlyPrice"
+      [suffix]="'tariffs.form.priceSuffix' | t"
+      [maxFractionDigits]="2"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.monthlyPrice()" />
+    <small class="text-muted-color">{{
+      (isFree() ? 'tariffs.form.freeHint' : 'tariffs.form.totalPriceHint') | t
+    }}</small>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="tariffFoodScanLimit" class="font-medium">{{
+      'tariffs.form.foodScan.label' | t
+    }}</label>
+    <div class="flex items-center gap-2">
+      <app-toggle-field inputId="tariffFoodScanUnlimited" [formField]="form.foodScanUnlimited" />
+      <label for="tariffFoodScanUnlimited">{{ 'tariffs.form.foodScan.unlimited' | t }}</label>
+    </div>
+    <app-number-field
+      inputId="tariffFoodScanLimit"
+      [formField]="form.foodScanLimit"
+      [placeholder]="'tariffs.form.foodScan.value' | t"
+      [useGrouping]="false"
+      [maxFractionDigits]="0"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.foodScanLimit()" />
+    <small class="text-muted-color">{{ 'tariffs.form.foodScan.hint' | t }}</small>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="tariffWorkoutVideoLimit" class="font-medium">{{
+      'tariffs.form.workoutVideo.label' | t
+    }}</label>
+    <div class="flex items-center gap-2">
+      <app-toggle-field
+        inputId="tariffWorkoutVideoUnlimited"
+        [formField]="form.workoutVideoUnlimited"
+      />
+      <label for="tariffWorkoutVideoUnlimited">{{
+        'tariffs.form.workoutVideo.unlimited' | t
+      }}</label>
+    </div>
+    <app-number-field
+      inputId="tariffWorkoutVideoLimit"
+      [formField]="form.workoutVideoLimit"
+      [placeholder]="'tariffs.form.workoutVideo.value' | t"
+      [useGrouping]="false"
+      [maxFractionDigits]="0"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.workoutVideoLimit()" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="tariffMealTypes" class="font-medium">{{
+      'tariffs.form.mealTypes.label' | t
+    }}</label>
+    <div class="flex items-center gap-2">
+      <app-toggle-field inputId="tariffAllMealTypes" [formField]="form.allMealTypes" />
+      <label for="tariffAllMealTypes">{{ 'tariffs.form.mealTypes.all' | t }}</label>
+    </div>
+    <app-multiselect-field
+      inputId="tariffMealTypes"
+      [formField]="form.mealTypes"
+      [options]="mealTypeOptions()"
+      [placeholder]="'tariffs.form.mealTypes.placeholder' | t"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.mealTypes()" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="tariffWorkoutChangeMonths" class="font-medium">{{
+      'tariffs.form.workoutChange.label' | t
+    }}</label>
+    <div class="flex items-center gap-2">
+      <app-toggle-field
+        inputId="tariffWorkoutNeverChanges"
+        [formField]="form.workoutNeverChanges"
+      />
+      <label for="tariffWorkoutNeverChanges">{{ 'tariffs.form.workoutChange.never' | t }}</label>
+    </div>
+    <app-number-field
+      inputId="tariffWorkoutChangeMonths"
+      [formField]="form.workoutChangeMonths"
+      [placeholder]="'tariffs.form.workoutChange.value' | t"
+      [suffix]="'tariffs.form.workoutChange.suffix' | t"
+      [useGrouping]="false"
+      [maxFractionDigits]="0"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.workoutChangeMonths()" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="tariffDietChangeDays" class="font-medium">{{
+      'tariffs.form.dietChange.label' | t
+    }}</label>
+    <div class="flex items-center gap-2">
+      <app-toggle-field inputId="tariffDietNeverChanges" [formField]="form.dietNeverChanges" />
+      <label for="tariffDietNeverChanges">{{ 'tariffs.form.dietChange.never' | t }}</label>
+    </div>
+    <app-number-field
+      inputId="tariffDietChangeDays"
+      [formField]="form.dietChangeDays"
+      [placeholder]="'tariffs.form.dietChange.value' | t"
+      [suffix]="'tariffs.form.dietChange.suffix' | t"
+      [useGrouping]="false"
+      [maxFractionDigits]="0"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.dietChangeDays()" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <span class="font-medium">{{ 'tariffs.form.aiChat.label' | t }}</span>
+    <div class="flex items-center gap-2">
+      <app-toggle-field inputId="tariffAiChat" [formField]="form.hasAiTrainerChat" />
+      <label for="tariffAiChat">{{ 'tariffs.form.aiChat.enabled' | t }}</label>
+    </div>
+  </div>
+</app-form-dialog>

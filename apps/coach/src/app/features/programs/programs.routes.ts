@@ -6,6 +6,7 @@ import { MealProgramPage } from './pages/meal-program-page/meal-program-page';
 import { ProgramsPage } from './pages/programs-page/programs-page';
 import { WorkoutProgramFormPage } from './pages/workout-program-form-page/workout-program-form-page';
 import { WorkoutProgramPage } from './pages/workout-program-page/workout-program-page';
+import { programLeaveGuard } from './program-leave.guard';
 
 export const PROGRAM_ROUTES: Routes = [
   { path: '', title: pageTitle('coachApp.programs.title'), component: ProgramsPage },
@@ -13,18 +14,21 @@ export const PROGRAM_ROUTES: Routes = [
     path: 'workout/new',
     title: pageTitle('coachApp.createProgram.title'),
     data: { [PUSHED_ROUTE]: true },
+    canDeactivate: [programLeaveGuard],
     component: WorkoutProgramFormPage,
   },
   {
     path: 'workout/:id/edit',
     title: pageTitle('coachApp.workoutProgram.editDetails'),
     data: { [PUSHED_ROUTE]: true },
+    canDeactivate: [programLeaveGuard],
     component: WorkoutProgramFormPage,
   },
   {
     path: 'workout/:id',
     title: pageTitle('coachApp.workoutProgram.detailTitle'),
     data: { [PUSHED_ROUTE]: true },
+    canDeactivate: [programLeaveGuard],
     component: WorkoutProgramPage,
   },
   {

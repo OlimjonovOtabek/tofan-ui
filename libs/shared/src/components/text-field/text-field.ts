@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, ElementRef, input, model, output, viewChild } from '@angular/core';
 import { FormValueControl } from '@angular/forms/signals';
 import { InputText } from '@openng/optimus-ui/inputtext';
 
@@ -7,6 +7,7 @@ import { InputText } from '@openng/optimus-ui/inputtext';
   imports: [InputText],
   template: `
     <input
+      #input
       pInputText
       [type]="type()"
       class="w-full"
@@ -32,6 +33,12 @@ export class TextField implements FormValueControl<string> {
   readonly inputId = input<string>();
   readonly placeholder = input<string>();
   readonly autocomplete = input<string>();
+
+  private readonly inputElement = viewChild.required<ElementRef<HTMLInputElement>>('input');
+
+  focus(options?: FocusOptions): void {
+    this.inputElement().nativeElement.focus(options);
+  }
 
   protected typed(event: Event): void {
     if (event.target instanceof HTMLInputElement) {

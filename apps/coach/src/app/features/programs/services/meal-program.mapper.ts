@@ -1,6 +1,6 @@
 import { fitnessGoals } from '@coach/core/fitness/fitness-goal.dto';
 import { FitnessGoal } from '@coach/core/fitness/fitness-goal';
-import { mealTypes } from '@coach/core/fitness/meal-type.dto';
+import { mealTypes } from '@shared/models/meal-type.dto';
 import { servingUnits } from '@coach/core/fitness/serving-unit.dto';
 import { Food } from '../models/food';
 import { MealDraft } from '../models/meal-draft';

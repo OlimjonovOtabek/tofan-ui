@@ -35,8 +35,8 @@ export class ApiClient {
     return this.send(this.http.put<unknown>(this.url(path), body));
   }
 
-  delete<TResponse>(path: string): Promise<TResponse> {
-    return this.send(this.http.delete<unknown>(this.url(path)));
+  delete<TResponse>(path: string, body?: unknown): Promise<TResponse> {
+    return this.send(this.http.delete<unknown>(this.url(path), body === undefined ? {} : { body }));
   }
 
   postAnonymously<TResponse>(path: string, body: unknown): Promise<TResponse> {

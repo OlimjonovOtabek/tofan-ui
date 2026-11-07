@@ -1,8 +1,13 @@
+import { Tier } from '@shared/models/tier';
 import { TrainerSubscription } from './trainer-subscription';
 
 const now = new Date('2026-10-10T12:00:00Z');
 
-function subscription(endsOn: string, endedOn: string | null): TrainerSubscription {
+function subscription(
+  endsOn: string,
+  endedOn: string | null,
+  tier: Tier = 'standard',
+): TrainerSubscription {
   return new TrainerSubscription(
     's1',
     't1',
@@ -13,6 +18,7 @@ function subscription(endsOn: string, endedOn: string | null): TrainerSubscripti
     endedOn === null ? null : new Date(endedOn),
     'a1',
     new Date('2026-09-10T12:00:00Z'),
+    tier,
   );
 }
 
@@ -36,5 +42,21 @@ describe('TrainerSubscription', () => {
   it('should allow ending when it is active and refuse when it was closed', () => {
     expect(subscription('2026-11-10T12:00:00Z', null).canEnd(now)).toBe(true);
     expect(subscription('2026-11-10T12:00:00Z', '2026-10-02T12:00:00Z').canEnd(now)).toBe(false);
+  });
+
+  it('should allow changing the tier when it is active and refuse when it was closed or its term is over', () => {
+    expect(subscription('2026-11-10T12:00:00Z', null).canChangeTier(now)).toBe(true);
+    expect(subscription('2026-11-10T12:00:00Z', '2026-10-02T12:00:00Z').canChangeTier(now)).toBe(
+      false,
+    );
+    expect(subscription('2026-10-01T12:00:00Z', null).canChangeTier(now)).toBe(false);
+  });
+
+  it('should offer vip when the subscription is standard', () => {
+    expect(subscription('2026-11-10T12:00:00Z', null, 'standard').targetTier()).toBe('vip');
+  });
+
+  it('should offer standard when the subscription is vip', () => {
+    expect(subscription('2026-11-10T12:00:00Z', null, 'vip').targetTier()).toBe('standard');
   });
 });

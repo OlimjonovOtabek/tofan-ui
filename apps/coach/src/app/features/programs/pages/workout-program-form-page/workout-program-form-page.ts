@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+  viewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
@@ -21,7 +30,7 @@ import { TextField } from '@coach/core/ui/text-field/text-field';
 import { DayEditor } from '../../components/day-editor/day-editor';
 import { DayDraft, EMPTY_DAY_DRAFT } from '../../models/day-draft';
 import { MAX_PROGRAM_DAYS } from '../../models/workout-program';
-import { WorkoutProgramFormStore } from '../../workout-program-form.store';
+import { PROGRAM_QUEUED, WorkoutProgramFormStore } from '../../workout-program-form.store';
 
 @Component({
   selector: 'coach-workout-program-form-page',
@@ -54,6 +63,7 @@ export class WorkoutProgramFormPage {
     readonly draft: DayDraft;
   } | null>(null);
   protected readonly maxDays = MAX_PROGRAM_DAYS;
+  private readonly dayEditor = viewChild(DayEditor);
 
   protected readonly goals = computed<Choice<(typeof FITNESS_GOALS)[number]>[]>(() =>
     FITNESS_GOALS.map((value) => ({
@@ -110,8 +120,25 @@ export class WorkoutProgramFormPage {
     ]);
   }
 
-  protected closeEditor(): void {
-    this.editing.set(null);
+  protected closeEditor(): Promise<boolean> {
+    return this.leaveEditor();
+  }
+
+  async canLeave(): Promise<boolean> {
+    if (!(await this.leaveEditor())) {
+      return false;
+    }
+    if (this.store.isSettled() || !this.store.hasPendingUploads()) {
+      return true;
+    }
+    const t = this.translator.translate.bind(this.translator);
+    return this.sheets.confirm({
+      title: t('coachApp.day.leaveTitle'),
+      message: t('coachApp.createProgram.leaveMessage'),
+      confirmLabel: t('coachApp.day.leaveConfirm'),
+      cancelLabel: t('coachApp.day.leaveStay'),
+      destructive: true,
+    });
   }
 
   protected back(): string {
@@ -120,8 +147,30 @@ export class WorkoutProgramFormPage {
 
   protected async submit(): Promise<void> {
     const id = await this.store.submit();
-    if (id !== null) {
+    if (id === PROGRAM_QUEUED) {
+      await this.router.navigate(['/programs'], {
+        queryParams: { kind: 'workout' },
+        replaceUrl: true,
+      });
+    } else if (id !== null) {
       await this.router.navigate(['/programs/workout', id], { replaceUrl: true });
     }
+  }
+
+  private async leaveEditor(): Promise<boolean> {
+    const editor = this.dayEditor();
+    if (editor === undefined) {
+      return true;
+    }
+    const leaving = await editor.leaving();
+    if (leaving.kind === 'stay') {
+      return false;
+    }
+    if (leaving.kind === 'save') {
+      this.saveDay(leaving.draft);
+    } else {
+      this.editing.set(null);
+    }
+    return true;
   }
 }

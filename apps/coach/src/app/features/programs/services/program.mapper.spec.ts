@@ -1,5 +1,5 @@
 import { FitnessGoalDto } from '@coach/core/fitness/fitness-goal.dto';
-import { MealTypeDto } from '@coach/core/fitness/meal-type.dto';
+import { MealTypeDto } from '@shared/models/meal-type.dto';
 import { ServingUnitDto } from '@coach/core/fitness/serving-unit.dto';
 import { pendingVideoDraft } from '../models/day-draft';
 import { mealDraftsOf } from '../models/meal-draft';
