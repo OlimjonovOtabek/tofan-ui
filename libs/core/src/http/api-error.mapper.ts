@@ -10,6 +10,8 @@ import { ValidationError, ValidationIssue } from '@shared/models/errors/validati
 import { LocalizedText } from '@shared/models/localized-text';
 import { ApiError, ErrorType } from './api.dto';
 
+const BUSINESS_CODE = /^[A-Za-z]+(\.[A-Za-z]+)+$/;
+
 interface ProblemDetails {
   title?: string;
   detail?: string;
@@ -41,7 +43,7 @@ function fromHttpError(error: HttpErrorResponse): DomainError {
     case HttpStatusCode.Unauthorized:
       return new SessionExpiredError();
     case HttpStatusCode.Forbidden:
-      return new AccessDeniedError();
+      return new AccessDeniedError(problem.detail, code, messages);
     case HttpStatusCode.NotFound:
       return new NotFoundError(message, code, messages);
     case HttpStatusCode.Conflict:
@@ -65,13 +67,31 @@ export function toDomainErrorFromApiError(error: ApiError | undefined): DomainEr
       return new ConflictError(message, code, messages);
     case ErrorType.Problem:
       return new BusinessRuleError(message, code, messages);
+    case ErrorType.Forbidden:
+      return new AccessDeniedError(message, code, messages);
     default:
       return new ServiceUnavailableError(message);
   }
 }
 
+export function isBusinessCode(code: string): boolean {
+  return BUSINESS_CODE.test(code);
+}
+
 function toProblemDetails(body: unknown): ProblemDetails {
-  return typeof body === 'object' && body !== null ? (body as ProblemDetails) : {};
+  if (typeof body !== 'object' || body === null) {
+    return {};
+  }
+  const failure = failedResultError(body);
+  if (failure === undefined) {
+    return body as ProblemDetails;
+  }
+  return { title: failure.code, detail: failure.message, messages: failure.messages };
+}
+
+function failedResultError(body: object): ApiError | undefined {
+  const { isSuccess, error } = body as { isSuccess?: unknown; error?: ApiError };
+  return isSuccess === false ? error : undefined;
 }
 
 function toIssues(errors: ApiError[]): ValidationIssue[] {

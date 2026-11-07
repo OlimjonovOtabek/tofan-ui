@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { Conversation, MESSAGE_MAX_LENGTH, Message, PAGE_SIZE, mergeMessages } from './models/chat';
+import { isSubscriptionRequired } from './models/chat-access';
 import { ChatHub } from './services/chat-hub.service';
 import { ChatService } from './services/chat.service';
 
@@ -83,7 +84,7 @@ export class ConversationStore {
       this.hasOlder.set(page.messages.length >= PAGE_SIZE);
       void this.markRead();
     } catch (error) {
-      this.loadError.set(toErrorMessage(error));
+      this.failedToOpen(error);
     } finally {
       this.loading.set(false);
     }
@@ -119,6 +120,9 @@ export class ConversationStore {
       this.messages.update((shown) => mergeMessages([message], shown));
       return true;
     } catch (error) {
+      if (isSubscriptionRequired(error)) {
+        this.canWrite.set(false);
+      }
       this.notifications.error(error);
       return false;
     } finally {
@@ -131,6 +135,14 @@ export class ConversationStore {
     if (id !== null && this.canWrite()) {
       this.hub.typing(id);
     }
+  }
+
+  private failedToOpen(error: unknown): void {
+    if (isSubscriptionRequired(error)) {
+      this.canWrite.set(false);
+      return;
+    }
+    this.loadError.set(toErrorMessage(error));
   }
 
   private async openWith(userId: string): Promise<string> {

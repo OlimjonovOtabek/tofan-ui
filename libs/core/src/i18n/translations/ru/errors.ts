@@ -9,6 +9,9 @@ export const ERRORS_RU: Dictionary['errors'] = {
     IdentityProvider: {
       UserNotFound: 'Пользователь не найден.',
     },
+    Chat: {
+      SubscriptionRequired: 'Чат открыт только для спортсменов с активной VIP-подпиской.',
+    },
     NotificationTemplate: {
       Conflict: 'Для этого типа и стиля уже есть активный шаблон. Сначала деактивируйте его.',
       NoActiveTemplate: 'Для этого типа нет активного шаблона в стиле пользователя.',

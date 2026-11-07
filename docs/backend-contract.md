@@ -88,6 +88,7 @@ in `detail`.
 | Problem             | 400                                                    |
 | NotFound            | 404                                                    |
 | Conflict            | 409                                                    |
+| Forbidden           | 403 (`title` = the rule code)                          |
 | Failure             | 500 (`title` = `Server failure`)                       |
 | Unhandled exception | 500 (`title` is the exception message)                 |
 
@@ -102,10 +103,15 @@ Frontend mapping (`core/http/api-error.mapper.ts`) turns failures into error cla
 | 400 with `errors` / `Validation` | `ValidationError` (`issues`: code + message + messages) |
 | 400 without `errors` / `Problem` | `BusinessRuleError`                                     |
 | 401                              | `SessionExpiredError` (`core/auth`)                     |
-| 403                              | `AccessDeniedError`                                     |
+| 403 / `Forbidden`                | `AccessDeniedError` (keeps `code` and `messages`)       |
 | 404 / `NotFound`                 | `NotFoundError`                                         |
 | 409 / `Conflict`                 | `ConflictError`                                         |
 | network failure, 5xx / `Failure` | `ServiceUnavailableError`                               |
+
+A 403 that carries a business code is a refusal of that rule, not a missing role.
+A business code is a dotted rule code such as `Chat.SubscriptionRequired`, in the ProblemDetails `title` or in the `error.code` of a Result envelope body.
+`sessionInterceptor` does not open `/auth/access-denied` for it; the caller reads `AccessDeniedError.code`.
+A 403 without such a code (empty body, or a generic title such as `Forbidden`) still opens the access denied page.
 
 Validation issues carry the FluentValidation _validator_ code (`NotEmptyValidator`) and, since
 backend `admin-ui-v1`, an optional camelCase `propertyName` (`nameUz`, `meals[0].items[1].quantityGrams`).
@@ -135,6 +141,7 @@ User-facing text comes from `core/feedback/error-message.ts`: first a per-code m
 | media            | StoredFile.InUse, StoredFile.NotFound                                                                                                                                                                                                                                                                     | per-code message                                                                                              |
 | exercises, foods | Exercise.NotFound, Food.NotFound                                                                                                                                                                                                                                                                          | generic `NotFoundError` message                                                                               |
 | garments         | Garment.NotFound, Garment.ManufacturedInFuture, Garment.NotClaimed, Garment.StatusNotAllowed, Garment.CannotDeleteClaimed (backend); Garment.MonthsOutOfRange (panel rule, `models/garment-extension.ts`); Drop.NotFound, Drop.VariantNotFound, Drop.SoldOut (backend `messages`)                         | per-code message                                                                                              |
+| coach chat       | Chat.SubscriptionRequired (403, on opening a conversation and on sending)                                                                                                                                                                                                                                 | read-only conversation on open; toast on send                                                                 |
 | file upload      | StoredFile.Empty, StoredFile.UnsupportedContent, StoredFile.TooLarge                                                                                                                                                                                                                                      | thrown before the request by `shared/utils/file-upload-rules.ts` as `BusinessRuleError`; its message is shown |
 
 ## Identity administration

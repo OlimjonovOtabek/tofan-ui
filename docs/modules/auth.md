@@ -23,7 +23,8 @@ lives in `core/auth`; this feature only holds the pages.
   `AuthSessionStorage`; the profile is read from the access token claims (`sub`,
   `preferred_username`, `name`, `realm_access.roles`), there is no `/auth/me`.
 - `session.interceptor.ts` refreshes once on 401 (parallel requests share one refresh) and signs out
-  when the refresh fails; 403 navigates to access denied.
+  when the refresh fails; 403 navigates to access denied unless the response carries a business code
+  (`Chat.SubscriptionRequired`), which stays with the caller as `AccessDeniedError.code`.
 - The login page accepts `returnUrl` and only follows same-origin paths.
 
 ## Traps

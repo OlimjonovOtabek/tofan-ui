@@ -53,6 +53,12 @@ describe('toErrorMessage', () => {
     );
   });
 
+  it('should explain the VIP only chat when access is refused for the subscription tier', () => {
+    const error = new AccessDeniedError('refused', 'Chat.SubscriptionRequired', BACKEND_TEXT);
+
+    expect(toErrorMessage(error)).toBe('errors.backend.Chat.SubscriptionRequired');
+  });
+
   it('should map BusinessRuleError to its message', () => {
     expect(toErrorMessage(new BusinessRuleError('errors.backend.Plan.Locked', 'Plan.Locked'))).toBe(
       'errors.backend.Plan.Locked',

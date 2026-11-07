@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { NotificationService } from '@core/feedback/notification.service';
+import { AccessDeniedError } from '@shared/models/errors/access-denied.error';
+import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ChatListStore } from './chat-list.store';
 import { ConversationStore } from './conversation.store';
 import { Conversation, Message, Presence } from './models/chat';
@@ -28,6 +30,9 @@ const message = (id: string, sender: string, minute: number): Message => ({
   text: id,
   sentOn: new Date(2026, 9, 22, 10, minute),
 });
+
+const vipRequired = (): AccessDeniedError =>
+  new AccessDeniedError('VIP required', 'Chat.SubscriptionRequired');
 
 describe('chat stores', () => {
   const service = {
@@ -121,6 +126,75 @@ describe('chat stores', () => {
     expect(await store.send('again')).toBe(false);
     expect(notifications.error).toHaveBeenCalledTimes(1);
     expect(await store.send('   ')).toBe(false);
+  });
+
+  it('should show the read-only state without an error when opening is refused for the tier', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.open.mockRejectedValue(vipRequired());
+
+    await store.open({ userId: 'them', name: 'Aziz' });
+
+    expect(store.canWrite()).toBe(false);
+    expect(store.loadError()).toBeNull();
+    expect(store.loading()).toBe(false);
+    expect(store.conversationId()).toBeNull();
+    expect(store.messages()).toEqual([]);
+    expect(store.name()).toBe('Aziz');
+    expect(service.conversations).not.toHaveBeenCalled();
+    expect(service.messages).not.toHaveBeenCalled();
+  });
+
+  it('should show the load error when opening fails for another reason', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.open.mockRejectedValue(new ServiceUnavailableError());
+
+    await store.open({ userId: 'them' });
+
+    expect(store.loadError()).not.toBeNull();
+    expect(store.canWrite()).toBe(true);
+  });
+
+  it('should show the load error when access is refused without the subscription code', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.open.mockRejectedValue(new AccessDeniedError());
+
+    await store.open({ userId: 'them' });
+
+    expect(store.loadError()).not.toBeNull();
+    expect(store.canWrite()).toBe(true);
+  });
+
+  it('should switch to read-only and explain it when a send is refused for the tier', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
+    service.messages.mockResolvedValue({
+      messages: [message('m1', 'them', 1)],
+      otherReadUpTo: null,
+    });
+    await store.open({ conversationId: 'c1' });
+    const refusal = vipRequired();
+    service.send.mockRejectedValueOnce(refusal);
+
+    const sent = await store.send('hello');
+
+    expect(sent).toBe(false);
+    expect(store.canWrite()).toBe(false);
+    expect(notifications.error).toHaveBeenCalledWith(refusal);
+    expect(store.messages().map((item) => item.id)).toEqual(['m1']);
+    expect(store.loadError()).toBeNull();
+  });
+
+  it('should stay writable when a send fails for another reason', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
+    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
+    await store.open({ conversationId: 'c1' });
+    service.send.mockRejectedValueOnce(new AccessDeniedError());
+
+    expect(await store.send('hello')).toBe(false);
+
+    expect(store.canWrite()).toBe(true);
+    expect(notifications.error).toHaveBeenCalledTimes(1);
   });
 
   it('should show typing for the other user and update the read mark', async () => {
