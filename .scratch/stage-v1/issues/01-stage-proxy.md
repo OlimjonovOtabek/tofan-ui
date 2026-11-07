@@ -7,11 +7,17 @@ Loyiha hujjatlarida yopilgan eski server o'rniga stage manzili turadi, relizga c
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Staging proxy stage API'ga qaraydi va WebSocket'ni uzatadi.
+- [x] Staging proxy stage API'ga qaraydi va WebSocket'ni uzatadi.
 - [ ] Admin stage'da login sahifasigacha ochiladi, coach panel ham.
-- [ ] Loyiha qoidalari, agentlar uchun qoidalar va README'da eski server qolmagan.
-- [ ] `CONTEXT.md` va spec shu PR bilan qo'shilgan.
-- [ ] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
+- [x] Loyiha qoidalari, agentlar uchun qoidalar va README'da eski server qolmagan.
+- [x] `CONTEXT.md` va spec shu PR bilan qo'shilgan.
+- [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.
+
+## Answer
+
+`proxy.staging.conf.json` stage API'ga (`https://api.stage.peaktofan.com`) qaraydi va `ws: true` bilan WebSocket'ni uzatadi.
+`CLAUDE.md`, `AGENTS.md` va `README.md` da eski server faqat "yopilgan" ogohlantirishi sifatida qoldi.
+`CONTEXT.md` va spec bilan birga commit `1baef33`. Stage'da login sahifasini ochish va `main`ga merge qolgan, chunki stage paroli va foydalanuvchi ruxsati kerak.
