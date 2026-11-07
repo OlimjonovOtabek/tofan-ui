@@ -2,7 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { PlatformFee } from './models/platform-fee';
-import { PlatformFeeDraft } from './models/platform-fee-draft';
+import { PlatformFeeDraft, createPlatformFeeDraft } from './models/platform-fee-draft';
 import { PlatformFeeService } from './services/platform-fee.service';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class PlatformFeeStore {
   async save(draft: PlatformFeeDraft): Promise<void> {
     this.saving.set(true);
     try {
-      await this.platformFeeService.update(draft);
+      await this.platformFeeService.update(createPlatformFeeDraft(draft));
       this.notifications.success('platformFee.toast.saved');
       await this.load();
     } catch (error) {

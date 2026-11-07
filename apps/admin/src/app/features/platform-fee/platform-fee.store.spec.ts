@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
 import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
+import { ValidationError } from '@shared/models/errors/validation.error';
 import { PlatformFee } from './models/platform-fee';
 import { PlatformFeeDraft } from './models/platform-fee-draft';
 import { PlatformFeeStore } from './platform-fee.store';
@@ -110,6 +111,20 @@ describe('PlatformFeeStore', () => {
 
     expect(notifications.error).toHaveBeenCalledWith(refusal);
     expect(notifications.success).not.toHaveBeenCalled();
+    expect(service.get).toHaveBeenCalledTimes(1);
+    expect(store.fee()).toEqual(fee);
+    expect(store.saving()).toBe(false);
+  });
+
+  it('should refuse to send and report the issues when the draft is invalid', async () => {
+    const store = createStore();
+    await store.load();
+
+    await store.save({ ...draft, taxPercent: 101 });
+
+    expect(service.update).not.toHaveBeenCalled();
+    expect(notifications.success).not.toHaveBeenCalled();
+    expect(notifications.error).toHaveBeenCalledWith(expect.any(ValidationError));
     expect(service.get).toHaveBeenCalledTimes(1);
     expect(store.fee()).toEqual(fee);
     expect(store.saving()).toBe(false);
