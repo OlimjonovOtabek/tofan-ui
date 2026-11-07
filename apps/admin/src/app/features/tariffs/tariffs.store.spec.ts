@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
+import { Benefit } from '@shared/models/benefit';
 import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ValidationError } from '@shared/models/errors/validation.error';
@@ -32,8 +33,11 @@ const draft: TariffDraft = {
   hasAiTrainerChat: true,
 };
 
+const scan: Benefit = { en: 'Scan', ru: 'Скан', uz: 'Skan' };
+const chat: Benefit = { en: 'AI chat', ru: 'ИИ чат', uz: 'AI chat' };
+
 describe('TariffsStore', () => {
-  let service: Pick<TariffsService, 'list' | 'change'>;
+  let service: Pick<TariffsService, 'list' | 'change' | 'changeBenefits'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
 
   function createStore(): TariffsStore {
@@ -51,6 +55,7 @@ describe('TariffsStore', () => {
     service = {
       list: vi.fn().mockResolvedValue([standard]),
       change: vi.fn().mockResolvedValue(undefined),
+      changeBenefits: vi.fn().mockResolvedValue(undefined),
     };
     notifications = { success: vi.fn(), error: vi.fn() };
   });
@@ -121,6 +126,61 @@ describe('TariffsStore', () => {
     const done = await store.change('standard', draft);
 
     expect(done).toBe(true);
+    expect(store.loadError()).not.toBeNull();
+  });
+
+  it('should send the whole ordered list and reload when the benefits are saved', async () => {
+    const saved: Tariff = { ...standard, benefits: [chat, scan] };
+    service.list = vi.fn().mockResolvedValue([saved]);
+    const store = createStore();
+
+    const done = await store.changeBenefits('standard', [chat, scan]);
+
+    expect(done).toBe(true);
+    expect(service.changeBenefits).toHaveBeenCalledWith('standard', [chat, scan]);
+    expect(service.list).toHaveBeenCalledTimes(1);
+    expect(store.tariffs()).toEqual([saved]);
+    expect(notifications.success).toHaveBeenCalledWith('tariffs.toast.benefitsSaved');
+    expect(store.saving()).toBe(false);
+  });
+
+  it('should be saving while the benefits write has not finished', async () => {
+    let finish: () => void = () => undefined;
+    service.changeBenefits = vi
+      .fn()
+      .mockReturnValue(new Promise<void>((resolve) => (finish = resolve)));
+    const store = createStore();
+
+    const saving = store.changeBenefits('vip', [scan]);
+
+    expect(store.saving()).toBe(true);
+    finish();
+    await saving;
+    expect(store.saving()).toBe(false);
+  });
+
+  it('should report the error and skip the reload when the benefits are refused', async () => {
+    const refusal = new BusinessRuleError('refused', 'Tariff.NotFound');
+    service.changeBenefits = vi.fn().mockRejectedValue(refusal);
+    const store = createStore();
+
+    const done = await store.changeBenefits('standard', [scan]);
+
+    expect(done).toBe(false);
+    expect(notifications.error).toHaveBeenCalledWith(refusal);
+    expect(notifications.success).not.toHaveBeenCalled();
+    expect(service.list).not.toHaveBeenCalled();
+    expect(store.saving()).toBe(false);
+  });
+
+  it('should keep the saved result when the reload fails after the benefits are saved', async () => {
+    service.list = vi.fn().mockRejectedValue(new ServiceUnavailableError('down'));
+    const store = createStore();
+
+    const done = await store.changeBenefits('standard', []);
+
+    expect(done).toBe(true);
+    expect(service.changeBenefits).toHaveBeenCalledWith('standard', []);
     expect(store.loadError()).not.toBeNull();
   });
 });

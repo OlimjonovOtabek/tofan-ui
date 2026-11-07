@@ -118,4 +118,30 @@ describe('TariffCard', () => {
 
     expect(edited).toHaveBeenCalledTimes(1);
   });
+
+  it('should emit editBenefits and not edit when the benefits button is clicked', () => {
+    const fixture = render(limited);
+    const edited = vi.fn();
+    const benefitsEdited = vi.fn();
+    fixture.componentInstance.edit.subscribe(edited);
+    fixture.componentInstance.editBenefits.subscribe(benefitsEdited);
+
+    const button = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('button'),
+    ).find((candidate) => candidate.textContent?.trim() === 'Imtiyozlar');
+    button?.click();
+
+    expect(benefitsEdited).toHaveBeenCalledTimes(1);
+    expect(edited).not.toHaveBeenCalled();
+  });
+
+  it('should offer the benefits button when the tariff has no benefits', () => {
+    const fixture = render(open);
+
+    const labels = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('button'),
+    ).map((candidate) => candidate.textContent?.trim());
+
+    expect(labels).toContain('Imtiyozlar');
+  });
 });
