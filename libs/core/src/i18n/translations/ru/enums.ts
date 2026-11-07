@@ -49,6 +49,10 @@ export const ENUMS_RU: Dictionary['enums'] = {
     male: 'Мужской',
     female: 'Женский',
   },
+  tier: {
+    standard: 'Стандарт',
+    vip: 'VIP',
+  },
   servingUnit: {
     grams: 'грамм',
     milliliters: 'мл',
