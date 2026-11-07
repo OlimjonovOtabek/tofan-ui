@@ -1,6 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
+import { TranslationKey } from '@core/i18n/dictionary';
+import { Benefit } from '@shared/models/benefit';
 import { Tariff } from './models/tariff';
 import { TariffDraft, createTariffDraft } from './models/tariff-draft';
 import { TariffType } from './models/tariff-type';
@@ -30,10 +32,24 @@ export class TariffsStore {
   }
 
   async change(type: TariffType, draft: TariffDraft): Promise<boolean> {
+    return this.write(
+      () => this.tariffsService.change(type, createTariffDraft(type, draft)),
+      'tariffs.toast.saved',
+    );
+  }
+
+  async changeBenefits(type: TariffType, benefits: readonly Benefit[]): Promise<boolean> {
+    return this.write(
+      () => this.tariffsService.changeBenefits(type, benefits),
+      'tariffs.toast.benefitsSaved',
+    );
+  }
+
+  private async write(action: () => Promise<void>, savedToast: TranslationKey): Promise<boolean> {
     this.saving.set(true);
     try {
-      await this.tariffsService.change(type, createTariffDraft(type, draft));
-      this.notifications.success('tariffs.toast.saved');
+      await action();
+      this.notifications.success(savedToast);
       await this.load();
       return true;
     } catch (error) {

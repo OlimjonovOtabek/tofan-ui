@@ -28,6 +28,10 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
     limits: 'Лимиты',
     benefits: 'Преимущества',
     noBenefits: 'Преимущества пока не добавлены.',
+    editBenefits: 'Преимущества',
+  },
+  benefits: {
+    dialogHeader: 'Преимущества тарифа {tariff}',
   },
   limits: {
     foodScan: {
@@ -111,5 +115,6 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
   },
   toast: {
     saved: 'Тариф сохранён',
+    benefitsSaved: 'Преимущества сохранены',
   },
 };

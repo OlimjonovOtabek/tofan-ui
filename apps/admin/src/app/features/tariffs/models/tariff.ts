@@ -1,4 +1,4 @@
-import { LocalizedText } from '@shared/models/localized-text';
+import { Benefit } from '@shared/models/benefit';
 import { MealType } from './meal-type';
 import { TariffType } from './tariff-type';
 
@@ -13,5 +13,5 @@ export interface Tariff {
   readonly workoutChangeMonths: number | null;
   readonly dietChangeDays: number | null;
   readonly hasAiTrainerChat: boolean;
-  readonly benefits: readonly LocalizedText[];
+  readonly benefits: readonly Benefit[];
 }

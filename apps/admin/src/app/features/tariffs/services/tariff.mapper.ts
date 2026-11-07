@@ -1,10 +1,11 @@
-import { LocalizedText } from '@shared/models/localized-text';
+import { Benefit } from '@shared/models/benefit';
 import { enumMap } from '@shared/utils/enum-map';
 import { MealType } from '../models/meal-type';
 import { Tariff } from '../models/tariff';
 import { TariffDraft } from '../models/tariff-draft';
 import { TariffType, compareTariffTypes } from '../models/tariff-type';
 import {
+  ChangeTariffBenefitsRequest,
   ChangeTariffRequest,
   MealType as ApiMealType,
   TariffBenefitResponse,
@@ -27,7 +28,7 @@ export function toTariff(response: TariffResponse): Tariff {
     workoutChangeMonths: response.workoutChangeMonths,
     dietChangeDays: response.dietChangeDays,
     hasAiTrainerChat: response.hasAiTrainerChat,
-    benefits: response.benefits.map(toBenefitText),
+    benefits: response.benefits.map(toBenefit),
   };
 }
 
@@ -47,6 +48,16 @@ export function toChangeTariffRequest(draft: TariffDraft): ChangeTariffRequest {
   };
 }
 
-function toBenefitText(benefit: TariffBenefitResponse): LocalizedText {
-  return { en: benefit.name, ru: benefit.nameRu, uz: benefit.nameUz };
+export function toChangeTariffBenefitsRequest(
+  benefits: readonly Benefit[],
+): ChangeTariffBenefitsRequest {
+  return { benefits: benefits.map(toBenefitText) };
+}
+
+function toBenefit(text: TariffBenefitResponse): Benefit {
+  return { en: text.name, ru: text.nameRu, uz: text.nameUz };
+}
+
+function toBenefitText(benefit: Benefit): TariffBenefitResponse {
+  return { name: benefit.en, nameRu: benefit.ru, nameUz: benefit.uz };
 }

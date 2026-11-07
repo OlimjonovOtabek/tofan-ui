@@ -28,6 +28,10 @@ export const TARIFFS_EN: Dictionary['tariffs'] = {
     limits: 'Limits',
     benefits: 'Benefits',
     noBenefits: 'No benefits yet.',
+    editBenefits: 'Benefits',
+  },
+  benefits: {
+    dialogHeader: '{tariff} tariff benefits',
   },
   limits: {
     foodScan: {
@@ -111,5 +115,6 @@ export const TARIFFS_EN: Dictionary['tariffs'] = {
   },
   toast: {
     saved: 'Tariff saved',
+    benefitsSaved: 'Benefits saved',
   },
 };

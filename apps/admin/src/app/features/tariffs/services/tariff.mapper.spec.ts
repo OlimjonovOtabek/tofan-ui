@@ -1,6 +1,12 @@
 import { TariffDraft } from '../models/tariff-draft';
 import { MealType as ApiMealType, TariffResponse, TariffType as ApiTariffType } from './tariff.dto';
-import { tariffTypes, toChangeTariffRequest, toTariff, toTariffs } from './tariff.mapper';
+import {
+  tariffTypes,
+  toChangeTariffBenefitsRequest,
+  toChangeTariffRequest,
+  toTariff,
+  toTariffs,
+} from './tariff.mapper';
 
 function response(overrides: Partial<TariffResponse> = {}): TariffResponse {
   return {
@@ -124,6 +130,26 @@ describe('toChangeTariffRequest', () => {
       workoutChangeMonths: null,
       dietChangeDays: null,
     });
+  });
+});
+
+describe('toChangeTariffBenefitsRequest', () => {
+  it('should send the English text as name and keep the order', () => {
+    const request = toChangeTariffBenefitsRequest([
+      { en: 'B', ru: 'Б', uz: 'Bb' },
+      { en: 'A', ru: 'А', uz: 'Aa' },
+    ]);
+
+    expect(request).toEqual({
+      benefits: [
+        { name: 'B', nameRu: 'Б', nameUz: 'Bb' },
+        { name: 'A', nameRu: 'А', nameUz: 'Aa' },
+      ],
+    });
+  });
+
+  it('should send an empty list when no benefits are left', () => {
+    expect(toChangeTariffBenefitsRequest([])).toEqual({ benefits: [] });
   });
 });
 

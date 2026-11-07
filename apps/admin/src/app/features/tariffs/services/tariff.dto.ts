@@ -43,3 +43,7 @@ export interface ChangeTariffRequest {
   dietChangeDays: number | null;
   hasAiTrainerChat: boolean;
 }
+
+export interface ChangeTariffBenefitsRequest {
+  benefits: TariffBenefitResponse[];
+}

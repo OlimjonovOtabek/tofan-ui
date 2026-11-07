@@ -108,4 +108,32 @@ describe('TariffsService', () => {
     request.flush({ isSuccess: true });
     await done;
   });
+
+  it('should put the whole ordered list under the tariff type number when the benefits are saved', async () => {
+    const done = service.changeBenefits('vip', [
+      { en: 'Second', ru: 'Второй', uz: 'Ikkinchi' },
+      { en: 'First', ru: 'Первый', uz: 'Birinchi' },
+    ]);
+
+    const request = http.expectOne('/api/admin/tariffs/3/benefits');
+    expect(request.request.method).toBe('PUT');
+    expect(request.request.body).toEqual({
+      benefits: [
+        { name: 'Second', nameRu: 'Второй', nameUz: 'Ikkinchi' },
+        { name: 'First', nameRu: 'Первый', nameUz: 'Birinchi' },
+      ],
+    });
+    request.flush({ isSuccess: true });
+    await done;
+  });
+
+  it('should put an empty list under the Free tariff number when every benefit was removed', async () => {
+    const done = service.changeBenefits('free', []);
+
+    const request = http.expectOne('/api/admin/tariffs/1/benefits');
+    expect(request.request.method).toBe('PUT');
+    expect(request.request.body).toEqual({ benefits: [] });
+    request.flush({ isSuccess: true });
+    await done;
+  });
 });

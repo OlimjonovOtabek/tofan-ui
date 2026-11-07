@@ -26,6 +26,10 @@ export const TARIFFS_UZ = {
     limits: 'Limitlar',
     benefits: 'Imtiyozlar',
     noBenefits: 'Imtiyozlar hali kiritilmagan.',
+    editBenefits: 'Imtiyozlar',
+  },
+  benefits: {
+    dialogHeader: '{tariff} tarifi imtiyozlari',
   },
   limits: {
     foodScan: {
@@ -110,5 +114,6 @@ export const TARIFFS_UZ = {
   },
   toast: {
     saved: 'Tarif saqlandi',
+    benefitsSaved: 'Imtiyozlar saqlandi',
   },
 };

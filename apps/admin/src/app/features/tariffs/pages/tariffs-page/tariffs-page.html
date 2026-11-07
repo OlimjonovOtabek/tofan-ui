@@ -23,7 +23,11 @@
 
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
     @for (tariff of store.tariffs(); track tariff.id) {
-      <app-tariff-card [tariff]="tariff" (edit)="edit(tariff)" />
+      <app-tariff-card
+        [tariff]="tariff"
+        (edit)="edit(tariff)"
+        (editBenefits)="editBenefits(tariff)"
+      />
     }
   </div>
 </div>
@@ -33,4 +37,12 @@
   [tariff]="editing()"
   [saving]="store.saving()"
   (save)="save($event)"
+/>
+
+<app-benefits-dialog
+  [(visible)]="benefitsVisible"
+  [header]="benefitsHeader()"
+  [benefits]="editingBenefits()"
+  [saving]="store.saving()"
+  (save)="saveBenefits($event)"
 />

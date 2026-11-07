@@ -26,6 +26,7 @@ export class TariffCard {
   readonly tariff = input.required<Tariff>();
 
   readonly edit = output<void>();
+  readonly editBenefits = output<void>();
 
   protected readonly title = computed(() =>
     this.translator.translate(TARIFF_TYPE_LABELS[this.tariff().type]),
