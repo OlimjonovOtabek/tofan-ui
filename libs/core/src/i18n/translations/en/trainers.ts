@@ -25,6 +25,7 @@ export const TRAINERS_EN = {
       slug: 'Link',
       userId: 'User ID',
       monthlyPrice: 'Monthly price',
+      vipPrice: 'VIP price',
       status: 'Status',
       createdOn: 'Created',
     },
@@ -97,10 +98,13 @@ export const TRAINERS_EN = {
     monthlyPrice: 'Monthly price',
     priceSuffix: ' UZS',
     priceHint: '0 means no price is set. A published trainer cannot have a price of 0.',
+    vipPrice: 'VIP price (optional)',
+    vipPriceHint: 'Leave empty to sell Standard only.',
     currentPhoto: 'Current photo',
     loading: 'Loading the account details…',
     errors: {
       monthlyPrice: 'Enter a price of 0 or more.',
+      vipPrice: 'The VIP price must be above 0, or leave the field empty.',
     },
   },
   password: {

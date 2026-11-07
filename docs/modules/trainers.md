@@ -13,14 +13,16 @@ The trainer panel (`/coach/*`) is not part of this app.
     `photoFileId?`) → card `Guid`. The backend opens the account and gives it the role; an existing
     account cannot be made a trainer.
   - `PUT /admin/trainers/{id}` (`email`, `phoneNumber?`, `displayName`, `bio?`, `photoFileId?`,
-    `monthlyPrice` ≥ 0). The username is shown but cannot change (the realm forbids it).
+    `monthlyPrice` ≥ 0, `vipMonthlyPrice` a number above 0 or `null`). The username is shown but cannot change
+    (the realm forbids it). `vipMonthlyPrice` is always in the body, see "VIP price" below.
   - `GET /admin/users/{userId}`: only to fill the username, email and phone in the edit dialog, through
     `TrainerAccountsService` with its own DTO, never the accounts feature.
   - `PUT /admin/trainers/{id}/password` (`password` 8–128)
   - `DELETE /admin/trainers/{id}`: drafts only; removes the card and the Keycloak account.
   - `POST /files` (`category` avatar) through the shared `app-file-upload`: the optional photo in the
     add-trainer dialog. The trainer can replace it later in the coach panel (`PUT /coach/profile`).
-  - `GET /admin/trainers` (paging, sort); each row carries `slug`
+  - `GET /admin/trainers` (paging, sort); each row carries `slug` and `vipMonthlyPrice` (`null` when the trainer
+    sells Standard only)
   - `POST /admin/trainers/{id}/publish`, `POST /admin/trainers/{id}/unpublish`
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`
   - `GET /admin/trainer-subscriptions` (paging, sort, `TrainerId`, `UserId`, `IsActive`); each row carries
@@ -46,6 +48,12 @@ The trainer panel (`/coach/*`) is not part of this app.
   (`PUT /coach/profile`, format `^[a-z0-9]+(-[a-z0-9]+)*$`, 3 to 30 characters); `CreateTrainerRequest` and
   `UpdateTrainerRequest` have no `slug`. It is plain text: the public page `peaktofan.com/t/<slug>` is opened by the
   mobile app only, so the panel builds no link and has no copy button. Old accounts may show `-` until the backend fills it.
+- VIP price: the list has a read-only "VIP narxi" column (not sortable) that shows the price like the monthly price
+  and a `-` when the trainer has none. The edit dialog has an optional "VIP narxi" number field prefilled with the
+  current value and the hint that an empty field means Standard only. Clearing the field sends `null` and the
+  trainer stops selling VIP. A value of 0 or below is refused by the form (`trainers.edit.errors.vipPrice`); the panel
+  does not compare it with the monthly price, the backend owns that rule. The create dialog has no VIP price: a new
+  trainer starts as Standard only and sets or gets a VIP price later.
 - Row actions (`TrainerRowActions`): edit, change password and grant a subscription on every trainer; publish or unpublish; delete only on drafts (published trainers
   must be unpublished first), with a confirm that says the Keycloak account goes too.
 - The edit dialog waits for the account (`TrainersStore.loadAccount`) and closes itself if it cannot be
@@ -99,6 +107,11 @@ The trainer panel (`/coach/*`) is not part of this app.
   page, not per trainer.
 - `GET /admin/payment-orders` also returns `commissionPercent` per order, but the panel has no payment
   orders screen yet.
+- Always send `vipMonthlyPrice` in `PUT /admin/trainers/{id}`: the backend treats a missing key as `null`, so an
+  update without it silently wipes the trainer's VIP price. `UpdateTrainerRequest.vipMonthlyPrice` is a required key,
+  `TrainerEditDraft` carries it, and the edit form is prefilled from `Trainer.vipMonthlyPrice`, so changing the name,
+  bio, photo, email, phone or price keeps it. `trainers.service.spec.ts` proves the key is on the wire as `null` and as
+  a number. `app-number-field` emits `null` when the admin clears the input, which must stay `null` and never become 0.
 - A trainer without a price stays a draft: only the trainer can set the price (`PUT /coach/profile`).
 - The subscriptions list has no Tier filter (the backend has no query parameter for it).
 - A backend without Tiers (the API v9.1 proxy before the release day) sends no `tier`.

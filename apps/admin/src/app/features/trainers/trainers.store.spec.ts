@@ -43,6 +43,7 @@ const editDraft: TrainerEditDraft = {
   bio: 'Kalistenika',
   photoFileId: null,
   monthlyPrice: 350000,
+  vipMonthlyPrice: 700000,
 };
 
 const account: TrainerAccount = {
@@ -119,6 +120,28 @@ describe('TrainersStore', () => {
       name: 'Jasur',
     });
     expect(trainers.list).toHaveBeenCalled();
+  });
+
+  it('should pass the VIP price to the service when a trainer is updated', async () => {
+    const store = createStore();
+
+    await store.update(trainer, { ...editDraft, vipMonthlyPrice: 800000 });
+
+    expect(trainers.update).toHaveBeenCalledWith(
+      't1',
+      expect.objectContaining({ vipMonthlyPrice: 800000 }),
+    );
+  });
+
+  it('should pass a null VIP price to the service when the admin cleared it', async () => {
+    const store = createStore();
+
+    await store.update(trainer, { ...editDraft, vipMonthlyPrice: null });
+
+    expect(trainers.update).toHaveBeenCalledWith(
+      't1',
+      expect.objectContaining({ vipMonthlyPrice: null }),
+    );
   });
 
   it('should mark the email field when the new email is taken', async () => {

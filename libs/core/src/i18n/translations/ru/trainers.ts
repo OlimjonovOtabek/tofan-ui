@@ -25,6 +25,7 @@ export const TRAINERS_RU = {
       slug: 'Ссылка',
       userId: 'ID пользователя',
       monthlyPrice: 'Цена в месяц',
+      vipPrice: 'Цена VIP',
       status: 'Статус',
       createdOn: 'Создан',
     },
@@ -97,10 +98,13 @@ export const TRAINERS_RU = {
     monthlyPrice: 'Цена в месяц',
     priceSuffix: ' сум',
     priceHint: '0 — цена не задана. У опубликованного тренера цена не может быть 0.',
+    vipPrice: 'Цена VIP (необязательно)',
+    vipPriceHint: 'Если оставить пустым, тренер продаёт только Standard.',
     currentPhoto: 'Текущее фото',
     loading: 'Загружаем данные аккаунта…',
     errors: {
       monthlyPrice: 'Укажите цену: 0 или больше.',
+      vipPrice: 'Цена VIP должна быть больше 0, или оставьте поле пустым.',
     },
   },
   password: {
