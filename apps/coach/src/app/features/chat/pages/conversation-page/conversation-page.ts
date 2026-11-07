@@ -21,6 +21,7 @@ import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { ConversationStore } from '../../conversation.store';
+import { unsentText } from '../../models/chat-access';
 import { chatInitials, isMine, isRead, opensDay } from '../../models/chat';
 import { dayLabel, presenceText } from '../../models/chat-text';
 
@@ -69,6 +70,7 @@ export class ConversationPage {
       day: opensDay(messages, index) ? dayLabel(message.sentOn, now, this.locale(), t) : null,
     }));
   });
+  protected readonly unsent = computed(() => unsentText(this.draft(), this.store.canWrite()));
   protected readonly canSend = computed(() => this.draft().trim() !== '' && !this.store.sending());
 
   constructor() {

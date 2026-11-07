@@ -29,9 +29,9 @@
   }
 
   <ol cdkDropList class="m-0 flex list-none flex-col gap-3 p-0" (cdkDropListDropped)="drop($event)">
-    @for (row of form.rows; track row; let index = $index; let last = $last) {
+    @for (row of rows(); track row.key; let index = $index; let last = $last) {
       @let number = index + 1;
-      @let key = row().value().key;
+      @let fields = form.rows[index];
       <li
         cdkDrag
         cdkDragLockAxis="y"
@@ -50,37 +50,39 @@
         <div class="flex min-w-0 flex-1 flex-col gap-2">
           @for (language of languages; track language.field) {
             <div class="flex flex-col gap-1">
-              <label [for]="key + '-' + language.field" class="text-muted-color text-sm">{{
+              <label [for]="row.key + '-' + language.field" class="text-muted-color text-sm">{{
                 language.label | t
               }}</label>
               <app-text-field
                 autocomplete="off"
-                [inputId]="key + '-' + language.field"
-                [formField]="row[language.field]"
+                [inputId]="row.key + '-' + language.field"
+                [formField]="fields[language.field]"
               />
-              <app-field-error [field]="row[language.field]()" />
+              <app-field-error [field]="fields[language.field]()" />
             </div>
           }
         </div>
 
         <div class="flex flex-col gap-1">
           <p-button
+            #moveUp
             icon="pi pi-arrow-up"
             severity="secondary"
             [text]="true"
             [rounded]="true"
             [ariaLabel]="'common.benefits.moveUp' | t: { number }"
             [disabled]="index === 0"
-            (onClick)="move(index, index - 1)"
+            (onClick)="moveByButton(index, 'up')"
           />
           <p-button
+            #moveDown
             icon="pi pi-arrow-down"
             severity="secondary"
             [text]="true"
             [rounded]="true"
             [ariaLabel]="'common.benefits.moveDown' | t: { number }"
             [disabled]="last"
-            (onClick)="move(index, index + 1)"
+            (onClick)="moveByButton(index, 'down')"
           />
           <p-button
             icon="pi pi-trash"

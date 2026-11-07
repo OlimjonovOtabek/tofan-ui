@@ -407,6 +407,7 @@ export const COACH_APP_UZ = {
     empty: 'Hali xabar yo‘q. Birinchi bo‘lib yozing!',
     errorTitle: 'Suhbatni ochib bo‘lmadi',
     send: 'Yuborish',
+    unsent: 'Yuborilmagan xabar',
   },
   profile: {
     editTitle: 'Profilni tahrirlash',

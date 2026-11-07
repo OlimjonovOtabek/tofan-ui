@@ -55,8 +55,12 @@ The store sends the whole list in one request, reloads and raises the toast.
 - Dragging uses the CDK drag handle.
   The up and down buttons are the keyboard way to reorder and carry the row number in their `aria-label`.
 - Benefits have no backend id, so every row gets a client side key (`benefit-1`, `benefit-2`, ...) that lives only in the dialog.
-  The key is used for input ids, never sent.
-  Rows are tracked by their Signal Forms field, so typing keeps focus and a moved row keeps its typed text and errors.
+  The key is used for input ids and as the `@for` track expression, never sent.
+  The loop walks the plain row values (`rows()`, `track row.key`) and reads the matching field with `form.rows[index]`, so typing keeps focus, a moved row keeps its element, its typed text and its errors, and moving rows does not re-create the list (no `NG0956`).
+- After a move with the up or down button the focus stays on the moved row's same button at its new index.
+  Angular moves DOM nodes to reorder them and the browser drops the focus of a moved node, so `moveByButton` restores it in `afterNextRender`.
+  When the row reaches the first place the up button is disabled and the focus goes to its down button; at the last place it goes to its up button.
+  Dragging does not touch the focus.
 - The emitted order equals the visible order: the dialog emits `toBenefits(rows)` from the same list that is rendered.
 - The texts are trimmed on emit.
 - An empty list is valid and removes every Benefit.
@@ -64,6 +68,8 @@ The store sends the whole list in one request, reloads and raises the toast.
 - Opening the dialog (`visible` turns true) resets the rows from `benefits`, so unsaved edits from an earlier opening are dropped.
   Changing `benefits` while the dialog is open does not reset the rows.
 - Invalid rows show their error after the first save attempt (field touched) and block the emit.
+  A blocked save also scrolls the first invalid field (row order, then English, Russian, Uzbek) to the middle of the dialog body and focuses it, so an invalid row below the visible area is noticed.
+  Focusing goes through `focusBoundControl`, which needs `TextField.focus()` (a `FormValueControl` hook).
 
 ## Traps
 - The page must set the `benefits` input before it sets `visible` to true, because the rows are read when the dialog opens.
@@ -73,5 +79,7 @@ The store sends the whole list in one request, reloads and raises the toast.
   The dialog provides `CDK_DRAG_CONFIG` with `zIndex: 2000` so the dragged row stays visible.
   The preview position was not checked in a real browser during development (unit tests cannot drag).
   Check it by hand before changing the container, for example to `cdkDragPreviewContainer="parent"`: a CSS transform on an ancestor changes what `position: fixed` is relative to.
-- Track rows by the field (`track row`), not by `row().value().key`: reading a removed row's value throws "Orphan field".
+- Do not track rows by the field (`track row`) and do not read `row().value().key` in the template: the first was seen re-creating the whole list on a move in the browser (`NG0956`, focus dropped to `BODY`) and reading a removed row's value throws "Orphan field".
+  Track the plain row value by its `key` and look the field up by index.
+- A move changes the order of the DOM nodes, so any new control inside a row that must keep keyboard focus after a move needs the same restore as the move buttons.
 - Do not use `LocalizedTextField` for Benefits: it is built on Reactive Forms and has a single localized value, not an array of rows.

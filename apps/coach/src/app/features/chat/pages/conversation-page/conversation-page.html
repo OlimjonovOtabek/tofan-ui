@@ -79,7 +79,15 @@
         </button>
       </form>
     } @else {
-      <div class="composer">
+      <div class="composer read-only">
+        @if (unsent(); as text) {
+          <div class="unsent">
+            <span class="t-base5 font-medium tone-secondary">{{
+              'coachApp.conversation.unsent' | t
+            }}</span>
+            <p class="t-base3 tone-secondary">{{ text }}</p>
+          </div>
+        }
         <coach-note icon="lock" [text]="'coachApp.conversation.readOnly' | t" />
       </div>
     }
