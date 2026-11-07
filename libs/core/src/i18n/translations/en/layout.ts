@@ -31,6 +31,8 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     notifications: 'Notifications',
     templates: 'Templates',
     sendPush: 'Send push',
+    pricing: 'Pricing',
+    tariffs: 'Tofan tariffs',
   },
   titles: {
     login: 'Sign in',
@@ -52,6 +54,7 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     userSessions: 'Sign-in log',
     notificationTemplates: 'Notification templates',
     sendNotification: 'Send push',
+    tariffs: 'Tofan tariffs',
   },
   status: {
     accessDeniedTitle: 'Access denied',

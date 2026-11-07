@@ -80,6 +80,11 @@ export const ERRORS_RU: Dictionary['errors'] = {
     MealPlan: {
       TrainerProgramMissing: 'Тренер ещё не опубликовал программу питания.',
     },
+    Tariff: {
+      FreeMustStayFree: 'Тариф Free всегда бесплатный. Оставьте цену 0.',
+      PaidPriceRequired: 'Цена тарифов Standard и VIP должна быть больше 0.',
+      NotFound: 'Тариф не найден.',
+    },
     GetUsersQuery:
       'Не удалось получить аккаунты из Keycloak. Если выбран фильтр по роли, он пока может не работать (нужна настройка Keycloak).',
   },

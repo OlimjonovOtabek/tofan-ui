@@ -29,6 +29,8 @@ export const LAYOUT_UZ = {
     notifications: 'Bildirishnomalar',
     templates: 'Shablonlar',
     sendPush: 'Push yuborish',
+    pricing: 'Narxlar',
+    tariffs: 'Tofan tariflari',
   },
   titles: {
     login: 'Kirish',
@@ -50,6 +52,7 @@ export const LAYOUT_UZ = {
     userSessions: 'Kirishlar jurnali',
     notificationTemplates: 'Bildirishnoma shablonlari',
     sendNotification: 'Push yuborish',
+    tariffs: 'Tofan tariflari',
   },
   status: {
     accessDeniedTitle: "Ruxsat yo'q",
