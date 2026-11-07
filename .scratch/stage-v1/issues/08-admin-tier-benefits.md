@@ -25,3 +25,5 @@ Saqlangan tartib ko'rilgan tartibga teng.
 The "Darajalar" tab (`/trainers/tiers`) in the `trainers` feature shows a card per Tier (Standard, VIP) with its Benefits in the admin language, and an "Imtiyozlar" button opens the new shared `app-benefits-dialog` (`libs/shared`): inputs are the current Benefits, a saving flag and the header, the output is the ordered list, and `TrainerTiersStore` does the PUT with the whole list and reloads.
 The dialog has EN, RU and UZ inputs per row, CDK drag with a handle, up and down buttons, add up to 20, remove, 200 character limit with trimmed required texts, a plain text warning, and a client side row key because Benefits have no backend id; its contract is in `docs/modules/benefits-dialog.md`.
 The two stage boxes (adding, moving and deleting a Benefit on stage, and the manual E2E and merge) stay open because nobody here has stage passwords, and the drag preview position inside the Optimus dialog still needs a look in a real browser.
+
+Commit: f30cee1 (branch feat/stage-v1-08-admin-tier-benefits).
