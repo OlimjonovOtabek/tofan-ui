@@ -460,6 +460,7 @@ export const COACH_APP_UZ = {
     statClientsCaption: 'Hozir obuna',
     statPrograms: 'Dasturlar',
     title: 'Murabbiy profili',
+    vipPrice: 'VIP {price}',
     statAdherence: 'Intizom',
     statAverage: 'O‘rtacha',
     statRevenue: 'Daromad',
@@ -470,6 +471,11 @@ export const COACH_APP_UZ = {
     note: 'Sportchilar murabbiyligingiz uchun har oy shu narxni to‘laydi.',
     saved: 'Narx yangilandi',
     title: 'Obuna narxi',
+    vipHint: 'masalan, 500000',
+    vipInvalid: 'VIP narxi noldan katta bo‘lishi kerak',
+    vipLabel: 'VIP narxi (ixtiyoriy)',
+    vipNote:
+      'VIP o‘quvchilar siz bilan chatda yozisha oladi. Faqat Standard sotish uchun bo‘sh qoldiring - hozirgi VIP o‘quvchilarda chat obuna tugaguncha ishlaydi.',
   },
   earnings: {
     entrySubtitle: 'Sof daromad va to‘lovlar',

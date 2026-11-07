@@ -41,6 +41,13 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
   Low activity means no workout for 7 days or ever. Ended subscriptions skip activity sections.
 - Preview videos: at most 5, can be reordered by drag.
 - Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending.
+- Pricing (`/profile/pricing`) has the monthly price and an optional VIP price, as on mobile.
+  An empty VIP field means `null`: no new VIP sales, and current VIP subscribers keep chat until their subscription ends.
+  A VIP price of zero is refused before saving (`coachApp.pricing.vipInvalid`).
+  The profile row shows `200 000 UZS / oy · VIP 400 000` when the coach sells VIP (`profilePriceLabel`, same number format and unit as the monthly price, VIP part from `coachApp.profile.vipPrice`).
+- `vipMonthlyPrice` is always in the `PUT /coach/profile` body, as a number or `null`, unlike `monthlyPrice`, `bio`, `photoFileId` and `slug`, which are left out when empty.
+  The backend wipes the VIP price when the key is missing or `null`, so every save (name, bio, link, photo, prices) goes through `toCoachProfileChange`, which copies the current VIP price from the loaded profile.
+  Never build an `UpdateCoachProfileRequest` by hand and never make `vipMonthlyPrice` optional in `CoachProfileChange`.
 
 ## Video uploads
 

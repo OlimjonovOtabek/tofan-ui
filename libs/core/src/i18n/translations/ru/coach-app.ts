@@ -470,6 +470,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     statClientsCaption: 'Подписаны сейчас',
     statPrograms: 'Программы',
     title: 'Профиль тренера',
+    vipPrice: 'VIP {price}',
     statAdherence: 'Дисциплина',
     statAverage: 'В среднем',
     statRevenue: 'Доход',
@@ -480,6 +481,11 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     note: 'Спортсмены платят эту цену каждый месяц за ваши тренировки.',
     saved: 'Цена обновлена',
     title: 'Цена подписки',
+    vipHint: 'например, 500000',
+    vipInvalid: 'Цена VIP должна быть больше нуля',
+    vipLabel: 'Цена VIP (необязательно)',
+    vipNote:
+      'VIP-спортсмены могут переписываться с вами в чате. Оставьте пустым, чтобы продавать только Standard, - у текущих VIP-спортсменов чат работает до конца подписки.',
   },
   earnings: {
     entrySubtitle: 'Чистый доход и платежи',
