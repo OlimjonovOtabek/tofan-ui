@@ -60,6 +60,12 @@ describe('tariffLimitLines', () => {
     ).toBe('tariffs.limits.workoutVideo.unlimited');
   });
 
+  it('should say all videos are closed when the video limit is zero', () => {
+    expect(
+      line({ ...tariff, workoutVideoLimit: 0 }, 'tariffs.limits.workoutVideo.label').value,
+    ).toBe('tariffs.limits.workoutVideo.closed');
+  });
+
   it('should count the open videos when the video limit is a number', () => {
     expect(line(tariff, 'tariffs.limits.workoutVideo.label')).toMatchObject({
       value: 'tariffs.limits.workoutVideo.some',

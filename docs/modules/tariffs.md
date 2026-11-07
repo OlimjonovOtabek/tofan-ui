@@ -3,7 +3,7 @@
 ## Purpose
 
 The admin reviews the three Tofan tariffs a Soldier can buy from Tofan itself (Free, Standard and VIP) on one page.
-Each card shows the monthly price, the total price a Soldier pays, the limits in words, whether the AI trainer chat is included, and the Benefits in the admin's language.
+Each card shows the one price a Soldier pays per month (`totalPrice`), the limits in words, whether the AI trainer chat is included, and the Benefits in the admin's language.
 The admin edits a tariff's monthly price, food scan limit, workout video limit, diet meal types, workout change months, diet change days and AI trainer chat.
 The admin edits the Benefits of a tariff with the shared Benefits dialog (`docs/modules/benefits-dialog.md`), opened by the "Imtiyozlar" button on every card.
 
@@ -50,6 +50,9 @@ The menu item "Tofan tariflari" sits in the "Narxlar" group (`layout.menu.pricin
 - The Free price field is disabled and the draft sends 0 whatever the field holds.
 - The total price is never edited.
   After a save the store reloads the list, so the total price and the limits on the cards are the backend's.
+- The card shows only `totalPrice`, as the backend sent it, with a note that no commission, tax or provider fee is added.
+  Since the 2026-11-05 backend decision a Tofan tariff has no Platform fee, so `totalPrice` always equals `monthlyPrice` and a second price row would only repeat it.
+  The panel never works the total out itself.
 - Benefits are edited by the shared `app-benefits-dialog`, used unchanged.
   The "Imtiyozlar" button of a card emits `editBenefits`, the page remembers the tariff type, passes that tariff's Benefits to the dialog and then opens it.
   The dialog emits the whole ordered list, `TariffsStore.changeBenefits(type, benefits)` sends it in one request, raises the `tariffs.toast.benefitsSaved` toast and reloads the list, so the card shows the backend's list.
@@ -63,8 +66,9 @@ The menu item "Tofan tariflari" sits in the "Narxlar" group (`layout.menu.pricin
   `tariffs.service.spec.ts` proves the body has seven keys with `null` limits kept.
 - `0` is a valid food scan limit and means scan is closed, so never treat it as empty (`required` is fine, `||` is not).
 - The limit minimums come from the backend hand-off, not from Swagger: scan and video `>= 0`, change months and change days `>= 1`.
-- The video limit unit is not documented; the card says "N ta video ochiq".
-  Check the wording with the backend if the unit turns out to be different.
+- `workoutVideoLimit` counts exercises over the whole plan, not per day (backend `docs/tariffs-v1.md`, "Videolar").
+  The first N exercises with a video, in day and exercise order, keep their video; an exercise repeated on another day counts once.
+  `null` opens every video and `0` closes every video, so `0` has its own card text ("Hamma video yopiq") like the scan limit.
 - `GET /tariffs` answers 401 without a token, so the page relies on the session interceptor like every other screen.
 - `PUT /admin/tariffs/{type}/benefits` replaces the whole list, so an empty list removes every Benefit of that tariff.
   A Benefit has no id, so the dialog sends every row again, including the ones the admin did not touch.
