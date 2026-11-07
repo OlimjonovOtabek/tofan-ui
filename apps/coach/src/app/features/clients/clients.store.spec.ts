@@ -14,6 +14,7 @@ const client = (userId: string, status: Client['status']): Client => ({
   subscribedOn: null,
   subscriptionEndsOn: null,
   status,
+  tier: 'standard',
   lastWorkoutOn: new Date(),
   adherencePercent: null,
 });

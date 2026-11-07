@@ -320,6 +320,7 @@ export const COACH_APP_UZ = {
     noMatchesMessage: 'Bu qidiruv yoki filtrga mos mijoz yo‘q.',
     searchHint: 'Ism bo‘yicha qidirish',
     statusNeedsReview: 'E’tibor kerak',
+    tierVip: 'VIP',
     accessExpired: 'Muddati tugagan',
     accessLeft: '{count} kun qoldi',
     accessUnknown: 'Tugash sanasi yo‘q',
