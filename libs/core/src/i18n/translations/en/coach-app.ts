@@ -324,6 +324,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     noMatchesMessage: 'No clients match this search or filter.',
     searchHint: 'Search by name',
     statusNeedsReview: 'Needs review',
+    tierVip: 'VIP',
     accessExpired: 'Expired',
     accessLeft: '{count, plural, one{{count} day left} other{{count} days left}}',
     accessUnknown: 'No end date',

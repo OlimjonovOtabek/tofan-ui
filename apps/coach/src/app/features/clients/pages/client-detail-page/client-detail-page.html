@@ -1,5 +1,5 @@
 <coach-app-bar [title]="'coachApp.clientDetail.title' | t" backLink="/clients" />
-<div class="coach-page coach-page--pushed coach-page--with-footer">
+<div class="coach-page coach-page--pushed" [class.coach-page--with-footer]="view()?.canMessage">
   @if (view(); as view) {
     @let detail = store.detail()!;
     <div class="hero">
@@ -7,6 +7,9 @@
       <div class="who">
         <h2 class="t-title2">{{ view.name }}</h2>
         <div class="tags">
+          @if (view.vip) {
+            <span class="c-tag c-tag--success">{{ 'coachApp.clients.tierVip' | t }}</span>
+          }
           @if (view.goal) {
             <span class="c-tag">{{ view.goal }}</span>
           }
@@ -250,11 +253,13 @@
         [message]="'coachApp.clientDetail.paymentsError' | t"
       />
     }
-    <div class="coach-footer">
-      <button coachButton="primary" type="button" (click)="openChat(view.name)">
-        <coach-icon name="message-circle" />{{ 'coachApp.clientDetail.write' | t }}
-      </button>
-    </div>
+    @if (view.canMessage) {
+      <div class="coach-footer">
+        <button coachButton="primary" type="button" (click)="openChat(view.name)">
+          <coach-icon name="message-circle" />{{ 'coachApp.clientDetail.write' | t }}
+        </button>
+      </div>
+    }
   } @else if (store.loadError(); as error) {
     <coach-empty-state
       icon="alert-triangle"

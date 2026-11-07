@@ -1,12 +1,15 @@
-import { ClientSubscriptionStatusDto } from './client.dto';
+import { TierDto } from '@shared/models/tier.dto';
+import { ClientSubscriptionStatusDto, ClientSummaryResponse } from './client.dto';
 import {
   Client,
   adherenceLevel,
+  canMessage,
   countClients,
   daysLeft,
   filterClients,
   fullNameOf,
   isLowActivity,
+  isVip,
   needsReview,
 } from './client';
 import { toClient } from './client.mapper';
@@ -22,6 +25,7 @@ const base: Client = {
   subscribedOn: null,
   subscriptionEndsOn: new Date(2026, 9, 25, 12, 0),
   status: 'active',
+  tier: 'standard',
   lastWorkoutOn: new Date(2026, 9, 21),
   adherencePercent: 90,
 };
@@ -91,26 +95,59 @@ describe('filterClients', () => {
   });
 });
 
+describe('isVip', () => {
+  it('should be true only for the VIP tier', () => {
+    expect(isVip(client({ tier: 'vip' }))).toBe(true);
+    expect(isVip(client({ tier: 'standard' }))).toBe(false);
+  });
+});
+
+describe('canMessage', () => {
+  it.each([
+    [true, 'vip', 'active'],
+    [true, 'vip', 'expiring'],
+    [false, 'vip', 'ended'],
+    [false, 'standard', 'active'],
+    [false, 'standard', 'expiring'],
+    [false, 'standard', 'ended'],
+  ] as const)(
+    'should return %s when the client is %s and the subscription is %s',
+    (expected, tier, status) => {
+      expect(canMessage(client({ tier, status }))).toBe(expected);
+    },
+  );
+});
+
 describe('toClient', () => {
+  const withoutTier: Omit<ClientSummaryResponse, 'tier'> = {
+    userId: 'u',
+    firstName: 'A',
+    lastName: 'B',
+    goal: null,
+    currentWeightKg: 70,
+    targetWeightKg: null,
+    subscribedOnUtc: null,
+    subscriptionEndsOnUtc: '2026-10-25T00:00:00Z',
+    status: ClientSubscriptionStatusDto.Expiring,
+    lastWorkoutOnUtc: null,
+  };
+  const summary: ClientSummaryResponse = { ...withoutTier, tier: TierDto.Standard };
+
   it('should map the status and trim nothing but keep names', () => {
-    const mapped = toClient(
-      {
-        userId: 'u',
-        firstName: 'A',
-        lastName: 'B',
-        goal: null,
-        currentWeightKg: 70,
-        targetWeightKg: null,
-        subscribedOnUtc: null,
-        subscriptionEndsOnUtc: '2026-10-25T00:00:00Z',
-        status: ClientSubscriptionStatusDto.Expiring,
-        lastWorkoutOnUtc: null,
-      },
-      80,
-    );
+    const mapped = toClient(summary, 80);
 
     expect(mapped.status).toBe('expiring');
     expect(mapped.adherencePercent).toBe(80);
     expect(fullNameOf(mapped)).toBe('A B');
+  });
+
+  it('should read the tier from the summary', () => {
+    expect(toClient({ ...summary, tier: TierDto.Vip }, null).tier).toBe('vip');
+    expect(toClient({ ...summary, tier: TierDto.Standard }, null).tier).toBe('standard');
+  });
+
+  it('should fall back to the standard tier when the backend sends no tier', () => {
+    expect(toClient(withoutTier as ClientSummaryResponse, null).tier).toBe('standard');
+    expect(toClient({ ...summary, tier: 0 as TierDto }, null).tier).toBe('standard');
   });
 });

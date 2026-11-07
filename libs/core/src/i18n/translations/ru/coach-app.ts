@@ -328,6 +328,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     noMatchesMessage: 'Нет клиентов по этому поиску или фильтру.',
     searchHint: 'Поиск по имени',
     statusNeedsReview: 'Требует внимания',
+    tierVip: 'VIP',
     accessExpired: 'Истекла',
     accessLeft:
       '{count, plural, one{Остался {count} день} few{Осталось {count} дня} many{Осталось {count} дней} other{Осталось {count} дня}}',

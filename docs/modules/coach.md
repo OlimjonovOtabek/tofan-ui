@@ -39,6 +39,12 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
   The totals card counts the first option of each meal.
 - Client adherence is graded high (85+), good (70+) or low. Low shows the needs-review tag.
   Low activity means no workout for 7 days or ever. Ended subscriptions skip activity sections.
+- Client Tier: `GET /coach/clients` carries `tier` (`1` Standard, `2` VIP), mapped with the shared `tiers` enum map from `@shared/models/tier.dto`.
+  A backend without `tier` (production before the release day) maps to Standard, so the panel keeps working.
+  VIP Clients get a VIP tag (`coachApp.clients.tierVip`) in the Clients row and next to the goal tag on the Client page.
+  `GET /coach/clients/{userId}` has no tier and no subscription data, so the Client page takes the Tier from the list summary, like it already does for the subscription.
+  A Client can be messaged only when the subscription is not ended and the Tier is VIP (`canMessage` in `core/clients/client.ts`; an expiring subscription still can).
+  The write button on the Client page and its sticky footer follow that rule, so a Standard or ended Client shows no button.
 - Preview videos: at most 5, can be reordered by drag.
 - Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending.
 
