@@ -82,7 +82,7 @@ describe('TrainerSubscriptionsPage', () => {
     expect(tierTags(fixture)).toEqual(['Standard', 'VIP']);
   });
 
-  it('should offer vip on an active standard subscription and standard on an active vip one', async () => {
+  it('should offer vip and standard actions when the subscriptions are active standard and active vip', async () => {
     const fixture = await render([
       subscription('s1', 'standard', 'active'),
       subscription('s2', 'vip', 'active'),

@@ -96,7 +96,7 @@ describe('filterClients', () => {
 });
 
 describe('isVip', () => {
-  it('should be true only for the VIP tier', () => {
+  it('should be true only when the client has the VIP tier', () => {
     expect(isVip(client({ tier: 'vip' }))).toBe(true);
     expect(isVip(client({ tier: 'standard' }))).toBe(false);
   });
@@ -141,7 +141,7 @@ describe('toClient', () => {
     expect(fullNameOf(mapped)).toBe('A B');
   });
 
-  it('should read the tier from the summary', () => {
+  it('should read the tier from the summary when mapping a client', () => {
     expect(toClient({ ...summary, tier: TierDto.Vip }, null).tier).toBe('vip');
     expect(toClient({ ...summary, tier: TierDto.Standard }, null).tier).toBe('standard');
   });

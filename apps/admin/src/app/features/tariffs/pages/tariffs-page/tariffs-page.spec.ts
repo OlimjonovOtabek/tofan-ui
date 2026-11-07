@@ -140,7 +140,7 @@ describe('TariffsPage', () => {
     expect(service.list).toHaveBeenCalledTimes(2);
   });
 
-  it('should open the benefits of the pressed tariff in the shared dialog', async () => {
+  it('should open the benefits of the pressed tariff in the shared dialog when its benefits button is pressed', async () => {
     const fixture = await render();
 
     buttons('Imtiyozlar')[1]?.click();

@@ -255,13 +255,6 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     error: "Couldn't load the video",
   },
   meal: {
-    breakfast: 'Breakfast',
-    secondBreakfast: 'Second breakfast',
-    lunch: 'Lunch',
-    snack: 'Snack',
-    dinner: 'Dinner',
-    preWorkout: 'Pre-workout',
-    postWorkout: 'Post-workout',
     itemPortionKcal: '{portion} · {kcal} kcal',
     kcal: '{kcal} kcal',
     optionAdd: 'Add option',

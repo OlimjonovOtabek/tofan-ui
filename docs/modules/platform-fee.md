@@ -42,6 +42,7 @@ It replaces the old per-Trainer commission percent, which was removed from the `
 - The currency is the suffix of the commission field (` UZS`), and the percent fields end with `%`.
   A note under the fields says a change affects only payments opened after it.
 - `models/platform-fee-rules.ts` holds the limits: commission at least 0, percents from 0 to 100, at most two decimals.
+  `createPlatformFeeDraft` in `models/platform-fee-draft.ts` applies them in `PlatformFeeStore.save`, so the store refuses an invalid draft with a `ValidationError` (shown as an error toast, nothing is sent) even if a caller skips the form.
   `components/platform-fee-form/platform-fee.schema.ts` applies them with `required`, `min`, `max` and a decimals check, each with a typed message key.
 
 ## Traps

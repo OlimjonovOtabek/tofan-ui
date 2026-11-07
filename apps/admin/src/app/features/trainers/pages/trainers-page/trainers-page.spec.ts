@@ -57,7 +57,7 @@ describe('TrainersPage', () => {
     return TestBed.inject(Translator).translate(...args);
   }
 
-  it('should offer Trainers, Subscriptions and Tiers tabs in that order', async () => {
+  it('should offer Trainers, Subscriptions and Tiers tabs in that order when the page opens', async () => {
     const fixture = await openAt(AppPaths.trainers);
 
     expect(tabLabels(fixture)).toEqual([

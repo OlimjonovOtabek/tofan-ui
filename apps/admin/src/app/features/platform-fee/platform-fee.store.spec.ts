@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { NotificationService } from '@core/feedback/notification.service';
 import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
+import { ValidationError } from '@shared/models/errors/validation.error';
 import { PlatformFee } from './models/platform-fee';
 import { PlatformFeeDraft } from './models/platform-fee-draft';
 import { PlatformFeeStore } from './platform-fee.store';
@@ -76,7 +77,7 @@ describe('PlatformFeeStore', () => {
     expect(store.fee()).toEqual(fee);
   });
 
-  it('should report the loading state while the fee is requested', async () => {
+  it('should report the loading state when the fee is requested', async () => {
     const store = createStore();
 
     const loading = store.load();
@@ -115,6 +116,20 @@ describe('PlatformFeeStore', () => {
     expect(store.saving()).toBe(false);
   });
 
+  it('should refuse to send and report the issues when the draft is invalid', async () => {
+    const store = createStore();
+    await store.load();
+
+    await store.save({ ...draft, taxPercent: 101 });
+
+    expect(service.update).not.toHaveBeenCalled();
+    expect(notifications.success).not.toHaveBeenCalled();
+    expect(notifications.error).toHaveBeenCalledWith(expect.any(ValidationError));
+    expect(service.get).toHaveBeenCalledTimes(1);
+    expect(store.fee()).toEqual(fee);
+    expect(store.saving()).toBe(false);
+  });
+
   it('should expose the load error when the reload after a save fails', async () => {
     const store = createStore();
     await store.load();
@@ -127,7 +142,7 @@ describe('PlatformFeeStore', () => {
     expect(store.fee()).toBeNull();
   });
 
-  it('should report the saving state while the change is sent', async () => {
+  it('should report the saving state when the change is sent', async () => {
     const store = createStore();
     await store.load();
 

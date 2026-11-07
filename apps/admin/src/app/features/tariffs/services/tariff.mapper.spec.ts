@@ -1,5 +1,6 @@
+import { MealTypeDto } from '@shared/models/meal-type.dto';
 import { TariffDraft } from '../models/tariff-draft';
-import { MealType as ApiMealType, TariffResponse, TariffType as ApiTariffType } from './tariff.dto';
+import { TariffResponse, TariffType as ApiTariffType } from './tariff.dto';
 import {
   tariffTypes,
   toChangeTariffBenefitsRequest,
@@ -16,7 +17,7 @@ function response(overrides: Partial<TariffResponse> = {}): TariffResponse {
     totalPrice: 99000,
     foodScanLimit: 15,
     workoutVideoLimit: 30,
-    dietMealTypes: [ApiMealType.Lunch, ApiMealType.SecondBreakfast],
+    dietMealTypes: [MealTypeDto.Lunch, MealTypeDto.SecondBreakfast],
     workoutChangeMonths: 3,
     dietChangeDays: 7,
     hasAiTrainerChat: true,
@@ -92,12 +93,12 @@ describe('toChangeTariffRequest', () => {
     hasAiTrainerChat: true,
   };
 
-  it('should send all seven fields with the meal types as integers', () => {
+  it('should send all seven fields with the meal types as integers when mapping a draft', () => {
     expect(toChangeTariffRequest(draft)).toEqual({
       monthlyPrice: 49000,
       foodScanLimit: 15,
       workoutVideoLimit: 30,
-      dietMealTypes: [ApiMealType.Lunch, ApiMealType.SecondBreakfast],
+      dietMealTypes: [MealTypeDto.Lunch, MealTypeDto.SecondBreakfast],
       workoutChangeMonths: 3,
       dietChangeDays: 7,
       hasAiTrainerChat: true,
@@ -134,7 +135,7 @@ describe('toChangeTariffRequest', () => {
 });
 
 describe('toChangeTariffBenefitsRequest', () => {
-  it('should send the English text as name and keep the order', () => {
+  it('should send the English text as name and keep the order when mapping benefits to the request', () => {
     const request = toChangeTariffBenefitsRequest([
       { en: 'B', ru: 'Б', uz: 'Bb' },
       { en: 'A', ru: 'А', uz: 'Aa' },
@@ -154,7 +155,7 @@ describe('toChangeTariffBenefitsRequest', () => {
 });
 
 describe('tariffTypes', () => {
-  it('should map the domain types to 1, 2 and 3', () => {
+  it('should map the domain types to 1, 2 and 3 when converting them to the API', () => {
     expect([
       tariffTypes.toApi('free'),
       tariffTypes.toApi('standard'),

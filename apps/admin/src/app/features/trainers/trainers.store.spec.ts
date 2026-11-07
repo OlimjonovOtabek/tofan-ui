@@ -24,6 +24,8 @@ const trainer = new Trainer(
   450000,
   false,
   new Date('2026-10-02T09:00:00Z'),
+  null,
+  null,
 );
 
 const draft: TrainerDraft = {

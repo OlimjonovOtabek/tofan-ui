@@ -1,5 +1,5 @@
 import { TranslationKey, TranslationParams } from '@core/i18n/dictionary';
-import { MealType } from './meal-type';
+import { MealType } from '@shared/models/meal-type';
 import { Tariff } from './tariff';
 
 export interface TariffLimitLine {

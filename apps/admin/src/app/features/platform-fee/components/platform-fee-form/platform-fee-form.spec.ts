@@ -69,7 +69,7 @@ describe('PlatformFeeForm', () => {
     expect(inputOf(fixture, PROVIDER_INPUT).value).toContain('%');
   });
 
-  it('should explain that a change affects only later payments', async () => {
+  it('should explain that a change affects only later payments when the form is shown', async () => {
     const { fixture } = await render();
 
     expect((fixture.nativeElement as HTMLElement).textContent).toContain(

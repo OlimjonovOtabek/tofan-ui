@@ -47,6 +47,8 @@ const trainer = new Trainer(
   450000,
   true,
   new Date('2026-10-02T09:00:00Z'),
+  null,
+  null,
 );
 
 describe('TrainerSubscriptionsStore', () => {

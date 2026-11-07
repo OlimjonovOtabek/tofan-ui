@@ -1,6 +1,6 @@
 import { ExperienceLevelDto } from '@coach/core/fitness/experience-level.dto';
 import { FitnessGoalDto } from '@coach/core/fitness/fitness-goal.dto';
-import { MealTypeDto } from '@coach/core/fitness/meal-type.dto';
+import { MealTypeDto } from '@shared/models/meal-type.dto';
 import { ServingUnitDto } from '@coach/core/fitness/serving-unit.dto';
 
 export interface WorkoutProgramResponse {

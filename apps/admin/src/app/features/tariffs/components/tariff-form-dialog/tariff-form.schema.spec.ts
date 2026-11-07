@@ -198,7 +198,7 @@ describe('tariffFormSchema', () => {
     expect(fields.mealTypes().invalid()).toBe(false);
   });
 
-  it('should accept a zero scan limit and refuse a negative one', () => {
+  it('should accept a zero scan limit and refuse a negative one when the limit is switched on', () => {
     const { model, fields } = formOf(tariffFormValue(tariff));
 
     model.update((value) => ({ ...value, foodScanLimit: 0 }));

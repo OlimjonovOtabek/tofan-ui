@@ -53,6 +53,15 @@ export const ENUMS_RU: Dictionary['enums'] = {
     standard: 'Стандарт',
     vip: 'VIP',
   },
+  mealType: {
+    breakfast: 'Завтрак',
+    secondBreakfast: 'Второй завтрак',
+    lunch: 'Обед',
+    snack: 'Перекус',
+    dinner: 'Ужин',
+    preWorkout: 'Перед тренировкой',
+    postWorkout: 'После тренировки',
+  },
   servingUnit: {
     grams: 'грамм',
     milliliters: 'мл',

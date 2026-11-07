@@ -16,7 +16,7 @@ const vip: TierBenefitsResponse = {
 };
 
 describe('toTierBenefits', () => {
-  it('should map the wire names to the three texts and keep the order', () => {
+  it('should map the wire names to the three texts and keep the order when reading the response', () => {
     const [first] = toTierBenefits([standard, vip]);
 
     expect(first.tier).toBe('standard');
@@ -49,7 +49,7 @@ describe('toTierBenefits', () => {
 });
 
 describe('toChangeTierBenefitsRequest', () => {
-  it('should send the English text as name and keep the order', () => {
+  it('should send the English text as name and keep the order when mapping benefits to the request', () => {
     const request = toChangeTierBenefitsRequest([
       { en: 'B', ru: 'Б', uz: 'Bb' },
       { en: 'A', ru: 'А', uz: 'Aa' },

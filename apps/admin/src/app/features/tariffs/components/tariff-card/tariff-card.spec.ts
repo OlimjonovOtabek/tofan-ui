@@ -54,7 +54,7 @@ function valueOf(fixture: ComponentFixture<TariffCard>, label: string): string {
 describe('TariffCard', () => {
   afterEach(() => localStorage.clear());
 
-  it('should show the tariff name, the monthly price and the total price', () => {
+  it('should show the tariff name, the monthly price and the total price when the card is rendered', () => {
     const text = textOf(render(limited));
 
     expect(text).toContain('Standard');

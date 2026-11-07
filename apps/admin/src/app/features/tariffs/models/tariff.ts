@@ -1,5 +1,5 @@
 import { Benefit } from '@shared/models/benefit';
-import { MealType } from './meal-type';
+import { MealType } from '@shared/models/meal-type';
 import { TariffType } from './tariff-type';
 
 export interface Tariff {

@@ -258,13 +258,6 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     error: 'Не удалось загрузить видео',
   },
   meal: {
-    breakfast: 'Завтрак',
-    secondBreakfast: 'Второй завтрак',
-    lunch: 'Обед',
-    snack: 'Перекус',
-    dinner: 'Ужин',
-    preWorkout: 'Перед тренировкой',
-    postWorkout: 'После тренировки',
     itemPortionKcal: '{portion} · {kcal} ккал',
     kcal: '{kcal} ккал',
     optionAdd: 'Добавить вариант',

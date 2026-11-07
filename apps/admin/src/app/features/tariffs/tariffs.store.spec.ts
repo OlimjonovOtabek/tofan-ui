@@ -144,7 +144,7 @@ describe('TariffsStore', () => {
     expect(store.saving()).toBe(false);
   });
 
-  it('should be saving while the benefits write has not finished', async () => {
+  it('should be saving when the benefits write has not finished', async () => {
     let finish: () => void = () => undefined;
     service.changeBenefits = vi
       .fn()

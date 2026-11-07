@@ -10,15 +10,6 @@ export const TARIFFS_UZ = {
     standard: 'Standard',
     vip: 'VIP',
   },
-  mealType: {
-    breakfast: 'Nonushta',
-    secondBreakfast: '2-nonushta',
-    lunch: 'Tushlik',
-    snack: 'Yengil taom',
-    dinner: 'Kechki ovqat',
-    preWorkout: "Mashg'ulotdan oldin",
-    postWorkout: "Mashg'ulotdan keyin",
-  },
   card: {
     monthlyPrice: 'Oylik narx',
     totalPrice: "O'quvchi to'laydigan jami narx",

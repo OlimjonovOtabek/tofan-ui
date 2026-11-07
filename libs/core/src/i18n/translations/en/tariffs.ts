@@ -12,15 +12,6 @@ export const TARIFFS_EN: Dictionary['tariffs'] = {
     standard: 'Standard',
     vip: 'VIP',
   },
-  mealType: {
-    breakfast: 'Breakfast',
-    secondBreakfast: 'Second breakfast',
-    lunch: 'Lunch',
-    snack: 'Snack',
-    dinner: 'Dinner',
-    preWorkout: 'Pre-workout',
-    postWorkout: 'Post-workout',
-  },
   card: {
     monthlyPrice: 'Monthly price',
     totalPrice: 'Total price a Soldier pays',

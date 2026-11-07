@@ -14,9 +14,9 @@ export const AppPaths = {
   notificationTemplates: '/notifications/templates',
   sendNotification: '/notifications/send',
   platformFee: '/platform-fee',
+  tariffs: '/tariffs',
   login: '/auth/login',
   accessDenied: '/auth/access-denied',
   error: '/auth/error',
-  tariffs: '/tariffs',
   notFound: '/not-found',
 } as const;

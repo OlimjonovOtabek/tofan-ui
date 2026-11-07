@@ -22,7 +22,7 @@ describe('TierBenefitsService', () => {
 
   afterEach(() => http.verify());
 
-  it('should read both tiers from the public endpoint', async () => {
+  it('should read both tiers from the public endpoint when listing', async () => {
     const done = service.list();
 
     const request = http.expectOne('/api/public/trainer-tier-benefits');
@@ -41,7 +41,7 @@ describe('TierBenefitsService', () => {
     ]);
   });
 
-  it('should put the whole ordered list under the Standard tier number', async () => {
+  it('should put the whole ordered list under the Standard tier number when changing the Standard benefits', async () => {
     const done = service.change('standard', [
       { en: 'Second', ru: 'Второй', uz: 'Ikkinchi' },
       { en: 'First', ru: 'Первый', uz: 'Birinchi' },

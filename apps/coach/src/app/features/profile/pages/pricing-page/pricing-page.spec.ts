@@ -66,7 +66,7 @@ describe('PricingPage', () => {
     return TestBed.inject(Translator).translate(key);
   }
 
-  it('should show the VIP field with the current VIP price and the VIP note', async () => {
+  it('should show the VIP field with the current VIP price and the VIP note when the coach has a VIP price', async () => {
     const page = await open(400000);
 
     expect(page.price.value).toBe('200000');
@@ -81,7 +81,7 @@ describe('PricingPage', () => {
     expect(page.vip.value).toBe('');
   });
 
-  it('should refuse a VIP price of zero and not save', async () => {
+  it('should refuse a VIP price of zero and not save when the coach types zero', async () => {
     const page = await open(null);
     page.type(page.vip, '0');
 
@@ -91,7 +91,7 @@ describe('PricingPage', () => {
     expect(page.element.textContent).toContain(text('coachApp.pricing.vipInvalid'));
   });
 
-  it('should save the VIP price together with the monthly price', async () => {
+  it('should save the VIP price together with the monthly price when both fields are filled', async () => {
     const page = await open(null);
     page.type(page.price, '250000');
     page.type(page.vip, '500000');

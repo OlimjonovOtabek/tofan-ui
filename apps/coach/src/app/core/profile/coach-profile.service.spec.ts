@@ -36,7 +36,7 @@ describe('CoachProfileService', () => {
 
   afterEach(() => http.verify());
 
-  it('should read the VIP price from the profile', async () => {
+  it('should read the VIP price from the profile when the profile is requested', async () => {
     const done = service.get();
 
     const request = http.expectOne('/api/coach/profile');
