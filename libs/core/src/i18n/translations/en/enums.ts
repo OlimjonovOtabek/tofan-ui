@@ -49,6 +49,10 @@ export const ENUMS_EN: Dictionary['enums'] = {
     male: 'Male',
     female: 'Female',
   },
+  tier: {
+    standard: 'Standard',
+    vip: 'VIP',
+  },
   servingUnit: {
     grams: 'grams',
     milliliters: 'ml',
