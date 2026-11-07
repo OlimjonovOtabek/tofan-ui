@@ -19,7 +19,6 @@ export const TRAINERS_UZ = {
     empty: "Hozircha trener yo'q.",
     add: "Trener qo'shish",
     price: "{amount} so'm",
-    commission: '{percent}%',
     priceMissing: 'Belgilanmagan',
     columns: {
       trainer: 'Trener',
@@ -27,7 +26,6 @@ export const TRAINERS_UZ = {
       userId: 'Foydalanuvchi ID',
       monthlyPrice: 'Oylik narx',
       status: 'Holati',
-      commissionPercent: 'Komissiya',
       createdOn: 'Yaratilgan',
     },
     actions: {
@@ -36,7 +34,6 @@ export const TRAINERS_UZ = {
       unpublish: "Ro'yxatdan olish",
       edit: 'Tahrirlash',
       password: 'Parolni almashtirish',
-      commission: "Komissiyani o'zgartirish",
       delete: "O'chirish",
     },
     deleteWarning: "Trener kartasi va uning Keycloak hisobi butunlay o'chadi.",
@@ -104,15 +101,6 @@ export const TRAINERS_UZ = {
     label: 'Yangi parol',
     hint: "Trener keyingi kirishda shu paroldan foydalanadi. Parolni trenerga o'zingiz yetkazing.",
   },
-  commission: {
-    header: '"{name}" komissiyasi',
-    label: 'Platforma komissiyasi',
-    suffix: '%',
-    hint: "0 dan 100 gacha, ko'pi bilan 2 kasr (masalan 7,5).",
-    futureOnly:
-      "Yangi foiz faqat bundan keyingi to'lovlarga qo'llanadi. Avvalgi to'lovlar o'zgarmaydi.",
-    error: "0 dan 100 gacha, ko'pi bilan 2 kasrli son kiriting.",
-  },
   grant: {
     header: 'Obuna berish',
     save: 'Obuna berish',
@@ -140,7 +128,6 @@ export const TRAINERS_UZ = {
     ended: '"{name}" trenerining obunasi tugatildi.',
     updated: '"{name}" saqlandi.',
     passwordChanged: '"{name}" uchun yangi parol o\'rnatildi.',
-    commissionChanged: '"{name}" komissiyasi o\'zgartirildi.',
     deleted: '"{name}" o\'chirildi.',
   },
 };

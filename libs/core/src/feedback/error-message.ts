@@ -53,7 +53,6 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Trainer.PriceNotSet': 'errors.backend.Trainer.PriceNotSet',
   'Trainer.NotFound': 'errors.backend.Trainer.NotFound',
   'Trainer.DisplayNameEmpty': 'errors.backend.Trainer.DisplayNameEmpty',
-  'Trainer.InvalidCommissionPercent': 'errors.backend.Trainer.InvalidCommissionPercent',
   'TrainerSubscription.OtherTrainerActive': 'errors.backend.TrainerSubscription.OtherTrainerActive',
   'TrainerSubscription.MonthsOutOfRange': 'errors.backend.TrainerSubscription.MonthsOutOfRange',
   'WorkoutPlan.TrainerProgramMissing': 'errors.backend.WorkoutPlan.TrainerProgramMissing',

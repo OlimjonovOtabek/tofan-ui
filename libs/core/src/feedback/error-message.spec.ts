@@ -81,6 +81,16 @@ describe('toErrorMessage', () => {
     expect(toErrorMessage(error)).toEqual(BACKEND_TEXT);
   });
 
+  it('should return the backend text when the retired commission code arrives', () => {
+    const error = new BusinessRuleError(
+      'The commission is not valid.',
+      'Trainer.InvalidCommissionPercent',
+      BACKEND_TEXT,
+    );
+
+    expect(toErrorMessage(error)).toEqual(BACKEND_TEXT);
+  });
+
   it('should join the issues per language when every issue is translated', () => {
     const error = new ValidationError('invalid', [
       { code: 'NotEmptyValidator', message: 'Name is empty.', messages: NAME_EMPTY },

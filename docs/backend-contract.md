@@ -127,6 +127,12 @@ the enum names (`FullBody` -> `fullBody`); DTO files declare a TS `enum` and map
 with `shared/utils/enum-map.ts`. Some enums start at 1 (`ExerciseType`, `ExerciseDifficulty`), some at 0
 (`MuscleGroup`), so never map by index.
 
+An enum that two features or both apps use lives in `libs/shared/src/models`, because features cannot import each other.
+The Trainer subscription Tier is the example: `tier.ts` holds the `Tier` union (`standard`, `vip`) and `TIERS`.
+`tier.dto.ts` holds `TierDto` (`Standard` 1, `Vip` 2) and the `tiers` enum map, and `tier-labels.ts` holds `TIER_LABELS`, the `enums.tier.*` translation keys.
+The DTO member must be `Vip`, not `VIP`, because `enumMap` finds the member by capitalizing the domain string.
+Use `tiers.toDomain` where the backend always sends the Tier, and `tiers.toDomainOrNull` where an older backend may leave it out.
+
 ## Error codes by feature
 
 User-facing text comes from `core/feedback/error-message.ts`: first a per-code message
