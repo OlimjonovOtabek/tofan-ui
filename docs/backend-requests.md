@@ -267,6 +267,40 @@ Batafsil: [modules/media.md](modules/media.md).
 
 ---
 
+## P1 - To'lov buyurtmalari (Payment moduli)
+
+> 2026-11-08. Admin panelda "To'lov buyurtmalari" ro'yxati qo'shildi (`GET /admin/payment-orders`), batafsil: [modules/payment-orders.md](modules/payment-orders.md).
+
+### Ro'yxatda ism va nom
+
+`GET /admin/payment-orders` faqat `userId` va `referenceId` qaytaradi.
+Admin kim to'laganini va nima uchun to'laganini ID orqali ko'radi, bu qidiruvni qiyinlashtiradi.
+So'rov: har qatorga `userName` (Soldier ismi va familiyasi, bo'lmasa username) va `referenceName` (trener nomi yoki tarif turi) qo'shilsin.
+Panel har qator uchun alohida so'rov yubormasligi uchun ma'lumot shu javobning o'zida kelishi kerak.
+Hozircha panel ID ko'rsatadi, foydalanuvchi ID'si Soldier sahifasiga havola.
+
+### `POST /admin/payment-orders` nima qiladi
+
+Swagger'da tavsif yo'q, body: `userId`, `purpose`, `referenceId`, `price`.
+Panelga "qo'lda buyurtma ochish" qo'shishdan oldin aniqlik kerak:
+
+1. Buyurtma qaysi holatda ochiladi: `Pending` (foydalanuvchi keyin Click yoki Payme orqali to'laydi) yoki darhol `Paid` (obuna yoki tarif to'lovsiz ochiladi)?
+2. `price` qanday hisoblanadi: admin yozgan son narx deb olinadi va unga komissiya, soliq va provayder qo'shiladimi, yoki u yakuniy summami?
+3. Trener obunasi uchun `tier` body'da yo'q: Standard yoki VIP qanday tanlanadi?
+4. `tariffs-v1.md` "Admin tarifni qo'lda bera olmaydi" deydi. `purpose = Tariff` bilan admin buyurtmasi bunga ziddmi?
+5. Bu endpoint qachon ishlatiladi (masalan, naqd to'lov yoki test)? Backendda xato kodlari qaysi?
+
+### Stage'dagi ma'lumot
+
+Stage'dagi 3 ta tarif buyurtmasida (Standard, 2026-11-04 va 2026-11-05) `commissionAmount` 50 000 va `providerFeeAmount` 3 400 turibdi, `amount` 173 400.
+Tarifga Platform fee qo'shilmasligi kerak (2026-11-05 qarori).
+Bular qaror kuchga kirishidan oldin ochilganmi?
+Yangi tarif buyurtmasi aynan `monthlyPrice` bilan ochilishini tasdiqlang.
+Bundan tashqari, tarif buyurtmalarida `tier: 1` keladi: tarif uchun `tier` `null` bo'lishi kerakmi?
+Panel tarif qatorida `tier` ni e'tiborsiz qoldiradi.
+
+---
+
 ## Keyingi bosqich (backend modullari yozilgach)
 
 Shop, Payment, Gamification, Trainer, AI modullari hozir bo'sh. Ular yozilayotganda har biriga
