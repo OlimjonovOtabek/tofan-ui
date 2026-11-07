@@ -54,10 +54,10 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     trainerTiers: 'Уровни тренеров',
     trainerSubscriptions: 'Подписки на тренеров',
     platformFee: 'Platform fee',
+    tariffs: 'Тарифы Tofan',
     userSessions: 'Журнал входов',
     notificationTemplates: 'Шаблоны уведомлений',
     sendNotification: 'Отправить push',
-    tariffs: 'Тарифы Tofan',
   },
   status: {
     accessDeniedTitle: 'Нет доступа',

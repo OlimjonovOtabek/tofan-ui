@@ -54,10 +54,10 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     trainerTiers: 'Trainer tiers',
     trainerSubscriptions: 'Trainer subscriptions',
     platformFee: 'Platform fee',
+    tariffs: 'Tofan tariffs',
     userSessions: 'Sign-in log',
     notificationTemplates: 'Notification templates',
     sendNotification: 'Send push',
-    tariffs: 'Tofan tariffs',
   },
   status: {
     accessDeniedTitle: 'Access denied',

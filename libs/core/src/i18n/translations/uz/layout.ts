@@ -52,10 +52,10 @@ export const LAYOUT_UZ = {
     trainerTiers: 'Trener darajalari',
     trainerSubscriptions: 'Trener obunalari',
     platformFee: 'Platform fee',
+    tariffs: 'Tofan tariflari',
     userSessions: 'Kirishlar jurnali',
     notificationTemplates: 'Bildirishnoma shablonlari',
     sendNotification: 'Push yuborish',
-    tariffs: 'Tofan tariflari',
   },
   status: {
     accessDeniedTitle: "Ruxsat yo'q",
