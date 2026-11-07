@@ -7,10 +7,10 @@ Bu prefactor, foydalanuvchiga ko'rinadigan o'zgarish yo'q.
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] Tier domen qiymati va DTO enum umumiy kutubxonada, enum map orqali bog'langan.
-- [ ] Ikki yo'nalishdagi mapping va noma'lum qiymat testlari.
-- [ ] Chegaralar tekshiruvi (Sheriff) yashil.
-- [ ] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
+- [x] Tier domen qiymati va DTO enum umumiy kutubxonada, enum map orqali bog'langan.
+- [x] Ikki yo'nalishdagi mapping va noma'lum qiymat testlari.
+- [x] Chegaralar tekshiruvi (Sheriff) yashil.
+- [x] `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` va `build:landing` o'tadi.
 - [ ] Stage'da qo'lda E2E o'tdi, PR `main`ga merge qilindi, prod'ga hech narsa chiqmadi.
