@@ -9,6 +9,7 @@ import { Roles } from '@core/auth/roles';
 import { environment } from '@coach-environments/environment';
 import { provideOptimus } from '@openng/optimus-ui/config';
 import { COACH_THEME } from './core/layout/coach-theme';
+import { PUSH_CONFIG } from './core/push/push-config';
 import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 
 const APP_NAME = 'Tofan Coach';
@@ -27,5 +28,6 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     ConfirmationService,
     { provide: REQUIRED_LOGIN_ROLE, useValue: Roles.trainer },
+    { provide: PUSH_CONFIG, useValue: environment.push },
   ],
 };

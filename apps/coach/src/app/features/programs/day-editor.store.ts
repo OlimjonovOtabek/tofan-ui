@@ -1,33 +1,43 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NotificationService } from '@core/feedback/notification.service';
-import { FileUploadService } from '@shared/components/file-upload/file-upload.service';
 import { VideoDetails } from '@coach/core/videos/video';
 import { VideoStatusService } from '@coach/core/videos/video-status.service';
-import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
+import { VideoUpload } from '@coach/core/videos/video-upload';
+import { VideoUploadsStore } from '@coach/core/videos/video-uploads.store';
 import {
+  DAY_UPLOAD_GROUP,
+  DAY_UPLOAD_LINK,
   DayDraft,
   DayVideoDraft,
+  EMPTY_DAY_DRAFT,
   canSaveDay,
+  dayFingerprint,
   isUploading,
+  pendingUploadsOf,
   pendingVideoDraft,
+  withUpload,
 } from './models/day-draft';
 import { moveItem } from './models/workout-program';
 
 const STATUS_POLL_MS = 5000;
-const TOO_LARGE_CODE = 'StoredFile.TooLarge';
 
 @Injectable()
 export class DayEditorStore {
-  private readonly uploads = inject(FileUploadService);
+  private readonly uploads = inject(VideoUploadsStore);
   private readonly statuses = inject(VideoStatusService);
   private readonly notifications = inject(NotificationService);
-  private readonly files = new Map<string, File>();
-  private nextKey = 0;
+  private readonly started = new Set<string>();
+  private readonly drafts = signal<readonly DayVideoDraft[]>([]);
+  private readonly initial = signal<DayDraft>(EMPTY_DAY_DRAFT);
   private pollTimer: ReturnType<typeof setTimeout> | null = null;
+  private finished = false;
 
   readonly title = signal('');
   readonly description = signal('');
-  readonly videos = signal<readonly DayVideoDraft[]>([]);
+  readonly videos = computed(() =>
+    this.drafts().map((video) => withUpload(video, this.uploads.uploads()[video.key])),
+  );
   readonly details = signal<Readonly<Record<string, VideoDetails>>>({});
   readonly droppedExerciseCount = signal(0);
 
@@ -39,43 +49,67 @@ export class DayEditorStore {
   }));
   readonly canSave = computed(() => canSaveDay(this.draft()));
   readonly uploading = computed(() => this.videos().some(isUploading));
+  readonly hasChanges = computed(
+    () => dayFingerprint(this.draft()) !== dayFingerprint(this.initial()),
+  );
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.stop());
+    const destroyRef = inject(DestroyRef);
+    destroyRef.onDestroy(() => this.stop());
+    this.uploads.changes$
+      .pipe(takeUntilDestroyed(destroyRef))
+      .subscribe((upload) => this.onUploadChanged(upload));
   }
 
   init(day: DayDraft): void {
+    this.initial.set(day);
     this.title.set(day.title);
     this.description.set(day.description);
-    this.videos.set(day.videos);
+    this.drafts.set(day.videos);
     this.droppedExerciseCount.set(day.droppedExerciseCount);
     void this.refreshStatuses();
   }
 
   addFile(file: File): void {
-    const key = `new-${this.nextKey++}`;
-    this.files.set(key, file);
-    this.videos.update((videos) => [...videos, pendingVideoDraft(key, URL.createObjectURL(file))]);
-    void this.upload(key);
+    const key = this.uploads.start(file, { group: DAY_UPLOAD_GROUP, link: DAY_UPLOAD_LINK });
+    this.started.add(key);
+    this.drafts.update((videos) => [...videos, pendingVideoDraft(key, URL.createObjectURL(file))]);
   }
 
   retry(key: string): void {
-    this.patch(key, { progress: 0, uploadFailed: false });
-    void this.upload(key);
+    this.uploads.retry(key);
   }
 
   rename(key: string, name: string): void {
-    this.patch(key, { name });
+    this.drafts.update((videos) =>
+      videos.map((video) => (video.key === key ? { ...video, name } : video)),
+    );
   }
 
   remove(key: string): void {
     this.revoke(key);
-    this.files.delete(key);
-    this.videos.update((videos) => videos.filter((video) => video.key !== key));
+    if (this.started.delete(key)) {
+      void this.uploads.cancel(key);
+    }
+    this.drafts.update((videos) => videos.filter((video) => video.key !== key));
   }
 
   reorder(from: number, to: number): void {
-    this.videos.update((videos) => moveItem(videos, from, to));
+    this.drafts.update((videos) => moveItem(videos, from, to));
+  }
+
+  finish(): DayDraft {
+    this.finished = true;
+    const day = this.draft();
+    const kept = new Set(pendingUploadsOf([day]));
+    const earlier = pendingUploadsOf([this.initial()]);
+    for (const key of [...this.started, ...earlier]) {
+      if (!kept.has(key)) {
+        void this.uploads.cancel(key);
+      }
+    }
+    this.revokeAll();
+    return { ...day, videos: day.videos.map((video) => ({ ...video, localUrl: null })) };
   }
 
   async refreshStatuses(): Promise<void> {
@@ -96,8 +130,23 @@ export class DayEditorStore {
     this.scheduleNextRead();
   }
 
+  private onUploadChanged(upload: VideoUpload): void {
+    if (!this.drafts().some((video) => video.key === upload.id)) {
+      return;
+    }
+    if (upload.status.kind === 'done') {
+      void this.refreshStatuses();
+    } else if (upload.status.kind === 'failed') {
+      this.notifications.error(upload.status.error);
+    } else if (upload.status.kind === 'tooLarge') {
+      this.remove(upload.id);
+      void this.uploads.cancel(upload.id);
+      this.notifications.failure('coachApp.day.videoTooLarge');
+    }
+  }
+
   private scheduleNextRead(): void {
-    this.stop();
+    this.stopPolling();
     const pending = Object.values(this.details()).some((item) => item.status === 'pending');
     if (pending) {
       this.pollTimer = setTimeout(() => void this.refreshStatuses(), STATUS_POLL_MS);
@@ -105,51 +154,32 @@ export class DayEditorStore {
   }
 
   private stop(): void {
+    this.stopPolling();
+    if (!this.finished) {
+      for (const key of this.started) {
+        void this.uploads.cancel(key);
+      }
+    }
+    this.revokeAll();
+  }
+
+  private stopPolling(): void {
     if (this.pollTimer !== null) {
       clearTimeout(this.pollTimer);
       this.pollTimer = null;
     }
-    for (const video of this.videos()) {
-      if (video.localUrl !== null) {
-        URL.revokeObjectURL(video.localUrl);
-      }
-    }
-  }
-
-  private async upload(key: string): Promise<void> {
-    const file = this.files.get(key);
-    if (file === undefined) {
-      return;
-    }
-    try {
-      const fileId = await this.uploads.upload({
-        file,
-        category: 'exerciseVideo',
-        onProgress: (percent) => this.patch(key, { progress: percent / 100 }),
-      });
-      this.patch(key, { fileId, progress: null });
-      void this.refreshStatuses();
-    } catch (error) {
-      if (error instanceof BusinessRuleError && error.code === TOO_LARGE_CODE) {
-        this.remove(key);
-        this.notifications.failure('coachApp.day.videoTooLarge');
-        return;
-      }
-      this.patch(key, { uploadFailed: true });
-      this.notifications.error(error);
-    }
-  }
-
-  private patch(key: string, change: Partial<DayVideoDraft>): void {
-    this.videos.update((videos) =>
-      videos.map((video) => (video.key === key ? { ...video, ...change } : video)),
-    );
   }
 
   private revoke(key: string): void {
-    const local = this.videos().find((video) => video.key === key)?.localUrl;
+    const local = this.drafts().find((video) => video.key === key)?.localUrl;
     if (local) {
       URL.revokeObjectURL(local);
+    }
+  }
+
+  private revokeAll(): void {
+    for (const video of this.drafts()) {
+      this.revoke(video.key);
     }
   }
 }

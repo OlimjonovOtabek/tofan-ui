@@ -54,14 +54,16 @@ describe('moveItem', () => {
 });
 
 describe('canSaveDay', () => {
-  it('should allow saving only with a title and fully uploaded videos', () => {
+  it('should allow saving with a title and videos that have not failed', () => {
     const draft = dayDraftOf(day, 'uz');
+    const pending = pendingVideoDraft('n1', 'blob:1');
 
     expect(canSaveDay(draft)).toBe(true);
     expect(canSaveDay({ ...draft, title: '  ' })).toBe(false);
     expect(canSaveDay({ ...draft, videos: [] })).toBe(false);
+    expect(canSaveDay({ ...draft, videos: [...draft.videos, pending] })).toBe(true);
     expect(
-      canSaveDay({ ...draft, videos: [...draft.videos, pendingVideoDraft('n1', 'blob:1')] }),
+      canSaveDay({ ...draft, videos: [...draft.videos, { ...pending, uploadFailed: true }] }),
     ).toBe(false);
   });
 });

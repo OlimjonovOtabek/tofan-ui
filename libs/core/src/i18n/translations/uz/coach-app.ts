@@ -149,6 +149,9 @@ export const COACH_APP_UZ = {
     daysHint: 'Kunlarni hozir yoki keyinroq dastur sahifasida qo‘shing.',
     submit: 'Qoralama yaratish',
     success: 'Qoralama yaratildi',
+    leaveMessage:
+      'Bu dastur videolari hali yuklanmoqda. Hozir chiqsangiz, yuklash to‘xtaydi va dastur yaratilmaydi.',
+    savedAfterUpload: 'Dastur videolari yuklanib bo‘lgach yaratiladi. Bu oynani yopmang.',
   },
   workoutProgram: {
     detailTitle: 'Mashg‘ulot dasturi',
@@ -192,7 +195,8 @@ export const COACH_APP_UZ = {
     save: 'Kunni saqlash',
     title: 'Kun nomi',
     titleHint: 'masalan, Push',
-    uploadsPending: 'Videolar yuklanib bo‘lishini kuting.',
+    uploadsPending:
+      'Videolar yuklanmoqda. Kunni saqlab, ishni davom ettirishingiz mumkin, lekin bu oynani yopmang.',
     videoCount: '{count} ta video',
     videoNameHint: 'masalan, Shtanga bilan jim',
     videoNameSave: 'Saqlash',
@@ -202,7 +206,7 @@ export const COACH_APP_UZ = {
     videoRemove: 'Videoni o‘chirish',
     videoRename: 'Nomini o‘zgartirish',
     videoRetry: 'Qayta urinish',
-    videoTooLarge: 'Video 200 MB dan katta. Qisqaroq videoni tanlang.',
+    videoTooLarge: 'Video 1 GB dan katta. Qisqaroq videoni tanlang.',
     videoWatch: 'Ko‘rish',
     videos: 'Videolar',
     videosEmpty: 'Kunda kamida bitta video bo‘lishi kerak.',
@@ -211,6 +215,35 @@ export const COACH_APP_UZ = {
     videosProgress: '{total} tadan {done} tasi yuklandi',
     videoUploading: 'Yuklanmoqda… {percent}%',
     restDay: 'Dam kuni',
+    discardConfirm: 'Saqlamasdan chiqish',
+    discardMessage:
+      'Kunni saqlash uchun nomi va kamida bitta video kerak. Hozir chiqsangiz, o‘zgarishlar yo‘qoladi.',
+    discardTitle: 'O‘zgarishlar bekor qilinsinmi?',
+    leaveConfirm: 'Chiqish',
+    leaveMessage:
+      'Videolar hali yuklanmoqda. Hozir chiqsangiz, yuklash to‘xtaydi va bu kundagi o‘zgarishlar saqlanmaydi.',
+    leaveStay: 'Qolish',
+    leaveTitle: 'Yuklash to‘xtaydi',
+    savedAfterUpload: 'Kun videolari yuklanib bo‘lgach saqlanadi. Bu oynani yopmang.',
+    videoPreparing: 'Tayyorlanmoqda… {percent}%',
+  },
+  videoUpload: {
+    lostInDraft:
+      'Ayrim videolarni yuklab bo‘lmadi. Kunni ochib, qayta urinib ko‘ring yoki ularni olib tashlang.',
+    preparing: 'Video tayyorlanmoqda',
+    progressMany: '{count} ta video · {percent}%',
+    saveFailed: 'Videolarni yuklab bo‘lmadi, shuning uchun o‘zgarishlar saqlanmadi.',
+    savedBody: 'O‘zgarishlar saqlandi.',
+    saving: 'Saqlanmoqda',
+    sending: 'Video yuklanmoqda',
+  },
+  push: {
+    denied: 'Bu brauzerda bildirishnomalar bloklangan. Ularni sayt sozlamalarida yoqing.',
+    off: 'O‘chiq',
+    on: 'Yoqilgan',
+    title: 'Bildirishnomalar',
+    videoFailed: 'Videoni o‘qib bo‘lmadi. Uni qayta yuklang.',
+    working: 'Kutilmoqda…',
   },
   video: {
     statusProcessing: 'Tayyorlanmoqda',

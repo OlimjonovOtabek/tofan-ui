@@ -153,6 +153,10 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     daysHint: "Add the days now, or later on the program's page.",
     submit: 'Create draft',
     success: 'Draft created',
+    leaveMessage:
+      'The videos of this program are still uploading. If you leave now, the upload stops and the program is not created.',
+    savedAfterUpload:
+      'The program will be created once its videos finish uploading. Keep this tab open.',
   },
   workoutProgram: {
     detailTitle: 'Workout program',
@@ -196,7 +200,8 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     save: 'Save day',
     title: 'Day name',
     titleHint: 'e.g. Push',
-    uploadsPending: 'Wait for the videos to finish uploading.',
+    uploadsPending:
+      'Videos are uploading. You can save the day and keep working, but keep this tab open.',
     videoCount: '{count, plural, one{{count} video} other{{count} videos}}',
     videoNameHint: 'e.g. Barbell bench press',
     videoNameSave: 'Save',
@@ -206,7 +211,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     videoRemove: 'Remove video',
     videoRename: 'Rename',
     videoRetry: 'Retry',
-    videoTooLarge: 'The video is larger than 200 MB. Pick a shorter one.',
+    videoTooLarge: 'The video is larger than 1 GB. Pick a shorter one.',
     videoWatch: 'Watch',
     videos: 'Videos',
     videosEmpty: 'A day needs at least one video.',
@@ -215,6 +220,34 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     videosProgress: '{done} of {total} uploaded',
     videoUploading: 'Uploading… {percent}%',
     restDay: 'Rest Day',
+    discardConfirm: 'Leave without saving',
+    discardMessage:
+      'A day needs a name and at least one video to be saved. If you leave now, your changes are lost.',
+    discardTitle: 'Discard changes?',
+    leaveConfirm: 'Leave',
+    leaveMessage:
+      'The videos are still uploading. If you leave now, the upload stops and changes to this day are not saved.',
+    leaveStay: 'Stay',
+    leaveTitle: 'Upload will stop',
+    savedAfterUpload: 'The day will be saved once its videos finish uploading. Keep this tab open.',
+    videoPreparing: 'Preparing… {percent}%',
+  },
+  videoUpload: {
+    lostInDraft: 'Some videos could not be uploaded. Open the day to try again or remove them.',
+    preparing: 'Preparing video',
+    progressMany: '{count} videos · {percent}%',
+    saveFailed: 'The videos could not be uploaded, so the changes were not saved.',
+    savedBody: 'Your changes are saved.',
+    saving: 'Saving',
+    sending: 'Uploading video',
+  },
+  push: {
+    denied: 'Notifications are blocked in this browser. Allow them in the site settings.',
+    off: 'Off',
+    on: 'On',
+    title: 'Notifications',
+    videoFailed: 'The video could not be processed. Upload it again.',
+    working: 'Please wait…',
   },
   video: {
     statusProcessing: 'Processing',

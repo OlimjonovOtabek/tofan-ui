@@ -1,0 +1,14 @@
+@if (summary(); as summary) {
+  <button
+    type="button"
+    class="bar c-pressable"
+    [class.is-raised]="raised()"
+    (click)="open(summary.link)"
+  >
+    <span class="text">
+      <span class="t-base4 font-semibold coach-ellipsis">{{ titleOf(summary.phase) | t }}</span>
+      <span class="t-base5 tone-secondary">{{ detail() }}</span>
+    </span>
+    <coach-progress [value]="summary.progress" />
+  </button>
+}
