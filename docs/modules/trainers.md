@@ -58,7 +58,7 @@ The trainer panel (`/coach/*`) is not part of this app.
   `UpdateTrainerRequest` have no `slug`. It is plain text: the public page `peaktofan.com/t/<slug>` is opened by the
   mobile app only, so the panel builds no link and has no copy button. Old accounts may show `-` until the backend fills it.
 - VIP price: the list has a read-only "VIP narxi" column (not sortable) that shows the price like the monthly price
-  and a `-` when the trainer has none. The edit dialog has an optional "VIP narxi" number field prefilled with the
+  and a `-` when the trainer has none (`null`); a stored 0 is shown as it is, so an invalid value is not hidden. The edit dialog has an optional "VIP narxi" number field prefilled with the
   current value and the hint that an empty field means Standard only. Clearing the field sends `null` and the
   trainer stops selling VIP. A value of 0 or below is refused by the form (`trainers.edit.errors.vipPrice`); the panel
   does not compare it with the monthly price, the backend owns that rule. The create dialog has no VIP price: a new

@@ -37,6 +37,10 @@ describe('Trainer', () => {
     expect(trainerWith('Jasur Karimov', 450000, null).hasVipPrice()).toBe(false);
   });
 
+  it('should show the stored VIP price when it is zero so the invalid value is not hidden', () => {
+    expect(trainerWith('Jasur Karimov', 450000, 0).hasVipPrice()).toBe(true);
+  });
+
   it('should take the first letters of the first two words when the name is long', () => {
     expect(trainerWith('jasur karimov ogli', 0).initials()).toBe('JK');
   });

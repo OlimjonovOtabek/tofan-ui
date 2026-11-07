@@ -13,8 +13,8 @@ export class Trainer {
     readonly monthlyPrice: number,
     readonly isPublished: boolean,
     readonly createdOn: Date,
-    readonly slug: string | null = null,
-    readonly vipMonthlyPrice: number | null = null,
+    readonly slug: string | null,
+    readonly vipMonthlyPrice: number | null,
   ) {}
 
   publishState(): TrainerPublishState {
@@ -26,7 +26,7 @@ export class Trainer {
   }
 
   hasVipPrice(): boolean {
-    return this.vipMonthlyPrice !== null && this.vipMonthlyPrice > 0;
+    return this.vipMonthlyPrice !== null;
   }
 
   initials(): string {
