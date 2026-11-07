@@ -47,6 +47,13 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
   The write button on the Client page and its sticky footer follow that rule, so a Standard or ended Client shows no button.
 - Preview videos: at most 5, can be reordered by drag.
 - Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending.
+- Pricing (`/profile/pricing`) has the monthly price and an optional VIP price, as on mobile.
+  An empty VIP field means `null`: no new VIP sales, and current VIP subscribers keep chat until their subscription ends.
+  A VIP price of zero is refused before saving (`coachApp.pricing.vipInvalid`).
+  The profile row shows `200 000 UZS / oy · VIP 400 000` when the coach sells VIP (`profilePriceLabel`, same number format and unit as the monthly price, VIP part from `coachApp.profile.vipPrice`).
+- `vipMonthlyPrice` is always in the `PUT /coach/profile` body, as a number or `null`, unlike `monthlyPrice`, `bio`, `photoFileId` and `slug`, which are left out when empty.
+  The backend wipes the VIP price when the key is missing or `null`, so every save (name, bio, link, photo, prices) goes through `toCoachProfileChange`, which copies the current VIP price from the loaded profile.
+  Never build an `UpdateCoachProfileRequest` by hand and never make `vipMonthlyPrice` optional in `CoachProfileChange`.
 
 ## Video uploads
 
@@ -61,6 +68,24 @@ Avatars and other images stay on the shared multipart `FileUploadService`.
 - **Compression:** `video-compressor.service.ts` makes a copy with Mediabunny (WebCodecs) in the origin private file system: at most 1920 on the longer side, 30 fps, 8 Mbit/s H.264, 128 kbit/s AAC, MP4. A video at most 1080p and 200 MB is sent as it is. Any failure, or a copy that is not smaller, sends the source. HDR sources are sent untouched, because the browser has no tone mapping like the mobile iOS transcoder.
 - **Queued saves:** a day can be saved while its videos upload. `saveWhenUploaded` sends the day, the new program or the preview video once they are stored, and gives the save up when one of them is lost. `VideoUploadBar` in the shell shows the progress and leads to the screen.
 - **Leaving:** `programLeaveGuard` and the back button save a day that can be saved. Otherwise they ask first (`Upload will stop` or `Discard changes?`) and stop the uploads of that edit. `beforeunload` warns while anything uploads, because a closed tab stops the uploads, unlike the mobile background upload.
+
+## Chat
+
+Only a Client with an active VIP Tier can be written to.
+A conversation with anyone else stays readable but is read-only.
+
+- **Read-only state:** `ConversationStore.canWrite` is false.
+  The composer is replaced by a lock note that says chat is open only to athletes with an active VIP subscription and that the history stays (`coachApp.conversation.readOnly`).
+  The "No messages yet" invitation is hidden in this state.
+- **Open refused:** `POST /chat/conversations/with/{userId}` answers `403 Chat.SubscriptionRequired` when the Client is not an active VIP.
+  The store treats it as the read-only state, not as a load error: no history is loaded, `loadError` stays empty, the name from the `?name=` query stays in the header.
+  Any other failure still shows the error state with retry.
+- **Send refused:** `POST /chat/conversations/{id}/messages` can answer the same 403 when the Client lost VIP after the conversation was opened.
+  The store switches to read-only, shows the toast `errors.backend.Chat.SubscriptionRequired` and returns `false`.
+  `ConversationPage` puts the text back into its draft when a send returns `false`, so nothing the coach typed is lost.
+- **Recognising the refusal:** `models/chat-access.ts` matches the backend code `Chat.SubscriptionRequired`, never the message text.
+  The code reaches the store because the shared HTTP layer keeps it on `AccessDeniedError` (see `docs/backend-contract.md`).
+- **Existing conversations:** the list and `GET /chat/conversations` carry `canWrite` per conversation, which feeds the same read-only state.
 
 ## Push notifications
 

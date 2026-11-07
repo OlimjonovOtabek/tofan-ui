@@ -24,6 +24,7 @@ import { Shimmer } from '@coach/core/ui/shimmer/shimmer';
 import { initialsOf } from '@coach/core/clients/client-activity';
 import { ProfileStore } from '../../profile.store';
 import { isGeneratedSlug, monthlyRevenue, publishedPrograms } from '../../models/profile-overview';
+import { profilePriceLabel } from '../../models/profile-price';
 import { ProfilePreferencesSheets, THEME_LABELS } from './profile-preferences-sheets';
 
 interface SettingRow {
@@ -100,9 +101,9 @@ export class ProfilePage {
     const profile = this.store.overview()?.profile;
     const locale = this.localeStore.locale();
     const price =
-      profile?.monthlyPrice == null
+      profile === undefined
         ? this.t('coachApp.profile.priceUnset')
-        : `${formatCount(profile.monthlyPrice, locale)} ${this.t('coachApp.profile.priceUnit')}`;
+        : profilePriceLabel(profile, (value) => formatCount(value, locale), this.t);
     return [
       {
         icon: 'credit-card',

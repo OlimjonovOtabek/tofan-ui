@@ -50,7 +50,9 @@
           </div>
         </div>
       } @empty {
-        <p class="empty t-base3 tone-secondary">{{ 'coachApp.conversation.empty' | t }}</p>
+        @if (store.canWrite()) {
+          <p class="empty t-base3 tone-secondary">{{ 'coachApp.conversation.empty' | t }}</p>
+        }
       }
       @if (store.loadingOlder()) {
         <div class="older"><coach-spinner /></div>
