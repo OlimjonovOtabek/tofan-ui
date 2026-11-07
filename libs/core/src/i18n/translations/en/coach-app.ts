@@ -412,7 +412,8 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     lastSeen: 'last seen {time}',
     today: 'Today',
     inputHint: 'Message',
-    readOnly: 'The subscription ended — the history stays open, but you can’t write.',
+    readOnly:
+      'Chat is open only to athletes with an active VIP subscription. The history stays, but you can’t write.',
     empty: 'No messages yet. Say hello!',
     errorTitle: "Couldn't open the chat",
     send: 'Send',

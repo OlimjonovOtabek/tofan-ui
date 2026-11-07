@@ -7,6 +7,9 @@ export const ERRORS_UZ = {
     IdentityProvider: {
       UserNotFound: 'Bunday foydalanuvchi topilmadi.',
     },
+    Chat: {
+      SubscriptionRequired: 'Chat faqat faol VIP obunali sportchilar uchun ochiq.',
+    },
     NotificationTemplate: {
       Conflict: 'Bu tur va uslub uchun faol shablon allaqachon bor. Avval uni faolsizlantiring.',
       NoActiveTemplate: 'Bu tur uchun foydalanuvchi uslubiga mos faol shablon topilmadi.',

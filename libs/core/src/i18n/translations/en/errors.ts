@@ -9,6 +9,9 @@ export const ERRORS_EN: Dictionary['errors'] = {
     IdentityProvider: {
       UserNotFound: 'User not found.',
     },
+    Chat: {
+      SubscriptionRequired: 'Chat is open only to athletes with an active VIP subscription.',
+    },
     NotificationTemplate: {
       Conflict: 'An active template already exists for this type and style. Deactivate it first.',
       NoActiveTemplate: "No active template matches this type and the user's style.",

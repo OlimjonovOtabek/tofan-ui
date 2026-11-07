@@ -408,7 +408,8 @@ export const COACH_APP_UZ = {
     lastSeen: 'oxirgi marta {time}',
     today: 'Bugun',
     inputHint: 'Xabar',
-    readOnly: 'Obuna tugagan — tarix ochiq, lekin yozib bo‘lmaydi.',
+    readOnly:
+      'Chat faqat faol VIP obunali sportchilar uchun ochiq. Tarix qoladi, lekin yozib bo‘lmaydi.',
     empty: 'Hali xabar yo‘q. Birinchi bo‘lib yozing!',
     errorTitle: 'Suhbatni ochib bo‘lmadi',
     send: 'Yuborish',
