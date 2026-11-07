@@ -1,0 +1,43 @@
+export const PAYMENT_ORDERS_UZ = {
+  title: "To'lov buyurtmalari",
+  total: 'Jami {count} ta buyurtma',
+  empty: "Bu filtr bo'yicha buyurtma yo'q.",
+  soldierCard: 'Soldier kartochkasi',
+  money: "{amount} so'm",
+  percent: '{value}%',
+  purposeWithTier: '{purpose} · {tier}',
+  paidAt: "To'langan: {date}",
+  paidWith: "To'langan: {date}, {provider}",
+  refundedAt: 'Qaytarilgan: {date}',
+  columns: {
+    created: 'Yaratilgan',
+    user: 'Foydalanuvchi ID',
+    purpose: 'Nima uchun',
+    price: 'Narx',
+    commission: 'Komissiya',
+    tax: 'Soliq',
+    providerFee: 'Provayder',
+    amount: 'Jami',
+    status: 'Holati',
+  },
+  purpose: {
+    trainerSubscription: 'Trener obunasi',
+    tariff: 'Tofan tarifi',
+  },
+  status: {
+    pending: 'Kutilmoqda',
+    paid: "To'langan",
+    refunded: 'Qaytarilgan',
+  },
+  provider: {
+    payme: 'Payme',
+    click: 'Click',
+  },
+  filters: {
+    status: 'Holati',
+    all: 'Hammasi',
+    userId: 'Foydalanuvchi ID',
+    referenceId: 'Trener yoki tarif ID',
+    idInvalid: "To'liq UUID kiriting.",
+  },
+};

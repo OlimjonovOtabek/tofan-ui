@@ -32,6 +32,7 @@ export const LAYOUT_UZ = {
     pricing: 'Narxlar',
     tariffs: 'Tofan tariflari',
     platformFee: 'Platform fee',
+    paymentOrders: "To'lov buyurtmalari",
   },
   titles: {
     login: 'Kirish',
@@ -52,6 +53,7 @@ export const LAYOUT_UZ = {
     trainerTiers: 'Trener darajalari',
     trainerSubscriptions: 'Trener obunalari',
     platformFee: 'Platform fee',
+    paymentOrders: "To'lov buyurtmalari",
     tariffs: 'Tofan tariflari',
     userSessions: 'Kirishlar jurnali',
     notificationTemplates: 'Bildirishnoma shablonlari',

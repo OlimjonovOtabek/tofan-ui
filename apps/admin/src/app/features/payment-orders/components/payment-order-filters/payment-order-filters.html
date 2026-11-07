@@ -1,0 +1,55 @@
+<div class="mb-4 flex flex-wrap items-start gap-3">
+  <div class="flex min-w-40 flex-col gap-1">
+    <label for="paymentOrderStatus" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.status' | t
+    }}</label>
+    <app-select-field
+      inputId="paymentOrderStatus"
+      [formField]="form.status"
+      [options]="statusOptions()"
+      [placeholder]="'paymentOrders.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex min-w-72 flex-1 flex-col gap-1">
+    <label for="paymentOrderUserId" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.userId' | t
+    }}</label>
+    <input
+      pInputText
+      id="paymentOrderUserId"
+      type="search"
+      [formField]="form.userId"
+      placeholder="UUID"
+    />
+    @if (userIdInvalid()) {
+      <small class="text-red-500">{{ 'paymentOrders.filters.idInvalid' | t }}</small>
+    }
+  </div>
+
+  <div class="flex min-w-72 flex-1 flex-col gap-1">
+    <label for="paymentOrderReferenceId" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.referenceId' | t
+    }}</label>
+    <input
+      pInputText
+      id="paymentOrderReferenceId"
+      type="search"
+      [formField]="form.referenceId"
+      placeholder="UUID"
+    />
+    @if (referenceIdInvalid()) {
+      <small class="text-red-500">{{ 'paymentOrders.filters.idInvalid' | t }}</small>
+    }
+  </div>
+
+  <p-button
+    class="self-end"
+    [label]="'common.actions.clear' | t"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</div>

@@ -1,0 +1,120 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { PaymentOrder } from '../../models/payment-order';
+import { PaymentOrdersService } from '../../services/payment-orders.service';
+import { PaymentOrdersPage } from './payment-orders-page';
+
+const paidSubscription: PaymentOrder = {
+  id: 'o1',
+  userId: '3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf',
+  purpose: 'trainerSubscription',
+  referenceId: '452bcf11-d084-4224-a4d2-54a589dfc707',
+  tier: 'vip',
+  price: 200000,
+  commissionAmount: 50000,
+  taxPercent: 12,
+  taxAmount: 30000,
+  providerFeePercent: 2.5,
+  providerFeeAmount: 7000,
+  amount: 287000,
+  status: 'paid',
+  paidWith: 'click',
+  createdAt: new Date('2026-11-06T04:56:00Z'),
+  paidAt: new Date('2026-11-06T05:00:00Z'),
+  refundedAt: null,
+};
+
+const pendingTariff: PaymentOrder = {
+  ...paidSubscription,
+  id: 'o2',
+  purpose: 'tariff',
+  referenceId: '5f6c1a10-7d1e-4a51-9c11-000000000002',
+  tier: null,
+  price: 120000,
+  commissionAmount: 0,
+  taxPercent: 0,
+  taxAmount: 0,
+  providerFeePercent: 0,
+  providerFeeAmount: 0,
+  amount: 120000,
+  status: 'pending',
+  paidWith: null,
+  paidAt: null,
+};
+
+describe('PaymentOrdersPage', () => {
+  let service: { list: ReturnType<typeof vi.fn> };
+
+  async function render(): Promise<ComponentFixture<PaymentOrdersPage>> {
+    const fixture = TestBed.createComponent(PaymentOrdersPage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return fixture;
+  }
+
+  function cells(fixture: ComponentFixture<PaymentOrdersPage>): string[][] {
+    const root = fixture.nativeElement as HTMLElement;
+    return Array.from(root.querySelectorAll('tbody tr')).map((row) =>
+      Array.from(row.querySelectorAll('td')).map(textOf),
+    );
+  }
+
+  function textOf(cell: Element): string {
+    const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT);
+    const parts: string[] = [];
+    for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+      const text = (node.textContent ?? '').replace(/\s+/g, ' ').trim();
+      if (text.length > 0) {
+        parts.push(text);
+      }
+    }
+    return parts.join(' ');
+  }
+
+  beforeEach(() => {
+    service = {
+      list: vi.fn().mockResolvedValue({ items: [paidSubscription, pendingTariff], totalCount: 2 }),
+    };
+    TestBed.configureTestingModule({
+      providers: [provideRouter([]), { provide: PaymentOrdersService, useValue: service }],
+    });
+  });
+
+  it('should load the newest orders first when the page opens', async () => {
+    await render();
+
+    expect(service.list).toHaveBeenCalledWith(
+      {},
+      expect.objectContaining({ first: 0, sortField: 'createdOnUtc', sortDirection: 'desc' }),
+    );
+  });
+
+  it('should show every amount and the paid status when the order is a paid subscription', async () => {
+    const [row] = cells(await render());
+
+    expect(row.slice(2)).toEqual([
+      'Trener obunasi · VIP 452bcf11-d084-4224-a4d2-54a589dfc707',
+      "200 000 so'm",
+      "50 000 so'm",
+      "30 000 so'm 12%",
+      "7 000 so'm 2,5%",
+      "287 000 so'm",
+      expect.stringMatching(/^To'langan To'langan: .+, Click$/),
+    ]);
+  });
+
+  it('should show the tariff without a tier and no paid date when the order is pending', async () => {
+    const [, row] = cells(await render());
+
+    expect(row[2]).toBe('Tofan tarifi 5f6c1a10-7d1e-4a51-9c11-000000000002');
+    expect(row[8]).toBe('Kutilmoqda');
+  });
+
+  it('should link the user id to the Soldier card when the table is shown', async () => {
+    const fixture = await render();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector('tbody a');
+    expect(link?.getAttribute('href')).toBe('/soldiers/3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf');
+  });
+});

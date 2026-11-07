@@ -34,6 +34,7 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     pricing: 'Цены',
     tariffs: 'Тарифы Tofan',
     platformFee: 'Platform fee',
+    paymentOrders: 'Платёжные заказы',
   },
   titles: {
     login: 'Вход',
@@ -54,6 +55,7 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     trainerTiers: 'Уровни тренеров',
     trainerSubscriptions: 'Подписки на тренеров',
     platformFee: 'Platform fee',
+    paymentOrders: 'Платёжные заказы',
     tariffs: 'Тарифы Tofan',
     userSessions: 'Журнал входов',
     notificationTemplates: 'Шаблоны уведомлений',
