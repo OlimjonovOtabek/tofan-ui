@@ -417,6 +417,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     empty: 'Сообщений пока нет. Напишите первым!',
     errorTitle: 'Не удалось открыть чат',
     send: 'Отправить',
+    unsent: 'Неотправленное сообщение',
   },
   profile: {
     editTitle: 'Редактировать профиль',

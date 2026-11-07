@@ -83,6 +83,9 @@ A conversation with anyone else stays readable but is read-only.
 - **Send refused:** `POST /chat/conversations/{id}/messages` can answer the same 403 when the Client lost VIP after the conversation was opened.
   The store switches to read-only, shows the toast `errors.backend.Chat.SubscriptionRequired` and returns `false`.
   `ConversationPage` puts the text back into its draft when a send returns `false`, so nothing the coach typed is lost.
+- **Unsent text:** while the conversation is read-only and the draft has text, the lock note is preceded by a muted block with the label `coachApp.conversation.unsent` and the draft as plain, selectable text (line breaks kept), so the coach can copy it.
+  The rule is `unsentText(draft, canWrite)` in `models/chat-access.ts`; nothing is shown for an empty or whitespace-only draft or while the conversation is writable.
+  The draft itself stays in the page, so when the conversation turns writable again the composer comes back with the same text.
 - **Recognising the refusal:** `models/chat-access.ts` matches the backend code `Chat.SubscriptionRequired`, never the message text.
   The code reaches the store because the shared HTTP layer keeps it on `AccessDeniedError` (see `docs/backend-contract.md`).
 - **Existing conversations:** the list and `GET /chat/conversations` carry `canWrite` per conversation, which feeds the same read-only state.

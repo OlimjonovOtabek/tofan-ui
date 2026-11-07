@@ -9,6 +9,7 @@ import { ConversationPage } from './conversation-page';
 
 const VIP_ONLY = 'Chat is open only to athletes with an active VIP subscription.';
 const NO_MESSAGES = 'No messages yet. Say hello!';
+const UNSENT_LABEL = 'Unsent message';
 
 function createFakeStore() {
   return {
@@ -68,6 +69,19 @@ describe('ConversationPage', () => {
     await fixture.whenStable();
   }
 
+  function unsentBlock(): HTMLElement | null {
+    return page().querySelector<HTMLElement>('.unsent');
+  }
+
+  async function refuseSendOf(text: string): Promise<void> {
+    store.send.mockImplementation(() => {
+      store.canWrite.set(false);
+      return Promise.resolve(false);
+    });
+    await type(text);
+    await submit();
+  }
+
   async function submit(): Promise<void> {
     page().querySelector('form')?.dispatchEvent(new Event('submit'));
     await fixture.whenStable();
@@ -120,6 +134,52 @@ describe('ConversationPage', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
+    expect(composer()?.value).toBe('salom');
+  });
+
+  it('should show the unsent text above the read-only note when a refused send turned the conversation read-only', async () => {
+    await refuseSendOf('salom\nDo‘stim');
+
+    const block = unsentBlock();
+    const note = page().querySelector('coach-note');
+    expect(block?.textContent).toContain(UNSENT_LABEL);
+    expect(block?.querySelector('p')?.textContent).toBe('salom\nDo‘stim');
+    expect(block?.compareDocumentPosition(note as Node)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it('should not show an unsent block when the conversation is read-only and nothing was typed', async () => {
+    store.canWrite.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(unsentBlock()).toBeNull();
+    expect(page().textContent).not.toContain(UNSENT_LABEL);
+  });
+
+  it('should not show an unsent block when the typed text is only spaces', async () => {
+    await type('   ');
+    store.canWrite.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(composer()).toBeNull();
+    expect(unsentBlock()).toBeNull();
+  });
+
+  it('should not show an unsent block when the conversation is writable', async () => {
+    await type('salom');
+
+    expect(unsentBlock()).toBeNull();
+    expect(page().textContent).not.toContain(UNSENT_LABEL);
+  });
+
+  it('should hide the unsent block and give the draft back to the composer when the conversation is writable again', async () => {
+    await refuseSendOf('salom');
+    store.canWrite.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(unsentBlock()).toBeNull();
     expect(composer()?.value).toBe('salom');
   });
 });

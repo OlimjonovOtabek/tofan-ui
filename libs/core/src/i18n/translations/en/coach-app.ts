@@ -411,6 +411,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     empty: 'No messages yet. Say hello!',
     errorTitle: "Couldn't open the chat",
     send: 'Send',
+    unsent: 'Unsent message',
   },
   profile: {
     editTitle: 'Edit profile',
