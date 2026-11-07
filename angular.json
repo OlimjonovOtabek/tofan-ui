@@ -156,6 +156,16 @@
                   "replace": "apps/coach/src/environments/environment.ts",
                   "with": "apps/coach/src/environments/environment.development.ts"
                 }
+              ],
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "apps/coach/public"
+                },
+                {
+                  "glob": "**/*",
+                  "input": "apps/coach/dev-public"
+                }
               ]
             }
           },

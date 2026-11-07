@@ -28,6 +28,7 @@ sozlanmaydi. API manzili image ichiga yozilmaydi, bitta image har qanday muhitda
 | ----------------------------- | ------------------------------------------------------------------- |
 | `Dockerfile`                  | `node:24-slim` da `npm ci` + `npm run build`, keyin nginx           |
 | `Dockerfile.coach`            | Coach app’ni alohida image qilib yig‘adi (`dist/coach/browser`)      |
+| `nginx/push-config.sh`        | Coach konteyneri ishga tushganda Firebase env'laridan `/push-config.json` yozadi |
 | `Dockerfile.landing`          | Landing'ni SSR Node server image qilib yig'adi (`dist/landing`, port 4000) |
 | `nginx/default.conf.template` | SPA, kesh, `/api` proxy; ishga tushganda env bilan to'ldiriladi     |
 | `nginx/security-headers.inc`  | `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`               |
@@ -61,7 +62,25 @@ o‘zgarmaydi.
 ```bash
 docker build -f Dockerfile.coach -t ejakhangir/tofan-coach:v1.0 .
 docker run --rm -p 8081:8080 -e API_UPSTREAM=http://host.docker.internal:5179 ejakhangir/tofan-coach:v1.0
+curl -s http://localhost:8081/push-config.json
 ```
+
+Coach web push uchun Firebase Web app config'i image ichiga yozilmaydi, konteyner ishga tushganda env'dan olinadi.
+Bu qiymatlar ochiq identifikatorlar, maxfiy emas.
+Backend'ning service account kaliti (`firebase-adminsdk-*.json`) panelga hech qachon berilmaydi.
+
+| O'zgaruvchi                    | Standart (prod, `tofan-68065`)             | Stage (`tofan-dev`)                         |
+| ------------------------------ | ------------------------------------------ | ------------------------------------------- |
+| `FIREBASE_PUBLIC_API_KEY`      | `AIzaSyDt2CYne5vyOA3S_jFjQYrA1a5vpwtuoBs`  | `AIzaSyCyIpmufwpWNl-LkvmA95TOogxt8eUX7GE`   |
+| `FIREBASE_APP_ID`              | `1:16797826601:web:b3e3840399c07d7cd76638` | `1:507735387316:web:e7c45f2064a01e6ff27be1` |
+| `FIREBASE_PROJECT_ID`          | `tofan-68065`                              | `tofan-dev`                                 |
+| `FIREBASE_MESSAGING_SENDER_ID` | `16797826601`                              | `507735387316`                              |
+| `FIREBASE_PUBLIC_VAPID_KEY`    | bo'sh (Firebase standart kaliti)           | bo'sh                                       |
+
+Prod stack'da hech narsa qo'yish shart emas: standart qiymatlar prod loyihasiniki.
+Stage stack'iga yuqoridagi stage qiymatlarini qo'ying.
+`FIREBASE_PROJECT_ID` bo'sh bo'lsa, push o'chadi (`null`).
+Qiymat yetishmasa yoki ruxsat etilmagan belgi bo'lsa, konteyner aniq xabar bilan to'xtaydi.
 
 Rollback: coach service image tag’ini oxirgi ishlagan `tofan-coach` tag’iga qaytaring. Admin service
 image’iga tegilmaydi.

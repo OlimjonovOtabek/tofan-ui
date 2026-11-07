@@ -18,7 +18,7 @@ export class PushStore {
   private readonly destroyRef = inject(DestroyRef);
   private started = false;
 
-  readonly supported = signal(this.messaging.supported);
+  readonly supported = signal(false);
   readonly enabled = signal(this.savedToken() !== null);
   readonly busy = signal(false);
 
@@ -32,9 +32,7 @@ export class PushStore {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((event) => (event.opened ? this.open(event.data) : this.received(event.data)));
     this.openFromLaunchLink();
-    if (this.supported() && this.enabled() && this.messaging.permission === 'granted') {
-      void this.registerCurrent().catch(() => this.enabled.set(false));
-    }
+    void this.restore().catch(() => this.enabled.set(false));
   }
 
   async toggle(): Promise<void> {
@@ -70,10 +68,21 @@ export class PushStore {
     this.enabled.set(true);
   }
 
+  private async restore(): Promise<void> {
+    this.supported.set(await this.messaging.available());
+    if (this.supported() && this.enabled() && this.messaging.permission === 'granted') {
+      await this.registerCurrent();
+    }
+  }
+
   private async registerCurrent(): Promise<void> {
+    const previous = this.savedToken();
     const token = await this.messaging.createToken();
     await this.deviceTokens.register(token);
     this.saveToken(token);
+    if (previous !== null && previous !== token) {
+      await this.deviceTokens.unregister(previous).catch(keepNewTokenWhenOldOneIsGone);
+    }
   }
 
   private received(data: PushData): void {
@@ -116,4 +125,8 @@ export class PushStore {
       this.enabled.set(token !== null);
     }
   }
+}
+
+function keepNewTokenWhenOldOneIsGone(): void {
+  return;
 }
