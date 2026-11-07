@@ -6,6 +6,10 @@
   (save)="submit()"
 >
   <div class="flex flex-col gap-4">
+    <p-message severity="info" icon="pi pi-info-circle">{{
+      'trainers.grant.tierHint' | t
+    }}</p-message>
+
     <div class="flex flex-col gap-1">
       <label for="grantTrainer" class="font-medium">{{ 'trainers.grant.trainer' | t }}</label>
       @if (trainer(); as lockedTrainer) {

@@ -1,4 +1,5 @@
 import { FitnessGoalDto } from '@coach/core/fitness/fitness-goal.dto';
+import { TierDto } from '@shared/models/tier.dto';
 
 export enum ClientSubscriptionStatusDto {
   Active = 1,
@@ -17,6 +18,7 @@ export interface ClientSummaryResponse {
   subscriptionEndsOnUtc: string | null;
   status: ClientSubscriptionStatusDto;
   lastWorkoutOnUtc: string | null;
+  tier: TierDto;
 }
 
 export interface AdherenceResponse {

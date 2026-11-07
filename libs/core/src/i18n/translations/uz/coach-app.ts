@@ -320,6 +320,7 @@ export const COACH_APP_UZ = {
     noMatchesMessage: 'Bu qidiruv yoki filtrga mos mijoz yo‘q.',
     searchHint: 'Ism bo‘yicha qidirish',
     statusNeedsReview: 'E’tibor kerak',
+    tierVip: 'VIP',
     accessExpired: 'Muddati tugagan',
     accessLeft: '{count} kun qoldi',
     accessUnknown: 'Tugash sanasi yo‘q',
@@ -408,7 +409,8 @@ export const COACH_APP_UZ = {
     lastSeen: 'oxirgi marta {time}',
     today: 'Bugun',
     inputHint: 'Xabar',
-    readOnly: 'Obuna tugagan — tarix ochiq, lekin yozib bo‘lmaydi.',
+    readOnly:
+      'Chat faqat faol VIP obunali sportchilar uchun ochiq. Tarix qoladi, lekin yozib bo‘lmaydi.',
     empty: 'Hali xabar yo‘q. Birinchi bo‘lib yozing!',
     errorTitle: 'Suhbatni ochib bo‘lmadi',
     send: 'Yuborish',
@@ -460,6 +462,7 @@ export const COACH_APP_UZ = {
     statClientsCaption: 'Hozir obuna',
     statPrograms: 'Dasturlar',
     title: 'Murabbiy profili',
+    vipPrice: 'VIP {price}',
     statAdherence: 'Intizom',
     statAverage: 'O‘rtacha',
     statRevenue: 'Daromad',
@@ -470,6 +473,11 @@ export const COACH_APP_UZ = {
     note: 'Sportchilar murabbiyligingiz uchun har oy shu narxni to‘laydi.',
     saved: 'Narx yangilandi',
     title: 'Obuna narxi',
+    vipHint: 'masalan, 500000',
+    vipInvalid: 'VIP narxi noldan katta bo‘lishi kerak',
+    vipLabel: 'VIP narxi (ixtiyoriy)',
+    vipNote:
+      'VIP o‘quvchilar siz bilan chatda yozisha oladi. Faqat Standard sotish uchun bo‘sh qoldiring - hozirgi VIP o‘quvchilarda chat obuna tugaguncha ishlaydi.',
   },
   earnings: {
     entrySubtitle: 'Sof daromad va to‘lovlar',

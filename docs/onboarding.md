@@ -100,6 +100,7 @@ Per-request behaviour (interceptors, order `sessionInterceptor`, then `authToken
 request ──> authTokenInterceptor: adds "Authorization: Bearer <token>" only for API_BASE_URL URLs
         <── sessionInterceptor:
               403           -> navigate to /auth/access-denied
+                               (not when the body carries a business code, e.g. Chat.SubscriptionRequired)
               401 + session -> AuthStore.renewSession() (one shared refresh at a time, POST /auth/refresh)
                                -> retry the request once
                                -> refresh fails -> logout() and go to /auth/login

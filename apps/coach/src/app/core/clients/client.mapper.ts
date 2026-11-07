@@ -1,4 +1,5 @@
 import { fitnessGoals } from '@coach/core/fitness/fitness-goal.dto';
+import { tiers } from '@shared/models/tier.dto';
 import { toDateOrNull } from '../payments/payment.mapper';
 import {
   AdherenceResponse,
@@ -24,6 +25,7 @@ export function toClient(response: ClientSummaryResponse, adherencePercent: numb
     subscribedOn: toDateOrNull(response.subscribedOnUtc),
     subscriptionEndsOn: toDateOrNull(response.subscriptionEndsOnUtc),
     status: STATUSES[response.status] ?? 'active',
+    tier: tiers.toDomainOrNull(response.tier) ?? 'standard',
     lastWorkoutOn: toDateOrNull(response.lastWorkoutOnUtc),
     adherencePercent,
   };

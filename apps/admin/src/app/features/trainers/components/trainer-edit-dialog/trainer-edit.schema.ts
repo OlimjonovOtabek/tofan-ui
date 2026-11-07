@@ -1,6 +1,14 @@
 import { Signal } from '@angular/core';
 import { TranslationKey } from '@core/i18n/dictionary';
-import { Schema, min, required, schema } from '@angular/forms/signals';
+import {
+  Schema,
+  ValidationResult,
+  min,
+  minError,
+  required,
+  schema,
+  validate,
+} from '@angular/forms/signals';
 import { TakenTrainerAccount } from '../../models/taken-trainer-account';
 import { Trainer } from '../../models/trainer';
 import { TrainerAccount } from '../../models/trainer-account';
@@ -12,6 +20,7 @@ import {
 } from '../trainer-form-dialog/trainer-field.rules';
 
 const MONTHLY_PRICE_ERROR: TranslationKey = 'trainers.edit.errors.monthlyPrice';
+const VIP_PRICE_ERROR: TranslationKey = 'trainers.edit.errors.vipPrice';
 
 export interface TrainerEditFormValue {
   email: string;
@@ -19,6 +28,7 @@ export interface TrainerEditFormValue {
   displayName: string;
   bio: string;
   monthlyPrice: number | null;
+  vipMonthlyPrice: number | null;
 }
 
 export function toTrainerEditFormValue(
@@ -31,6 +41,7 @@ export function toTrainerEditFormValue(
     displayName: trainer.displayName,
     bio: trainer.bio ?? '',
     monthlyPrice: trainer.monthlyPrice,
+    vipMonthlyPrice: trainer.vipMonthlyPrice,
   };
 }
 
@@ -45,7 +56,15 @@ export function toTrainerEditDraft(
     bio: value.bio,
     photoFileId,
     monthlyPrice: value.monthlyPrice ?? 0,
+    vipMonthlyPrice: value.vipMonthlyPrice,
   };
+}
+
+function vipPriceError(price: number | null): ValidationResult {
+  if (price === null || price > 0) {
+    return null;
+  }
+  return minError(0, { message: VIP_PRICE_ERROR });
 }
 
 export function trainerEditFormSchema(
@@ -57,5 +76,6 @@ export function trainerEditFormSchema(
     applyCardRules(path.displayName, path.bio);
     required(path.monthlyPrice, { message: MONTHLY_PRICE_ERROR });
     min(path.monthlyPrice, 0, { message: MONTHLY_PRICE_ERROR });
+    validate(path.vipMonthlyPrice, ({ value }) => vipPriceError(value()));
   });
 }
