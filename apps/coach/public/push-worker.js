@@ -18,16 +18,14 @@ function tell(client, kind, data, notice) {
   client.postMessage({ kind, data: JSON.stringify(data), ...notice });
 }
 
-function noticeOf(payload) {
-  const data = payload.data ?? {};
-  const notification = payload.notification ?? {};
+function noticeOf(notification, data) {
   const title = notification.title ?? data.title;
   return title ? { title, body: notification.body ?? data.body ?? '' } : null;
 }
 
 async function deliver(payload) {
   const data = payload.data ?? {};
-  const notice = noticeOf(payload);
+  const notice = noticeOf(payload.notification ?? {}, data);
   const open = await windows();
   const visible = open.find((client) => client.visibilityState === 'visible');
   if (visible) {

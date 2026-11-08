@@ -5,7 +5,7 @@ import { Translator } from '@core/i18n/translator';
 import { toErrorMessage } from './error-message';
 
 const SUCCESS_LIFETIME_MS = 4000;
-const ERROR_LIFETIME_MS = 8000;
+const LONG_LIFETIME_MS = 8000;
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -26,7 +26,7 @@ export class NotificationService {
       severity: 'info',
       summary: this.translator.translate('common.toast.info'),
       detail: this.translator.translate(detail, params),
-      life: ERROR_LIFETIME_MS,
+      life: LONG_LIFETIME_MS,
     });
   }
 
@@ -35,7 +35,7 @@ export class NotificationService {
       severity: 'info',
       summary,
       detail,
-      life: ERROR_LIFETIME_MS,
+      life: LONG_LIFETIME_MS,
     });
   }
 
@@ -44,7 +44,7 @@ export class NotificationService {
       severity: 'error',
       summary: this.translator.translate('common.toast.error'),
       detail: this.translator.translate(detail, params),
-      life: ERROR_LIFETIME_MS,
+      life: LONG_LIFETIME_MS,
     });
   }
 
@@ -53,7 +53,7 @@ export class NotificationService {
       severity: 'error',
       summary: this.translator.translate('common.toast.error'),
       detail: this.translator.message(toErrorMessage(error)),
-      life: ERROR_LIFETIME_MS,
+      life: LONG_LIFETIME_MS,
     });
   }
 }

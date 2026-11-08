@@ -35,14 +35,14 @@ describe('push messages', () => {
     expect(isFailedVideoPush({ source: 'video', type: '13' })).toBe(false);
   });
 
-  it('should read the title and body a visible tab can show', () => {
+  it('should read the title and body when the push carries both', () => {
     expect(toPushNotice({ title: 'Hello', body: 'World' })).toEqual({
       title: 'Hello',
       body: 'World',
     });
   });
 
-  it('should read a title without a body as an empty body', () => {
+  it('should read an empty body when the push carries only a title', () => {
     expect(toPushNotice({ title: 'Hello' })).toEqual({ title: 'Hello', body: '' });
   });
 

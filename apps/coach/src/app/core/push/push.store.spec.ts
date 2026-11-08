@@ -165,7 +165,7 @@ describe('PushStore', () => {
     expect(notifications.failure).toHaveBeenCalledWith('coachApp.push.videoFailed');
   });
 
-  it('should show the title and body of a push that arrives in front', () => {
+  it('should show the title and body when a push arrives in front', () => {
     store.start();
 
     events.next({
@@ -178,7 +178,7 @@ describe('PushStore', () => {
     expect(router.navigateByUrl).not.toHaveBeenCalled();
   });
 
-  it('should show nothing for a push that arrives in front without a title', () => {
+  it('should show nothing when a push arrives in front without a title', () => {
     store.start();
 
     events.next({ opened: false, data: {}, notice: null });
