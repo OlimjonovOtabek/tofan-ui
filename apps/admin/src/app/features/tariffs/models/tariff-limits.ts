@@ -42,9 +42,13 @@ function foodScanLine(limit: number | null): TariffLimitLine {
 
 function workoutVideoLine(limit: number | null): TariffLimitLine {
   const label = 'tariffs.limits.workoutVideo.label';
-  return limit === null
-    ? line(label, 'tariffs.limits.workoutVideo.unlimited')
-    : line(label, 'tariffs.limits.workoutVideo.some', { count: limit });
+  if (limit === null) {
+    return line(label, 'tariffs.limits.workoutVideo.unlimited');
+  }
+  if (limit === 0) {
+    return line(label, 'tariffs.limits.workoutVideo.closed');
+  }
+  return line(label, 'tariffs.limits.workoutVideo.some', { count: limit });
 }
 
 function mealTypesLine(mealTypes: readonly MealType[] | null): TariffLimitLine {

@@ -1,6 +1,6 @@
 import { Query } from '@core/http/api.dto';
 import { toPagedQuery } from '@core/http/paging.mapper';
-import { SoldierOption } from '../models/soldier-option';
+import { SoldierOption } from '@shared/models/soldier-option';
 import { SoldierLookupResponse } from './soldier-lookup.dto';
 
 export function toSoldierOption(response: SoldierLookupResponse): SoldierOption {

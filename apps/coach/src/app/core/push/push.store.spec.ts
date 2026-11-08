@@ -9,7 +9,7 @@ import { PushStore } from './push.store';
 describe('PushStore', () => {
   const events = new Subject<WorkerPushEvent>();
   const messaging = {
-    supported: true,
+    available: vi.fn(),
     permission: 'default',
     requestPermission: vi.fn(),
     createToken: vi.fn(),
@@ -25,6 +25,14 @@ describe('PushStore', () => {
     vi.resetAllMocks();
     localStorage.clear();
     messaging.permission = 'default';
+    messaging.available.mockResolvedValue(true);
+    deviceTokens.register.mockResolvedValue(undefined);
+    deviceTokens.unregister.mockResolvedValue(undefined);
+    store = createStore();
+  });
+
+  function createStore(): PushStore {
+    TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       providers: [
         { provide: PushMessagingService, useValue: messaging },
@@ -33,8 +41,8 @@ describe('PushStore', () => {
         { provide: Router, useValue: router },
       ],
     });
-    store = TestBed.inject(PushStore);
-  });
+    return TestBed.inject(PushStore);
+  }
 
   it('should register the token when the coach allows notifications', async () => {
     messaging.requestPermission.mockResolvedValue('granted');
@@ -79,6 +87,61 @@ describe('PushStore', () => {
     expect(notifications.error).toHaveBeenCalledWith(failure);
     expect(store.enabled()).toBe(false);
     expect(store.busy()).toBe(false);
+  });
+
+  it('should offer push when the container gives a Firebase config', async () => {
+    store.start();
+
+    await vi.waitFor(() => expect(store.supported()).toBe(true));
+  });
+
+  it('should hide push when the container has no Firebase config', async () => {
+    messaging.available.mockResolvedValue(false);
+
+    store.start();
+
+    await vi.waitFor(() => expect(messaging.available).toHaveBeenCalled());
+    expect(store.supported()).toBe(false);
+  });
+
+  it('should register the token again when push was on before', async () => {
+    localStorage.setItem('coach.push.token', 't1');
+    messaging.permission = 'granted';
+    messaging.createToken.mockResolvedValue('t1');
+    store = createStore();
+
+    store.start();
+
+    await vi.waitFor(() => expect(deviceTokens.register).toHaveBeenCalledWith('t1'));
+    expect(deviceTokens.unregister).not.toHaveBeenCalled();
+  });
+
+  it('should drop the old token when the browser gives a new one', async () => {
+    localStorage.setItem('coach.push.token', 'old');
+    messaging.permission = 'granted';
+    messaging.createToken.mockResolvedValue('new');
+    store = createStore();
+
+    store.start();
+
+    await vi.waitFor(() => expect(deviceTokens.unregister).toHaveBeenCalledWith('old'));
+    expect(deviceTokens.register).toHaveBeenCalledWith('new');
+    expect(localStorage.getItem('coach.push.token')).toBe('new');
+    expect(store.enabled()).toBe(true);
+  });
+
+  it('should keep push on when the old token is already gone', async () => {
+    localStorage.setItem('coach.push.token', 'old');
+    messaging.permission = 'granted';
+    messaging.createToken.mockResolvedValue('new');
+    deviceTokens.unregister.mockRejectedValue(new Error('not found'));
+    store = createStore();
+
+    store.start();
+
+    await vi.waitFor(() => expect(deviceTokens.unregister).toHaveBeenCalledWith('old'));
+    expect(localStorage.getItem('coach.push.token')).toBe('new');
+    expect(store.enabled()).toBe(true);
   });
 
   it('should open the screen of a tapped push', () => {

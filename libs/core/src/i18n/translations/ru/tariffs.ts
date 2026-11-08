@@ -13,8 +13,8 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
     vip: 'VIP',
   },
   card: {
-    monthlyPrice: 'Цена в месяц',
-    totalPrice: 'Итоговая цена для Soldier',
+    userPays: 'Soldier платит в месяц',
+    noPlatformFee: 'Комиссия, налог и сбор провайдера не добавляются.',
     price: '{amount} сум',
     limits: 'Лимиты',
     benefits: 'Преимущества',
@@ -34,7 +34,8 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
     workoutVideo: {
       label: 'Видео тренировок',
       unlimited: 'Все открыты',
-      some: 'Открыто видео: {count}',
+      closed: 'Все видео закрыты',
+      some: 'Открыты видео первых {count} упражнений плана',
     },
     mealTypes: {
       label: 'Приёмы пищи',
@@ -62,7 +63,8 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
     monthlyPrice: 'Цена в месяц',
     priceSuffix: ' сум',
     freeHint: 'Free всегда бесплатный',
-    totalPriceHint: 'Итоговую цену считает бэкенд после сохранения, её нельзя изменить.',
+    totalPriceHint:
+      'Soldier платит ровно эту цену: к тарифам Tofan не добавляются комиссия, налог и сбор провайдера.',
     foodScan: {
       label: 'Лимит сканирования еды',
       unlimited: 'Без ограничений',
@@ -72,7 +74,8 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
     workoutVideo: {
       label: 'Лимит видео тренировок',
       unlimited: 'Все открыты',
-      value: 'Количество открытых видео',
+      value: 'Упражнений с открытым видео',
+      hint: 'Открыты видео первых N упражнений плана. При значении 0 все видео закрыты.',
     },
     mealTypes: {
       label: 'Приёмы пищи',

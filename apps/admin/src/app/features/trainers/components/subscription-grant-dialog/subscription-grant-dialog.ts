@@ -18,8 +18,8 @@ import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { NumberField } from '@shared/components/number-field/number-field';
 import { SelectField } from '@shared/components/select-field/select-field';
 import { SelectOption } from '@shared/models/select-option';
-import { SoldierOption } from '../../models/soldier-option';
-import { SoldierField } from '../soldier-field/soldier-field';
+import { SoldierOption } from '@shared/models/soldier-option';
+import { SoldierField } from '@shared/components/soldier-field/soldier-field';
 import { Trainer } from '../../models/trainer';
 import {
   SubscriptionGrantFormValue,

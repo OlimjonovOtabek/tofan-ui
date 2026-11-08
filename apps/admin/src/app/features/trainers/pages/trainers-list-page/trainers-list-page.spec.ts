@@ -7,7 +7,7 @@ import { API_BASE_URL } from '@core/http/api-base-url';
 import { Trainer } from '../../models/trainer';
 import { TrainerResponse } from '../../services/trainer.dto';
 import { toTrainer } from '../../services/trainer.mapper';
-import { SoldierLookupService } from '../../services/soldier-lookup.service';
+import { SoldierLookupService } from '@shared/components/soldier-field/soldier-lookup.service';
 import { TrainerAccountsService } from '../../services/trainer-accounts.service';
 import { TrainerSubscriptionsService } from '../../services/trainer-subscriptions.service';
 import { TrainersService } from '../../services/trainers.service';

@@ -11,8 +11,8 @@ export const TARIFFS_UZ = {
     vip: 'VIP',
   },
   card: {
-    monthlyPrice: 'Oylik narx',
-    totalPrice: "O'quvchi to'laydigan jami narx",
+    userPays: "O'quvchi oyiga to'laydi",
+    noPlatformFee: "Komissiya, soliq va provayder foizi qo'shilmaydi.",
     price: "{amount} so'm",
     limits: 'Limitlar',
     benefits: 'Imtiyozlar',
@@ -32,7 +32,8 @@ export const TARIFFS_UZ = {
     workoutVideo: {
       label: 'Mashq videolari',
       unlimited: 'Hammasi ochiq',
-      some: '{count} ta video ochiq',
+      closed: 'Hamma video yopiq',
+      some: 'Rejadagi birinchi {count} ta mashq videosi ochiq',
     },
     mealTypes: {
       label: 'Ovqat turlari',
@@ -61,7 +62,7 @@ export const TARIFFS_UZ = {
     priceSuffix: " so'm",
     freeHint: 'Free doim bepul',
     totalPriceHint:
-      "Jami narxni saqlagandan keyin backend qayta hisoblaydi, uni o'zgartirib bo'lmaydi.",
+      "O'quvchi aynan shu narxni to'laydi: Tofan tariflariga komissiya, soliq va provayder foizi qo'shilmaydi.",
     foodScan: {
       label: 'Ovqat scan limiti',
       unlimited: 'Cheksiz',
@@ -71,7 +72,8 @@ export const TARIFFS_UZ = {
     workoutVideo: {
       label: 'Mashq videolari limiti',
       unlimited: 'Hammasi ochiq',
-      value: 'Ochiq videolar soni',
+      value: 'Videosi ochiq mashqlar soni',
+      hint: "Rejadagi birinchi N ta mashq videosi ochiq bo'ladi. 0 kiritilsa hamma video yopiq.",
     },
     mealTypes: {
       label: 'Ovqat turlari',

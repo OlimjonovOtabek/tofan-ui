@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { SOLDIER_SUGGESTION_LIMIT, SoldierOption } from './models/soldier-option';
-import { SoldierLookupService } from './services/soldier-lookup.service';
+import { SOLDIER_SUGGESTION_LIMIT, SoldierOption } from '@shared/models/soldier-option';
+import { SoldierLookupService } from './soldier-lookup.service';
 
 @Injectable()
 export class SoldierSearchStore {

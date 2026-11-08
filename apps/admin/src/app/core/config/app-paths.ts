@@ -15,6 +15,7 @@ export const AppPaths = {
   sendNotification: '/notifications/send',
   platformFee: '/platform-fee',
   tariffs: '/tariffs',
+  paymentOrders: '/payment-orders',
   login: '/auth/login',
   accessDenied: '/auth/access-denied',
   error: '/auth/error',

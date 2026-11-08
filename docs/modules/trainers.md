@@ -104,6 +104,9 @@ The trainer panel (`/coach/*`) is not part of this app.
   `SoldierSearchStore` is provided by each page; the dialog emits `soldierSearch` and the page forwards it.
   The dialog asks for the first 10 soldiers when it opens, and the field asks again on focus and on typing.
   Reading `/admin/soldiers` goes through `SoldierLookupService` with its own DTO, never the soldiers feature.
+  The field, the store, the service and `SoldierOption` live in `libs/shared/src/components/soldier-field` (and `shared/models/soldier-option.ts`),
+  because the payment orders create dialog uses the same picker.
+  The shown name follows the form value (`linkedSignal` on `value`), so a dialog that resets its form also clears the name in the field.
 
 ### Tiers tab ("Darajalar")
 - `TrainerTiersPage` provides `TrainerTiersStore` and shows one `TierCard` per Tier, Standard first, then VIP.
@@ -129,8 +132,9 @@ The trainer panel (`/coach/*`) is not part of this app.
   its sort, the row action, the dialog and `Trainer.InvalidCommissionPercent`. The commission is now one
   global Platform fee (commission amount, tax and payment provider fee) managed on the admin Platform fee
   page (`docs/modules/platform-fee.md`), not per trainer.
-- `GET /admin/payment-orders` also returns `commissionPercent` per order, but the panel has no payment
-  orders screen yet.
+- `GET /admin/payment-orders` returns per order `price`, `commissionAmount`, `taxPercent`, `taxAmount`,
+  `providerFeePercent`, `providerFeeAmount` and `amount` (the sum of the four sums, `admin-ui-platform-fee-v1.1.md`),
+  and the admin "To'lov buyurtmalari" page shows them (`docs/modules/payment-orders.md`).
 - Always send `vipMonthlyPrice` in `PUT /admin/trainers/{id}`: the backend treats a missing key as `null`, so an
   update without it silently wipes the trainer's VIP price. `UpdateTrainerRequest.vipMonthlyPrice` is a required key,
   `TrainerEditDraft` carries it, and the edit form is prefilled from `Trainer.vipMonthlyPrice`, so changing the name,

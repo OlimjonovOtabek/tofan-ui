@@ -40,6 +40,12 @@ server {
         add_header Cache-Control "no-cache" always;
     }
 
+    location = /push-config.json {
+        include /etc/nginx/snippets/security-headers.inc;
+        add_header Cache-Control "no-cache" always;
+        try_files $uri =404;
+    }
+
     location ~ "-[A-Za-z0-9]{8}\.(js|css)$" {
         include /etc/nginx/snippets/security-headers.inc;
         add_header Cache-Control "public, max-age=31536000, immutable" always;

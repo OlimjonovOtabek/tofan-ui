@@ -77,6 +77,43 @@ describe('PlatformFeeForm', () => {
     );
   });
 
+  function sampleRowsOf(fixture: ComponentFixture<PlatformFeeForm>): string[] {
+    const sample = (fixture.nativeElement as HTMLElement).querySelector('app-platform-fee-sample');
+    return Array.from(sample?.querySelectorAll('dl > div') ?? []).map((row) =>
+      Array.from(row.children)
+        .map((cell) => (cell.textContent ?? '').replace(/\s+/g, ' ').trim())
+        .join(' '),
+    );
+  }
+
+  it('should show the sample trainer payment when the fee is given', async () => {
+    const { fixture } = await render();
+
+    expect(sampleRowsOf(fixture)).toEqual([
+      'Trener narxi 200 000 UZS',
+      'Komissiya 50 000 UZS',
+      'Soliq (12%) 30 000 UZS',
+      "To'lov provayderi (2,5%) 7 000 UZS",
+      "O'quvchi to'laydi 287 000 UZS",
+    ]);
+  });
+
+  it('should recount the sample when a percent is edited', async () => {
+    const { fixture } = await render();
+
+    await type(fixture, PROVIDER_INPUT, '2');
+
+    expect(sampleRowsOf(fixture)).toContain("O'quvchi to'laydi 285 600 UZS");
+  });
+
+  it('should hide the sample when a field is not valid', async () => {
+    const { fixture } = await render();
+
+    await type(fixture, TAX_INPUT, '');
+
+    expect(sampleRowsOf(fixture)).toEqual([]);
+  });
+
   it('should emit the draft of the shown values when the form is submitted untouched', async () => {
     const { fixture, emitted } = await render();
 

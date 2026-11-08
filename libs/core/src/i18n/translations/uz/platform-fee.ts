@@ -1,11 +1,12 @@
 export const PLATFORM_FEE_UZ = {
   title: 'Platform fee',
-  subtitle: "Tofan har bir to'lov narxiga qo'shadigan komissiya, soliq va to'lov provayderi foizi.",
+  subtitle:
+    "Trener obunasi narxiga qo'shiladigan komissiya, soliq va to'lov provayderi foizi. Tofan tariflariga qo'shilmaydi.",
   loading: 'Yuklanmoqda...',
   form: {
     commissionAmount: 'Komissiya summasi',
     commissionHint:
-      "Har bir to'lovga qo'shiladigan qat'iy summa. 0 dan kam emas, ko'pi bilan 2 kasr.",
+      "Har bir trener obunasi to'loviga qo'shiladigan qat'iy summa. 0 dan kam emas, ko'pi bilan 2 kasr.",
     taxPercent: 'Soliq foizi',
     taxHint: "0 dan 100 gacha, ko'pi bilan 2 kasr (masalan 12).",
     providerFeePercent: "To'lov provayderi foizi",
@@ -13,6 +14,15 @@ export const PLATFORM_FEE_UZ = {
     percentSuffix: '%',
     futureOnly:
       "O'zgarish faqat saqlangandan keyin ochilgan to'lovlarga ta'sir qiladi. Avvalgi to'lovlar o'zgarmaydi.",
+  },
+  sample: {
+    title: 'Namunaviy hisob',
+    hint: "Formadagi qiymatlar bo'yicha. Soliq va provayder summasi alohida butun so'mga yaxlitlanadi.",
+    price: 'Trener narxi',
+    commission: 'Komissiya',
+    tax: 'Soliq ({percent}%)',
+    providerFee: "To'lov provayderi ({percent}%)",
+    total: "O'quvchi to'laydi",
   },
   errors: {
     commissionAmount: "0 yoki undan katta, ko'pi bilan 2 kasrli son kiriting.",

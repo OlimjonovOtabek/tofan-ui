@@ -1,0 +1,66 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="'paymentOrders.create.header' | t"
+  [saveLabel]="'paymentOrders.create.save' | t"
+  [saving]="saving()"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-4">
+    <p-message severity="info" icon="pi pi-info-circle">{{
+      'paymentOrders.create.hint' | t
+    }}</p-message>
+
+    <div class="flex flex-col gap-1">
+      <label for="orderTrainer" class="font-medium">{{ 'paymentOrders.create.trainer' | t }}</label>
+      <app-select-field
+        inputId="orderTrainer"
+        [formField]="form.trainerId"
+        [options]="trainerOptions()"
+        [placeholder]="'paymentOrders.create.trainerPlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.trainerId()" />
+      @if (trainersFailed()) {
+        <small class="text-red-500" role="alert">{{
+          'paymentOrders.create.trainersFailed' | t
+        }}</small>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="orderUser" class="font-medium">{{ 'paymentOrders.create.user' | t }}</label>
+      <app-soldier-field
+        inputId="orderUser"
+        [formField]="form.userId"
+        [options]="soldiers()"
+        [placeholder]="'paymentOrders.create.soldierPlaceholder' | t"
+        [emptyMessage]="soldiersEmpty() | t"
+        (searchChange)="soldierSearch.emit($event)"
+      />
+      <app-field-error [field]="form.userId()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="orderPrice" class="font-medium">{{ 'paymentOrders.create.price' | t }}</label>
+      <app-number-field
+        inputId="orderPrice"
+        [formField]="form.price"
+        [maxFractionDigits]="0"
+        [suffix]="'paymentOrders.create.priceSuffix' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.price()" />
+      @if (trainerPrice(); as hint) {
+        <div class="flex flex-wrap items-center gap-x-1">
+          <span class="text-muted-color text-sm">{{ hint }}</span>
+          <p-button
+            [label]="'paymentOrders.create.useTrainerPrice' | t"
+            [link]="true"
+            size="small"
+            (onClick)="useTrainerPrice()"
+          />
+        </div>
+      }
+    </div>
+  </div>
+</app-form-dialog>
