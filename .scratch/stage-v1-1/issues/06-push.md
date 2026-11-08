@@ -17,3 +17,5 @@ Trainer bildirishnomaga ruxsat bergach brauzer ro'yxatdan o'tadi, admin bitta fo
 ## Comments
 
 Deploy qilingan `v1.5` da ochiq tab'da push ko'rinmadi (frontend xatosi, `a4aa3df` da tuzatildi, tuzatish lokal Coach'da tasdiqlandi, `v1.5`da emas). macOS bildirishnomasi tasdiqlanmadi: foydalanuvchi lokal 'OS path test' ni ham ko'rmadi (macOS/Chrome sozlamasi), ammo worker bildirishnomani yaratgani `getNotifications()` bilan ko'rildi.
+
+2026-11-09 qayta sinov: ochiq tab'dagi push lokal Coach'da qayta tasdiqlandi (00:19, toast ko'rindi); deploy qilingan `v1.5` da emas. macOS bildirishnomasi hali tasdiqlanmagan (ish stoli boshqaruv vositasi yo'q, hisobotda).
