@@ -1,5 +1,6 @@
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
 
+import { readStoredLayoutConfig, storeLayoutConfig } from './layout-config.storage';
 import { surfaceGroundFor } from './theme/surface-ground';
 
 export type MenuMode = 'static' | 'overlay';
@@ -23,18 +24,19 @@ interface LayoutState {
 const DARK_THEME_CLASS = 'app-dark';
 const BLOCKED_SCROLL_CLASS = 'blocked-scroll';
 const DESKTOP_MIN_WIDTH = 992;
+const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
+  preset: 'Aura',
+  primary: 'blue',
+  surface: null,
+  darkTheme: false,
+  menuMode: 'static',
+};
 
 @Injectable({ providedIn: 'root' })
 export class LayoutService {
   private readonly document = inject(DOCUMENT);
 
-  private readonly config = signal<LayoutConfig>({
-    preset: 'Aura',
-    primary: 'blue',
-    surface: null,
-    darkTheme: false,
-    menuMode: 'static',
-  });
+  private readonly config = signal<LayoutConfig>(readStoredLayoutConfig(DEFAULT_LAYOUT_CONFIG));
 
   private readonly state = signal<LayoutState>({
     staticMenuDesktopInactive: false,
@@ -54,6 +56,7 @@ export class LayoutService {
   constructor() {
     effect(() => this.applyDarkTheme(this.config().darkTheme));
     effect(() => this.applySurfaceGround(this.config()));
+    effect(() => storeLayoutConfig(this.config()));
     effect(() =>
       this.document.body.classList.toggle(BLOCKED_SCROLL_CLASS, this.state().mobileMenuActive),
     );
