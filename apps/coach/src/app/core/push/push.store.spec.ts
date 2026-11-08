@@ -17,7 +17,7 @@ describe('PushStore', () => {
     workerEvents: () => events,
   };
   const deviceTokens = { register: vi.fn(), unregister: vi.fn() };
-  const notifications = { failure: vi.fn(), error: vi.fn() };
+  const notifications = { failure: vi.fn(), error: vi.fn(), announce: vi.fn() };
   const router = { navigateByUrl: vi.fn() };
   let store: PushStore;
 
@@ -147,7 +147,11 @@ describe('PushStore', () => {
   it('should open the screen of a tapped push', () => {
     store.start();
 
-    events.next({ opened: true, data: { source: 'chat', conversationId: 'c1' } });
+    events.next({
+      opened: true,
+      data: { source: 'chat', conversationId: 'c1' },
+      notice: null,
+    });
 
     expect(router.navigateByUrl).toHaveBeenCalledWith('/chat/c/c1');
   });
@@ -155,9 +159,56 @@ describe('PushStore', () => {
   it('should warn about a failed video in front without moving', () => {
     store.start();
 
-    events.next({ opened: false, data: { source: 'video', type: '14' } });
+    events.next({ opened: false, data: { source: 'video', type: '14' }, notice: null });
 
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(notifications.failure).toHaveBeenCalledWith('coachApp.push.videoFailed');
+  });
+
+  it('should show the title and body of a push that arrives in front', () => {
+    store.start();
+
+    events.next({
+      opened: false,
+      data: {},
+      notice: { title: 'Stage push test', body: 'Hello' },
+    });
+
+    expect(notifications.announce).toHaveBeenCalledWith('Stage push test', 'Hello');
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
+  });
+
+  it('should show nothing for a push that arrives in front without a title', () => {
+    store.start();
+
+    events.next({ opened: false, data: {}, notice: null });
+
+    expect(notifications.announce).not.toHaveBeenCalled();
+    expect(notifications.failure).not.toHaveBeenCalled();
+  });
+
+  it('should warn instead of showing the text when a failed video arrives in front', () => {
+    store.start();
+
+    events.next({
+      opened: false,
+      data: { source: 'video', type: '14' },
+      notice: { title: 'Video failed', body: 'Try again' },
+    });
+
+    expect(notifications.failure).toHaveBeenCalledWith('coachApp.push.videoFailed');
+    expect(notifications.announce).not.toHaveBeenCalled();
+  });
+
+  it('should not show the text again when the coach taps the system notification', () => {
+    store.start();
+
+    events.next({
+      opened: true,
+      data: { source: 'chat', conversationId: 'c1' },
+      notice: { title: 'New message', body: 'Hi' },
+    });
+
+    expect(notifications.announce).not.toHaveBeenCalled();
   });
 });

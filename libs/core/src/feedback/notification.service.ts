@@ -30,6 +30,15 @@ export class NotificationService {
     });
   }
 
+  announce(summary: string, detail: string): void {
+    this.messageService.add({
+      severity: 'info',
+      summary,
+      detail,
+      life: ERROR_LIFETIME_MS,
+    });
+  }
+
   failure(detail: TranslationKey, params?: TranslationParams): void {
     this.messageService.add({
       severity: 'error',

@@ -1,4 +1,10 @@
-import { isFailedVideoPush, pushDataFromLink, pushLinkOf, toPushData } from './push-message';
+import {
+  isFailedVideoPush,
+  pushDataFromLink,
+  pushLinkOf,
+  toPushData,
+  toPushNotice,
+} from './push-message';
 
 describe('push messages', () => {
   it('should open the conversation of a chat push', () => {
@@ -27,6 +33,23 @@ describe('push messages', () => {
   it('should recognise a failed video', () => {
     expect(isFailedVideoPush({ source: 'video', type: '14' })).toBe(true);
     expect(isFailedVideoPush({ source: 'video', type: '13' })).toBe(false);
+  });
+
+  it('should read the title and body a visible tab can show', () => {
+    expect(toPushNotice({ title: 'Hello', body: 'World' })).toEqual({
+      title: 'Hello',
+      body: 'World',
+    });
+  });
+
+  it('should read a title without a body as an empty body', () => {
+    expect(toPushNotice({ title: 'Hello' })).toEqual({ title: 'Hello', body: '' });
+  });
+
+  it('should read no notice when the push carries no title', () => {
+    expect(toPushNotice({ body: 'World' })).toBeNull();
+    expect(toPushNotice({ title: '' })).toBeNull();
+    expect(toPushNotice({})).toBeNull();
   });
 
   it('should keep only the text values', () => {

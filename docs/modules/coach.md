@@ -95,6 +95,9 @@ A conversation with anyone else stays readable but is read-only.
 `core/push` registers the browser's Firebase token with `PUT /device-tokens/me` (`platform` 3, Web) and removes it on sign-out with `DELETE /device-tokens/me`.
 The coach turns it on in Profile, since browsers ask for permission on a user action.
 `public/push-worker.js` is a plain service worker without the Firebase SDK: it shows the notification, or tells a visible tab, and a tap opens the screen from `pushLinkOf` (the same routes as mobile).
+A visible tab gets the push `data` plus its `title` and `body` (`toPushNotice`), and `PushStore` shows them in an info toast (`NotificationService.announce`).
+A failed video push keeps its own localized toast, and a tap on a system notification opens the screen without showing the text again.
+With the tab hidden the worker raises the system notification instead, so a push is never silent.
 
 The Firebase web app config is read at run time from `/push-config.json`, so one image works with the stage and the production Firebase projects.
 The values are public identifiers, not secrets; the backend's service account key never goes into the panel.
