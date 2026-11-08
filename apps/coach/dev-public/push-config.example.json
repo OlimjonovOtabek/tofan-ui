@@ -1,0 +1,6 @@
+{
+  "apiKey": "<firebaseConfig.apiKey of the tofan-dev web app>",
+  "appId": "<firebaseConfig.appId>",
+  "projectId": "tofan-dev",
+  "messagingSenderId": "<firebaseConfig.messagingSenderId>"
+}
