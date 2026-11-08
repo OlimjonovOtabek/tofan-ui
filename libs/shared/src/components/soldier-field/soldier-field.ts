@@ -2,7 +2,7 @@ import { Component, input, model, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
 import { AutoComplete } from '@openng/optimus-ui/autocomplete';
-import { SoldierOption } from '../../models/soldier-option';
+import { SoldierOption } from '@shared/models/soldier-option';
 
 function isSoldierOption(candidate: unknown): candidate is SoldierOption {
   return typeof candidate === 'object' && candidate !== null && 'userId' in candidate;

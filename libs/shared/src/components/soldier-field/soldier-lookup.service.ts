@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiClient } from '@core/http/api-client';
 import { PagedList } from '@core/http/api.dto';
-import { SoldierOption } from '../models/soldier-option';
+import { SoldierOption } from '@shared/models/soldier-option';
 import { SoldierLookupResponse } from './soldier-lookup.dto';
 import { toSoldierOption, toSoldierSearchQuery } from './soldier-lookup.mapper';
 

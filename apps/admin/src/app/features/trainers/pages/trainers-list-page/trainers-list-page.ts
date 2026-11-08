@@ -9,7 +9,7 @@ import {
   TRAINER_PUBLISH_SEVERITIES,
   TrainerTagSeverity,
 } from '../../models/trainer-labels';
-import { SoldierSearchStore } from '../../soldier-search.store';
+import { SoldierSearchStore } from '@shared/components/soldier-field/soldier-search.store';
 import { TrainersStore } from '../../trainers.store';
 import {
   SubscriptionGrantRequest,
