@@ -134,7 +134,7 @@ The trainer panel (`/coach/*`) is not part of this app.
   page (`docs/modules/platform-fee.md`), not per trainer.
 - `GET /admin/payment-orders` returns per order `price`, `commissionAmount`, `taxPercent`, `taxAmount`,
   `providerFeePercent`, `providerFeeAmount` and `amount` (the sum of the four sums, `admin-ui-platform-fee-v1.1.md`),
-  but the panel has no payment orders screen yet.
+  and the admin "To'lov buyurtmalari" page shows them (`docs/modules/payment-orders.md`).
 - Always send `vipMonthlyPrice` in `PUT /admin/trainers/{id}`: the backend treats a missing key as `null`, so an
   update without it silently wipes the trainer's VIP price. `UpdateTrainerRequest.vipMonthlyPrice` is a required key,
   `TrainerEditDraft` carries it, and the edit form is prefilled from `Trainer.vipMonthlyPrice`, so changing the name,
