@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PUSH_CONFIG, PushConfig } from './push-config';
+import { PushConfig } from './push-config';
+import { PushConfigService } from './push-config.service';
 import { PushData, toPushData } from './push-message';
 
 const WORKER_PATH = '/push-worker.js';
@@ -14,15 +15,13 @@ export interface WorkerPushEvent {
 
 @Injectable({ providedIn: 'root' })
 export class PushMessagingService {
-  private readonly config = inject(PUSH_CONFIG);
+  private readonly pushConfig = inject(PushConfigService);
 
-  get supported(): boolean {
-    return (
-      this.config !== null &&
-      'serviceWorker' in navigator &&
-      'PushManager' in window &&
-      'Notification' in window
-    );
+  async available(): Promise<boolean> {
+    if (!browserSupportsPush()) {
+      return false;
+    }
+    return (await this.pushConfig.load()) !== null;
   }
 
   get permission(): NotificationPermission {
@@ -69,7 +68,7 @@ export class PushMessagingService {
   }
 
   private async loadMessaging() {
-    const config = this.requireConfig();
+    const config = await this.requireConfig();
     const [{ getApps, initializeApp }, { deleteToken, getMessaging, getToken }] = await Promise.all(
       [import('@firebase/app'), import('@firebase/messaging')],
     );
@@ -77,10 +76,15 @@ export class PushMessagingService {
     return { config, deleteToken, getToken, messaging: getMessaging(app) };
   }
 
-  private requireConfig(): PushConfig {
-    if (this.config === null) {
+  private async requireConfig(): Promise<PushConfig> {
+    const config = await this.pushConfig.load();
+    if (config === null) {
       throw new Error('Push notifications are not configured.');
     }
-    return this.config;
+    return config;
   }
+}
+
+function browserSupportsPush(): boolean {
+  return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
 }

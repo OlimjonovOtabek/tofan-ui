@@ -1,9 +1,9 @@
 # Backend contract
 
 Verified against `D:\Projects\tofan` `origin/main` (2026-09-16) and the staging Swagger
-(`https://api.157.90.117.20.sslip.io/swagger/v1/swagger.json`, 151 operations). Read before writing
-any service code. DTOs are hand-written; when the backend changes, compare them against the
-staging Swagger.
+(then `https://api.157.90.117.20.sslip.io`, now closed; today `https://api.stage.peaktofan.com/swagger/v1/swagger.json`).
+Read before writing any service code. DTOs are hand-written; when the backend changes, compare them against the
+stage Swagger.
 
 ## Base
 
@@ -51,6 +51,10 @@ with status 200 is not expected but is mapped to an error class as well.
 ## Errors
 
 Failures are RFC 7807 ProblemDetails built by `ApiResults.Problem`:
+
+Swagger declares every 4xx response with a `Result` schema (`.Produces<Result>(...)`, 362 places, no `ProducesProblem`).
+That schema is wrong: the server always answers a failure with the ProblemDetails shape below (backend answer to PR #22, 2026-11-07).
+Rely on this sample, not on the 4xx schemas in Swagger.
 
 ```json
 {

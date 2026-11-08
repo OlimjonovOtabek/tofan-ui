@@ -48,25 +48,27 @@ function textOf(fixture: ComponentFixture<TariffCard>): string {
 function valueOf(fixture: ComponentFixture<TariffCard>, label: string): string {
   const terms = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('dt'));
   const term = terms.find((candidate) => candidate.textContent?.trim() === label);
-  return term?.nextElementSibling?.textContent?.trim() ?? '';
+  return (term?.nextElementSibling?.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
 
 describe('TariffCard', () => {
   afterEach(() => localStorage.clear());
 
-  it('should show the tariff name, the monthly price and the total price when the card is rendered', () => {
-    const text = textOf(render(limited));
+  it('should show the tariff name and only the price the user pays when the card is rendered', () => {
+    const fixture = render(limited);
+    const text = textOf(fixture);
 
     expect(text).toContain('Standard');
-    expect(text).toContain("49 000 so'm");
-    expect(text).toContain("99 000 so'm");
+    expect(valueOf(fixture, "O'quvchi oyiga to'laydi")).toBe("99 000 so'm");
+    expect(text).not.toContain("49 000 so'm");
+    expect(text).toContain("Komissiya, soliq va provayder foizi qo'shilmaydi.");
   });
 
   it('should describe the numeric limits in words when the limits are set', () => {
     const text = textOf(render(limited));
 
     expect(text).toContain('Oyiga 15 ta');
-    expect(text).toContain('30 ta video ochiq');
+    expect(text).toContain('Rejadagi birinchi 30 ta mashq videosi ochiq');
     expect(text).toContain('Har 3 oyda');
     expect(text).toContain('Har 7 kunda');
     expect(text).toContain('Tushlik');
@@ -84,6 +86,10 @@ describe('TariffCard', () => {
 
   it('should say scan is closed when the scan limit is zero', () => {
     expect(textOf(render({ ...limited, foodScanLimit: 0 }))).toContain('Scan yopiq');
+  });
+
+  it('should say every video is closed when the video limit is zero', () => {
+    expect(textOf(render({ ...limited, workoutVideoLimit: 0 }))).toContain('Hamma video yopiq');
   });
 
   it('should say whether the AI trainer chat is included when the flag is set', () => {

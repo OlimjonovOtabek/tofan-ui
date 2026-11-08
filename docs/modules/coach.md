@@ -96,10 +96,18 @@ A conversation with anyone else stays readable but is read-only.
 The coach turns it on in Profile, since browsers ask for permission on a user action.
 `public/push-worker.js` is a plain service worker without the Firebase SDK: it shows the notification, or tells a visible tab, and a tap opens the screen from `pushLinkOf` (the same routes as mobile).
 
-The Firebase web app config lives in `push` in `apps/coach/src/environments/environment*.ts`; these values are public identifiers, not secrets.
-Set `push` to `null` to hide the feature.
-No `vapidKey` is set, so the Firebase default key is used.
-Delivery from the backend to a browser has not been checked yet; turning on, turning off, sign-out and the worker logic have.
+The Firebase web app config is read at run time from `/push-config.json`, so one image works with the stage and the production Firebase projects.
+The values are public identifiers, not secrets; the backend's service account key never goes into the panel.
+- In the image, `nginx/push-config.sh` runs at container start (`/docker-entrypoint.d/40-push-config.sh`) and writes the file from `FIREBASE_PUBLIC_API_KEY`, `FIREBASE_APP_ID`, `FIREBASE_PROJECT_ID`, `FIREBASE_MESSAGING_SENDER_ID` and the optional `FIREBASE_PUBLIC_VAPID_KEY` (table in `docs/deployment.md`).
+  An empty `FIREBASE_PROJECT_ID` writes `null` and hides push; a missing or malformed value stops the container with a clear message.
+- On the dev server, `apps/coach/dev-public/push-config.json` holds the `tofan-dev` web app (`Tofan Coach Web Dev`), added only by the `development` build configuration.
+  Local push therefore works with the local and the stage backend, never with production, so no test device token reaches production data.
+- `PushConfigService` loads the file once; `PushStore.start()` sets `supported` after it, so the Profile row appears only when the file has a full config.
+- When the browser hands out a new token (for example after the Firebase project changed), `PushStore` registers the new token and removes the old one from the backend.
+- No VAPID key is set, so the Firebase default key is used.
+
+Stage runs on the `tofan-dev` project and production on `tofan-68065`.
+A token from one project cannot be reached by the other project's sender, which is why push on stage stayed silent while the image carried the production config.
 
 ## Structure
 

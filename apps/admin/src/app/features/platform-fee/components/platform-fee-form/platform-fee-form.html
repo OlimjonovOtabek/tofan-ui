@@ -44,6 +44,10 @@
     <small class="text-muted-color">{{ 'platformFee.form.providerFeeHint' | t }}</small>
   </div>
 
+  @if (sampleFee(); as sample) {
+    <app-platform-fee-sample [fee]="sample" [currencyCode]="fee().currencyCode" />
+  }
+
   <p-message severity="warn" icon="pi pi-info-circle">{{
     'platformFee.form.futureOnly' | t
   }}</p-message>

@@ -8,6 +8,7 @@ import { NumberField } from '@shared/components/number-field/number-field';
 import { PlatformFee } from '../../models/platform-fee';
 import { PlatformFeeDraft } from '../../models/platform-fee-draft';
 import { PLATFORM_FEE_FRACTION_DIGITS } from '../../models/platform-fee-rules';
+import { PlatformFeeSample } from '../platform-fee-sample/platform-fee-sample';
 import {
   platformFeeFormSchema,
   toPlatformFeeDraft,
@@ -16,7 +17,16 @@ import {
 
 @Component({
   selector: 'app-platform-fee-form',
-  imports: [FormField, FormRoot, FieldError, NumberField, Button, Message, TranslatePipe],
+  imports: [
+    FormField,
+    FormRoot,
+    FieldError,
+    NumberField,
+    Button,
+    Message,
+    PlatformFeeSample,
+    TranslatePipe,
+  ],
   templateUrl: './platform-fee-form.html',
 })
 export class PlatformFeeForm {
@@ -31,6 +41,9 @@ export class PlatformFeeForm {
   protected readonly form = form(this.value, platformFeeFormSchema, {
     submission: { action: () => this.submit() },
   });
+  protected readonly sampleFee = computed(() =>
+    this.form().valid() ? toPlatformFeeDraft(this.value()) : null,
+  );
 
   private async submit(): Promise<undefined> {
     const draft = toPlatformFeeDraft(this.value());

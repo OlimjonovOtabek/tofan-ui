@@ -129,8 +129,9 @@ The trainer panel (`/coach/*`) is not part of this app.
   its sort, the row action, the dialog and `Trainer.InvalidCommissionPercent`. The commission is now one
   global Platform fee (commission amount, tax and payment provider fee) managed on the admin Platform fee
   page (`docs/modules/platform-fee.md`), not per trainer.
-- `GET /admin/payment-orders` also returns `commissionPercent` per order, but the panel has no payment
-  orders screen yet.
+- `GET /admin/payment-orders` returns per order `price`, `commissionAmount`, `taxPercent`, `taxAmount`,
+  `providerFeePercent`, `providerFeeAmount` and `amount` (the sum of the four sums, `admin-ui-platform-fee-v1.1.md`),
+  but the panel has no payment orders screen yet.
 - Always send `vipMonthlyPrice` in `PUT /admin/trainers/{id}`: the backend treats a missing key as `null`, so an
   update without it silently wipes the trainer's VIP price. `UpdateTrainerRequest.vipMonthlyPrice` is a required key,
   `TrainerEditDraft` carries it, and the edit form is prefilled from `Trainer.vipMonthlyPrice`, so changing the name,
