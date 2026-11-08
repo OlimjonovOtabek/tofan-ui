@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, output } from '@angular/core';
-import { INTL_LOCALES } from '@core/i18n/locale';
+import { formatNumber } from '@core/i18n/number-format';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
@@ -46,7 +46,7 @@ export class TariffCard {
   );
 
   private priceLabel(price: number): string {
-    const amount = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()]).format(price);
+    const amount = formatNumber(price, this.localeStore.locale());
     return this.translator.translate('tariffs.card.price', { amount });
   }
 }

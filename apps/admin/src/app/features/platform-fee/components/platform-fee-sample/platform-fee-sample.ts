@@ -1,6 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { TranslationKey, TranslationParams } from '@core/i18n/dictionary';
-import { INTL_LOCALES } from '@core/i18n/locale';
+import { formatNumber } from '@core/i18n/number-format';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { PlatformFeeDraft } from '../../models/platform-fee-draft';
@@ -28,12 +28,6 @@ export class PlatformFeeSample {
   readonly fee = input.required<PlatformFeeDraft>();
   readonly currencyCode = input.required<string>();
 
-  private readonly numbers = computed(
-    () =>
-      new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()], {
-        maximumFractionDigits: PLATFORM_FEE_FRACTION_DIGITS,
-      }),
-  );
   private readonly breakdown = computed<TrainerPriceBreakdown>(() =>
     trainerPriceBreakdown(SAMPLE_TRAINER_PRICE, this.fee()),
   );
@@ -58,10 +52,14 @@ export class PlatformFeeSample {
   protected readonly total = computed(() => this.money(this.breakdown().total));
 
   private money(amount: number): string {
-    return `${this.numbers().format(amount)} ${this.currencyCode()}`;
+    return `${this.number(amount)} ${this.currencyCode()}`;
   }
 
   private percent(value: number): TranslationParams {
-    return { percent: this.numbers().format(value) };
+    return { percent: this.number(value) };
+  }
+
+  private number(value: number): string {
+    return formatNumber(value, this.localeStore.locale(), PLATFORM_FEE_FRACTION_DIGITS);
   }
 }

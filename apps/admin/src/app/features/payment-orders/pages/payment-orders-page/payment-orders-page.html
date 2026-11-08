@@ -29,7 +29,10 @@
   >
     <ng-template #row let-order>
       <tr>
-        <td class="whitespace-nowrap">{{ order.createdAt }}</td>
+        <td>
+          <div class="whitespace-nowrap">{{ order.createdAt }}</div>
+          <div class="text-muted-color font-mono text-xs break-all">{{ order.id }}</div>
+        </td>
         <td class="font-mono text-sm break-all">
           <a
             [routerLink]="[soldiersPath, order.userId]"

@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
 import { formatDateTime } from '@core/i18n/date-format';
 import { TranslationKey, TranslationParams } from '@core/i18n/dictionary';
-import { INTL_LOCALES } from '@core/i18n/locale';
+import { formatNumber } from '@core/i18n/number-format';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
@@ -92,13 +92,6 @@ export class PaymentOrdersPage {
     { field: 'status', header: this.text('paymentOrders.columns.status') },
   ]);
 
-  private readonly numbers = computed(
-    () =>
-      new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()], {
-        maximumFractionDigits: MONEY_FRACTION_DIGITS,
-      }),
-  );
-
   protected readonly rows = computed<readonly PaymentOrderRow[]>(() =>
     this.store.orders().map((order) => this.toRow(order)),
   );
@@ -169,11 +162,15 @@ export class PaymentOrdersPage {
   }
 
   private money(amount: number): string {
-    return this.translate('paymentOrders.money', { amount: this.numbers().format(amount) });
+    return this.translate('paymentOrders.money', { amount: this.number(amount) });
   }
 
   private percent(value: number): string {
-    return this.translate('paymentOrders.percent', { value: this.numbers().format(value) });
+    return this.translate('paymentOrders.percent', { value: this.number(value) });
+  }
+
+  private number(value: number): string {
+    return formatNumber(value, this.localeStore.locale(), MONEY_FRACTION_DIGITS);
   }
 
   private date(date: Date): string {

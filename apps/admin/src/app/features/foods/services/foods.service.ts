@@ -11,7 +11,6 @@ import { FoodDraft } from '../models/food-draft';
 import { FoodResponse } from './food.dto';
 import { Food } from '../models/food';
 
-
 const FOODS = '/diet/foods';
 
 @Injectable({ providedIn: 'root' })

@@ -20,13 +20,12 @@ const purposes = enumMap<PaymentPurpose, PaymentPurposeDto>(PaymentPurposeDto);
 const providers = enumMap<PaymentProvider, PaymentProviderDto>(PaymentProviderDto);
 
 export function toPaymentOrder(response: PaymentOrderResponse): PaymentOrder {
-  const purpose = purposes.toDomain(response.purpose);
   return {
     id: response.id,
     userId: response.userId,
-    purpose,
+    purpose: purposes.toDomain(response.purpose),
     referenceId: response.referenceId,
-    tier: purpose === 'trainerSubscription' ? toTier(response.tier) : null,
+    tier: toTier(response.tier),
     price: response.price,
     commissionAmount: response.commissionAmount,
     taxPercent: response.taxPercent,
