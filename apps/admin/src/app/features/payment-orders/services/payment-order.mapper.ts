@@ -1,0 +1,64 @@
+import { tiers } from '@shared/models/tier.dto';
+import { enumMap } from '@shared/utils/enum-map';
+import { PaymentOrderDraft } from '../models/payment-order-draft';
+import {
+  PaymentOrder,
+  PaymentOrderStatus,
+  PaymentProvider,
+  PaymentPurpose,
+} from '../models/payment-order';
+import {
+  CreatePaymentOrderRequest,
+  PaymentOrderResponse,
+  PaymentOrderStatusDto,
+  PaymentProviderDto,
+  PaymentPurposeDto,
+} from './payment-order.dto';
+
+const statuses = enumMap<PaymentOrderStatus, PaymentOrderStatusDto>(PaymentOrderStatusDto);
+const purposes = enumMap<PaymentPurpose, PaymentPurposeDto>(PaymentPurposeDto);
+const providers = enumMap<PaymentProvider, PaymentProviderDto>(PaymentProviderDto);
+
+export function toPaymentOrder(response: PaymentOrderResponse): PaymentOrder {
+  const purpose = purposes.toDomain(response.purpose);
+  return {
+    id: response.id,
+    userId: response.userId,
+    purpose,
+    referenceId: response.referenceId,
+    tier: purpose === 'trainerSubscription' ? toTier(response.tier) : null,
+    price: response.price,
+    commissionAmount: response.commissionAmount,
+    taxPercent: response.taxPercent,
+    taxAmount: response.taxAmount,
+    providerFeePercent: response.providerFeePercent,
+    providerFeeAmount: response.providerFeeAmount,
+    amount: response.amount,
+    status: statuses.toDomain(response.status),
+    paidWith: response.paidWith === null ? null : providers.toDomainOrNull(response.paidWith),
+    createdAt: new Date(response.createdOnUtc),
+    paidAt: toDateOrNull(response.paidOnUtc),
+    refundedAt: toDateOrNull(response.refundedOnUtc),
+  };
+}
+
+export function toPaymentOrderStatusDto(status: PaymentOrderStatus): PaymentOrderStatusDto {
+  return statuses.toApi(status);
+}
+
+export function toCreatePaymentOrderRequest(draft: PaymentOrderDraft): CreatePaymentOrderRequest {
+  return {
+    userId: draft.userId,
+    purpose: PaymentPurposeDto.TrainerSubscription,
+    referenceId: draft.trainerId,
+    price: draft.price,
+  };
+}
+
+function toTier(tier: PaymentOrderResponse['tier']): PaymentOrder['tier'] {
+  return tier === null ? null : tiers.toDomainOrNull(tier);
+}
+
+function toDateOrNull(value: string | null): Date | null {
+  return value === null ? null : new Date(value);
+}

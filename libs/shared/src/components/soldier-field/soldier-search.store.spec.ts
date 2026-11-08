@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
-import { SoldierOption } from './models/soldier-option';
-import { SoldierLookupService } from './services/soldier-lookup.service';
+import { SoldierOption } from '@shared/models/soldier-option';
+import { SoldierLookupService } from './soldier-lookup.service';
 import { SoldierSearchStore } from './soldier-search.store';
 
 const ali: SoldierOption = { userId: 'u1', label: 'Ali Valiyev', userName: 'ali_v' };

@@ -1,0 +1,76 @@
+<div class="card catalog-page">
+  <app-catalog-header
+    [title]="'paymentOrders.title' | t"
+    [subtitle]="
+      'paymentOrders.total' | t: { count: store.loadError() === null ? store.totalCount() : '-' }
+    "
+  >
+    <p-button
+      [label]="'paymentOrders.create.open' | t"
+      icon="pi pi-plus"
+      (onClick)="openCreate()"
+    />
+  </app-catalog-header>
+
+  <app-payment-order-filters (filterChange)="applyFilter($event)" />
+
+  <app-data-table
+    [columns]="columns()"
+    [items]="rows()"
+    [totalCount]="store.totalCount()"
+    [loading]="store.loading()"
+    [error]="store.loadError()"
+    [first]="store.first()"
+    defaultSortField="createdOnUtc"
+    defaultSortDirection="desc"
+    [emptyMessage]="'paymentOrders.empty' | t"
+    (pageChange)="loadPage($event)"
+    (retry)="store.load()"
+  >
+    <ng-template #row let-order>
+      <tr>
+        <td class="whitespace-nowrap">{{ order.createdAt }}</td>
+        <td class="font-mono text-sm break-all">
+          <a
+            [routerLink]="[soldiersPath, order.userId]"
+            class="text-primary"
+            [title]="'paymentOrders.soldierCard' | t"
+            >{{ order.userId }}</a
+          >
+        </td>
+        <td>
+          <div>{{ order.purpose }}</div>
+          <div class="text-muted-color font-mono text-xs break-all">{{ order.referenceId }}</div>
+        </td>
+        <td class="whitespace-nowrap tabular-nums">{{ order.price }}</td>
+        <td class="whitespace-nowrap tabular-nums">{{ order.commission }}</td>
+        <td class="whitespace-nowrap tabular-nums">
+          <div>{{ order.tax }}</div>
+          <div class="text-muted-color text-xs">{{ order.taxPercent }}</div>
+        </td>
+        <td class="whitespace-nowrap tabular-nums">
+          <div>{{ order.providerFee }}</div>
+          <div class="text-muted-color text-xs">{{ order.providerFeePercent }}</div>
+        </td>
+        <td class="font-semibold whitespace-nowrap tabular-nums">{{ order.amount }}</td>
+        <td>
+          <p-tag [value]="order.statusLabel" [severity]="order.statusSeverity" />
+          @if (order.statusHint; as hint) {
+            <div class="text-muted-color mt-1 text-xs whitespace-nowrap">{{ hint }}</div>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-payment-order-create-dialog
+  [(visible)]="createVisible"
+  [trainers]="store.trainers()"
+  [trainersFailed]="store.trainersFailed()"
+  [soldiers]="soldierSearch.options()"
+  [soldiersFailed]="soldierSearch.failed()"
+  [saving]="store.creating()"
+  (create)="create($event)"
+  (soldierSearch)="soldierSearch.search($event)"
+/>

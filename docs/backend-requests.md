@@ -267,6 +267,60 @@ Batafsil: [modules/media.md](modules/media.md).
 
 ---
 
+## P1 - To'lov buyurtmalari (Payment moduli)
+
+> 2026-11-08. Admin panelda "To'lov buyurtmalari" ro'yxati qo'shildi (`GET /admin/payment-orders`), batafsil: [modules/payment-orders.md](modules/payment-orders.md).
+
+### Ro'yxatda ism va nom
+
+`GET /admin/payment-orders` faqat `userId` va `referenceId` qaytaradi.
+Admin kim to'laganini va nima uchun to'laganini ID orqali ko'radi, bu qidiruvni qiyinlashtiradi.
+So'rov: har qatorga `userName` (Soldier ismi va familiyasi, bo'lmasa username) va `referenceName` (trener nomi yoki tarif turi) qo'shilsin.
+Panel har qator uchun alohida so'rov yubormasligi uchun ma'lumot shu javobning o'zida kelishi kerak.
+Hozircha panel ID ko'rsatadi, foydalanuvchi ID'si Soldier sahifasiga havola.
+
+### `POST /admin/payment-orders` nima qiladi
+
+Swagger'da tavsif yo'q edi, shuning uchun endpoint 2026-11-08 da stage'da test hisoblar bilan sinab ko'rildi.
+Natijalar [modules/payment-orders.md](modules/payment-orders.md) da yozilgan, qisqasi:
+
+- buyurtma `Pending` holatida ochiladi;
+- `Tariff` rad etiladi, faqat trener obunasi ochiladi;
+- `price` asosiy narx, ustiga joriy Platform fee qo'shiladi;
+- `tier` doim Standard.
+
+Panelga "Buyurtma ochish" oynasi shu xatti-harakat bo'yicha qo'shildi.
+Ochiq qolgan savollar va so'rovlar:
+
+1. Endpoint nima uchun kerak (chegirmali narx, naqd to'lov, Click yoki Payme sandbox testi)?
+   Foydalanuvchi bu buyurtmani qanday topadi va to'laydi?
+   Mobil ilovada "mening buyurtmalarim" ro'yxati yo'q, admin esa boshqa foydalanuvchi buyurtmasining to'lov havolasini ololmaydi (`PaymentOrder.NotFound`).
+2. `referenceId` tekshirilmaydi: mavjud bo'lmagan trener ID'si bilan ham buyurtma ochildi.
+   So'rov: trener topilmasa `404 Trainer.NotFound` qaytarilsin.
+   `userId` ham tekshirilishi kerak (orphan buyurtma ochilmasin uchun bu sinab ko'rilmadi).
+3. `price` kasr sonni qabul qiladi (1 000.5 saqlandi).
+   So'mda tiyin ishlatilmasa, butun son talab qilinsin.
+4. `tier` body'da yo'q, buyurtma doim Standard.
+   VIP obuna uchun buyurtma kerak bo'lsa, body'ga `tier` qo'shilsin.
+5. Buyurtmani bekor qilish yoki o'chirish endpoint'i yo'q.
+   Stage'da sinovdan 3 ta `Pending` buyurtma qoldi:
+   - `f8bf7e46-e218-4d18-b4d8-7a68bb5024a8` (Probe User, narx 1 000.5);
+   - `d3f29105-6662-4995-9af1-a31c9804e285` (Probe User, mavjud bo'lmagan trener);
+   - `9f940a86-9706-48be-b571-bf70ba14f277` (`stage-admin`, narx 1 000).
+
+   Kerak bo'lsa ularni o'chirib yuboring.
+
+### Stage'dagi ma'lumot
+
+Stage'dagi 3 ta tarif buyurtmasida (Standard, 2026-11-04 va 2026-11-05) `commissionAmount` 50 000 va `providerFeeAmount` 3 400 turibdi, `amount` 173 400.
+Tarifga Platform fee qo'shilmasligi kerak (2026-11-05 qarori).
+Bular qaror kuchga kirishidan oldin ochilganmi?
+Yangi tarif buyurtmasi aynan `monthlyPrice` bilan ochilishini tasdiqlang.
+Bundan tashqari, tarif buyurtmalarida `tier: 1` keladi: tarif uchun `tier` `null` bo'lishi kerakmi?
+Panel tarif qatorida `tier` ni e'tiborsiz qoldiradi.
+
+---
+
 ## Keyingi bosqich (backend modullari yozilgach)
 
 Shop, Payment, Gamification, Trainer, AI modullari hozir bo'sh. Ular yozilayotganda har biriga

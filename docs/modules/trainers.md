@@ -104,6 +104,9 @@ The trainer panel (`/coach/*`) is not part of this app.
   `SoldierSearchStore` is provided by each page; the dialog emits `soldierSearch` and the page forwards it.
   The dialog asks for the first 10 soldiers when it opens, and the field asks again on focus and on typing.
   Reading `/admin/soldiers` goes through `SoldierLookupService` with its own DTO, never the soldiers feature.
+  The field, the store, the service and `SoldierOption` live in `libs/shared/src/components/soldier-field` (and `shared/models/soldier-option.ts`),
+  because the payment orders create dialog uses the same picker.
+  The shown name follows the form value (`linkedSignal` on `value`), so a dialog that resets its form also clears the name in the field.
 
 ### Tiers tab ("Darajalar")
 - `TrainerTiersPage` provides `TrainerTiersStore` and shows one `TierCard` per Tier, Standard first, then VIP.

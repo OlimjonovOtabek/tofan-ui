@@ -17,7 +17,7 @@ import {
   SUBSCRIPTION_STATUS_SEVERITIES,
   TrainerTagSeverity,
 } from '../../models/trainer-labels';
-import { SoldierSearchStore } from '../../soldier-search.store';
+import { SoldierSearchStore } from '@shared/components/soldier-field/soldier-search.store';
 import { TrainerSubscriptionsStore } from '../../trainer-subscriptions.store';
 import { SubscriptionFilters } from '../../components/subscription-filters/subscription-filters';
 import {

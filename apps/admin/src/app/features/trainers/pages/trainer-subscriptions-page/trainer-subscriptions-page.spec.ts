@@ -5,7 +5,7 @@ import { TranslationKey } from '@core/i18n/dictionary';
 import { Translator } from '@core/i18n/translator';
 import { Tier } from '@shared/models/tier';
 import { TrainerSubscription } from '../../models/trainer-subscription';
-import { SoldierLookupService } from '../../services/soldier-lookup.service';
+import { SoldierLookupService } from '@shared/components/soldier-field/soldier-lookup.service';
 import { TrainerSubscriptionsService } from '../../services/trainer-subscriptions.service';
 import { TrainersService } from '../../services/trainers.service';
 import { TrainerSubscriptionsPage } from './trainer-subscriptions-page';
