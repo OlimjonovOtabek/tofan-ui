@@ -101,7 +101,9 @@ The values are public identifiers, not secrets; the backend's service account ke
 - In the image, `nginx/push-config.sh` runs at container start (`/docker-entrypoint.d/40-push-config.sh`) and writes the file from `FIREBASE_PUBLIC_API_KEY`, `FIREBASE_APP_ID`, `FIREBASE_PROJECT_ID`, `FIREBASE_MESSAGING_SENDER_ID` and the optional `FIREBASE_PUBLIC_VAPID_KEY` (table in `docs/deployment.md`).
   An empty `FIREBASE_PROJECT_ID` writes `null` and hides push; a missing or malformed value stops the container with a clear message.
 - On the dev server, `apps/coach/dev-public/push-config.json` holds the `tofan-dev` web app (`Tofan Coach Web Dev`), added only by the `development` build configuration.
+  The file is git-ignored: copy `push-config.example.json` next to it and fill it from the Firebase console. Without it the dev server hides push, as on an image without `FIREBASE_*` env.
   Local push therefore works with the local and the stage backend, never with production, so no test device token reaches production data.
+- The image has no Firebase defaults; both stacks set the env (`docs/deployment.md`). Values never go into git, because GitHub secret scanning flags the API key.
 - `PushConfigService` loads the file once; `PushStore.start()` sets `supported` after it, so the Profile row appears only when the file has a full config.
 - When the browser hands out a new token (for example after the Firebase project changed), `PushStore` registers the new token and removes the old one from the backend.
 - No VAPID key is set, so the Firebase default key is used.

@@ -22,24 +22,28 @@ Backend'dan kerak bo'ladigan narsalar:
 
 ## Sizdan kerak
 
-### 1. Stage coach uchun Firebase env (merge'dan keyin)
+### 1. Stage va prod coach uchun Firebase env (merge'dan keyin)
 
 Coach panel Firebase Web app sozlamasini endi build ichidan emas, konteyner env'idan oladi.
 Konteyner ishga tushganda `/push-config.json` faylini yozadi.
 Shu sabab bitta image stage'da ham, prod'da ham ishlaydi.
 
-Stage `tofan-coach` service'iga quyidagi env'larni qo'ying:
+Stage va prod `tofan-coach` service'lariga quyidagi env'larni qo'ying:
 
-| O'zgaruvchi                    | Stage qiymati (`tofan-dev`)                 |
-| ------------------------------ | ------------------------------------------- |
-| `FIREBASE_PUBLIC_API_KEY`      | `AIzaSyCyIpmufwpWNl-LkvmA95TOogxt8eUX7GE`   |
-| `FIREBASE_APP_ID`              | `1:507735387316:web:e7c45f2064a01e6ff27be1` |
-| `FIREBASE_PROJECT_ID`          | `tofan-dev`                                 |
-| `FIREBASE_MESSAGING_SENDER_ID` | `507735387316`                              |
-| `FIREBASE_PUBLIC_VAPID_KEY`    | bo'sh qoldiring                             |
+| O'zgaruvchi                    | Qayerdan                                         |
+| ------------------------------ | ------------------------------------------------ |
+| `FIREBASE_PUBLIC_API_KEY`      | `firebaseConfig.apiKey`                          |
+| `FIREBASE_APP_ID`              | `firebaseConfig.appId`                           |
+| `FIREBASE_PROJECT_ID`          | stage: `tofan-dev`, prod: `tofan-68065`          |
+| `FIREBASE_MESSAGING_SENDER_ID` | `firebaseConfig.messagingSenderId`               |
+| `FIREBASE_PUBLIC_VAPID_KEY`    | bo'sh qoldiring                                  |
 
-- Prod'da hech narsa qo'yish shart emas: image'dagi standart qiymatlar prod loyihasiniki (`tofan-68065`).
-- Bu qiymatlar ochiq identifikatorlar, maxfiy emas.
+- Qiymatlar Firebase console'da: Project settings, General, Your apps, Web app.
+  Stage uchun "Tofan Coach Web Dev" (`tofan-dev`), prod uchun prod loyihadagi web app.
+  Kerak bo'lsa, stage qiymatlarini alohida yuboraman.
+- Image'da standart qiymat yo'q: env qo'yilmasa, push o'chiq turadi.
+- Qiymatlar repoga yozilmaydi: GitHub secret scanning API kalitini sizib chiqqan kalit deb belgiladi.
+- Google Cloud console'da ikkala API kalitga cheklov qo'ying: HTTP referrer (Coach domenlari) va API (Firebase Installations, FCM).
 - Service account kaliti (`firebase-adminsdk-*.json`) panelga ham, image'ga ham kirmaydi.
 - `FIREBASE_PROJECT_ID` bo'sh bo'lsa, push o'chadi va panelda push sozlamasi ko'rinmaydi.
 - Qiymat yetishmasa yoki noto'g'ri belgi bo'lsa, konteyner aniq xabar bilan to'xtaydi.

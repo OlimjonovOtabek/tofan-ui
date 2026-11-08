@@ -65,22 +65,25 @@ docker run --rm -p 8081:8080 -e API_UPSTREAM=http://host.docker.internal:5179 ej
 curl -s http://localhost:8081/push-config.json
 ```
 
-Coach web push uchun Firebase Web app config'i image ichiga yozilmaydi, konteyner ishga tushganda env'dan olinadi.
-Bu qiymatlar ochiq identifikatorlar, maxfiy emas.
+Coach web push uchun Firebase Web app config'i image ichiga ham, repoga ham yozilmaydi.
+Konteyner ishga tushganda uni env'dan oladi.
+Qiymatlar Firebase console'da: Project settings, General, Your apps, Web app (`firebaseConfig`).
+Stage `tofan-dev` loyihasidan, prod `tofan-68065` loyihasidan olinadi.
+Ular stack env'ida yoki secret store'da saqlanadi, git'ga qo'yilmaydi: GitHub secret scanning API kalitini sizib chiqqan kalit deb belgilaydi.
 Backend'ning service account kaliti (`firebase-adminsdk-*.json`) panelga hech qachon berilmaydi.
 
-| O'zgaruvchi                    | Standart (prod, `tofan-68065`)             | Stage (`tofan-dev`)                         |
-| ------------------------------ | ------------------------------------------ | ------------------------------------------- |
-| `FIREBASE_PUBLIC_API_KEY`      | `AIzaSyDt2CYne5vyOA3S_jFjQYrA1a5vpwtuoBs`  | `AIzaSyCyIpmufwpWNl-LkvmA95TOogxt8eUX7GE`   |
-| `FIREBASE_APP_ID`              | `1:16797826601:web:b3e3840399c07d7cd76638` | `1:507735387316:web:e7c45f2064a01e6ff27be1` |
-| `FIREBASE_PROJECT_ID`          | `tofan-68065`                              | `tofan-dev`                                 |
-| `FIREBASE_MESSAGING_SENDER_ID` | `16797826601`                              | `507735387316`                              |
-| `FIREBASE_PUBLIC_VAPID_KEY`    | bo'sh (Firebase standart kaliti)           | bo'sh                                       |
+| O'zgaruvchi                    | Qayerdan                                  |
+| ------------------------------ | ----------------------------------------- |
+| `FIREBASE_PUBLIC_API_KEY`      | `firebaseConfig.apiKey`                   |
+| `FIREBASE_APP_ID`              | `firebaseConfig.appId`                    |
+| `FIREBASE_PROJECT_ID`          | `firebaseConfig.projectId`                |
+| `FIREBASE_MESSAGING_SENDER_ID` | `firebaseConfig.messagingSenderId`        |
+| `FIREBASE_PUBLIC_VAPID_KEY`    | ixtiyoriy, bo'sh bo'lsa Firebase standart kaliti |
 
-Prod stack'da hech narsa qo'yish shart emas: standart qiymatlar prod loyihasiniki.
-Stage stack'iga yuqoridagi stage qiymatlarini qo'ying.
-`FIREBASE_PROJECT_ID` bo'sh bo'lsa, push o'chadi (`null`).
+Image'da standart qiymat yo'q: stage va prod stack'larining ikkalasiga ham shu env'larni qo'ying.
+`FIREBASE_PROJECT_ID` bo'sh bo'lsa, push o'chadi (`null`) va Coach panelda push sozlamasi ko'rinmaydi.
 Qiymat yetishmasa yoki ruxsat etilmagan belgi bo'lsa, konteyner aniq xabar bilan to'xtaydi.
+Google Cloud console'da har ikki kalitga cheklov qo'yilgan bo'lishi kerak: HTTP referrer (Coach domenlari) va API (Firebase Installations, FCM).
 
 Rollback: coach service image tag’ini oxirgi ishlagan `tofan-coach` tag’iga qaytaring. Admin service
 image’iga tegilmaydi.
