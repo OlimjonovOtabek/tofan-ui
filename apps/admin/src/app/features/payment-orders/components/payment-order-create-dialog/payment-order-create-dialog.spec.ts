@@ -119,6 +119,34 @@ describe('PaymentOrderCreateDialog', () => {
     expect(created).toEqual([{ userId: soldier.userId, trainerId: trainer.id, price: 200000 }]);
   });
 
+  it('should not offer a trainer price when the trainer has no Standard price yet', async () => {
+    const { fixture } = await render();
+    fixture.componentRef.setInput('trainers', [{ ...trainer, standardPrice: 0 }]);
+    await settle(fixture);
+
+    find<HTMLElement>('app-select-field p-select').click();
+    await pickOption(fixture, 'Stage Coach');
+
+    expect(document.body.textContent).not.toContain('Trenerning Standard narxi');
+    expect(document.body.textContent).not.toContain("Shu narxni qo'yish");
+  });
+
+  it('should clear the form and ask for the first soldiers again when the dialog is reopened', async () => {
+    const { fixture } = await render();
+    const searches: string[] = [];
+    fixture.componentInstance.soldierSearch.subscribe((query) => searches.push(query));
+    find<HTMLElement>('.p-autocomplete-dropdown').click();
+    await pickOption(fixture, 'Probe User');
+
+    fixture.componentRef.setInput('visible', false);
+    await settle(fixture);
+    fixture.componentRef.setInput('visible', true);
+    await settle(fixture);
+
+    expect(find<HTMLInputElement>('#orderUser').value).toBe('');
+    expect(searches.at(-1)).toBe('');
+  });
+
   it('should say so when the trainers did not load', async () => {
     const { fixture } = await render();
 

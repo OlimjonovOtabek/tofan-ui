@@ -67,7 +67,7 @@
 <app-payment-order-create-dialog
   [(visible)]="createVisible"
   [trainers]="store.trainers()"
-  [trainersFailed]="store.trainersError() !== null"
+  [trainersFailed]="store.trainersFailed()"
   [soldiers]="soldierSearch.options()"
   [soldiersFailed]="soldierSearch.failed()"
   [saving]="store.creating()"

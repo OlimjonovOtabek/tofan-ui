@@ -56,6 +56,8 @@ The backend has not described the endpoint, so it was tried on stage with test a
 - `components/payment-order-create-dialog` is a Signal Forms dialog: trainer (`SelectField`), user (shared `SoldierField`) and price (`NumberField`, no fraction digits).
   The trainer comes first on purpose: the dialog focuses its first field when it opens, and a focused `SoldierField` opens its suggestion list over the rest of the form, where a stray click picks a user.
   When a trainer is chosen it shows the trainer's Standard price with a "use this price" link; the admin can type a different one.
+  A trainer whose Standard price is not set yet (0) gets no hint, because 0 is not a valid order price.
+  The trainer list is the first 100 trainers (`TRAINER_OPTIONS_LIMIT`); raise it or add a search when the platform has more.
   An info message says the order is a Pending Standard subscription, the Platform fee is added on top and only the user can pay it.
 - `createPaymentOrderDraft` (in `models/payment-order-draft.ts`) trims both IDs, checks they are UUIDs and that the price is a positive whole number before the store calls the service.
 - `PaymentOrdersStore.create` shows "order created for <trainer>" and reloads the first page with the current filter and sort, so the new order is on top under the default sort.

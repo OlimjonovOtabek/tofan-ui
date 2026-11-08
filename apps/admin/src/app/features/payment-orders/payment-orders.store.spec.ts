@@ -158,7 +158,22 @@ describe('PaymentOrdersStore', () => {
     await store.loadTrainers();
 
     expect(store.trainers()).toEqual([]);
-    expect(store.trainersError()).not.toBeNull();
+    expect(store.trainersFailed()).toBe(true);
+  });
+
+  it('should keep the newest trainers when an older answer arrives late', async () => {
+    let answerFirst: (trainers: TrainerOption[]) => void = () => undefined;
+    trainerOptions.list
+      .mockImplementationOnce(() => new Promise((resolve) => (answerFirst = resolve)))
+      .mockResolvedValueOnce([trainer]);
+    const store = createStore();
+
+    const first = store.loadTrainers();
+    await store.loadTrainers();
+    answerFirst([]);
+    await first;
+
+    expect(store.trainers()).toEqual([trainer]);
   });
 
   it('should create the order, name the trainer and show the first page when the draft is valid', async () => {

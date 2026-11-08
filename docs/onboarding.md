@@ -188,6 +188,7 @@ use tokens and Tailwind utilities, no inline colours. Optimus components are imp
 | `text-field`, `select-field`, `multiselect-field`, `number-field`, `date-field`, `choice-field`, `color-field` | Signal Forms wrappers over Optimus inputs |
 | `localized-text-field` | three-language text input |
 | `file-upload` | uploads with progress (the one component that may do HTTP, through its service) |
+| `soldier-field` | soldier autocomplete as a form control; the page provides `SoldierSearchStore`, which reads `/admin/soldiers` through `SoldierLookupService` (the field itself injects nothing) |
 | `field-error` | shows form validation messages |
 
 ## 11. Features at a glance

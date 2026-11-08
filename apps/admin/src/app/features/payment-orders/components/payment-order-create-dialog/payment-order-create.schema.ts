@@ -1,7 +1,6 @@
 import { min, required, schema } from '@angular/forms/signals';
 import { TranslationKey } from '@core/i18n/dictionary';
-
-export const MIN_ORDER_PRICE = 1;
+import { MIN_ORDER_PRICE } from '../../models/payment-order-draft';
 
 const ERRORS = {
   userId: 'paymentOrders.create.errors.userId',

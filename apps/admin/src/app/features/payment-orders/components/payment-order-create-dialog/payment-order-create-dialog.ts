@@ -24,7 +24,7 @@ import { SelectField } from '@shared/components/select-field/select-field';
 import { SoldierField } from '@shared/components/soldier-field/soldier-field';
 import { SelectOption } from '@shared/models/select-option';
 import { SoldierOption } from '@shared/models/soldier-option';
-import { PaymentOrderDraft } from '../../models/payment-order-draft';
+import { MIN_ORDER_PRICE, PaymentOrderDraft } from '../../models/payment-order-draft';
 import { TrainerOption } from '../../models/trainer-option';
 import { emptyCreateFormValue, paymentOrderCreateSchema } from './payment-order-create.schema';
 
@@ -69,7 +69,11 @@ export class PaymentOrderCreateDialog {
       : 'paymentOrders.create.soldierEmpty',
   );
   private readonly selectedTrainer = computed(
-    () => this.trainers().find((trainer) => trainer.id === this.value().trainerId) ?? null,
+    () =>
+      this.trainers().find(
+        (trainer) =>
+          trainer.id === this.value().trainerId && trainer.standardPrice >= MIN_ORDER_PRICE,
+      ) ?? null,
   );
   protected readonly trainerPrice = computed(() => {
     const trainer = this.selectedTrainer();

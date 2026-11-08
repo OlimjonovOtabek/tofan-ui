@@ -27,9 +27,11 @@ export class PaymentOrdersStore {
   readonly first = computed(() => this.currentRequest()?.first ?? 0);
   readonly trainers = this.trainerList.asReadonly();
   readonly trainersError = signal<ErrorMessage | null>(null);
+  readonly trainersFailed = computed(() => this.trainersError() !== null);
   readonly creating = signal(false);
 
   private latestLoad = 0;
+  private latestTrainersLoad = 0;
 
   async load(request: PageRequest = this.currentRequest() ?? firstPage()): Promise<void> {
     const loadNumber = ++this.latestLoad;
@@ -59,12 +61,18 @@ export class PaymentOrdersStore {
   }
 
   async loadTrainers(): Promise<void> {
+    const loadNumber = ++this.latestTrainersLoad;
     this.trainersError.set(null);
     try {
-      this.trainerList.set(await this.trainerOptionsService.list());
+      const trainers = await this.trainerOptionsService.list();
+      if (loadNumber === this.latestTrainersLoad) {
+        this.trainerList.set(trainers);
+      }
     } catch (error) {
-      this.trainerList.set([]);
-      this.trainersError.set(toErrorMessage(error));
+      if (loadNumber === this.latestTrainersLoad) {
+        this.trainerList.set([]);
+        this.trainersError.set(toErrorMessage(error));
+      }
     }
   }
 

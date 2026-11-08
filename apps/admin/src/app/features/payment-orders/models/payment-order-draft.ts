@@ -1,6 +1,8 @@
 import { ValidationError } from '@shared/models/errors/validation.error';
 import { isUuid } from '@shared/utils/identifiers';
 
+export const MIN_ORDER_PRICE = 1;
+
 export interface PaymentOrderDraft {
   readonly userId: string;
   readonly trainerId: string;
@@ -14,7 +16,7 @@ export function createPaymentOrderDraft(draft: PaymentOrderDraft): PaymentOrderD
     'TrainerId.Invalid',
     'The trainer id must be a UUID.',
   );
-  if (!Number.isInteger(draft.price) || draft.price <= 0) {
+  if (!Number.isInteger(draft.price) || draft.price < MIN_ORDER_PRICE) {
     throw new ValidationError('The order price is not a positive whole number.', [
       { code: 'PaymentOrder.PriceInvalid', message: 'The price must be a positive whole number.' },
     ]);
