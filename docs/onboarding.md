@@ -200,7 +200,7 @@ use tokens and Tailwind utilities, no inline colours. Optimus components are imp
 | media | `/media` | `/files` | browse, preview, upload and delete stored files |
 | garments | `/garments` | `/admin/garments` | NFC garments: create (server-made ULID serial), status, extend, export chip links |
 | tariffs | `/tariffs` | `/tariffs`, `/admin/tariffs` | Tofan tariffs (Free, Standard, VIP): price, limits, AI chat, read-only Benefits |
-| payment-orders | `/payment-orders` | `/admin/payment-orders` | Read-only payment orders: amounts, status, filters by status, user and reference |
+| payment-orders | `/payment-orders` | `/admin/payment-orders` | Payment orders: amounts, status, filters by status, user and reference; opens a Pending Trainer subscription order by hand |
 | soldiers | `/soldiers` | `/admin/soldiers` | read-only user cards with weight chart |
 | accounts | `/accounts` | `/admin/users` | Keycloak accounts: roles, block/unblock, sign out everywhere |
 | user-sessions | `/user-sessions` | `/user-sessions` | read-only login journal |

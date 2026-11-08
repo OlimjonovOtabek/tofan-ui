@@ -1,5 +1,6 @@
 import { tiers } from '@shared/models/tier.dto';
 import { enumMap } from '@shared/utils/enum-map';
+import { PaymentOrderDraft } from '../models/payment-order-draft';
 import {
   PaymentOrder,
   PaymentOrderStatus,
@@ -7,6 +8,7 @@ import {
   PaymentPurpose,
 } from '../models/payment-order';
 import {
+  CreatePaymentOrderRequest,
   PaymentOrderResponse,
   PaymentOrderStatusDto,
   PaymentProviderDto,
@@ -42,6 +44,15 @@ export function toPaymentOrder(response: PaymentOrderResponse): PaymentOrder {
 
 export function toPaymentOrderStatusDto(status: PaymentOrderStatus): PaymentOrderStatusDto {
   return statuses.toApi(status);
+}
+
+export function toCreatePaymentOrderRequest(draft: PaymentOrderDraft): CreatePaymentOrderRequest {
+  return {
+    userId: draft.userId,
+    purpose: PaymentPurposeDto.TrainerSubscription,
+    referenceId: draft.trainerId,
+    price: draft.price,
+  };
 }
 
 function toTier(tier: PaymentOrderResponse['tier']): PaymentOrder['tier'] {

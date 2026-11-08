@@ -281,14 +281,34 @@ Hozircha panel ID ko'rsatadi, foydalanuvchi ID'si Soldier sahifasiga havola.
 
 ### `POST /admin/payment-orders` nima qiladi
 
-Swagger'da tavsif yo'q, body: `userId`, `purpose`, `referenceId`, `price`.
-Panelga "qo'lda buyurtma ochish" qo'shishdan oldin aniqlik kerak:
+Swagger'da tavsif yo'q edi, shuning uchun endpoint 2026-11-08 da stage'da test hisoblar bilan sinab ko'rildi.
+Natijalar [modules/payment-orders.md](modules/payment-orders.md) da yozilgan, qisqasi:
 
-1. Buyurtma qaysi holatda ochiladi: `Pending` (foydalanuvchi keyin Click yoki Payme orqali to'laydi) yoki darhol `Paid` (obuna yoki tarif to'lovsiz ochiladi)?
-2. `price` qanday hisoblanadi: admin yozgan son narx deb olinadi va unga komissiya, soliq va provayder qo'shiladimi, yoki u yakuniy summami?
-3. Trener obunasi uchun `tier` body'da yo'q: Standard yoki VIP qanday tanlanadi?
-4. `tariffs-v1.md` "Admin tarifni qo'lda bera olmaydi" deydi. `purpose = Tariff` bilan admin buyurtmasi bunga ziddmi?
-5. Bu endpoint qachon ishlatiladi (masalan, naqd to'lov yoki test)? Backendda xato kodlari qaysi?
+- buyurtma `Pending` holatida ochiladi;
+- `Tariff` rad etiladi, faqat trener obunasi ochiladi;
+- `price` asosiy narx, ustiga joriy Platform fee qo'shiladi;
+- `tier` doim Standard.
+
+Panelga "Buyurtma ochish" oynasi shu xatti-harakat bo'yicha qo'shildi.
+Ochiq qolgan savollar va so'rovlar:
+
+1. Endpoint nima uchun kerak (chegirmali narx, naqd to'lov, Click yoki Payme sandbox testi)?
+   Foydalanuvchi bu buyurtmani qanday topadi va to'laydi?
+   Mobil ilovada "mening buyurtmalarim" ro'yxati yo'q, admin esa boshqa foydalanuvchi buyurtmasining to'lov havolasini ololmaydi (`PaymentOrder.NotFound`).
+2. `referenceId` tekshirilmaydi: mavjud bo'lmagan trener ID'si bilan ham buyurtma ochildi.
+   So'rov: trener topilmasa `404 Trainer.NotFound` qaytarilsin.
+   `userId` ham tekshirilishi kerak (orphan buyurtma ochilmasin uchun bu sinab ko'rilmadi).
+3. `price` kasr sonni qabul qiladi (1 000.5 saqlandi).
+   So'mda tiyin ishlatilmasa, butun son talab qilinsin.
+4. `tier` body'da yo'q, buyurtma doim Standard.
+   VIP obuna uchun buyurtma kerak bo'lsa, body'ga `tier` qo'shilsin.
+5. Buyurtmani bekor qilish yoki o'chirish endpoint'i yo'q.
+   Stage'da sinovdan 3 ta `Pending` buyurtma qoldi:
+   - `f8bf7e46-e218-4d18-b4d8-7a68bb5024a8` (Probe User, narx 1 000.5);
+   - `d3f29105-6662-4995-9af1-a31c9804e285` (Probe User, mavjud bo'lmagan trener);
+   - `9f940a86-9706-48be-b571-bf70ba14f277` (`stage-admin`, narx 1 000).
+
+   Kerak bo'lsa ularni o'chirib yuboring.
 
 ### Stage'dagi ma'lumot
 

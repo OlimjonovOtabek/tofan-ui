@@ -5,7 +5,11 @@ import {
   PaymentProviderDto,
   PaymentPurposeDto,
 } from './payment-order.dto';
-import { toPaymentOrder, toPaymentOrderStatusDto } from './payment-order.mapper';
+import {
+  toCreatePaymentOrderRequest,
+  toPaymentOrder,
+  toPaymentOrderStatusDto,
+} from './payment-order.mapper';
 
 const subscriptionOrder: PaymentOrderResponse = {
   id: 'o1',
@@ -93,5 +97,18 @@ describe('toPaymentOrderStatusDto', () => {
     expect(toPaymentOrderStatusDto('pending')).toBe(1);
     expect(toPaymentOrderStatusDto('paid')).toBe(2);
     expect(toPaymentOrderStatusDto('refunded')).toBe(3);
+  });
+});
+
+describe('toCreatePaymentOrderRequest', () => {
+  it('should send a trainer subscription with the trainer as the reference when an order is drafted', () => {
+    expect(
+      toCreatePaymentOrderRequest({ userId: 'u1', trainerId: 'trainer-1', price: 150000 }),
+    ).toEqual({
+      userId: 'u1',
+      purpose: PaymentPurposeDto.TrainerSubscription,
+      referenceId: 'trainer-1',
+      price: 150000,
+    });
   });
 });

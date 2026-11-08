@@ -4,9 +4,14 @@ import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
 import { Page, PageRequest } from '@shared/models/page';
 import { PaymentOrder } from '../models/payment-order';
+import { PaymentOrderDraft } from '../models/payment-order-draft';
 import { PaymentOrderFilter } from '../models/payment-order-filter';
 import { PaymentOrderResponse } from './payment-order.dto';
-import { toPaymentOrder, toPaymentOrderStatusDto } from './payment-order.mapper';
+import {
+  toCreatePaymentOrderRequest,
+  toPaymentOrder,
+  toPaymentOrderStatusDto,
+} from './payment-order.mapper';
 
 const PAYMENT_ORDERS = '/admin/payment-orders';
 
@@ -22,5 +27,9 @@ export class PaymentOrdersService {
       ReferenceId: filter.referenceId,
     });
     return toPage(list, toPaymentOrder);
+  }
+
+  create(draft: PaymentOrderDraft): Promise<string> {
+    return this.apiClient.post<string>(PAYMENT_ORDERS, toCreatePaymentOrderRequest(draft));
   }
 }

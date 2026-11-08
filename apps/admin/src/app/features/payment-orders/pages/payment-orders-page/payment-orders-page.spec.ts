@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { NotificationService } from '@core/feedback/notification.service';
+import { SoldierLookupService } from '@shared/components/soldier-field/soldier-lookup.service';
 import { PaymentOrder } from '../../models/payment-order';
 import { PaymentOrdersService } from '../../services/payment-orders.service';
+import { TrainerOptionsService } from '../../services/trainer-options.service';
 import { PaymentOrdersPage } from './payment-orders-page';
 
 const paidSubscription: PaymentOrder = {
@@ -44,6 +47,7 @@ const pendingTariff: PaymentOrder = {
 
 describe('PaymentOrdersPage', () => {
   let service: { list: ReturnType<typeof vi.fn> };
+  let trainerOptions: { list: ReturnType<typeof vi.fn> };
 
   async function render(): Promise<ComponentFixture<PaymentOrdersPage>> {
     const fixture = TestBed.createComponent(PaymentOrdersPage);
@@ -76,8 +80,21 @@ describe('PaymentOrdersPage', () => {
     service = {
       list: vi.fn().mockResolvedValue({ items: [paidSubscription, pendingTariff], totalCount: 2 }),
     };
+    trainerOptions = {
+      list: vi
+        .fn()
+        .mockResolvedValue([
+          { id: paidSubscription.referenceId, displayName: 'Stage Coach', standardPrice: 200000 },
+        ]),
+    };
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: PaymentOrdersService, useValue: service }],
+      providers: [
+        provideRouter([]),
+        { provide: PaymentOrdersService, useValue: service },
+        { provide: TrainerOptionsService, useValue: trainerOptions },
+        { provide: SoldierLookupService, useValue: { search: vi.fn().mockResolvedValue([]) } },
+        { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
+      ],
     });
   });
 
@@ -116,5 +133,19 @@ describe('PaymentOrdersPage', () => {
 
     const link = (fixture.nativeElement as HTMLElement).querySelector('tbody a');
     expect(link?.getAttribute('href')).toBe('/soldiers/3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf');
+  });
+
+  it('should open the create dialog and load the trainers when the create button is pressed', async () => {
+    const fixture = await render();
+
+    const open = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button')).find(
+      (button) => button.textContent?.includes('Buyurtma ochish'),
+    );
+    open?.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(trainerOptions.list).toHaveBeenCalledTimes(1);
+    expect(document.body.textContent).toContain("To'lov buyurtmasini ochish");
   });
 });

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
 import { formatDateTime } from '@core/i18n/date-format';
@@ -7,13 +7,17 @@ import { INTL_LOCALES } from '@core/i18n/locale';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
+import { Button } from '@openng/optimus-ui/button';
 import { Tag } from '@openng/optimus-ui/tag';
 import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
+import { SoldierSearchStore } from '@shared/components/soldier-field/soldier-search.store';
 import { PageRequest } from '@shared/models/page';
 import { TIER_LABELS } from '@shared/models/tier-labels';
+import { PaymentOrderCreateDialog } from '../../components/payment-order-create-dialog/payment-order-create-dialog';
 import { PaymentOrderFilters } from '../../components/payment-order-filters/payment-order-filters';
 import { PaymentOrder } from '../../models/payment-order';
+import { PaymentOrderDraft } from '../../models/payment-order-draft';
 import { PaymentOrderFilter } from '../../models/payment-order-filter';
 import {
   PAYMENT_ORDER_STATUS_LABELS,
@@ -46,8 +50,17 @@ interface PaymentOrderRow {
 
 @Component({
   selector: 'app-payment-orders-page',
-  imports: [CatalogHeader, DataTable, PaymentOrderFilters, RouterLink, Tag, TranslatePipe],
-  providers: [PaymentOrdersStore],
+  imports: [
+    Button,
+    CatalogHeader,
+    DataTable,
+    PaymentOrderCreateDialog,
+    PaymentOrderFilters,
+    RouterLink,
+    Tag,
+    TranslatePipe,
+  ],
+  providers: [PaymentOrdersStore, SoldierSearchStore],
   templateUrl: './payment-orders-page.html',
 })
 export class PaymentOrdersPage {
@@ -55,7 +68,9 @@ export class PaymentOrdersPage {
   private readonly localeStore = inject(LocaleStore);
 
   protected readonly store = inject(PaymentOrdersStore);
+  protected readonly soldierSearch = inject(SoldierSearchStore);
   protected readonly soldiersPath = AppPaths.soldiers;
+  protected readonly createVisible = signal(false);
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'createdOnUtc', header: this.text('paymentOrders.columns.created'), sortable: true },
@@ -94,6 +109,17 @@ export class PaymentOrdersPage {
 
   protected applyFilter(filter: PaymentOrderFilter): void {
     void this.store.applyFilter(filter);
+  }
+
+  protected openCreate(): void {
+    this.createVisible.set(true);
+    void this.store.loadTrainers();
+  }
+
+  protected async create(draft: PaymentOrderDraft): Promise<void> {
+    if (await this.store.create(draft)) {
+      this.createVisible.set(false);
+    }
   }
 
   private toRow(order: PaymentOrder): PaymentOrderRow {

@@ -53,4 +53,20 @@ describe('PaymentOrdersService', () => {
     request.flush({ data: [], totalCount: 0 });
     await done;
   });
+
+  it('should post a trainer subscription order and return its id when an order is created', async () => {
+    const done = service.create({ userId: USER_ID, trainerId: REFERENCE_ID, price: 150000 });
+
+    const request = http.expectOne('/api/admin/payment-orders');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({
+      userId: USER_ID,
+      purpose: 1,
+      referenceId: REFERENCE_ID,
+      price: 150000,
+    });
+    request.flush({ isSuccess: true, data: 'order-1' });
+
+    expect(await done).toBe('order-1');
+  });
 });

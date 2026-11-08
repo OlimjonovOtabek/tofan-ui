@@ -4,7 +4,13 @@
     [subtitle]="
       'paymentOrders.total' | t: { count: store.loadError() === null ? store.totalCount() : '-' }
     "
-  />
+  >
+    <p-button
+      [label]="'paymentOrders.create.open' | t"
+      icon="pi pi-plus"
+      (onClick)="openCreate()"
+    />
+  </app-catalog-header>
 
   <app-payment-order-filters (filterChange)="applyFilter($event)" />
 
@@ -57,3 +63,14 @@
     </ng-template>
   </app-data-table>
 </div>
+
+<app-payment-order-create-dialog
+  [(visible)]="createVisible"
+  [trainers]="store.trainers()"
+  [trainersFailed]="store.trainersError() !== null"
+  [soldiers]="soldierSearch.options()"
+  [soldiersFailed]="soldierSearch.failed()"
+  [saving]="store.creating()"
+  (create)="create($event)"
+  (soldierSearch)="soldierSearch.search($event)"
+/>

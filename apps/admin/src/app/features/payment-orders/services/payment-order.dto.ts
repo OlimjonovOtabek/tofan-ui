@@ -35,3 +35,10 @@ export interface PaymentOrderResponse {
   refundedOnUtc: string | null;
   tier: TierDto | null;
 }
+
+export interface CreatePaymentOrderRequest {
+  userId: string;
+  purpose: PaymentPurposeDto;
+  referenceId: string;
+  price: number;
+}
