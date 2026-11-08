@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '@core/feedback/notification.service';
 import { DeviceTokensService } from './device-tokens.service';
 import { PushData, isFailedVideoPush, pushDataFromLink, pushLinkOf } from './push-message';
-import { PushMessagingService } from './push-messaging.service';
+import { PushMessagingService, WorkerPushEvent } from './push-messaging.service';
 
 const TOKEN_KEY = 'coach.push.token';
 const OPEN_PARAM = 'push';
@@ -30,7 +30,7 @@ export class PushStore {
     this.messaging
       .workerEvents()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event) => (event.opened ? this.open(event.data) : this.received(event.data)));
+      .subscribe((event) => (event.opened ? this.open(event.data) : this.received(event)));
     this.openFromLaunchLink();
     void this.restore().catch(() => this.enabled.set(false));
   }
@@ -85,10 +85,21 @@ export class PushStore {
     }
   }
 
-  private received(data: PushData): void {
-    if (isFailedVideoPush(data)) {
-      this.notifications.failure('coachApp.push.videoFailed');
+  private received(event: WorkerPushEvent): void {
+    if (this.warnAboutFailedVideo(event.data)) {
+      return;
     }
+    if (event.notice !== null) {
+      this.notifications.announce(event.notice.title, event.notice.body);
+    }
+  }
+
+  private warnAboutFailedVideo(data: PushData): boolean {
+    if (!isFailedVideoPush(data)) {
+      return false;
+    }
+    this.notifications.failure('coachApp.push.videoFailed');
+    return true;
   }
 
   private open(data: PushData): void {
@@ -96,7 +107,7 @@ export class PushStore {
     if (link !== null) {
       void this.router.navigateByUrl(link);
     }
-    this.received(data);
+    this.warnAboutFailedVideo(data);
   }
 
   private openFromLaunchLink(): void {

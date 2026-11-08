@@ -187,6 +187,7 @@ describe('PaymentOrdersStore', () => {
     expect(service.create).toHaveBeenCalledWith(draft);
     expect(notifications.success).toHaveBeenCalledWith('paymentOrders.create.created', {
       name: 'Stage Coach',
+      id: 'order-new',
     });
     expect(service.list).toHaveBeenLastCalledWith(
       {},

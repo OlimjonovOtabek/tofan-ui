@@ -45,7 +45,7 @@ export const PAYMENT_ORDERS_UZ = {
     open: 'Buyurtma ochish',
     header: "To'lov buyurtmasini ochish",
     save: 'Ochish',
-    hint: "Buyurtma trener obunasi uchun Standard darajada va \"Kutilmoqda\" holatida ochiladi. Narx ustiga joriy komissiya, soliq va provayder haqi qo'shiladi. Buyurtmani faqat foydalanuvchining o'zi to'lay oladi.",
+    hint: "Bu Click va Payme sandbox testi uchun vaqtinchalik buyurtma: u trener obunasiga Standard darajada, \"Kutilmoqda\" holatida ochiladi va ilovada ko'rinmaydi. Narx ustiga joriy komissiya, soliq va provayder haqi qo'shiladi. Test kassada buyurtma ID'si bilan to'lanadi, to'lov esa faqat narx trenerning joriy Standard narxiga teng bo'lsa o'tadi.",
     user: 'Foydalanuvchi',
     soldierPlaceholder: "Ism yoki username bo'yicha qidiring",
     soldierEmpty: 'Soldier topilmadi.',
@@ -57,7 +57,7 @@ export const PAYMENT_ORDERS_UZ = {
     priceSuffix: " so'm",
     trainerPrice: "Trenerning Standard narxi: {amount} so'm",
     useTrainerPrice: "Shu narxni qo'yish",
-    created: '"{name}" treneri uchun buyurtma ochildi.',
+    created: '"{name}" treneri uchun buyurtma ochildi. ID: {id}',
     errors: {
       userId: 'Foydalanuvchini tanlang.',
       trainer: 'Trenerni tanlang.',

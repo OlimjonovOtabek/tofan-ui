@@ -1,4 +1,5 @@
 import { AppLocale, INTL_LOCALES } from '@core/i18n/locale';
+import { formatNumber } from '@core/i18n/number-format';
 
 const UZ_MONTHS_SHORT = [
   'yan',
@@ -29,8 +30,6 @@ const UZ_MONTHS_LONG = [
   'dekabr',
 ];
 const UZ_WEEKDAYS_SHORT = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'];
-const UZ_GROUP = ' ';
-const UZ_DECIMAL = ',';
 const NBSP = ' ';
 const SHORT_SUFFIXES = ['', 'k', 'm', 'b', 't'];
 const THOUSAND = 1000;
@@ -45,19 +44,7 @@ export function formatDecimal(
   maxFractionDigits: number,
   minFractionDigits = 0,
 ): string {
-  const options = {
-    maximumFractionDigits: maxFractionDigits,
-    minimumFractionDigits: minFractionDigits,
-  };
-  if (locale !== 'uz') {
-    return new Intl.NumberFormat(INTL_LOCALES[locale], options).format(value);
-  }
-  const parts = new Intl.NumberFormat('en-US', options).formatToParts(value);
-  return parts
-    .map((part) =>
-      part.type === 'group' ? UZ_GROUP : part.type === 'decimal' ? UZ_DECIMAL : part.value,
-    )
-    .join('');
+  return formatNumber(value, locale, maxFractionDigits, minFractionDigits);
 }
 
 export function formatMoney(

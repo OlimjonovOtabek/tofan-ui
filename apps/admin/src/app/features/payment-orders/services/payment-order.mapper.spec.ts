@@ -54,15 +54,15 @@ describe('toPaymentOrder', () => {
     });
   });
 
-  it('should drop the tier when the order is for a Tofan tariff', () => {
+  it('should keep the tariff kind as the tier when the order is for a Tofan tariff', () => {
     const order = toPaymentOrder({
       ...subscriptionOrder,
       purpose: PaymentPurposeDto.Tariff,
-      tier: TierDto.Standard,
+      tier: TierDto.Vip,
     });
 
     expect(order.purpose).toBe('tariff');
-    expect(order.tier).toBeNull();
+    expect(order.tier).toBe('vip');
   });
 
   it('should keep the provider and the dates empty when the order is still pending', () => {

@@ -14,23 +14,27 @@ function windows() {
   return self.clients.matchAll({ type: 'window', includeUncontrolled: true });
 }
 
-function tell(client, kind, data) {
-  client.postMessage({ kind, data: JSON.stringify(data) });
+function tell(client, kind, data, notice) {
+  client.postMessage({ kind, data: JSON.stringify(data), ...notice });
+}
+
+function noticeOf(notification, data) {
+  const title = notification.title ?? data.title;
+  return title ? { title, body: notification.body ?? data.body ?? '' } : null;
 }
 
 async function deliver(payload) {
   const data = payload.data ?? {};
+  const notice = noticeOf(payload.notification ?? {}, data);
   const open = await windows();
   const visible = open.find((client) => client.visibilityState === 'visible');
   if (visible) {
-    tell(visible, PUSH_RECEIVED, data);
+    tell(visible, PUSH_RECEIVED, data, notice);
     return;
   }
-  const notification = payload.notification ?? {};
-  const title = notification.title ?? data.title;
-  if (title) {
-    await self.registration.showNotification(title, {
-      body: notification.body ?? data.body ?? '',
+  if (notice) {
+    await self.registration.showNotification(notice.title, {
+      body: notice.body,
       icon: ICON,
       data,
     });

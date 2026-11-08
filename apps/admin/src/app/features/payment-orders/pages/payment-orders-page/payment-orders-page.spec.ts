@@ -32,7 +32,7 @@ const pendingTariff: PaymentOrder = {
   id: 'o2',
   purpose: 'tariff',
   referenceId: '5f6c1a10-7d1e-4a51-9c11-000000000002',
-  tier: null,
+  tier: 'standard',
   price: 120000,
   commissionAmount: 0,
   taxPercent: 0,
@@ -121,11 +121,17 @@ describe('PaymentOrdersPage', () => {
     ]);
   });
 
-  it('should show the tariff without a tier and no paid date when the order is pending', async () => {
+  it('should show the tariff kind and no paid date when the order is a pending tariff', async () => {
     const [, row] = cells(await render());
 
-    expect(row[2]).toBe('Tofan tarifi 5f6c1a10-7d1e-4a51-9c11-000000000002');
+    expect(row[2]).toBe('Tofan tarifi · Standard 5f6c1a10-7d1e-4a51-9c11-000000000002');
     expect(row[8]).toBe('Kutilmoqda');
+  });
+
+  it('should show the order id under the created date when the table is shown', async () => {
+    const [row] = cells(await render());
+
+    expect(row[0]).toMatch(/^\S.* o1$/);
   });
 
   it('should link the user id to the Soldier card when the table is shown', async () => {
