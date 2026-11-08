@@ -1,11 +1,20 @@
-import { Component, input, model, output, signal } from '@angular/core';
+import { Component, input, linkedSignal, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormValueControl } from '@angular/forms/signals';
 import { AutoComplete } from '@openng/optimus-ui/autocomplete';
 import { SoldierOption } from '@shared/models/soldier-option';
 
+type SoldierEntry = SoldierOption | string | null;
+
 function isSoldierOption(candidate: unknown): candidate is SoldierOption {
   return typeof candidate === 'object' && candidate !== null && 'userId' in candidate;
+}
+
+function entryForValue(userId: string | null, entry: SoldierEntry): SoldierEntry {
+  if (userId === null) {
+    return typeof entry === 'string' ? entry : null;
+  }
+  return isSoldierOption(entry) && entry.userId === userId ? entry : null;
 }
 
 @Component({
@@ -27,9 +36,12 @@ export class SoldierField implements FormValueControl<string | null> {
 
   readonly searchChange = output<string>();
 
-  protected readonly entry = signal<SoldierOption | string | null>(null);
+  protected readonly entry = linkedSignal<string | null, SoldierEntry>({
+    source: this.value,
+    computation: (userId, previous) => entryForValue(userId, previous?.value ?? null),
+  });
 
-  protected change(entry: SoldierOption | string | null): void {
+  protected change(entry: SoldierEntry): void {
     this.entry.set(entry);
     this.value.set(isSoldierOption(entry) ? entry.userId : null);
   }
