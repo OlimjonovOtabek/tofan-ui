@@ -290,34 +290,33 @@ Natijalar [modules/payment-orders.md](modules/payment-orders.md) da yozilgan, qi
 - `tier` doim Standard.
 
 Panelga "Buyurtma ochish" oynasi shu xatti-harakat bo'yicha qo'shildi.
-Ochiq qolgan savollar va so'rovlar:
+Backend javobi (2026-11-08, "Stage v1.1: backend javoblari"):
 
-1. Endpoint nima uchun kerak (chegirmali narx, naqd to'lov, Click yoki Payme sandbox testi)?
-   Foydalanuvchi bu buyurtmani qanday topadi va to'laydi?
-   Mobil ilovada "mening buyurtmalarim" ro'yxati yo'q, admin esa boshqa foydalanuvchi buyurtmasining to'lov havolasini ololmaydi (`PaymentOrder.NotFound`).
-2. `referenceId` tekshirilmaydi: mavjud bo'lmagan trener ID'si bilan ham buyurtma ochildi.
-   So'rov: trener topilmasa `404 Trainer.NotFound` qaytarilsin.
-   `userId` ham tekshirilishi kerak (orphan buyurtma ochilmasin uchun bu sinab ko'rilmadi).
-3. `price` kasr sonni qabul qiladi (1 000.5 saqlandi).
-   So'mda tiyin ishlatilmasa, butun son talab qilinsin.
-4. `tier` body'da yo'q, buyurtma doim Standard.
-   VIP obuna uchun buyurtma kerak bo'lsa, body'ga `tier` qo'shilsin.
-5. Buyurtmani bekor qilish yoki o'chirish endpoint'i yo'q.
-   Stage'da sinovdan 3 ta `Pending` buyurtma qoldi:
-   - `f8bf7e46-e218-4d18-b4d8-7a68bb5024a8` (Probe User, narx 1 000.5);
-   - `d3f29105-6662-4995-9af1-a31c9804e285` (Probe User, mavjud bo'lmagan trener);
-   - `9f940a86-9706-48be-b571-bf70ba14f277` (`stage-admin`, narx 1 000).
+- Endpoint vaqtinchalik va faqat Click va Payme sandbox testi uchun.
+  Admin to'lovchi bo'lib kirmasdan buyurtma ID'sini beradi, test kassada shu ID bilan to'lanadi.
+  Buyurtma ilovada ko'rinmaydi va ko'rinishi kerak ham emas.
+- To'lov o'tishi uchun `price` trenerning joriy narxiga teng bo'lishi kerak.
+- Noto'g'ri `referenceId` bilan pul o'tmaydi: provayder tekshiruvi to'lovdan oldin trenerni so'raydi (`-31008`).
+- Sinovdan qolgan 3 ta buyurtma o'chirildi (2026-11-08 16:40 UTC).
+  Otabek Olimjonovning 255 000 lik buyurtmasi qoldi.
 
-   Kerak bo'lsa ularni o'chirib yuboring.
+Panel oynaga boshqa kuch sarflamaydi.
+Quyidagilar faqat endpoint doimiy bo'lib qolsa ahamiyatli, backend tasdiqladi va hozircha o'zgartirmaydi:
 
-### Stage'dagi ma'lumot
+1. `referenceId` va `userId` mavjudligi tekshirilmaydi, validator faqat bo'sh emasligini ko'radi.
+2. `price` 2 xonagacha kasrni qabul qiladi; panel baribir butun so'm yuboradi.
+3. Body'da `tier` yo'q, buyurtma doim Standard.
 
-Stage'dagi 3 ta tarif buyurtmasida (Standard, 2026-11-04 va 2026-11-05) `commissionAmount` 50 000 va `providerFeeAmount` 3 400 turibdi, `amount` 173 400.
-Tarifga Platform fee qo'shilmasligi kerak (2026-11-05 qarori).
-Bular qaror kuchga kirishidan oldin ochilganmi?
-Yangi tarif buyurtmasi aynan `monthlyPrice` bilan ochilishini tasdiqlang.
-Bundan tashqari, tarif buyurtmalarida `tier: 1` keladi: tarif uchun `tier` `null` bo'lishi kerakmi?
-Panel tarif qatorida `tier` ni e'tiborsiz qoldiradi.
+### Stage'dagi tarif buyurtmalari
+
+Backend javobi (2026-11-08):
+
+- 173 400 lik 3 ta Standard tarif buyurtmasi Platform fee'ni tariflardan olib tashlagan o'zgarishdan oldin ochilgan.
+  U stage'ga 2026-11-05 13:00 UTC atrofida chiqdi (API `v9.15`).
+  Undan keyingi tarif buyurtmasida narx va jami `monthlyPrice` ga teng, komissiya, soliq va provayder 0.
+- Eski 3 ta buyurtma `Pending` holatida qoldi; ularni o'chirish yoki qoldirishni backend hal qiladi.
+- Tarif buyurtmasidagi `tier` `null` bo'lmaydi va tarif turini bildiradi: VIP tarif `2`, qolgan tariflar `1`.
+  Panel uni tarif qatorida "Tofan tarifi · Standard" yoki "Tofan tarifi · VIP" deb ko'rsatadi.
 
 ---
 

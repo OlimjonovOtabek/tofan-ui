@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PushConfig } from './push-config';
 import { PushConfigService } from './push-config.service';
-import { PushData, toPushData } from './push-message';
+import { PushData, PushNotice, toPushData, toPushNotice } from './push-message';
 
 const WORKER_PATH = '/push-worker.js';
 const WORKER_PUSH_KIND = 'push-received';
@@ -11,6 +11,7 @@ const WORKER_OPEN_KIND = 'push-open';
 export interface WorkerPushEvent {
   readonly opened: boolean;
   readonly data: PushData;
+  readonly notice: PushNotice | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -59,6 +60,7 @@ export class PushMessagingService {
           subscriber.next({
             opened: kind === WORKER_OPEN_KIND,
             data: toPushData(JSON.parse(message['data'] ?? '{}') as unknown),
+            notice: toPushNotice(message),
           });
         }
       };

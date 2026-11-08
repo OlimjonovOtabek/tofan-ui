@@ -23,6 +23,16 @@ describe('NotificationService', () => {
   it('should show a success toast with the translated text when a success key is given', () => {
     service.success('coachApp.common.retry');
 
-    expect(add).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success', detail: 'Qayta urinish' }));
+    expect(add).toHaveBeenCalledWith(
+      expect.objectContaining({ severity: 'success', detail: 'Qayta urinish' }),
+    );
+  });
+
+  it('should show an info toast with the given title and body when an announcement is made', () => {
+    service.announce('Stage push test', 'Hello');
+
+    expect(add).toHaveBeenCalledWith(
+      expect.objectContaining({ severity: 'info', summary: 'Stage push test', detail: 'Hello' }),
+    );
   });
 });

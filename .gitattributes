@@ -1,1 +1,4 @@
 graphify-out/graph.json merge=graphify
+*.sh text eol=lf
+nginx/** text eol=lf
+Dockerfile* text eol=lf

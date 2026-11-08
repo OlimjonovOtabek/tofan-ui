@@ -47,7 +47,7 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
     open: 'Create order',
     header: 'Create a payment order',
     save: 'Create',
-    hint: 'The order is a Standard trainer subscription and starts as "Pending". The current commission, tax and provider fee are added on top of the price. Only the user can pay the order.',
+    hint: 'A temporary order for the Click and Payme sandbox test: it opens as a Standard trainer subscription in "Pending" status and does not show in the app. The current commission, tax and provider fee are added on top of the price. It is paid in the test checkout by its order ID, and the payment goes through only when the price equals the trainer\'s current Standard price.',
     user: 'User',
     soldierPlaceholder: 'Search by name or username',
     soldierEmpty: 'No soldier found.',
@@ -59,7 +59,7 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
     priceSuffix: ' UZS',
     trainerPrice: 'Trainer Standard price: {amount} UZS',
     useTrainerPrice: 'Use this price',
-    created: 'The order for trainer "{name}" was created.',
+    created: 'The order for trainer "{name}" was created. ID: {id}',
     errors: {
       userId: 'Choose a user.',
       trainer: 'Choose a trainer.',

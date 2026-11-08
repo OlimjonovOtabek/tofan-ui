@@ -79,9 +79,10 @@ export class PaymentOrdersStore {
   async create(draft: PaymentOrderDraft): Promise<boolean> {
     this.creating.set(true);
     try {
-      await this.paymentOrdersService.create(createPaymentOrderDraft(draft));
+      const id = await this.paymentOrdersService.create(createPaymentOrderDraft(draft));
       this.notifications.success('paymentOrders.create.created', {
         name: this.trainerName(draft.trainerId),
+        id,
       });
       await this.reloadFirstPage();
       return true;

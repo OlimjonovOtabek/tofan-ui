@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { FormField, form } from '@angular/forms/signals';
 import { TranslationKey } from '@core/i18n/dictionary';
-import { INTL_LOCALES } from '@core/i18n/locale';
+import { formatNumber } from '@core/i18n/number-format';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
@@ -80,9 +80,7 @@ export class PaymentOrderCreateDialog {
     if (trainer === null) {
       return null;
     }
-    const amount = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()]).format(
-      trainer.standardPrice,
-    );
+    const amount = formatNumber(trainer.standardPrice, this.localeStore.locale());
     return this.translator.translate('paymentOrders.create.trainerPrice', { amount });
   });
 

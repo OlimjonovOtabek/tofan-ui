@@ -1,5 +1,10 @@
 export type PushData = Readonly<Record<string, string>>;
 
+export interface PushNotice {
+  readonly title: string;
+  readonly body: string;
+}
+
 const CHAT_SOURCE = 'chat';
 const VIDEO_SOURCE = 'video';
 const VIDEO_FAILED_TYPE = '14';
@@ -20,6 +25,11 @@ export function pushLinkOf(data: PushData): string | null {
 
 export function isFailedVideoPush(data: PushData): boolean {
   return data['source'] === VIDEO_SOURCE && data['type'] === VIDEO_FAILED_TYPE;
+}
+
+export function toPushNotice(message: PushData): PushNotice | null {
+  const title = message['title'];
+  return title ? { title, body: message['body'] ?? '' } : null;
 }
 
 export function toPushData(value: unknown): PushData {

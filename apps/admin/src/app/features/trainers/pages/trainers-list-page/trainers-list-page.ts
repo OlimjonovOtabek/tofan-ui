@@ -26,7 +26,7 @@ import { PageRequest } from '@shared/models/page';
 import { shortId } from '@shared/utils/identifiers';
 import { formatDate } from '@core/i18n/date-format';
 import { Dictionary } from '@core/i18n/dictionary';
-import { INTL_LOCALES } from '@core/i18n/locale';
+import { formatNumber } from '@core/i18n/number-format';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
@@ -91,7 +91,7 @@ export class TrainersListPage {
   }
 
   protected amountLabel(price: number): string {
-    const amount = new Intl.NumberFormat(INTL_LOCALES[this.localeStore.locale()]).format(price);
+    const amount = formatNumber(price, this.localeStore.locale());
     return this.translator.translate('trainers.list.price', { amount });
   }
 
