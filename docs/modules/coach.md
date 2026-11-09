@@ -81,14 +81,43 @@ A conversation with anyone else stays readable but is read-only.
   The store treats it as the read-only state, not as a load error: no history is loaded, `loadError` stays empty, the name from the `?name=` query stays in the header.
   Any other failure still shows the error state with retry.
 - **Send refused:** `POST /chat/conversations/{id}/messages` can answer the same 403 when the Client lost VIP after the conversation was opened.
-  The store switches to read-only, shows the toast `errors.backend.Chat.SubscriptionRequired` and returns `false`.
-  `ConversationPage` puts the text back into its draft when a send returns `false`, so nothing the coach typed is lost.
+  `ChatOutboxStore` asks `ConversationStore.refused` to switch to read-only, shows the toast `errors.backend.Chat.SubscriptionRequired` and returns `false`.
+  `ChatComposerStore` puts the text back into its draft when a send returns `false`, so nothing the coach typed is lost.
 - **Unsent text:** while the conversation is read-only and the draft has text, the lock note is preceded by a muted block with the label `coachApp.conversation.unsent` and the draft as plain, selectable text (line breaks kept), so the coach can copy it.
   The rule is `unsentText(draft, canWrite)` in `models/chat-access.ts`; nothing is shown for an empty or whitespace-only draft or while the conversation is writable.
-  The draft itself stays in the page, so when the conversation turns writable again the composer comes back with the same text.
+  The draft lives in `ChatComposerStore`, provided by the page, so when the conversation turns writable again the composer comes back with the same text.
 - **Recognising the refusal:** `models/chat-access.ts` matches the backend code `Chat.SubscriptionRequired`, never the message text.
   The code reaches the store because the shared HTTP layer keeps it on `AccessDeniedError` (see `docs/backend-contract.md`).
 - **Existing conversations:** the list and `GET /chat/conversations` carry `canWrite` per conversation, which feeds the same read-only state.
+
+### Chat v2: images, files, voice and video notes
+
+Backend contract: `.scratch/chat-v2/backend-chat-v2.md` (stage API v9.19).
+A message has a `kind` (`text`, `image`, `file`, `voice`, `videoNote`) and `attachments`; `text` is an empty string for media without a caption.
+
+- **Stores on the conversation page:** `ConversationStore` (history, peer, links), `ChatOutboxStore` (text send, uploads and pending bubbles), `ChatComposerStore` (draft, picked files), `VoiceRecordingStore` (microphone session) and `ChatPlaybackStore` (only one voice or video plays with sound at a time); `locateConversation` opens or finds the conversation before the history loads.
+- **Sending media:** every file goes to `POST /files` through the shared `FileUploadService` (category `chatImage` 8, `chatFile` 11, `chatVoice` 9), then the message is sent with `{ text, attachments: [fileId] }`.
+  Images and files are picked from the attach menu, 1 to 10 per message; the two kinds never mix (`Chat.AttachmentsMixed`), so the menu only opens while nothing is picked and a pasted image joins the image tray.
+  Extensions and sizes are checked in the browser with `ensureUploadIsAllowed` before the upload; the backend still decides.
+  The message shows at once as a pending bubble with the combined progress; a failure keeps it with retry and discard, and discard cancels the uploads.
+- **Scroll after sending:** every send (text, images or files, voice) scrolls the list to the newest message, even when the coach had scrolled up.
+  `ChatOutboxStore.outgoingRevision` grows when a send starts and again when the sent message is shown, and the page scrolls on each change.
+  The second scroll is needed because the reply often arrives while the first smooth scroll is still running, which left the list one bubble above the bottom.
+- **Voice:** a click on the microphone starts `MediaRecorder` (webm/opus in Chrome and Firefox, mp4 in Safari, ogg as a fallback) and the file is named `voice.webm`, `voice.m4a` or `voice.ogg` so the backend accepts the extension.
+  The send button finishes, the bin or Esc cancels, under 1 second is dropped with a toast, and recording stops on its own at 15 minutes.
+  The live bars use a decibel scale (`levelFromRms`: -60 dB is empty, 0 dB is full) because a linear scale leaves normal speech near zero.
+- **Showing media:** an image album reserves its height from `width`/`height` (one image) or fixed rows (2 to 10, `albumRows`) and opens a full screen `<dialog>` gallery with arrows, thumbnails and download.
+  A file shows its extension badge, name and size and downloads through a fresh signed URL.
+  A voice message shows 64 waveform bars, the elapsed part in the strong color, the time and a 1x/1.5x/2x speed toggle; the bars double as an invisible range input for seeking.
+  A video note is a 208 px circle that plays muted in a loop; a click plays it from the start with sound and fills the progress ring.
+  The `muted` state must be a property binding: a static `muted` attribute added by Angular does not mute the element, and Chrome then autoplays with sound.
+- **Signed URLs:** the `url` of a file changes every hour.
+  `mergeMessages` keeps the URL the page already has for a `fileId` while its `expires` is more than a minute away, so a reload of the history does not refetch every image.
+  A media element that fails to load, or a file opened after its URL expired, makes `MediaLinks` refetch the 20 messages around that message (at most once a minute per message) and replace that message's URLs.
+- **Activity:** the hub method `Activity(conversationId, activity)` replaces `Typing`: 1 while typing, 2 while recording voice, 4 while uploading, at most once per 3 seconds per activity (`shouldSendActivity`).
+  `UserActivity` replaces `UserTyping`; the header and the conversation list show it for 5 seconds or until a message from that user arrives (`ActivityBoard`).
+- **List preview:** `lastMessageKind` picks the icon (image, paperclip, microphone, video note) and, when `lastMessageText` is empty, the word for the kind (`previewText`).
+- **Trap:** a CSS class called `ring` (and other Tailwind utility names) picks up the Tailwind utility; the progress circles use `progress-ring`.
 
 ## Push notifications
 
