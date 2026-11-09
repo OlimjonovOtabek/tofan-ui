@@ -9,6 +9,10 @@ export enum FileCategoryDto {
   ProductImage = 5,
   Document = 6,
   GarmentImage = 7,
+  ChatImage = 8,
+  ChatVoice = 9,
+  ChatVideoNote = 10,
+  ChatFile = 11,
 }
 
 export const fileCategories = enumMap<FileCategory, FileCategoryDto>(FileCategoryDto);
