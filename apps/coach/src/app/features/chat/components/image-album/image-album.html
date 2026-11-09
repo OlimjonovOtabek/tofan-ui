@@ -1,0 +1,20 @@
+@for (row of rows(); track row.key) {
+  <div class="row" [class.is-single]="single()" [style.aspect-ratio]="single() ? aspect() : null">
+    @for (tile of row.tiles; track tile.attachment.fileId) {
+      <button
+        type="button"
+        class="tile"
+        [attr.aria-label]="'coachApp.conversation.openImage' | t"
+        (click)="opened.emit(tile.index)"
+      >
+        <img
+          [src]="tile.attachment.url"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          (error)="failed.emit()"
+        />
+      </button>
+    }
+  </div>
+}

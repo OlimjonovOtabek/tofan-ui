@@ -1,0 +1,92 @@
+<dialog
+  #dialog
+  class="gallery"
+  [attr.aria-label]="title()"
+  (close)="closed.emit()"
+  tabindex="-1"
+  (keydown.arrowLeft)="previous()"
+  (keydown.arrowRight)="next()"
+>
+  <header class="bar">
+    <span class="who">
+      <span class="t-title4 coach-ellipsis">{{ title() }}</span>
+      <span class="t-base5 muted"
+        >{{ subtitle() }}
+        @if (many()) {
+          ·
+          {{
+            'coachApp.conversation.galleryPosition'
+              | t: { index: index() + 1, count: attachments().length }
+          }}
+        }
+      </span>
+    </span>
+    @if (current(); as attachment) {
+      <button
+        type="button"
+        class="icon-button"
+        [attr.aria-label]="'coachApp.conversation.download' | t"
+        (click)="downloaded.emit(attachment)"
+      >
+        <coach-icon name="download" />
+      </button>
+    }
+    <button
+      type="button"
+      class="icon-button"
+      [attr.aria-label]="'coachApp.conversation.galleryClose' | t"
+      (click)="close()"
+    >
+      <coach-icon name="close" />
+    </button>
+  </header>
+  <div class="stage">
+    @if (many()) {
+      <button
+        type="button"
+        class="nav"
+        [attr.aria-label]="'coachApp.conversation.galleryPrevious' | t"
+        (click)="previous()"
+      >
+        <coach-icon name="chevron-left" />
+      </button>
+    }
+    @if (current(); as attachment) {
+      <img class="photo" [src]="attachment.url" alt="" (error)="failed.emit()" />
+    }
+    @if (many()) {
+      <button
+        type="button"
+        class="nav"
+        [attr.aria-label]="'coachApp.conversation.galleryNext' | t"
+        (click)="next()"
+      >
+        <coach-icon name="chevron-right" />
+      </button>
+    }
+  </div>
+  <footer class="footer">
+    @if (caption()) {
+      <p class="caption t-base3">{{ caption() }}</p>
+    }
+    @if (many()) {
+      <div class="thumbs">
+        @for (thumb of thumbs(); track thumb.attachment.fileId) {
+          <button
+            type="button"
+            class="thumb"
+            [class.is-current]="thumb.index === index()"
+            [attr.aria-label]="
+              'coachApp.conversation.galleryPosition'
+                | t: { index: thumb.index + 1, count: attachments().length }
+            "
+            [attr.aria-current]="thumb.index === index()"
+            (click)="show(thumb.index)"
+          >
+            <img [src]="thumb.attachment.url" alt="" loading="lazy" />
+          </button>
+        }
+      </div>
+    }
+  </footer>
+</dialog>

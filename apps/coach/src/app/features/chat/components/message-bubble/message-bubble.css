@@ -1,0 +1,87 @@
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  max-width: 78%;
+  padding: 8px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: 18px 18px 18px 6px;
+  background: var(--c-surface);
+}
+
+:host(.is-mine) {
+  align-self: flex-end;
+  border-color: transparent;
+  border-radius: 18px 18px 6px;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+:host(.is-media) {
+  width: min(360px, 78%);
+  padding: 0;
+  overflow: hidden;
+}
+
+:host(.is-photo-only) {
+  border: 0;
+  background: transparent;
+}
+
+:host(.is-bare) {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-text);
+}
+
+.text {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.caption {
+  padding: 6px 12px 0;
+}
+
+.meta {
+  margin-top: 2px;
+}
+
+.caption-meta {
+  padding: 0 12px 6px;
+}
+
+.overlay-meta {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.inline-meta {
+  margin-left: auto;
+}
+
+.bare-meta {
+  margin-bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--c-surface-2);
+  color: var(--c-text-muted);
+  opacity: 1;
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: min(260px, 100%);
+}
+
+:host(.is-mine.is-bare) {
+  flex-direction: row-reverse;
+}

@@ -1,0 +1,160 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: flex-end;
+  width: min(300px, 78%);
+  padding: 8px 12px;
+  border-radius: 18px 18px 6px;
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+:host(.is-media) {
+  overflow: hidden;
+  padding: 0 0 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 3), minmax(0, 1fr));
+  gap: 2px;
+}
+
+.thumb {
+  display: block;
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--c-on-primary) 20%, transparent);
+}
+
+.grid.is-single .thumb {
+  aspect-ratio: 4 / 3;
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+.caption {
+  padding: 0 12px;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.file {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+}
+
+.badge {
+  --icon-size: 20px;
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--c-radius-tile);
+  background: color-mix(in srgb, var(--c-on-primary) 20%, transparent);
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.size {
+  opacity: 0.75;
+}
+
+.voice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mic {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--c-on-primary);
+  color: var(--c-primary);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  --icon-size: 16px;
+}
+
+:host(.is-media) .status {
+  padding: 0 8px 0 12px;
+}
+
+.label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.progress-ring {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  transform: rotate(-90deg);
+}
+
+.progress-ring circle {
+  fill: none;
+  stroke-width: 5;
+}
+
+.track {
+  stroke: color-mix(in srgb, var(--c-on-primary) 30%, transparent);
+}
+
+.done {
+  stroke: var(--c-on-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.2s linear;
+}
+
+.spinner {
+  --spinner-size: 18px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--c-on-primary) 22%, transparent);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.action.icon-only {
+  justify-content: center;
+  width: 36px;
+  padding: 0;
+}

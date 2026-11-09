@@ -1,0 +1,58 @@
+@switch (message().kind) {
+  @case ('image') {
+    <coach-image-album
+      [attachments]="message().attachments"
+      (opened)="imageOpened.emit($event)"
+      (failed)="mediaFailed.emit()"
+    />
+    @if (hasText()) {
+      <p class="text caption t-base2">{{ message().text }}</p>
+      <coach-message-meta
+        class="meta caption-meta"
+        [time]="time()"
+        [mine]="mine()"
+        [read]="read()"
+      />
+    } @else {
+      <coach-message-meta
+        class="overlay-meta"
+        [time]="time()"
+        [mine]="mine()"
+        [read]="read()"
+        [overlay]="true"
+      />
+    }
+  }
+  @case ('file') {
+    <div class="files">
+      @for (attachment of message().attachments; track attachment.fileId) {
+        <coach-file-attachment
+          [attachment]="attachment"
+          [mine]="mine()"
+          (opened)="fileOpened.emit(attachment)"
+        />
+      }
+    </div>
+    @if (hasText()) {
+      <p class="text t-base2">{{ message().text }}</p>
+    }
+    <coach-message-meta class="meta" [time]="time()" [mine]="mine()" [read]="read()" />
+  }
+  @case ('voice') {
+    @if (first(); as voice) {
+      <coach-voice-message [attachment]="voice" [mine]="mine()" (failed)="mediaFailed.emit()">
+        <coach-message-meta class="inline-meta" [time]="time()" [mine]="mine()" [read]="read()" />
+      </coach-voice-message>
+    }
+  }
+  @case ('videoNote') {
+    @if (first(); as video) {
+      <coach-video-note [attachment]="video" (failed)="mediaFailed.emit()" />
+    }
+    <coach-message-meta class="bare-meta" [time]="time()" [mine]="mine()" [read]="read()" />
+  }
+  @default {
+    <p class="text t-base2">{{ message().text }}</p>
+    <coach-message-meta class="meta" [time]="time()" [mine]="mine()" [read]="read()" />
+  }
+}

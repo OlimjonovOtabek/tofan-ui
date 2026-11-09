@@ -25,6 +25,7 @@ const conversation = (
   lastSeen: null,
   otherReadUpTo: null,
   lastMessageSenderId: null,
+  lastMessageKind: null,
   lastMessageText: '',
   lastMessageOn: on === null ? null : new Date(on),
   unreadCount: unread,
@@ -34,8 +35,29 @@ const message = (id: string, sender: string, at: string): Message => ({
   id,
   conversationId: 'c',
   senderUserId: sender,
+  kind: 'text',
   text: id,
+  attachments: [],
   sentOn: new Date(at),
+});
+const signedUrl = (fileId: string, expires: number): string =>
+  `/api/files/${fileId}/content?expires=${expires}&signature=s${expires}`;
+const withImage = (base: Message, url: string): Message => ({
+  ...base,
+  kind: 'image',
+  attachments: [
+    {
+      fileId: 'f1',
+      url,
+      fileName: 'photo.jpg',
+      contentType: 'image/jpeg',
+      sizeBytes: 10,
+      durationSeconds: null,
+      width: 800,
+      height: 600,
+      waveform: [],
+    },
+  ],
 });
 
 describe('conversation rules', () => {
@@ -67,7 +89,29 @@ describe('message rules', () => {
     const a = message('a', 'me', '2026-10-22T10:00:00Z');
     const b = message('b', 'them', '2026-10-22T11:00:00Z');
 
-    expect(mergeMessages([b], [a, b]).map((item) => item.id)).toEqual(['b', 'a']);
+    expect(mergeMessages([b], [a, b], new Date()).map((item) => item.id)).toEqual(['b', 'a']);
+  });
+
+  it('should keep the shown file url when it is still valid', () => {
+    const now = new Date('2026-11-09T10:00:00Z');
+    const inAnHour = now.getTime() / 1000 + 3600;
+    const shown = withImage(message('a', 'me', '2026-11-09T09:00:00Z'), signedUrl('f1', inAnHour));
+    const incoming = withImage(shown, signedUrl('f1', inAnHour + 3600));
+
+    expect(mergeMessages([incoming], [shown], now)[0].attachments[0].url).toBe(
+      signedUrl('f1', inAnHour),
+    );
+  });
+
+  it('should take the new file url when the shown one has expired', () => {
+    const now = new Date('2026-11-09T10:00:00Z');
+    const expired = now.getTime() / 1000 - 10;
+    const shown = withImage(message('a', 'me', '2026-11-09T09:00:00Z'), signedUrl('f1', expired));
+    const incoming = withImage(shown, signedUrl('f1', expired + 7200));
+
+    expect(mergeMessages([incoming], [shown], now)[0].attachments[0].url).toBe(
+      signedUrl('f1', expired + 7200),
+    );
   });
 
   it('should know who wrote it and whether the other side read it', () => {

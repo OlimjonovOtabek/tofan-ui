@@ -1,0 +1,25 @@
+<button
+  type="button"
+  class="cancel"
+  [attr.aria-label]="'coachApp.conversation.recordCancel' | t"
+  (click)="cancelled.emit()"
+>
+  <coach-icon name="trash" />
+</button>
+<div class="pill">
+  <span class="dot" aria-hidden="true"></span>
+  <span class="clock t-base3 font-semibold">{{ clock() }}</span>
+  <span class="levels" role="img" [attr.aria-label]="'coachApp.conversation.recordingLevels' | t">
+    @for (level of levels(); track level.index) {
+      <span class="level" [style.height.%]="level.height"></span>
+    }
+  </span>
+</div>
+<button
+  type="button"
+  class="send"
+  [attr.aria-label]="'coachApp.conversation.recordSend' | t"
+  (click)="sent.emit()"
+>
+  <coach-icon name="arrow-up" />
+</button>
