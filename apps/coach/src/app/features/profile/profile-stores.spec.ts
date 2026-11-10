@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ClientsService } from '@coach/core/clients/clients.service';
 import { CoachProfileService } from '@coach/core/profile/coach-profile.service';
 import { VideoStatusService } from '@coach/core/videos/video-status.service';
+import { VideoStatusesStore } from '@coach/core/videos/video-statuses.store';
 import { NotificationService } from '@core/feedback/notification.service';
 import { FileUploadService } from '@shared/components/file-upload/file-upload.service';
 import { signal } from '@angular/core';
@@ -57,6 +58,7 @@ describe('profile stores', () => {
         ProfileEditStore,
         EarningsStore,
         PreviewVideosStore,
+        VideoStatusesStore,
         { provide: CoachProfileService, useValue: profiles },
         { provide: ClientsService, useValue: clients },
         { provide: ProfileService, useValue: stats },
@@ -69,6 +71,7 @@ describe('profile stores', () => {
             saves$: videoUploads.saves,
             uploads: signal({}),
             progressIn: () => null,
+            preparingIn: () => false,
           },
         },
         { provide: VideoStatusService, useValue: statuses },

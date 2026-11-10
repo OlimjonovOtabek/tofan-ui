@@ -60,14 +60,9 @@
         </div>
       }
     </div>
-    @if (store.uploadProgress() !== null) {
-      <div class="c-card upload">
-        <span class="t-base4 font-medium tone-secondary">{{
-          (store.preparing() ? 'coachApp.day.videoPreparing' : 'coachApp.day.videoUploading')
-            | t: { percent: percent() }
-        }}</span>
-        <coach-progress [value]="store.uploadProgress()" />
-      </div>
+    @let progress = store.uploadProgress();
+    @if (progress !== null) {
+      <coach-video-upload-card [progress]="progress" [preparing]="store.preparing()" />
     }
     @if (store.full()) {
       <p class="t-base5 tone-secondary full">{{ 'coachApp.previewVideos.limit' | t }}</p>
@@ -75,7 +70,7 @@
       <label class="add c-pressable" [class.is-disabled]="store.working()">
         <input
           type="file"
-          accept="video/mp4,video/quicktime,video/webm,.mp4,.m4v,.mov,.webm"
+          [accept]="accept"
           hidden
           [disabled]="store.working()"
           (change)="chosen($event)"

@@ -97,6 +97,12 @@ export class VideoUploadsStore {
     return [...this.queue(), ...this.sending()].some((save) => save.group === group) ? 1 : null;
   }
 
+  preparingIn(group: string): boolean {
+    return Object.values(this.state()).some(
+      (upload) => upload.group === group && upload.status.kind === 'compressing',
+    );
+  }
+
   private async run(id: string, run: UploadRun): Promise<void> {
     const { signal } = run.abort;
     try {

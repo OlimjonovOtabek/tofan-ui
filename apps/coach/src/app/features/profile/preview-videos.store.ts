@@ -2,13 +2,11 @@ import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
-import { VideoDetails } from '@coach/core/videos/video';
-import { VideoStatusService } from '@coach/core/videos/video-status.service';
+import { VideoStatusesStore } from '@coach/core/videos/video-statuses.store';
 import { VideoUploadsStore } from '@coach/core/videos/video-uploads.store';
 import { PreviewVideo, isFull } from './models/preview-video';
 import { ProfileService } from './services/profile.service';
 
-const POLL_MS = 5000;
 const PREVIEW_UPLOAD_GROUP = 'preview-videos';
 const PREVIEW_UPLOAD_LINK = '/profile/preview-videos';
 
@@ -16,28 +14,20 @@ const PREVIEW_UPLOAD_LINK = '/profile/preview-videos';
 export class PreviewVideosStore {
   private readonly service = inject(ProfileService);
   private readonly uploads = inject(VideoUploadsStore);
-  private readonly statuses = inject(VideoStatusService);
+  private readonly statuses = inject(VideoStatusesStore);
   private readonly notifications = inject(NotificationService);
-  private timer: ReturnType<typeof setTimeout> | null = null;
 
   readonly videos = signal<readonly PreviewVideo[] | null>(null);
   readonly loadError = signal<ErrorMessage | null>(null);
-  readonly details = signal<Readonly<Record<string, VideoDetails>>>({});
   readonly uploadProgress = computed(() => this.uploads.progressIn(PREVIEW_UPLOAD_GROUP));
-  readonly preparing = computed(() =>
-    Object.values(this.uploads.uploads()).some(
-      (upload) => upload.group === PREVIEW_UPLOAD_GROUP && upload.status.kind === 'compressing',
-    ),
-  );
+  readonly preparing = computed(() => this.uploads.preparingIn(PREVIEW_UPLOAD_GROUP));
   readonly busy = signal(false);
 
   readonly full = computed(() => isFull(this.videos() ?? []));
   readonly working = computed(() => this.busy() || this.uploadProgress() !== null);
 
   constructor() {
-    const destroyRef = inject(DestroyRef);
-    destroyRef.onDestroy(() => this.stopPolling());
-    this.uploads.saves$.pipe(takeUntilDestroyed(destroyRef)).subscribe((result) => {
+    this.uploads.saves$.pipe(takeUntilDestroyed(inject(DestroyRef))).subscribe((result) => {
       if (result.group === PREVIEW_UPLOAD_GROUP) {
         void this.load();
       }
@@ -47,8 +37,7 @@ export class PreviewVideosStore {
   async load(): Promise<void> {
     this.loadError.set(null);
     try {
-      this.videos.set(await this.service.previewVideos());
-      void this.refreshStatuses();
+      this.show(await this.service.previewVideos());
     } catch (error) {
       this.loadError.set(toErrorMessage(error));
     }
@@ -99,7 +88,7 @@ export class PreviewVideosStore {
     this.busy.set(true);
     try {
       await action();
-      this.videos.set(await this.service.previewVideos());
+      this.show(await this.service.previewVideos());
     } catch (error) {
       this.notifications.error(error);
     } finally {
@@ -107,31 +96,8 @@ export class PreviewVideosStore {
     }
   }
 
-  private async refreshStatuses(): Promise<void> {
-    this.stopPolling();
-    const ids = (this.videos() ?? []).map((video) => video.fileId);
-    if (ids.length === 0) {
-      return;
-    }
-    try {
-      const read = await this.statuses.read(ids);
-      this.details.set(Object.fromEntries(read.map((item) => [item.fileId, item])));
-    } catch {
-      return;
-    }
-    if (read(this.details())) {
-      this.timer = setTimeout(() => void this.refreshStatuses(), POLL_MS);
-    }
+  private show(videos: readonly PreviewVideo[]): void {
+    this.videos.set(videos);
+    void this.statuses.track(videos.map((video) => video.fileId));
   }
-
-  private stopPolling(): void {
-    if (this.timer !== null) {
-      clearTimeout(this.timer);
-      this.timer = null;
-    }
-  }
-}
-
-function read(details: Readonly<Record<string, VideoDetails>>): boolean {
-  return Object.values(details).some((item) => item.status === 'pending');
 }
