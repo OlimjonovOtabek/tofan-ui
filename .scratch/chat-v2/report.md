@@ -32,3 +32,10 @@ Coach panel on `npm run start:coach:staging` against `api.stage.peaktofan.com`, 
 - Receiving `UserActivity` from the mobile app (needs the athlete's phone); covered by store tests.
 - An expired signed URL in a long-open tab (needs an hour); covered by the merge and `MediaLinks` tests.
 - Safari recording (`audio/mp4` → `voice.m4a`); covered by the format test only.
+
+## Round video recording (2026-11-10)
+
+- Sent 1 round video to Otabek Olimjonov from the panel with the fake camera: `POST /files` and `POST …/messages` answered 200, and the backend returned a 3 second 480×480 video note that plays in the conversation.
+- Hub frames: `Activity` 3 while recording and 4 while uploading.
+- Esc closes the recorder, both camera and microphone tracks end, and nothing is sent.
+- Found and fixed: the attach menu wrapped "Video message" and its hint onto two lines at phone width; the menu is wider and its labels stay on one line.
