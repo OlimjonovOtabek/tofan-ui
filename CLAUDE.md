@@ -114,7 +114,7 @@ apps/admin/src/app/
   routes/                  # admin app.routes.ts
 apps/coach/src/app/
   core/                    # coach shell, ui primitives, formats, shared client, payment and video code, profile guard
-  features/                # auth, dashboard, programs, clients, chat, profile (lazy loaded)
+  features/                # auth, dashboard, programs, clients, chat, profile, posts, video-collections (lazy loaded)
   routes/                  # coach app.routes.ts
 apps/landing/src/app/
   core/                    # links, landing dictionary and locale routes, shell, SEO head

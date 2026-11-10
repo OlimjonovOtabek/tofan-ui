@@ -1,0 +1,65 @@
+.tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+.handle {
+  flex: 0 0 auto;
+  color: var(--c-text-muted);
+  cursor: grab;
+  --icon-size: 16px;
+}
+
+.thumb {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: var(--c-video);
+  color: var(--c-on-video);
+  cursor: pointer;
+  --icon-size: 16px;
+}
+
+.thumb:disabled {
+  cursor: default;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.note {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.more {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-text-muted);
+  --icon-size: 20px;
+}
+
+.more:disabled {
+  opacity: 0.5;
+}

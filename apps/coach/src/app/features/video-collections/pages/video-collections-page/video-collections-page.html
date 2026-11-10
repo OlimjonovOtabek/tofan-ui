@@ -1,0 +1,69 @@
+<coach-app-bar [title]="'coachApp.videoCollections.title' | t" backLink="/profile" />
+<div class="coach-page coach-page--pushed coach-page--with-footer">
+  @if (store.collections(); as collections) {
+    <div>
+      <p class="t-base5 tone-secondary">{{ 'coachApp.videoCollections.hint' | t }}</p>
+      <p class="t-base4 font-semibold tone-info count">
+        {{ 'coachApp.videoCollections.count' | t: { count: collections.length, max: max } }}
+      </p>
+    </div>
+    @if (collections.length === 0) {
+      <coach-empty-state
+        icon="dumbbell"
+        [title]="'coachApp.videoCollections.emptyTitle' | t"
+        [message]="'coachApp.videoCollections.emptyMessage' | t"
+      />
+    } @else {
+      <div
+        class="list"
+        cdkDropList
+        [cdkDropListDisabled]="store.reordering() || store.creating()"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (collection of collections; track collection.id) {
+          <button
+            type="button"
+            class="c-card tile c-pressable"
+            cdkDrag
+            (click)="open(collection.id)"
+          >
+            <coach-icon name="list" class="handle" />
+            <span class="text">
+              <span class="t-base2 font-semibold coach-ellipsis">{{ collection.title }}</span>
+              <span class="t-base5 tone-muted">{{
+                'coachApp.videoCollections.videoCount' | t: { count: collection.videoCount }
+              }}</span>
+            </span>
+            <coach-collection-status-tag [published]="collection.isPublished" />
+            <coach-icon name="chevron-right" class="chevron" />
+          </button>
+        }
+      </div>
+    }
+    <div class="coach-footer">
+      @if (store.hasRoom()) {
+        <button
+          coachButton="primary"
+          type="button"
+          [disabled]="store.reordering()"
+          [loading]="store.creating()"
+          (click)="create()"
+        >
+          {{ 'coachApp.videoCollections.new' | t }}
+        </button>
+      } @else {
+        <p class="t-base5 tone-secondary limit">{{ 'coachApp.videoCollections.limit' | t }}</p>
+      }
+    </div>
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.videoCollections.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <div class="loading"><coach-spinner /></div>
+  }
+</div>

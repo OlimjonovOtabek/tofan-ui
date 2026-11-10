@@ -59,6 +59,16 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'TrainerSubscription.NotActive': 'errors.backend.TrainerSubscription.NotActive',
   'WorkoutPlan.TrainerProgramMissing': 'errors.backend.WorkoutPlan.TrainerProgramMissing',
   'MealPlan.TrainerProgramMissing': 'errors.backend.MealPlan.TrainerProgramMissing',
+  'TrainerPost.NotFound': 'errors.backend.TrainerPost.NotFound',
+  'TrainerVideoCollection.NotFound': 'errors.backend.TrainerVideoCollection.NotFound',
+  'TrainerVideoCollection.VideoNotFound': 'errors.backend.TrainerVideoCollection.VideoNotFound',
+  'TrainerVideoCollection.Empty': 'errors.backend.TrainerVideoCollection.Empty',
+  'TrainerVideoCollection.LimitReached': 'errors.backend.TrainerVideoCollection.LimitReached',
+  'TrainerVideoCollection.VideoLimitReached':
+    'errors.backend.TrainerVideoCollection.VideoLimitReached',
+  'TrainerVideoCollection.OrderMismatch': 'errors.backend.TrainerVideoCollection.OrderMismatch',
+  'TrainerVideoCollection.VideoOrderMismatch':
+    'errors.backend.TrainerVideoCollection.VideoOrderMismatch',
   'Tariff.FreeMustStayFree': 'errors.backend.Tariff.FreeMustStayFree',
   'Tariff.PaidPriceRequired': 'errors.backend.Tariff.PaidPriceRequired',
   'Tariff.NotFound': 'errors.backend.Tariff.NotFound',

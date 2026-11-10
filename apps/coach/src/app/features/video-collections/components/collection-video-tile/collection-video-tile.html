@@ -1,0 +1,30 @@
+<div class="c-card tile">
+  <coach-icon name="list" class="handle" />
+  <button
+    type="button"
+    class="thumb"
+    [disabled]="!watchable()"
+    [attr.aria-label]="'coachApp.day.videoWatch' | t"
+    (click)="watch.emit()"
+  >
+    <coach-icon name="play" />
+  </button>
+  <div class="text">
+    <span class="t-base2 font-semibold coach-ellipsis">{{ title() }}</span>
+    @if (video().note) {
+      <span class="t-base5 tone-muted note">{{ video().note }}</span>
+    }
+  </div>
+  @if (flagged()) {
+    <coach-video-status-tag [status]="status()" />
+  }
+  <button
+    type="button"
+    class="more"
+    [disabled]="busy()"
+    [attr.aria-label]="'coachApp.common.more' | t"
+    (click)="more.emit()"
+  >
+    <coach-icon name="more-horizontal" />
+  </button>
+</div>

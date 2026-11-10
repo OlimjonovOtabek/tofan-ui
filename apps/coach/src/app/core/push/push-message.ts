@@ -20,7 +20,15 @@ export function pushLinkOf(data: PushData): string | null {
   if (data['programId'] && data['dayId']) {
     return `/programs/workout/${encodeURIComponent(data['programId'])}`;
   }
-  return data['previewVideoId'] ? '/profile/preview-videos' : '/programs';
+  if (data['previewVideoId']) {
+    return '/profile/preview-videos';
+  }
+  if (data['postId']) {
+    return '/profile/posts';
+  }
+  return data['collectionId']
+    ? `/profile/video-collections/${encodeURIComponent(data['collectionId'])}`
+    : '/programs';
 }
 
 export function isFailedVideoPush(data: PushData): boolean {

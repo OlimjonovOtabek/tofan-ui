@@ -30,6 +30,17 @@ export const routes: Routes = [
           import('@coach/features/programs/programs.routes').then((m) => m.PROGRAM_ROUTES),
       },
       {
+        path: 'profile/posts',
+        loadChildren: () => import('@coach/features/posts/posts.routes').then((m) => m.POST_ROUTES),
+      },
+      {
+        path: 'profile/video-collections',
+        loadChildren: () =>
+          import('@coach/features/video-collections/video-collections.routes').then(
+            (m) => m.VIDEO_COLLECTION_ROUTES,
+          ),
+      },
+      {
         path: 'profile',
         loadChildren: () =>
           import('@coach/features/profile/profile.routes').then((m) => m.PROFILE_ROUTES),

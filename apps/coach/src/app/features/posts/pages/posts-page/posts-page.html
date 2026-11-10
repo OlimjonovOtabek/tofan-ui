@@ -1,0 +1,69 @@
+<coach-app-bar [title]="'coachApp.posts.title' | t" backLink="/profile" />
+<div class="coach-page coach-page--pushed coach-page--with-footer">
+  @if (store.page(); as page) {
+    <p class="t-base5 tone-secondary">{{ 'coachApp.posts.hint' | t }}</p>
+    @let progress = store.uploadProgress();
+    @if (progress !== null) {
+      <div class="waiting">
+        <p class="t-base4 font-semibold tone-info">{{ 'coachApp.posts.uploadWaiting' | t }}</p>
+        <coach-video-upload-card [progress]="progress" [preparing]="store.preparing()" />
+      </div>
+    }
+    @if (page.posts.length === 0 && progress === null) {
+      <coach-empty-state
+        icon="bell"
+        [title]="'coachApp.posts.emptyTitle' | t"
+        [message]="'coachApp.posts.emptyMessage' | t"
+      />
+    }
+    <div class="list">
+      @for (post of page.posts; track post.id) {
+        <coach-post-card
+          [post]="post"
+          [now]="now()"
+          [locale]="locale()"
+          [status]="statuses.statusOf(post.fileId)"
+          [busy]="store.busy()"
+          (watch)="watch(post)"
+          (more)="more(post)"
+        />
+      }
+    </div>
+    @if (store.hasMore()) {
+      <button
+        coachButton="secondary"
+        type="button"
+        [loading]="store.loadingMore()"
+        (click)="store.loadMore()"
+      >
+        {{ 'coachApp.posts.loadMore' | t }}
+      </button>
+    }
+    <div class="coach-footer">
+      <button coachButton="primary" type="button" (click)="create()">
+        {{ 'coachApp.posts.new' | t }}
+      </button>
+    </div>
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.posts.errorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load()"
+    />
+  } @else {
+    <div class="loading"><coach-spinner /></div>
+  }
+</div>
+<coach-sheet
+  [open]="editing() !== null"
+  (openChange)="editorToggled($event)"
+  [title]="
+    (editing()?.post ? 'coachApp.posts.editorEditTitle' : 'coachApp.posts.editorNewTitle') | t
+  "
+>
+  @if (editing(); as editing) {
+    <coach-post-editor [post]="editing.post" (done)="saved($event)" />
+  }
+</coach-sheet>
