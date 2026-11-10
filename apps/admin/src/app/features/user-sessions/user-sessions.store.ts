@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { UserSession } from './models/user-session';
-import { UserSessionFilter } from './models/user-session-filter';
+import { SessionListFilter, UserSessionFilter } from './models/user-session-filter';
 import { UserSessionsService } from './services/user-sessions.service';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 
@@ -10,35 +10,59 @@ export class UserSessionsStore {
   private readonly userSessionsService = inject(UserSessionsService);
 
   private readonly page = signal<Page<UserSession>>(emptyPage<UserSession>());
-  private readonly currentFilter = signal<UserSessionFilter>({});
+  private readonly currentUserId = signal<string | null>(null);
+  private readonly currentListFilter = signal<SessionListFilter>({});
   private readonly currentRequest = signal<PageRequest | null>(null);
+  private readonly currentFilter = computed<UserSessionFilter>(() => {
+    const userId = this.currentUserId();
+    return userId === null ? this.currentListFilter() : { ...this.currentListFilter(), userId };
+  });
 
   readonly sessions = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
   readonly loading = signal(false);
   readonly loadError = signal<ErrorMessage | null>(null);
   readonly first = computed(() => this.currentRequest()?.first ?? 0);
-  readonly userId = computed(() => this.currentFilter().userId ?? null);
+  readonly userId = this.currentUserId.asReadonly();
+
+  private latestLoad = 0;
 
   async load(request: PageRequest = this.currentRequest() ?? firstPage()): Promise<void> {
+    const loadNumber = ++this.latestLoad;
     this.currentRequest.set(request);
     this.loading.set(true);
     this.loadError.set(null);
     try {
-      this.page.set(await this.userSessionsService.list(this.currentFilter(), request));
+      const page = await this.userSessionsService.list(this.currentFilter(), request);
+      if (loadNumber === this.latestLoad) {
+        this.page.set(page);
+      }
     } catch (error) {
-      this.page.set(emptyPage<UserSession>());
-      this.loadError.set(toErrorMessage(error));
+      if (loadNumber === this.latestLoad) {
+        this.page.set(emptyPage<UserSession>());
+        this.loadError.set(toErrorMessage(error));
+      }
     } finally {
-      this.loading.set(false);
+      if (loadNumber === this.latestLoad) {
+        this.loading.set(false);
+      }
     }
   }
 
   async filterByUser(userId: string | null): Promise<void> {
-    if (userId === this.userId()) {
+    if (userId === this.currentUserId()) {
       return;
     }
-    this.currentFilter.set(userId === null ? {} : { userId });
+    this.currentUserId.set(userId);
+    await this.reloadFirstPage();
+  }
+
+  async applyFilter(filter: SessionListFilter): Promise<void> {
+    this.currentListFilter.set(filter);
+    await this.reloadFirstPage();
+  }
+
+  private async reloadFirstPage(): Promise<void> {
     const request = this.currentRequest();
     if (request === null) {
       return;

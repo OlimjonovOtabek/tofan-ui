@@ -6,7 +6,7 @@ import { ApiClient } from '@core/http/api-client';
 import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
 import { UserSessionResponse } from './user-session.dto';
-import { toUserSession } from './user-session.mapper';
+import { toUserSession, toUserSessionQuery } from './user-session.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class UserSessionsService {
@@ -15,7 +15,7 @@ export class UserSessionsService {
   async list(filter: UserSessionFilter, page: PageRequest): Promise<Page<UserSession>> {
     const list = await this.apiClient.get<PagedList<UserSessionResponse>>('/user-sessions', {
       ...toPagedQuery(page),
-      UserId: filter.userId,
+      ...toUserSessionQuery(filter),
     });
     return toPage(list, toUserSession);
   }
