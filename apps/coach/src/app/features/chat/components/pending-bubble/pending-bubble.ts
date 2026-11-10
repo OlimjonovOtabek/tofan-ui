@@ -17,10 +17,7 @@ const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
   imports: [FileBadge, Icon, Spinner, TranslatePipe],
   templateUrl: './pending-bubble.html',
   styleUrl: './pending-bubble.css',
-  host: {
-    '[class.is-media]': "pending().kind === 'image'",
-    '[class.is-note]': "pending().kind === 'videoNote'",
-  },
+  host: { '[class.is-media]': "pending().kind === 'image'" },
 })
 export class PendingBubble {
   readonly pending = input.required<PendingMessage>();

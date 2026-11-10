@@ -33,15 +33,6 @@
                 'coachApp.conversation.attachFileHint' | t: fileLimit
               }}</span>
             </button>
-            <button type="button" role="menuitem" class="item" (click)="recordVideoNote()">
-              <coach-icon name="video-note" />
-              <span class="t-base3 font-medium">{{
-                'coachApp.conversation.attachVideoNote' | t
-              }}</span>
-              <span class="hint t-base5">{{
-                'coachApp.conversation.attachVideoNoteHint' | t: videoNoteLimit
-              }}</span>
-            </button>
           </div>
         }
         <button
@@ -93,15 +84,6 @@
         </button>
       }
     </div>
-  }
-  @if (store.videoNote(); as videoNote) {
-    <coach-video-note-recorder
-      [state]="videoNote"
-      [stream]="store.videoStream()"
-      [maxMs]="store.videoNoteMaxMs"
-      (cancelled)="store.cancelVideoNote()"
-      (sent)="store.finishVideoNote()"
-    />
   }
   <input
     #imageInput

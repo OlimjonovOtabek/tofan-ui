@@ -9,14 +9,12 @@ import { ChatComposerStore } from '../../chat-composer.store';
 import { ChatOutboxStore } from '../../chat-outbox.store';
 import { ChatPlaybackStore } from '../../chat-playback.store';
 import { ConversationStore } from '../../conversation.store';
-import { VideoNoteRecordingStore } from '../../video-note-recording.store';
 import { VoiceRecordingStore } from '../../voice-recording.store';
 import { Message } from '../../models/chat';
 import { ChatActivity } from '../../models/chat-activity';
 import { Attachment, MessageKind } from '../../models/chat-attachment';
 import { ChatService } from '../../services/chat.service';
 import { PreviewUrls } from '../../services/preview-urls.service';
-import { VideoNoteRecorder } from '../../services/video-note-recorder.service';
 import { VoiceRecorder } from '../../services/voice-recorder.service';
 import { ConversationPage } from './conversation-page';
 
@@ -101,7 +99,6 @@ describe('ConversationPage', () => {
         { provide: FileUploadService, useValue: { startUpload: vi.fn() } },
         { provide: PreviewUrls, useValue: { create: vi.fn(() => null), revoke: vi.fn() } },
         { provide: VoiceRecorder, useValue: { start: vi.fn() } },
-        { provide: VideoNoteRecorder, useValue: { start: vi.fn() } },
       ],
     });
     TestBed.overrideComponent(ConversationPage, {
@@ -110,7 +107,6 @@ describe('ConversationPage', () => {
           { provide: ConversationStore, useValue: store },
           ChatOutboxStore,
           VoiceRecordingStore,
-          VideoNoteRecordingStore,
           ChatComposerStore,
           ChatPlaybackStore,
         ],

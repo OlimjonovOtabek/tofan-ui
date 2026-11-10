@@ -3,13 +3,16 @@ import { NotificationService } from '@core/feedback/notification.service';
 import { ChatOutboxStore } from './chat-outbox.store';
 import { ConversationStore } from './conversation.store';
 import { OutgoingDraft } from './models/chat-outbox';
-import { MediaDeniedError } from './services/media-capture';
-import { VoiceRecorder, VoiceRecording } from './services/voice-recorder.service';
+import {
+  MicrophoneDeniedError,
+  VoiceRecorder,
+  VoiceRecording,
+} from './services/voice-recorder.service';
 import { VoiceRecordingStore } from './voice-recording.store';
 
 describe('VoiceRecordingStore', () => {
   const handle: VoiceRecording = {
-    fileName: 'voice.webm',
+    format: { mimeType: 'audio/webm;codecs=opus', fileName: 'voice.webm' },
     level: vi.fn(() => 40),
     stop: vi.fn(() => Promise.resolve(new Blob(['voice'], { type: 'audio/webm' }))),
     cancel: vi.fn(),
@@ -84,7 +87,7 @@ describe('VoiceRecordingStore', () => {
 
   it('should explain a blocked microphone when the browser refuses access', async () => {
     const store = TestBed.inject(VoiceRecordingStore);
-    recorder.start.mockRejectedValueOnce(new MediaDeniedError());
+    recorder.start.mockRejectedValueOnce(new MicrophoneDeniedError());
 
     await store.start();
 

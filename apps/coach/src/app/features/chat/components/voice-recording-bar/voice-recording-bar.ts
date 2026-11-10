@@ -3,7 +3,7 @@ import { Icon } from '@coach/core/ui/icon/icon';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { formatDuration } from '../../models/chat-attachment';
 import { LIVE_LEVEL_BARS } from '../../models/voice-note';
-import { RecordingState } from '../../models/recording';
+import { RecordingState } from '../../voice-recording.store';
 
 const MILLISECONDS_PER_SECOND = 1000;
 const MIN_LEVEL_PERCENT = 12;

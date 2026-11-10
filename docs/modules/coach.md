@@ -95,7 +95,7 @@ A conversation with anyone else stays readable but is read-only.
 Backend contract: `.scratch/chat-v2/backend-chat-v2.md` (stage API v9.19).
 A message has a `kind` (`text`, `image`, `file`, `voice`, `videoNote`) and `attachments`; `text` is an empty string for media without a caption.
 
-- **Stores on the conversation page:** `ConversationStore` (history, peer, links), `ChatOutboxStore` (text send, uploads and pending bubbles), `ChatComposerStore` (draft, picked files), `VoiceRecordingStore` and `VideoNoteRecordingStore` (both built on `MediaRecordingStore`, which owns the timer, the time limit, the under-one-second rule and the hand-over to the outbox) and `ChatPlaybackStore` (only one voice or video plays with sound at a time); `locateConversation` opens or finds the conversation before the history loads.
+- **Stores on the conversation page:** `ConversationStore` (history, peer, links), `ChatOutboxStore` (text send, uploads and pending bubbles), `ChatComposerStore` (draft, picked files), `VoiceRecordingStore` (microphone session) and `ChatPlaybackStore` (only one voice or video plays with sound at a time); `locateConversation` opens or finds the conversation before the history loads.
 - **Sending media:** every file goes to `POST /files` through the shared `FileUploadService` (category `chatImage` 8, `chatFile` 11, `chatVoice` 9), then the message is sent with `{ text, attachments: [fileId] }`.
   Images and files are picked from the attach menu, 1 to 10 per message; the two kinds never mix (`Chat.AttachmentsMixed`), so the menu only opens while nothing is picked and a pasted image joins the image tray.
   Extensions and sizes are checked in the browser with `ensureUploadIsAllowed` before the upload; the backend still decides.
@@ -106,11 +106,6 @@ A message has a `kind` (`text`, `image`, `file`, `voice`, `videoNote`) and `atta
 - **Voice:** a click on the microphone starts `MediaRecorder` (webm/opus in Chrome and Firefox, mp4 in Safari, ogg as a fallback) and the file is named `voice.webm`, `voice.m4a` or `voice.ogg` so the backend accepts the extension.
   The send button finishes, the bin or Esc cancels, under 1 second is dropped with a toast, and recording stops on its own at 15 minutes.
   The live bars use a decibel scale (`levelFromRms`: -60 dB is empty, 0 dB is full) because a linear scale leaves normal speech near zero.
-- **Round video:** the attach menu's "Video message" opens the front camera (`VideoNoteRecorder`, `facingMode: 'user'`, 480 px ideal) in a modal circle with a 60 second ring.
-  The preview is mirrored like a selfie; the recording is not. The send button finishes, the bin or Esc cancels and stops the camera, and the recording stops on its own at 60 seconds (the backend refuses 61).
-  The file is `video-note.webm` (Chrome, Firefox) or `video-note.mp4` (Safari), uploaded as `chatVideoNote` (10); the backend crops it to a 480×480 mp4. `Activity` 3 is sent while recording.
-  The pending bubble plays the recorded file in a circle until the message arrives.
-  Camera and microphone access go through `services/media-capture.ts` (`openMedia`, `supportedFormat`, `captureStream`), shared with voice.
 - **Showing media:** an image album reserves its height from `width`/`height` (one image) or fixed rows (2 to 10, `albumRows`) and opens a full screen `<dialog>` gallery with arrows, thumbnails and download.
   A file shows its extension badge, name and size and downloads through a fresh signed URL.
   A voice message shows 64 waveform bars, the elapsed part in the strong color, the time and a 1x/1.5x/2x speed toggle; the bars double as an invisible range input for seeking.

@@ -158,38 +158,3 @@
   width: 36px;
   padding: 0;
 }
-
-:host(.is-note) {
-  align-items: flex-end;
-  width: auto;
-  padding: 0;
-  background: transparent;
-  color: var(--c-text);
-}
-
-.note-preview {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: var(--c-video);
-  object-fit: cover;
-  opacity: 0.8;
-}
-
-:host(.is-note) .status {
-  padding: 2px 4px 2px 10px;
-  border-radius: 9999px;
-  background: var(--c-surface-2);
-}
-
-:host(.is-note) .track {
-  stroke: var(--c-border);
-}
-
-:host(.is-note) .done {
-  stroke: var(--c-primary);
-}
-
-:host(.is-note) .action {
-  background: var(--c-surface);
-}

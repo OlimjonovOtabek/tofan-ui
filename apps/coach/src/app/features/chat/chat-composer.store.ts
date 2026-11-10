@@ -6,7 +6,6 @@ import { ConversationStore } from './conversation.store';
 import { unsentText } from './models/chat-access';
 import { MAX_ATTACHMENTS } from './models/chat-attachment';
 import { OUTGOING_CATEGORIES, PickedFile } from './models/chat-outbox';
-import { VideoNoteRecordingStore } from './video-note-recording.store';
 import { VoiceRecordingStore } from './voice-recording.store';
 import { PreviewUrls } from './services/preview-urls.service';
 
@@ -19,23 +18,18 @@ export class ChatComposerStore {
   private readonly previews = inject(PreviewUrls);
   private readonly notifications = inject(NotificationService);
   private readonly voice = inject(VoiceRecordingStore);
-  private readonly videoNotes = inject(VideoNoteRecordingStore);
   private nextId = 0;
 
   readonly draft = signal('');
   readonly picked = signal<readonly PickedFile[]>([]);
   readonly pickedKind = signal<PickKind | null>(null);
   readonly recording = this.voice.recording;
-  readonly videoNote = this.videoNotes.recording;
-  readonly videoStream = this.videoNotes.stream;
-  readonly videoNoteMaxMs = this.videoNotes.maxMs;
   readonly maxAttachments = MAX_ATTACHMENTS;
 
   readonly hasPicked = computed(() => this.picked().length > 0);
   readonly canSend = computed(
     () =>
       this.recording() === null &&
-      this.videoNote() === null &&
       !this.outbox.sendingText() &&
       (this.hasPicked() || this.draft().trim() !== ''),
   );
@@ -117,18 +111,6 @@ export class ChatComposerStore {
 
   cancelRecording(): void {
     this.voice.cancel();
-  }
-
-  startVideoNote(): Promise<void> {
-    return this.videoNotes.start();
-  }
-
-  finishVideoNote(): Promise<void> {
-    return this.videoNotes.finish();
-  }
-
-  cancelVideoNote(): void {
-    this.videoNotes.cancel();
   }
 
   private accepted(kind: PickKind, files: readonly File[]): PickedFile[] {

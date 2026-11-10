@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { ChatComposerStore, PickKind } from '../../chat-composer.store';
 import { PickedFile } from '../../models/chat-outbox';
-import { RecordingState } from '../../models/recording';
+import { RecordingState } from '../../voice-recording.store';
 import { ChatComposer } from './chat-composer';
 
 function createFakeStore() {
@@ -14,9 +14,6 @@ function createFakeStore() {
     picked,
     pickedKind: signal<PickKind | null>(null),
     recording: signal<RecordingState | null>(null),
-    videoNote: signal<RecordingState | null>(null),
-    videoStream: signal<MediaStream | null>(null),
-    videoNoteMaxMs: 60_000,
     maxAttachments: 10,
     hasPicked: computed(() => picked().length > 0),
     canSend: computed(() => draft().trim() !== ''),
@@ -28,9 +25,6 @@ function createFakeStore() {
     startRecording: vi.fn(),
     finishRecording: vi.fn(),
     cancelRecording: vi.fn(),
-    startVideoNote: vi.fn(),
-    finishVideoNote: vi.fn(),
-    cancelVideoNote: vi.fn(),
   };
 }
 
@@ -92,7 +86,7 @@ describe('ChatComposer', () => {
 
     host.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')?.click();
     fixture.detectChanges();
-    expect(host.querySelectorAll('.menu .item')).toHaveLength(3);
+    expect(host.querySelectorAll('.menu .item')).toHaveLength(2);
     expect(host.querySelector('.menu')?.textContent).toContain('up to 10');
 
     document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
@@ -121,34 +115,5 @@ describe('ChatComposer', () => {
 
     expect(host.querySelector('[aria-label="Record a voice message"]')).toBeNull();
     expect(host.querySelector('button[type="submit"]')).not.toBeNull();
-  });
-
-  it('should start a round video from the attach menu', () => {
-    const { fixture, host } = render();
-    host.querySelector<HTMLButtonElement>('[aria-haspopup="menu"]')?.click();
-    fixture.detectChanges();
-
-    const item = host.querySelectorAll<HTMLButtonElement>('.menu .item')[2];
-    expect(item.textContent).toContain('up to 60 s');
-    item.click();
-    fixture.detectChanges();
-
-    expect(store.startVideoNote).toHaveBeenCalledTimes(1);
-    expect(host.querySelector('.menu')).toBeNull();
-  });
-
-  it('should show the round video recorder while a video note is recording', async () => {
-    HTMLDialogElement.prototype.showModal = vi.fn();
-    const { fixture, host } = render();
-
-    store.videoNote.set({ elapsedMs: 15_000, levels: [] });
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    expect(host.querySelector('coach-video-note-recorder .clock')?.textContent).toContain(
-      '0:15 / 1:00',
-    );
-    host.querySelector<HTMLButtonElement>('coach-video-note-recorder .send')?.click();
-    expect(store.finishVideoNote).toHaveBeenCalledTimes(1);
   });
 });
