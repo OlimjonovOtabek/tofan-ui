@@ -1,0 +1,52 @@
+<div class="flex items-center justify-between gap-2">
+  <span class="text-sm text-muted-color font-semibold">{{ label() | t }}</span>
+  @if (matte() !== null) {
+    <label
+      class="flex items-center gap-2 text-xs text-muted-color cursor-pointer"
+      [for]="matteId()"
+    >
+      <p-checkbox
+        [inputId]="matteId()"
+        [binary]="true"
+        size="small"
+        [disabled]="selected() === null"
+        [ngModel]="matte()"
+        (ngModelChange)="matteChange.emit($event)"
+      />
+      {{ 'layout.configurator.matte' | t }}
+    </label>
+  }
+</div>
+<div class="flex flex-col gap-2">
+  @for (row of rows(); track $index; let first = $first) {
+    <div class="flex gap-2 flex-wrap justify-start">
+      @if (first && allowDefault()) {
+        <button
+          type="button"
+          [title]="'layout.configurator.default' | t"
+          [attr.aria-label]="'layout.configurator.default' | t"
+          [attr.aria-pressed]="selected() === null"
+          (click)="choose($event, null)"
+          [class.outline]="selected() === null"
+          [class.outline-primary]="selected() === null"
+          class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 items-center justify-center p-0 outline-offset-1 border border-dashed border-surface-400 bg-transparent text-muted-color"
+        >
+          <i class="pi pi-sparkles text-[0.625rem]"></i>
+        </button>
+      }
+      @for (swatch of row; track swatch.name) {
+        <button
+          type="button"
+          [title]="swatch.title"
+          [attr.aria-label]="swatch.title"
+          [attr.aria-pressed]="swatch.name === selected()"
+          (click)="choose($event, swatch.name)"
+          [class.outline]="swatch.name === selected()"
+          [class.outline-primary]="swatch.name === selected()"
+          class="cursor-pointer w-5 h-5 rounded-full flex shrink-0 p-0 outline-offset-1 border border-surface"
+          [style.background-color]="swatch.color"
+        ></button>
+      }
+    </div>
+  }
+</div>

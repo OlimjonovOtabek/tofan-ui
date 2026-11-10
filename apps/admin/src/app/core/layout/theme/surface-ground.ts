@@ -1,3 +1,5 @@
+import { matteColor, strongColorFor, withMatte } from './tone';
+
 export interface LightGround {
   readonly top: string;
   readonly bottom: string;
@@ -64,4 +66,41 @@ export function surfaceGroundFor(primary: string, darkTheme: boolean): SurfaceGr
     background: `linear-gradient(180deg, ${top} 0%, ${bottom} ${GROUND_GRADIENT_END_PERCENT}%)`,
     top,
   };
+}
+
+export const DEFAULT_LIGHT_GROUND: SurfaceGround = {
+  background: 'linear-gradient(180deg, #e8ebf3 0%, #eeebe6 100%)',
+  top: '#e8ebf3',
+};
+
+const STRONG_GROUND_SHADOW_PERCENT = 14;
+
+export function shellGroundFor(
+  ground: string | null,
+  primary: string,
+  darkTheme: boolean,
+  matte = false,
+): SurfaceGround {
+  if (ground === null) {
+    return darkTheme ? surfaceGroundFor(primary, true) : DEFAULT_LIGHT_GROUND;
+  }
+  const strong = strongColorFor(ground, 'ground', darkTheme);
+  if (strong !== null) {
+    return strongGround(withMatte(strong, matte));
+  }
+  return matte
+    ? matteGround(surfaceGroundFor(ground, darkTheme))
+    : surfaceGroundFor(ground, darkTheme);
+}
+
+function strongGround(color: string): SurfaceGround {
+  return {
+    background: `linear-gradient(180deg, ${color} 0%, color-mix(in srgb, ${color}, #000000 ${STRONG_GROUND_SHADOW_PERCENT}%) 100%)`,
+    top: color,
+  };
+}
+
+function matteGround({ background, top }: SurfaceGround): SurfaceGround {
+  const matteTop = matteColor(top);
+  return { background: background.replaceAll(top, matteTop), top: matteTop };
 }

@@ -1,4 +1,5 @@
-import type { LayoutConfig, MenuMode } from './layout.service';
+import type { LayoutConfig } from './layout.service';
+import { TONE_IDS } from './theme/card-color';
 import {
   NOIR_PRIMARY,
   PRIMARY_COLOR_NAMES,
@@ -7,7 +8,6 @@ import {
 } from './theme/theme-palettes';
 
 const LAYOUT_CONFIG_STORAGE_KEY = 'tofan.admin.layout';
-const MENU_MODES: readonly MenuMode[] = ['static', 'overlay'];
 const PRIMARY_NAMES: readonly string[] = [NOIR_PRIMARY, ...PRIMARY_COLOR_NAMES];
 const SURFACE_NAMES: readonly string[] = SURFACE_PALETTES.map((palette) => palette.name);
 
@@ -36,10 +36,13 @@ export function toLayoutConfig(stored: unknown, defaults: LayoutConfig): LayoutC
   return {
     preset: pick(stored['preset'], THEME_PRESET_NAMES, defaults.preset),
     primary: pick(stored['primary'], PRIMARY_NAMES, defaults.primary),
-    surface:
-      stored['surface'] === null ? null : pick(stored['surface'], SURFACE_NAMES, defaults.surface),
-    darkTheme: typeof stored['darkTheme'] === 'boolean' ? stored['darkTheme'] : defaults.darkTheme,
-    menuMode: pick(stored['menuMode'], MENU_MODES, defaults.menuMode),
+    surface: pickOptional(stored['surface'], SURFACE_NAMES, defaults.surface),
+    ground: pickOptional(stored['ground'], TONE_IDS, defaults.ground),
+    groundMatte: pickBoolean(stored['groundMatte'], defaults.groundMatte),
+    card: pickOptional(stored['card'], TONE_IDS, defaults.card),
+    cardMatte: pickBoolean(stored['cardMatte'], defaults.cardMatte),
+    darkTheme: pickBoolean(stored['darkTheme'], defaults.darkTheme),
+    menuCollapsed: pickBoolean(stored['menuCollapsed'], defaults.menuCollapsed),
   };
 }
 
@@ -54,4 +57,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function pick<T extends string | null>(value: unknown, allowed: readonly T[], fallback: T): T {
   return allowed.find((option) => option === value) ?? fallback;
+}
+
+function pickOptional(
+  value: unknown,
+  allowed: readonly string[],
+  fallback: string | null,
+): string | null {
+  return value === null ? null : pick(value, allowed, fallback);
+}
+
+function pickBoolean(value: unknown, fallback: boolean): boolean {
+  return typeof value === 'boolean' ? value : fallback;
 }

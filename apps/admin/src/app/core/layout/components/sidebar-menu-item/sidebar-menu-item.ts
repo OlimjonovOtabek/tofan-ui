@@ -1,6 +1,7 @@
 import { Component, afterNextRender, computed, inject, input, signal } from '@angular/core';
 import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/router';
 import { Ripple } from '@openng/optimus-ui/ripple';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { LayoutService } from '@core/layout/layout.service';
 import { LayoutMenuItem } from '@core/layout/menu/layout-menu-item';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
@@ -14,7 +15,7 @@ const EXACT_ROUTE_MATCH: IsActiveMatchOptions = {
 
 @Component({
   selector: '[app-sidebar-menu-item]',
-  imports: [RouterLink, RouterLinkActive, Ripple, TranslatePipe],
+  imports: [RouterLink, RouterLinkActive, Ripple, Tooltip, TranslatePipe],
   templateUrl: './sidebar-menu-item.html',
   styleUrl: './sidebar-menu-item.css',
   host: {
@@ -30,6 +31,7 @@ export class SidebarMenuItem {
   readonly parentPath = input<string | null>(null);
 
   protected readonly exactRouteMatch = EXACT_ROUTE_MATCH;
+  protected readonly railMenu = this.layoutService.isRailMenu;
 
   protected readonly animationsEnabled = signal(false);
 

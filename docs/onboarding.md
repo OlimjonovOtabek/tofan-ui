@@ -174,8 +174,27 @@ Uzbek (default), Russian, English. The choice is a `LocaleStore` signal persiste
 
 ## 9. Layout and theme (`core/layout`)
 
-`Layout` hosts the sidebar (menu from `app-menu.ts`), topbar (logo, language and theme switchers, sign out)
-and the router outlet. The dashboard greets the admin by `AuthStore.displayName()`. Theme tokens come from the Optimus preset (`core/layout/theme`); styles
+The shell follows the ZM Maktab `feat/ui-design-foundation` layout, rebuilt on Optimus UI with its own code.
+`Layout` puts a transparent side menu on the page background and one sheet next to it.
+The sheet holds the topbar and the router outlet; the content area is the only part that scrolls.
+- Side menu: brand, menu from `app-menu.ts` (group headings, active item on a raised fill) and `UserMenu` at the bottom.
+  On desktop it collapses to an icon rail with tooltips; below 992px it opens as a drawer over a mask.
+- Topbar: menu toggle, breadcrumb, light/dark switch, theme configurator, segmented `UZ RU EN` switch and `UserMenu`.
+- Pages render straight into the sheet: no `.card` wrapper; list pages use `catalog-page` to fill the height.
+- `LayoutService` keeps the theme config in `localStorage` (`tofan.admin.layout`): preset, primary, surface,
+  background (`ground`, `null` is the cool to warm ZM gradient in light mode and the primary tint in dark mode),
+  main card color (`card`, `null` uses the theme surface), dark mode and the collapsed rail.
+- Background and main card offer pale tints and strong tones (`core/layout/theme/tone.ts`, ids `strong-<palette>`).
+  A strong background uses shade 600 in light mode and 900 in dark mode; the side menu switches to white ink on it.
+  A strong card uses shade 100 in light mode and 900 in dark mode, because Optimus component text tokens resolve at
+  `:root` and cannot be flipped inside the sheet, so a 500 card would leave tables unreadable.
+  Each has a "Matte" checkbox that keeps lightness and cuts chroma to 40% (`oklch(from <color> l calc(c * 0.4) h)`).
+- The configurator starts with ten ready styles (`core/layout/theme/theme-styles.ts`).
+  A style sets preset, primary, surface, background, card color and light or dark mode in one click.
+  The picker marks the style that matches the current config and shows "Custom" once any field differs.
+- Light mode uses the neutral `gray` surface palette, so text and lines match ZM instead of taking a primary tint.
+- The shell switches to the drawer below 960px, the same breakpoint as ZM.
+The dashboard greets the admin by `AuthStore.displayName()`. Theme tokens come from the Optimus preset (`core/layout/theme`); styles
 use tokens and Tailwind utilities, no inline colours. Optimus components are imported one by one from
 `@openng/optimus-ui/<component>`, never from a barrel.
 

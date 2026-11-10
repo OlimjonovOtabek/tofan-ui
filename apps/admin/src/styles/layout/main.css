@@ -1,37 +1,67 @@
+.layout-stroke-icon {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .layout-wrapper {
-  height: 100vh;
   display: flex;
-  transition: all 0.2s ease;
+  height: 100dvh;
+  padding: var(--shell-padding) var(--shell-padding) var(--shell-padding) 0;
+  overflow: hidden;
+  color: var(--text-color);
 }
 
-.layout-content-wrapper {
-  flex: 1;
-  height: 100%;
-  overflow: auto;
-  z-index: 9;
-  transition: all 0.2s ease;
-}
-
-.layout-content-wrapper-inside {
-  max-width: 1540px;
-  height: 100%;
-  margin: 0 auto;
+.layout-main {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  margin: var(--sheet-margin-y) var(--sheet-margin-y) var(--sheet-margin-y) 0;
+  overflow: hidden;
+  background: var(--layout-card-bg);
+  border: 1px solid var(--sheet-border-color);
+  border-radius: var(--sheet-radius);
+  box-shadow: var(--sheet-shadow);
 }
 
 .layout-content {
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
-  position: relative;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 var(--layout-content-padding) var(--layout-content-padding);
+  --p-datatable-header-background: transparent;
+  --p-datatable-header-cell-background: transparent;
+  --p-datatable-row-background: transparent;
+  --p-datatable-footer-background: transparent;
+  --p-datatable-footer-cell-background: transparent;
+  --p-paginator-background: transparent;
+}
+
+.layout-content::before {
+  content: '';
+  flex: none;
+  height: var(--layout-content-padding);
+}
+
+.layout-content .p-datatable-thead > tr > th {
+  background: var(--layout-card-bg);
 }
 
 .layout-mask {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.2);
-  z-index: -998;
+  z-index: 998;
+  background-color: var(--p-mask-background);
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.15s ease-in-out;
+  transition:
+    opacity var(--layout-section-transition-duration),
+    visibility var(--layout-section-transition-duration);
 }

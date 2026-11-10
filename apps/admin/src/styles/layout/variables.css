@@ -4,14 +4,12 @@
   --text-color: var(--p-text-color);
   --text-color-secondary: var(--p-text-muted-color);
   --surface-border: var(--p-content-border-color);
-  --surface-card: rgba(255, 255, 255, 0.64);
-  --surface-card-solid: color-mix(in srgb, #ffffff 64%, var(--surface-ground-top));
   --surface-hover: var(--p-content-hover-background);
   --surface-overlay: var(--p-overlay-popover-background);
   --transition-duration: var(--p-transition-duration);
   --maskbg: var(--p-mask-background);
   --content-border-radius: var(--p-content-border-radius);
-  --layout-section-transition-duration: 0.2s;
+  --layout-section-transition-duration: 0.3s;
   --element-transition-duration: var(--p-transition-duration);
   --focus-ring-width: var(--p-focus-ring-width);
   --focus-ring-style: var(--p-focus-ring-style);
@@ -19,46 +17,85 @@
   --focus-ring-offset: var(--p-focus-ring-offset);
   --focus-ring-shadow: var(--p-focus-ring-shadow);
 
-  --surface-ground-top: #e0e7f5;
-  --surface-ground: linear-gradient(180deg, #e0e7f5 0%, rgba(170, 194, 239, 0.06) 111.26%);
-  --card-radius: 1.5rem;
-  --card-shadow:
-    0px 10px 10px -8px rgba(18, 18, 23, 0.02), 0px 2px 2px -1.5px rgba(18, 18, 23, 0.02),
-    0px 1px 1px -0.5px rgba(18, 18, 23, 0.02), 0px 0px 0px 1px rgba(18, 18, 23, 0.02);
+  --surface-ground-top: #e8ebf3;
+  --surface-ground: linear-gradient(180deg, #e8ebf3 0%, #eeebe6 100%);
 
-  --sidebar-width: 17rem;
-  --sidebar-radius: 1.5rem;
-  --sidebar-bg: #ffffff;
-  --menuitem-root-text-color: var(--p-surface-700);
-  --menuitem-text-color: var(--p-surface-700);
-  --menuitem-text-hover-color: var(--p-surface-950);
-  --menuitem-hover-bg: rgba(255, 255, 255, 0.64);
-  --menuitem-active-bg: #ffffff;
-  --menuitem-active-text-color: var(--p-surface-950);
-  --app-name-color: var(--p-surface-950);
-  --topbar-action-hover-bg: #ffffff;
+  --shell-padding: 8px;
+  --sheet-margin-y: 16px;
+  --sheet-radius: 15px;
+  --sheet-border-color: transparent;
+  --sheet-shadow: 0 1px 2px rgba(31, 42, 55, 0.06), 0 6px 20px rgba(31, 42, 55, 0.08);
+  --sheet-line: var(--p-surface-100);
+  --shell-text: var(--p-surface-800);
+  --shell-text-muted: var(--p-surface-500);
+  --layout-panel-bg: var(--p-surface-0);
+  --layout-card-bg: var(--p-surface-0);
+  --layout-content-padding: 24px;
+  --topbar-height: 64px;
+  --sidebar-width: 260px;
+  --sidebar-rail-width: 64px;
+  --control-radius: 4px;
+
+  --menu-heading-color: var(--p-surface-600);
+  --menuitem-text-color: var(--p-surface-600);
+  --menuitem-icon-color: var(--p-surface-400);
+  --menuitem-text-hover-color: var(--p-surface-800);
+  --menuitem-hover-bg: color-mix(in srgb, var(--p-surface-900) 6%, transparent);
+  --menuitem-active-bg: var(--layout-panel-bg);
+  --menuitem-active-shadow: 0 1px 2px rgba(31, 42, 55, 0.06);
+  --menuitem-active-text-color: var(--p-primary-700);
+  --menuitem-active-icon-color: var(--p-primary-600);
+  --sidebar-line: color-mix(in srgb, var(--p-surface-900) 10%, transparent);
+  --app-name-color: var(--p-surface-800);
+  --avatar-bg: var(--p-primary-100);
+  --avatar-color: var(--p-primary-700);
+  --soft-fill: var(--p-surface-50);
+  --soft-fill-on: var(--p-surface-0);
 
   --code-background: var(--p-surface-900);
   --code-color: var(--p-surface-200);
 }
 
 :root[class*='app-dark'] {
-  --surface-card: rgba(255, 255, 255, 0.08);
   --surface-ground-top: #000c23;
   --surface-ground: #000c23;
-  --surface-card-solid: color-mix(in srgb, #ffffff 8%, var(--surface-ground-top));
-  --card-shadow: none;
 
-  --sidebar-bg: var(--p-surface-950);
-  --menuitem-root-text-color: rgba(255, 255, 255, 0.48);
-  --menuitem-text-color: rgba(255, 255, 255, 0.48);
-  --menuitem-text-hover-color: rgba(255, 255, 255, 0.75);
+  --layout-panel-bg: var(--p-surface-900);
+  --layout-card-bg: var(--p-surface-900);
+  --sheet-border-color: rgba(255, 255, 255, 0.06);
+  --sheet-shadow: none;
+  --sheet-line: rgba(255, 255, 255, 0.08);
+  --shell-text: rgba(255, 255, 255, 0.92);
+  --shell-text-muted: rgba(255, 255, 255, 0.6);
+
+  --menu-heading-color: rgba(255, 255, 255, 0.6);
+  --menuitem-text-color: rgba(255, 255, 255, 0.7);
+  --menuitem-icon-color: rgba(255, 255, 255, 0.5);
+  --menuitem-text-hover-color: rgba(255, 255, 255, 0.92);
   --menuitem-hover-bg: rgba(255, 255, 255, 0.06);
-  --menuitem-active-bg: rgba(255, 255, 255, 0.12);
-  --menuitem-active-text-color: #ffffff;
+  --menuitem-active-bg: rgba(255, 255, 255, 0.1);
+  --menuitem-active-shadow: none;
+  --menuitem-active-text-color: var(--p-primary-color);
+  --menuitem-active-icon-color: var(--p-primary-color);
+  --sidebar-line: rgba(255, 255, 255, 0.1);
   --app-name-color: var(--p-surface-0);
-  --topbar-action-hover-bg: var(--p-surface-800);
+  --avatar-bg: color-mix(in srgb, var(--p-primary-color) 20%, transparent);
+  --avatar-color: var(--p-primary-color);
+  --soft-fill: rgba(255, 255, 255, 0.06);
+  --soft-fill-on: var(--p-surface-700);
 
   --code-background: var(--p-surface-800);
   --code-color: var(--p-surface-100);
+}
+
+@media screen and (max-width: 959.98px) {
+  :root {
+    --sheet-margin-y: 0px;
+  }
+}
+
+@media screen and (max-width: 599.98px) {
+  :root {
+    --layout-content-padding: 16px;
+  }
 }

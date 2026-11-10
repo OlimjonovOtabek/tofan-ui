@@ -1,13 +1,16 @@
-<div class="layout-wrapper" [class]="containerClass()">
+<div
+  class="layout-wrapper"
+  [class.layout-rail]="layoutService.isRailMenu()"
+  [class.layout-ground-strong]="layoutService.isStrongGround()"
+  [class.layout-mobile-active]="layoutService.isSidebarActive()"
+  [style.--layout-card-bg]="layoutService.cardBackground()"
+>
   <app-sidebar />
-  <div class="layout-content-wrapper">
-    <div class="layout-content-wrapper-inside">
-      <app-topbar />
-      <main class="layout-content">
-        <router-outlet />
-      </main>
-      <app-footer />
-    </div>
+  <div class="layout-main">
+    <app-topbar />
+    <main class="layout-content">
+      <router-outlet />
+    </main>
   </div>
-  <div class="layout-mask"></div>
+  <div class="layout-mask" aria-hidden="true" (click)="layoutService.hideMenu()"></div>
 </div>

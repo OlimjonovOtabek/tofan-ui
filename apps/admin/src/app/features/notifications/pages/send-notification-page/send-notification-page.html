@@ -1,135 +1,133 @@
-<div class="card">
-  <div class="mb-6">
-    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-      {{ 'notifications.send.title' | t }}
-    </h1>
-  </div>
+<div class="mb-6">
+  <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+    {{ 'notifications.send.title' | t }}
+  </h1>
+</div>
 
-  <form [formGroup]="form" class="flex max-w-3xl flex-col gap-5" (ngSubmit)="send()" novalidate>
-    <p-selectbutton
-      formControlName="mode"
-      [options]="modeOptions()"
-      optionLabel="label"
-      optionValue="value"
-      [allowEmpty]="false"
-      [attr.aria-label]="'notifications.send.mode' | t"
-    />
+<form [formGroup]="form" class="flex max-w-3xl flex-col gap-5" (ngSubmit)="send()" novalidate>
+  <p-selectbutton
+    formControlName="mode"
+    [options]="modeOptions()"
+    optionLabel="label"
+    optionValue="value"
+    [allowEmpty]="false"
+    [attr.aria-label]="'notifications.send.mode' | t"
+  />
 
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div class="flex flex-col gap-1">
-        <label for="userId" class="font-medium">{{ 'notifications.send.userId' | t }}</label>
-        <input
-          pInputText
-          id="userId"
-          type="text"
-          formControlName="userId"
-          placeholder="3fa85f64-5717-4562-b3fc-2c963f66afa6"
-          autocomplete="off"
-          [invalid]="isInvalid('userId')"
-        />
-        @if (isInvalid('userId')) {
-          <small class="text-red-500">
-            {{
-              form.controls.userId.hasError('required')
-                ? ('notifications.send.userIdRequired' | t)
-                : ('notifications.send.userIdInvalid' | t)
-            }}
-          </small>
-        }
-      </div>
-
-      <div class="flex flex-col gap-1">
-        <label for="type" class="font-medium">{{ 'notifications.send.type' | t }}</label>
-        <p-select
-          inputId="type"
-          formControlName="type"
-          [options]="typeOptions()"
-          optionLabel="label"
-          optionValue="value"
-          [fluid]="true"
-        />
-      </div>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <label for="userId" class="font-medium">{{ 'notifications.send.userId' | t }}</label>
+      <input
+        pInputText
+        id="userId"
+        type="text"
+        formControlName="userId"
+        placeholder="3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        autocomplete="off"
+        [invalid]="isInvalid('userId')"
+      />
+      @if (isInvalid('userId')) {
+        <small class="text-red-500">
+          {{
+            form.controls.userId.hasError('required')
+              ? ('notifications.send.userIdRequired' | t)
+              : ('notifications.send.userIdInvalid' | t)
+          }}
+        </small>
+      }
     </div>
 
-    @if (mode() === 'templated') {
-      @if (store.templatesLoading()) {
-        <span class="text-muted-color text-sm">
-          <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i
-          >{{ 'notifications.send.templatesLoading' | t }}
-        </span>
-      } @else if (store.templatesError(); as message) {
-        <p-message severity="warn">
-          <div class="flex flex-wrap items-center gap-3">
-            <span>{{
-              'notifications.send.templatesFailed' | t: { error: (message | message) }
-            }}</span>
-            <p-button
-              [label]="'common.actions.retry' | t"
-              icon="pi pi-refresh"
-              severity="secondary"
-              size="small"
-              [outlined]="true"
-              (onClick)="store.loadTemplates()"
-            />
-          </div>
-        </p-message>
-      } @else if (store.templatesLoaded()) {
-        <app-template-coverage-hint
-          [coverage]="coverage()"
-          [preview]="preview()"
-          [templatesPath]="templatesPath"
-        />
-      }
-    } @else {
-      <div class="flex flex-col gap-1">
-        <div class="flex justify-between">
-          <label for="title" class="font-medium">{{ 'notifications.send.titleLabel' | t }}</label>
-          <small [class.text-red-500]="titleLength() > titleMaxLength" class="text-muted-color">
-            {{ titleLength() }} / {{ titleMaxLength }}
-          </small>
-        </div>
-        <input
-          pInputText
-          id="title"
-          type="text"
-          formControlName="title"
-          [invalid]="isInvalid('title') || isMissing('title')"
-        />
-        @if (isMissing('title')) {
-          <small class="text-red-500">{{ 'notifications.send.titleRequired' | t }}</small>
-        }
-      </div>
-
-      <div class="flex flex-col gap-1">
-        <div class="flex justify-between">
-          <label for="body" class="font-medium">{{ 'notifications.send.body' | t }}</label>
-          <small [class.text-red-500]="bodyLength() > bodyMaxLength" class="text-muted-color">
-            {{ bodyLength() }} / {{ bodyMaxLength }}
-          </small>
-        </div>
-        <textarea
-          pTextarea
-          id="body"
-          rows="4"
-          formControlName="body"
-          [autoResize]="true"
-          [invalid]="isInvalid('body') || isMissing('body')"
-        ></textarea>
-        @if (isMissing('body')) {
-          <small class="text-red-500">{{ 'notifications.send.bodyRequired' | t }}</small>
-        }
-      </div>
-    }
-
-    <app-notification-data-entries [entries]="dataEntries" />
-
-    <div>
-      <p-button
-        type="submit"
-        [label]="'notifications.send.submit' | t"
-        icon="pi pi-send"
-        [loading]="store.sending()"
+    <div class="flex flex-col gap-1">
+      <label for="type" class="font-medium">{{ 'notifications.send.type' | t }}</label>
+      <p-select
+        inputId="type"
+        formControlName="type"
+        [options]="typeOptions()"
+        optionLabel="label"
+        optionValue="value"
+        [fluid]="true"
       />
     </div>
-  </form>
-</div>
+  </div>
+
+  @if (mode() === 'templated') {
+    @if (store.templatesLoading()) {
+      <span class="text-muted-color text-sm">
+        <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i
+        >{{ 'notifications.send.templatesLoading' | t }}
+      </span>
+    } @else if (store.templatesError(); as message) {
+      <p-message severity="warn">
+        <div class="flex flex-wrap items-center gap-3">
+          <span>{{
+            'notifications.send.templatesFailed' | t: { error: (message | message) }
+          }}</span>
+          <p-button
+            [label]="'common.actions.retry' | t"
+            icon="pi pi-refresh"
+            severity="secondary"
+            size="small"
+            [outlined]="true"
+            (onClick)="store.loadTemplates()"
+          />
+        </div>
+      </p-message>
+    } @else if (store.templatesLoaded()) {
+      <app-template-coverage-hint
+        [coverage]="coverage()"
+        [preview]="preview()"
+        [templatesPath]="templatesPath"
+      />
+    }
+  } @else {
+    <div class="flex flex-col gap-1">
+      <div class="flex justify-between">
+        <label for="title" class="font-medium">{{ 'notifications.send.titleLabel' | t }}</label>
+        <small [class.text-red-500]="titleLength() > titleMaxLength" class="text-muted-color">
+          {{ titleLength() }} / {{ titleMaxLength }}
+        </small>
+      </div>
+      <input
+        pInputText
+        id="title"
+        type="text"
+        formControlName="title"
+        [invalid]="isInvalid('title') || isMissing('title')"
+      />
+      @if (isMissing('title')) {
+        <small class="text-red-500">{{ 'notifications.send.titleRequired' | t }}</small>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <div class="flex justify-between">
+        <label for="body" class="font-medium">{{ 'notifications.send.body' | t }}</label>
+        <small [class.text-red-500]="bodyLength() > bodyMaxLength" class="text-muted-color">
+          {{ bodyLength() }} / {{ bodyMaxLength }}
+        </small>
+      </div>
+      <textarea
+        pTextarea
+        id="body"
+        rows="4"
+        formControlName="body"
+        [autoResize]="true"
+        [invalid]="isInvalid('body') || isMissing('body')"
+      ></textarea>
+      @if (isMissing('body')) {
+        <small class="text-red-500">{{ 'notifications.send.bodyRequired' | t }}</small>
+      }
+    </div>
+  }
+
+  <app-notification-data-entries [entries]="dataEntries" />
+
+  <div>
+    <p-button
+      type="submit"
+      [label]="'notifications.send.submit' | t"
+      icon="pi pi-send"
+      [loading]="store.sending()"
+    />
+  </div>
+</form>

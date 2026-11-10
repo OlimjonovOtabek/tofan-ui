@@ -8,16 +8,24 @@ const defaults: LayoutConfig = {
   preset: 'Aura',
   primary: 'blue',
   surface: null,
+  ground: null,
+  groundMatte: false,
+  card: null,
+  cardMatte: false,
   darkTheme: false,
-  menuMode: 'static',
+  menuCollapsed: false,
 };
 
 const customized: LayoutConfig = {
   preset: 'Nora',
   primary: 'emerald',
   surface: 'zinc',
+  ground: 'strong-violet',
+  groundMatte: true,
+  card: 'teal',
+  cardMatte: true,
   darkTheme: true,
-  menuMode: 'overlay',
+  menuCollapsed: true,
 };
 
 describe('layout config storage', () => {
@@ -48,18 +56,37 @@ describe('layout config storage', () => {
       preset: 'Material',
       primary: 'emerald',
       surface: 'plaid',
+      ground: 'mud',
+      card: 'amber',
       darkTheme: 'yes',
-      menuMode: 'overlay',
+      menuCollapsed: 'no',
     };
     expect(toLayoutConfig(stored, defaults)).toEqual({
       ...defaults,
       primary: 'emerald',
-      menuMode: 'overlay',
+      card: 'amber',
     });
   });
 
   it('should keep the automatic surface when the stored surface is null', () => {
     expect(toLayoutConfig({ ...customized, surface: null }, defaults).surface).toBeNull();
+  });
+
+  it('should follow the primary color when the stored ground and card are null', () => {
+    const restored = toLayoutConfig({ ...customized, ground: null, card: null }, defaults);
+    expect(restored.ground).toBeNull();
+    expect(restored.card).toBeNull();
+  });
+
+  it('should drop the old menu mode when a config saved before the card layout is read', () => {
+    const legacy = {
+      preset: 'Lara',
+      primary: 'blue',
+      surface: null,
+      darkTheme: false,
+      menuMode: 'overlay',
+    };
+    expect(toLayoutConfig(legacy, defaults)).toEqual({ ...defaults, preset: 'Lara' });
   });
 });
 
