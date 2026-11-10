@@ -1,121 +1,255 @@
 .layout-topbar {
-  padding: 0.75rem 0.5rem;
-  position: relative;
-  width: calc(100% - 4rem);
-  margin: 0 auto;
-  z-index: 999;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  color: var(--text-color);
+  flex: none;
+  gap: 8px;
+  min-height: var(--topbar-height);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--sheet-line);
+  color: var(--shell-text);
 }
 
-.layout-topbar .topbar-left {
+.layout-topbar app-breadcrumb {
   display: flex;
-  align-items: center;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
-.layout-topbar .topbar-right {
+.layout-topbar .topbar-end {
   display: flex;
+  flex: none;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
 }
 
-.layout-topbar .topbar-right app-theme-switcher {
+.layout-config-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 4px;
 }
 
-.layout-topbar .topbar-right app-theme-switcher > .relative {
+.layout-config-menu > .relative {
   display: flex;
 }
 
-.layout-topbar .menu-button,
-.layout-topbar .layout-topbar-action {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+.layout-topbar-action {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border: none;
-  border-radius: 99px;
+  border: 0;
+  border-radius: var(--control-radius);
   background: transparent;
-  color: var(--text-color);
-  overflow: hidden;
+  color: var(--shell-text-muted);
   cursor: pointer;
-  user-select: none;
   outline: 0 none;
   transition:
-    background-color var(--transition-duration),
-    box-shadow var(--transition-duration);
+    background-color 120ms ease,
+    color 120ms ease;
 }
 
-.layout-topbar .menu-button:hover {
-  background: var(--surface-hover);
+.layout-topbar-action:hover {
+  background: var(--soft-fill);
+  color: var(--shell-text);
 }
 
-.layout-topbar .layout-topbar-action:hover {
-  background-color: var(--topbar-action-hover-bg);
+.layout-topbar-action:focus-visible {
+  outline: 2px solid var(--p-primary-color);
+  outline-offset: 2px;
 }
 
-.layout-topbar .menu-button:focus-visible,
-.layout-topbar .layout-topbar-action:focus-visible {
-  box-shadow: var(--focus-ring-shadow);
+.layout-topbar-action i {
+  font-size: 1.1429rem;
 }
 
-.layout-topbar .menu-button i,
-.layout-topbar .layout-topbar-action i {
-  font-size: 1.125rem;
-}
-
-.layout-topbar .menu-button-open {
-  display: none;
-}
-
-.layout-topbar .menu-button-collapse {
-  transition: transform var(--layout-section-transition-duration);
-}
-
-.layout-topbar .topbar-separator {
-  display: block;
+.layout-topbar .topbar-divider {
   width: 1px;
-  border-left: 1px solid var(--surface-border);
-  align-self: stretch;
-  margin: 0 1rem;
+  height: 20px;
+  margin: 0 4px;
+  background: var(--sheet-line);
 }
 
-.layout-topbar .mobile-logo {
-  display: none;
+.layout-breadcrumb {
+  min-width: 0;
 }
 
 .layout-breadcrumb ol {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
-  gap: 1rem;
 }
 
 .layout-breadcrumb li {
+  padding: 4px 6px;
   white-space: nowrap;
-  font-weight: 500;
-  font-size: 1.25rem;
-  color: var(--p-surface-950);
+  color: var(--shell-text-muted);
 }
 
 .layout-breadcrumb li.layout-breadcrumb-chevron {
-  color: var(--text-color-secondary);
-  font-weight: 400;
+  display: flex;
+  padding: 0;
+  color: var(--menuitem-icon-color);
 }
 
-:root[class*='app-dark'] .layout-breadcrumb li {
-  color: var(--p-surface-0);
+.layout-breadcrumb li.layout-breadcrumb-current {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  color: var(--shell-text);
 }
 
-:root[class*='app-dark'] .layout-breadcrumb li.layout-breadcrumb-chevron {
-  color: var(--text-color-secondary);
+.language-segments {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 6px;
+  background: var(--soft-fill);
+}
+
+.language-segment {
+  height: 28px;
+  min-width: 36px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--control-radius);
+  background: transparent;
+  color: var(--shell-text-muted);
+  font: inherit;
+  font-size: 0.8571rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: 0 none;
+}
+
+.language-segment:hover {
+  color: var(--shell-text);
+}
+
+.language-segment.is-on {
+  background: var(--soft-fill-on);
+  color: var(--shell-text);
+  box-shadow: 0 1px 2px rgba(31, 42, 55, 0.08);
+}
+
+.language-segment:focus-visible {
+  outline: 2px solid var(--p-primary-color);
+  outline-offset: 1px;
+}
+
+.user-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 6px 8px 6px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--shell-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  outline: 0 none;
+  transition: background-color 120ms ease;
+}
+
+.user-menu-button:hover {
+  background: var(--menuitem-hover-bg);
+}
+
+.user-menu-button:focus-visible {
+  outline: 2px solid var(--p-primary-color);
+  outline-offset: 2px;
+}
+
+.user-menu-button.user-menu-compact {
+  justify-content: center;
+  width: 40px;
+  padding: 0;
+}
+
+.user-menu-button.user-menu-top {
+  width: auto;
+  min-height: 44px;
+  padding: 0 8px 0 4px;
+}
+
+.user-menu-button.user-menu-top:hover {
+  background: var(--soft-fill);
+}
+
+.user-menu-button.user-menu-top .user-menu-text {
+  max-width: 220px;
+}
+
+.user-menu-avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--avatar-bg);
+  color: var(--avatar-color);
+}
+
+.user-menu-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.user-menu-name,
+.user-menu-role {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-menu-name {
+  font-weight: 600;
+}
+
+.user-menu-role {
+  font-size: 0.8571rem;
+  color: var(--shell-text-muted);
+}
+
+.user-menu-chevron {
+  color: var(--shell-text-muted);
+}
+
+.p-menu.user-menu-panel {
+  min-width: 248px;
+}
+
+.user-menu-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--sheet-line);
+}
+
+.user-menu-caption {
+  font-size: 0.8571rem;
+  color: var(--shell-text-muted);
+}
+
+.user-menu-head-name {
+  font-weight: 600;
+  color: var(--shell-text);
 }

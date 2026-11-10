@@ -1,34 +1,22 @@
-<div class="layout-topbar">
-  <div class="topbar-left">
-    <button
-      type="button"
-      class="menu-button layout-menu-button"
-      [attr.aria-label]="'layout.topbar.toggleMenu' | t"
-      (click)="layoutService.toggleMenu()"
-    >
-      <i class="pi pi-chevron-left menu-button-collapse"></i>
-      <i class="pi pi-bars menu-button-open"></i>
-    </button>
-    <span class="topbar-separator"></span>
-    <app-breadcrumb />
-    <a class="mobile-logo" [routerLink]="dashboardPath">
-      <app-logo class="h-8" />
-    </a>
-  </div>
+<header class="layout-topbar">
+  <button
+    type="button"
+    class="layout-topbar-action layout-menu-button"
+    [attr.aria-label]="toggleLabel() | t"
+    [attr.title]="toggleLabel() | t"
+    [attr.aria-expanded]="menuExpanded()"
+    (click)="layoutService.toggleMenu()"
+  >
+    <svg class="layout-stroke-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM9 3v18" />
+    </svg>
+  </button>
+  <span class="topbar-divider" aria-hidden="true"></span>
+  <app-breadcrumb />
 
-  <div class="topbar-right">
+  <div class="topbar-end">
     <app-theme-switcher />
-    <app-language-switcher />
-
-    <button
-      type="button"
-      class="layout-topbar-action"
-      [attr.aria-label]="'layout.topbar.profile' | t"
-      aria-haspopup="true"
-      (click)="profileMenu.toggle($event)"
-    >
-      <i class="pi pi-user"></i>
-    </button>
-    <p-menu #profileMenu [model]="profileMenuItems()" [popup]="true" appendTo="body" />
+    <app-language-switcher variant="segmented" />
+    <app-user-menu variant="top" />
   </div>
-</div>
+</header>

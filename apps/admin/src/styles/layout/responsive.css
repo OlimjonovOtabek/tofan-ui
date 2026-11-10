@@ -1,60 +1,68 @@
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 959.98px) {
   .blocked-scroll {
     overflow: hidden;
   }
 
-  .layout-topbar {
-    flex-direction: column;
-    width: 100%;
-    padding: 0;
-  }
-
-  .layout-topbar .topbar-left {
-    width: 100%;
-    padding: 0.75rem 2rem;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--surface-border);
-  }
-
-  .layout-topbar .topbar-right {
-    width: 100%;
-    padding: 0.75rem 2rem;
-    justify-content: flex-end;
-  }
-
-  .layout-topbar .topbar-separator,
-  .layout-topbar .layout-breadcrumb {
-    display: none;
-  }
-
-  .layout-topbar .menu-button-collapse {
-    display: none;
-  }
-
-  .layout-topbar .menu-button-open {
-    display: inline-block;
-  }
-
-  .layout-topbar .mobile-logo {
-    display: block;
+  .layout-wrapper {
+    padding: var(--shell-padding);
   }
 
   .layout-sidebar {
-    position: absolute;
-    z-index: 999;
-    height: 100%;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 0;
+    bottom: 0;
     left: 0;
+    z-index: 999;
+    width: min(var(--sidebar-width), 100vw);
+    background: var(--surface-ground);
+    background-color: var(--surface-ground-top);
+    box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.18);
     transform: translateX(-100%);
   }
 
   .layout-mobile-active .layout-sidebar {
-    transform: translateX(0);
+    transform: none;
   }
 
   .layout-mobile-active .layout-mask {
     opacity: 1;
-    z-index: 998;
     visibility: visible;
+  }
+
+  .layout-topbar {
+    flex-wrap: nowrap;
+    padding: 0 8px;
+  }
+
+  .layout-topbar .topbar-end {
+    gap: 4px;
+  }
+
+  .layout-breadcrumb ol {
+    flex-wrap: nowrap;
+  }
+
+  .layout-topbar .topbar-divider,
+  .layout-breadcrumb li.layout-breadcrumb-group,
+  .layout-breadcrumb li.layout-breadcrumb-chevron,
+  .user-menu-button.user-menu-top .user-menu-text,
+  .user-menu-button.user-menu-top .user-menu-chevron {
+    display: none;
+  }
+
+  .user-menu-button.user-menu-top {
+    padding: 0 4px;
+  }
+}
+
+@media screen and (max-width: 599.98px) {
+  .layout-config-menu,
+  .language-segments {
+    gap: 0;
+  }
+
+  .language-segment {
+    min-width: 30px;
+    padding: 0 6px;
   }
 }

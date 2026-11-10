@@ -24,6 +24,7 @@ export function loadThemePreset(name: ThemePresetName): Promise<Preset> {
 }
 
 export const NOIR_PRIMARY = 'noir';
+export const NEUTRAL_SURFACE_NAME = 'gray';
 
 export const PRIMARY_COLOR_NAMES = [
   'emerald',

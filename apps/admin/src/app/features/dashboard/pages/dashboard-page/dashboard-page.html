@@ -1,9 +1,7 @@
-<div class="card">
-  <h5>
-    @if (authStore.displayName(); as name) {
-      {{ 'layout.dashboard.welcomeName' | t: { name } }}
-    } @else {
-      {{ 'layout.dashboard.welcome' | t }}
-    }
-  </h5>
-</div>
+<h5>
+  @if (authStore.displayName(); as name) {
+    {{ 'layout.dashboard.welcomeName' | t: { name } }}
+  } @else {
+    {{ 'layout.dashboard.welcome' | t }}
+  }
+</h5>
