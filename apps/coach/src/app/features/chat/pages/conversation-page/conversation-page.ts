@@ -30,6 +30,7 @@ import { PendingBubble } from '../../components/pending-bubble/pending-bubble';
 import { ConversationStore } from '../../conversation.store';
 import { Message, chatInitials, isMine, isRead, opensDay } from '../../models/chat';
 import { dayLabel, presenceText } from '../../models/chat-text';
+import { VideoNoteRecordingStore } from '../../video-note-recording.store';
 import { VoiceRecordingStore } from '../../voice-recording.store';
 
 const OLDER_THRESHOLD_PX = 240;
@@ -59,6 +60,7 @@ interface GalleryTarget {
     ConversationStore,
     ChatOutboxStore,
     VoiceRecordingStore,
+    VideoNoteRecordingStore,
     ChatComposerStore,
     ChatPlaybackStore,
   ],

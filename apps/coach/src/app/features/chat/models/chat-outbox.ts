@@ -1,13 +1,14 @@
 import { ErrorMessage } from '@core/feedback/error-message';
 import { FileCategory } from '@shared/models/file-category';
 
-export const OUTGOING_KINDS = ['image', 'file', 'voice'] as const;
+export const OUTGOING_KINDS = ['image', 'file', 'voice', 'videoNote'] as const;
 export type OutgoingKind = (typeof OUTGOING_KINDS)[number];
 
 export const OUTGOING_CATEGORIES: Readonly<Record<OutgoingKind, FileCategory>> = {
   image: 'chatImage',
   file: 'chatFile',
   voice: 'chatVoice',
+  videoNote: 'chatVideoNote',
 };
 
 const PERCENT = 100;
@@ -43,6 +44,8 @@ export function combinedProgress(sizes: readonly number[], percents: readonly nu
   return Math.round((done / total) * PERCENT);
 }
 
+const RECORDED_KINDS: readonly OutgoingKind[] = ['voice', 'videoNote'];
+
 export function captionFor(kind: OutgoingKind, caption: string): string {
-  return kind === 'voice' ? '' : caption.trim();
+  return RECORDED_KINDS.includes(kind) ? '' : caption.trim();
 }

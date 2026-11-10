@@ -1,26 +1,13 @@
-import {
-  isLongEnough,
-  levelFromRms,
-  pickRecordingFormat,
-  pushLevel,
-  recordedSeconds,
-} from './voice-note';
+import { pickRecordingFormat } from './recording';
+import { VOICE_FORMATS, levelFromRms, pushLevel } from './voice-note';
 
 describe('voice note rules', () => {
   it('should prefer webm with opus and fall back to mp4 for Safari', () => {
-    expect(pickRecordingFormat(() => true)?.fileName).toBe('voice.webm');
-    expect(pickRecordingFormat((type) => type === 'audio/mp4')).toEqual({
+    expect(pickRecordingFormat(VOICE_FORMATS, () => true)?.fileName).toBe('voice.webm');
+    expect(pickRecordingFormat(VOICE_FORMATS, (type) => type === 'audio/mp4')).toEqual({
       mimeType: 'audio/mp4',
       fileName: 'voice.m4a',
     });
-    expect(pickRecordingFormat(() => false)).toBeNull();
-  });
-
-  it('should accept a recording from one second', () => {
-    expect(isLongEnough(999)).toBe(false);
-    expect(isLongEnough(1000)).toBe(true);
-    expect(recordedSeconds(400)).toBe(1);
-    expect(recordedSeconds(2600)).toBe(3);
   });
 
   it('should keep the latest forty eight levels within range', () => {

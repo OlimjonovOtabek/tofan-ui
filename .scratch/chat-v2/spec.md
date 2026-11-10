@@ -13,7 +13,8 @@ The coach panel chat shows and sends the new message kinds that the mobile app a
 - Message model: `kind` (1 text, 2 image, 3 file, 4 voice, 5 video note) and `attachments`; `text` may be an empty string.
 - Send images (category 8, 1-10 per message, optional caption) and files (category 11, 1-10 per message, optional caption): upload with `POST /files`, then `POST /chat/conversations/{id}/messages` with `{ text, attachments: [fileId] }`.
 - Send voice messages recorded with `MediaRecorder` (category 9, named `voice.webm`, `voice.m4a` or `voice.ogg` by container).
-- Show all four kinds, round video included; recording a round video is out of scope for the panel.
+- Show all four kinds, round video included.
+- Record round videos with the front camera (category 10, at most 60 seconds); the brief marks it optional, added on 2026-11-10.
 - Conversation list shows `lastMessageKind`.
 - SignalR: call `Activity(conversationId, activity)` and show `UserActivity` instead of `Typing` / `UserTyping`.
 
@@ -32,4 +33,4 @@ The coach panel chat shows and sends the new message kinds that the mobile app a
 
 ## Out of scope
 
-Recording round video, editing, deleting, forwarding and replying to messages, "listened" state for voice messages (the API has none), drag and drop of files.
+Editing, deleting, forwarding and replying to messages, "listened" state for voice messages (the API has none), drag and drop of files.
