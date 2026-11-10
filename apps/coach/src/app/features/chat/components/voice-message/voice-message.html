@@ -1,0 +1,51 @@
+<button
+  type="button"
+  class="play"
+  [attr.aria-label]="(playing() ? 'coachApp.conversation.pause' : 'coachApp.conversation.play') | t"
+  (click)="toggle()"
+>
+  <coach-icon [name]="playing() ? 'pause' : 'play'" />
+</button>
+<div class="body">
+  <div class="wave">
+    <div class="bars" aria-hidden="true">
+      @for (bar of bars(); track bar.index) {
+        <span class="bar" [class.is-played]="bar.played" [style.height.%]="bar.height"></span>
+      }
+    </div>
+    <input
+      type="range"
+      class="seek"
+      min="0"
+      [max]="seekMax"
+      [step]="seekStep"
+      [value]="seekValue()"
+      [attr.aria-label]="'coachApp.conversation.waveform' | t"
+      (input)="seek($event)"
+    />
+  </div>
+  <div class="info t-base6">
+    <span class="clock">{{ clock() }}</span>
+    @if (showsSpeed()) {
+      <button
+        type="button"
+        class="speed font-semibold"
+        [attr.aria-label]="'coachApp.conversation.speed' | t"
+        (click)="nextSpeed()"
+      >
+        {{ speedLabel() }}
+      </button>
+    }
+    <ng-content />
+  </div>
+</div>
+<audio
+  #audio
+  preload="none"
+  [src]="attachment().url"
+  (play)="started()"
+  (pause)="stopped()"
+  (ended)="ended()"
+  (timeupdate)="timeChanged()"
+  (error)="failed.emit()"
+></audio>

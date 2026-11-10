@@ -2,6 +2,8 @@ import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Avatar } from '@coach/core/ui/avatar/avatar';
 import { EmptyState } from '@coach/core/ui/empty-state/empty-state';
+import { Icon } from '@coach/core/ui/icon/icon';
+import { IconName } from '@coach/core/ui/icon/icon-name';
 import { Shimmer } from '@coach/core/ui/shimmer/shimmer';
 import { TextField } from '@coach/core/ui/text-field/text-field';
 import { LocaleStore } from '@core/i18n/locale.store';
@@ -10,7 +12,8 @@ import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { ChatListStore } from '../../chat-list.store';
 import { CHAT_FILTERS, ChatFilter, Conversation, chatInitials } from '../../models/chat';
-import { chatTime } from '../../models/chat-text';
+import { MessageKind } from '../../models/chat-attachment';
+import { ACTIVITY_LABELS, chatTime, previewText } from '../../models/chat-text';
 
 const FILTER_LABELS = {
   all: 'coachApp.chat.filterAll',
@@ -18,9 +21,17 @@ const FILTER_LABELS = {
   read: 'coachApp.chat.filterRead',
 } as const;
 
+const KIND_ICONS: Readonly<Record<MessageKind, IconName | null>> = {
+  text: null,
+  image: 'image',
+  file: 'paperclip',
+  voice: 'mic',
+  videoNote: 'video-note',
+};
+
 @Component({
   selector: 'coach-chat-page',
-  imports: [TranslatePipe, MessagePipe, Avatar, EmptyState, Shimmer, TextField],
+  imports: [TranslatePipe, MessagePipe, Avatar, EmptyState, Icon, Shimmer, TextField],
   providers: [ChatListStore],
   templateUrl: './chat-page.html',
   styleUrl: './chat-page.css',
@@ -37,18 +48,17 @@ export class ChatPage {
   }));
   protected readonly rows = computed(() => {
     const now = this.store.now();
+    const activities = this.store.activities();
     const t = this.translator.translate.bind(this.translator);
     return this.store.visible().map((conversation) => {
-      const mine =
-        conversation.lastMessageSenderId !== null &&
-        conversation.lastMessageSenderId !== conversation.otherUserId;
+      const activity = activities.get(conversation.id) ?? null;
       return {
         conversation,
         initials: chatInitials(conversation.name),
         name: conversation.name || t('coachApp.common.unknown'),
-        preview: mine
-          ? t('coachApp.chat.youPrefix', { text: conversation.lastMessageText })
-          : conversation.lastMessageText,
+        live: activity !== null,
+        icon: activity === null ? this.iconOf(conversation) : null,
+        preview: activity === null ? this.previewOf(conversation) : t(ACTIVITY_LABELS[activity]),
         time:
           conversation.lastMessageOn === null
             ? null
@@ -63,6 +73,19 @@ export class ChatPage {
 
   protected select(filter: ChatFilter): void {
     this.store.filter.set(filter);
+  }
+
+  private previewOf(conversation: Conversation): string {
+    const t = this.translator.translate.bind(this.translator);
+    const text = previewText(conversation.lastMessageKind, conversation.lastMessageText, t);
+    const mine =
+      conversation.lastMessageSenderId !== null &&
+      conversation.lastMessageSenderId !== conversation.otherUserId;
+    return mine ? t('coachApp.chat.youPrefix', { text }) : text;
+  }
+
+  private iconOf(conversation: Conversation): IconName | null {
+    return conversation.lastMessageKind === null ? null : KIND_ICONS[conversation.lastMessageKind];
   }
 
   protected open(conversation: Conversation): void {

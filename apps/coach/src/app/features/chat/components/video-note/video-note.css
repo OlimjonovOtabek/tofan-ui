@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.note {
+  position: relative;
+  display: block;
+  width: 208px;
+  height: 208px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.video {
+  position: absolute;
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  border-radius: 50%;
+  background: var(--c-video);
+  object-fit: cover;
+}
+
+.progress-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring circle {
+  fill: none;
+  stroke-width: 4;
+}
+
+.track {
+  stroke: var(--c-border);
+}
+
+.done {
+  stroke: var(--c-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.25s linear;
+}
+
+.clock {
+  position: absolute;
+  bottom: 26px;
+  left: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--c-scrim);
+  color: var(--c-on-video);
+  font-variant-numeric: tabular-nums;
+  --icon-size: 12px;
+}

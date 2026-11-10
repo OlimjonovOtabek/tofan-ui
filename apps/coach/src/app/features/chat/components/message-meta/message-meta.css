@@ -1,0 +1,25 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+:host(.is-overlay) {
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--c-scrim);
+  color: var(--c-on-video);
+  opacity: 1;
+}
+
+.ticks {
+  display: inline-flex;
+  --icon-size: 16px;
+}
+
+.second {
+  margin-left: -11px;
+}

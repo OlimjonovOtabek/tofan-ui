@@ -29,28 +29,30 @@
     <div class="center"><coach-spinner /></div>
   } @else {
     <div #scroller class="messages" (scroll)="scrolled()">
+      @for (pending of pendingNewestFirst(); track pending.id) {
+        <coach-pending-bubble
+          [pending]="pending"
+          (retried)="outbox.retry(pending.id)"
+          (discarded)="outbox.discard(pending.id)"
+        />
+      }
       @for (row of rows(); track row.message.id) {
         <div class="entry">
           @if (row.day) {
             <span class="day t-base5 font-medium tone-secondary">{{ row.day }}</span>
           }
-          <div class="bubble" [class.is-mine]="row.mine">
-            <p class="t-base2">{{ row.message.text }}</p>
-            <span class="meta t-base6">
-              {{ row.time }}
-              @if (row.mine) {
-                <span class="ticks"
-                  ><coach-icon name="check" />
-                  @if (row.read) {
-                    <coach-icon name="check" class="second" />
-                  }
-                </span>
-              }
-            </span>
-          </div>
+          <coach-message-bubble
+            [message]="row.message"
+            [mine]="row.mine"
+            [read]="row.read"
+            [time]="row.time"
+            (imageOpened)="openImage(row.message, $event)"
+            (fileOpened)="store.openFile(row.message.id, $event)"
+            (mediaFailed)="store.mediaFailed(row.message.id)"
+          />
         </div>
       } @empty {
-        @if (store.canWrite()) {
+        @if (store.canWrite() && outbox.pending().length === 0) {
           <p class="empty t-base3 tone-secondary">{{ 'coachApp.conversation.empty' | t }}</p>
         }
       }
@@ -59,28 +61,10 @@
       }
     </div>
     @if (store.canWrite()) {
-      <form class="composer" (submit)="$event.preventDefault(); send()">
-        <textarea
-          rows="1"
-          class="input"
-          [attr.maxlength]="store.maxLength"
-          [placeholder]="'coachApp.conversation.inputHint' | t"
-          [value]="draft()"
-          (input)="typed($event)"
-          (keydown.enter)="enter($event)"
-        ></textarea>
-        <button
-          type="submit"
-          class="send"
-          [disabled]="!canSend()"
-          [attr.aria-label]="'coachApp.conversation.send' | t"
-        >
-          <coach-icon name="arrow-up" />
-        </button>
-      </form>
+      <coach-chat-composer />
     } @else {
       <div class="composer read-only">
-        @if (unsent(); as text) {
+        @if (composer.unsent(); as text) {
           <div class="unsent">
             <span class="t-base5 font-medium tone-secondary">{{
               'coachApp.conversation.unsent' | t
@@ -93,3 +77,15 @@
     }
   }
 </div>
+@if (gallery(); as gallery) {
+  <coach-image-gallery
+    [attachments]="gallery.message.attachments"
+    [startIndex]="gallery.index"
+    [title]="gallery.title"
+    [subtitle]="gallery.subtitle"
+    [caption]="gallery.message.text"
+    (closed)="closeGallery()"
+    (downloaded)="store.openFile(gallery.message.id, $event)"
+    (failed)="store.mediaFailed(gallery.message.id)"
+  />
+}

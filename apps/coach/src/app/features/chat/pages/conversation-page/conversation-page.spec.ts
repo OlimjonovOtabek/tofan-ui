@@ -2,47 +2,115 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { ErrorMessage } from '@core/feedback/error-message';
+import { NotificationService } from '@core/feedback/notification.service';
 import { LocaleStore } from '@core/i18n/locale.store';
+import { FileUploadService } from '@shared/components/file-upload/file-upload.service';
+import { ChatComposerStore } from '../../chat-composer.store';
+import { ChatOutboxStore } from '../../chat-outbox.store';
+import { ChatPlaybackStore } from '../../chat-playback.store';
 import { ConversationStore } from '../../conversation.store';
+import { VoiceRecordingStore } from '../../voice-recording.store';
 import { Message } from '../../models/chat';
+import { ChatActivity } from '../../models/chat-activity';
+import { Attachment, MessageKind } from '../../models/chat-attachment';
+import { ChatService } from '../../services/chat.service';
+import { PreviewUrls } from '../../services/preview-urls.service';
+import { VoiceRecorder } from '../../services/voice-recorder.service';
 import { ConversationPage } from './conversation-page';
 
 const VIP_ONLY = 'Chat is open only to athletes with an active VIP subscription.';
 const NO_MESSAGES = 'No messages yet. Say hello!';
 const UNSENT_LABEL = 'Unsent message';
 
+const attachment = (fileId: string, change: Partial<Attachment> = {}): Attachment => ({
+  fileId,
+  url: `/api/files/${fileId}/content?expires=4102444800&signature=s`,
+  fileName: 'plan.pdf',
+  contentType: 'application/pdf',
+  sizeBytes: 1258291,
+  durationSeconds: null,
+  width: null,
+  height: null,
+  waveform: [],
+  ...change,
+});
+const message = (
+  id: string,
+  kind: MessageKind,
+  attachments: readonly Attachment[],
+  text = '',
+): Message => ({
+  id,
+  conversationId: 'c1',
+  senderUserId: 'them',
+  kind,
+  text,
+  attachments,
+  sentOn: new Date(2026, 10, 9, 9, 13),
+});
+
 function createFakeStore() {
   return {
+    conversationId: signal<string | null>('c1'),
     name: signal('Aziz'),
     photoUrl: signal<string | null>(null),
     messages: signal<readonly Message[]>([]),
     canWrite: signal(true),
-    typing: signal(false),
+    activity: signal<ChatActivity | null>(null),
     online: signal(false),
     lastSeen: signal<Date | null>(null),
     otherUserId: signal('them'),
     otherReadUpTo: signal<Date | null>(null),
     loading: signal(false),
     loadError: signal<ErrorMessage | null>(null),
-    sending: signal(false),
     loadingOlder: signal(false),
     maxLength: 2000,
     open: vi.fn().mockResolvedValue(undefined),
-    send: vi.fn(),
+    show: vi.fn(),
+    refused: vi.fn(),
     typed: vi.fn(),
+    notifyActivity: vi.fn(),
     loadOlder: vi.fn(),
+    mediaFailed: vi.fn(),
+    openFile: vi.fn(),
   };
 }
 
 describe('ConversationPage', () => {
+  afterEach(() => vi.restoreAllMocks());
+
   let store: ReturnType<typeof createFakeStore>;
   let fixture: ComponentFixture<ConversationPage>;
+  const service = { send: vi.fn() };
 
   beforeEach(async () => {
+    vi.resetAllMocks();
+    vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+    Element.prototype.scrollTo = vi.fn();
     store = createFakeStore();
-    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: ChatService, useValue: service },
+        {
+          provide: NotificationService,
+          useValue: { error: vi.fn(), failure: vi.fn(), info: vi.fn() },
+        },
+        { provide: FileUploadService, useValue: { startUpload: vi.fn() } },
+        { provide: PreviewUrls, useValue: { create: vi.fn(() => null), revoke: vi.fn() } },
+        { provide: VoiceRecorder, useValue: { start: vi.fn() } },
+      ],
+    });
     TestBed.overrideComponent(ConversationPage, {
-      set: { providers: [{ provide: ConversationStore, useValue: store }] },
+      set: {
+        providers: [
+          { provide: ConversationStore, useValue: store },
+          ChatOutboxStore,
+          VoiceRecordingStore,
+          ChatComposerStore,
+          ChatPlaybackStore,
+        ],
+      },
     });
     TestBed.inject(LocaleStore).setLocale('en');
     fixture = TestBed.createComponent(ConversationPage);
@@ -74,9 +142,9 @@ describe('ConversationPage', () => {
   }
 
   async function refuseSendOf(text: string): Promise<void> {
-    store.send.mockImplementation(() => {
+    service.send.mockImplementation(() => {
       store.canWrite.set(false);
-      return Promise.resolve(false);
+      return Promise.reject(new Error('VIP required'));
     });
     await type(text);
     await submit();
@@ -112,19 +180,19 @@ describe('ConversationPage', () => {
   });
 
   it('should restore the typed text when a send fails and the conversation stays writable', async () => {
-    store.send.mockResolvedValue(false);
+    service.send.mockRejectedValue(new Error('offline'));
     await type('salom');
 
     await submit();
 
-    expect(store.send).toHaveBeenCalledWith('salom');
+    expect(service.send).toHaveBeenCalledWith('c1', 'salom');
     expect(composer()?.value).toBe('salom');
   });
 
   it('should keep the typed text when a refused send turns the conversation read-only', async () => {
-    store.send.mockImplementation(() => {
+    service.send.mockImplementation(() => {
       store.canWrite.set(false);
-      return Promise.resolve(false);
+      return Promise.reject(new Error('VIP required'));
     });
     await type('salom');
 
@@ -181,5 +249,92 @@ describe('ConversationPage', () => {
 
     expect(unsentBlock()).toBeNull();
     expect(composer()?.value).toBe('salom');
+  });
+
+  async function show(messages: readonly Message[]): Promise<void> {
+    store.messages.set(messages);
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
+  it('should show an album with a tile per image and the caption under it', async () => {
+    await show([
+      message('m1', 'image', [attachment('a'), attachment('b'), attachment('c')], 'Leg day'),
+    ]);
+
+    expect(page().querySelectorAll('coach-image-album img')).toHaveLength(3);
+    expect(page().querySelector('.caption')?.textContent).toContain('Leg day');
+  });
+
+  it('should open the gallery at the clicked image', async () => {
+    await show([message('m1', 'image', [attachment('a'), attachment('b')])]);
+
+    page().querySelectorAll<HTMLButtonElement>('coach-image-album button')[1].click();
+    fixture.detectChanges();
+
+    expect(page().querySelector('coach-image-gallery')?.textContent).toContain('2 of 2');
+  });
+
+  it('should show a file with its extension, name and size', async () => {
+    await show([message('m1', 'file', [attachment('a')])]);
+
+    const file = page().querySelector('coach-file-attachment');
+    expect(file?.textContent).toContain('PDF');
+    expect(file?.textContent).toContain('plan.pdf');
+    expect(file?.textContent).toContain('1.2 MB');
+  });
+
+  it('should show a voice message with sixty four bars and its duration', async () => {
+    await show([
+      message('m1', 'voice', [attachment('a', { durationSeconds: 10, waveform: [10, 50, 90] })]),
+    ]);
+
+    expect(page().querySelectorAll('coach-voice-message .bar')).toHaveLength(64);
+    expect(page().querySelector('coach-voice-message .clock')?.textContent).toContain('0:10');
+  });
+
+  it('should show a round video note with its duration', async () => {
+    await show([message('m1', 'videoNote', [attachment('a', { durationSeconds: 24 })])]);
+
+    expect(page().querySelector('coach-video-note video')).not.toBeNull();
+    expect(page().querySelector('coach-video-note .clock')?.textContent).toContain('0:24');
+  });
+
+  it('should ask the store to refresh links when an image fails to load', async () => {
+    await show([message('m1', 'image', [attachment('a')])]);
+
+    page().querySelector('coach-image-album img')?.dispatchEvent(new Event('error'));
+
+    expect(store.mediaFailed).toHaveBeenCalledWith('m1');
+  });
+
+  it('should show what the other side is doing in the header', async () => {
+    store.activity.set('recordingVoice');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(page().querySelector('coach-app-bar')?.textContent).toContain(
+      'recording a voice message',
+    );
+  });
+
+  it('should offer the microphone until something is typed', async () => {
+    expect(page().querySelector('[aria-label="Record a voice message"]')).not.toBeNull();
+
+    await type('salom');
+    fixture.detectChanges();
+
+    expect(page().querySelector('[aria-label="Record a voice message"]')).toBeNull();
+    expect(page().querySelector('button[type="submit"]')).not.toBeNull();
+  });
+
+  it('should scroll to the newest message when the coach sends one', async () => {
+    service.send.mockResolvedValue(message('m9', 'text', [], 'salom'));
+    await type('salom');
+    expect(Element.prototype.scrollTo).not.toHaveBeenCalled();
+
+    await submit();
+
+    expect(Element.prototype.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });

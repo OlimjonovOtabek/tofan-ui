@@ -13,6 +13,9 @@
       [attr.target]="item().target"
       tabindex="0"
       pRipple
+      [pTooltip]="item().label | t"
+      tooltipPosition="right"
+      [tooltipDisabled]="!railMenu()"
       (click)="onClick($event)"
     >
       <i class="layout-menuitem-icon" [class]="item().icon"></i>
@@ -25,6 +28,9 @@
       [attr.target]="item().target"
       tabindex="0"
       pRipple
+      [pTooltip]="item().label | t"
+      tooltipPosition="right"
+      [tooltipDisabled]="!railMenu()"
       (click)="onClick($event)"
     >
       <i class="layout-menuitem-icon" [class]="item().icon"></i>

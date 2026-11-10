@@ -58,46 +58,6 @@
   background: var(--c-surface-2);
 }
 
-.bubble {
-  align-self: flex-start;
-  max-width: 78%;
-  padding: 8px 12px;
-  border: 1px solid var(--c-border);
-  border-radius: 18px 18px 18px 6px;
-  background: var(--c-surface);
-}
-
-.bubble.is-mine {
-  align-self: flex-end;
-  border-color: transparent;
-  border-radius: 18px 18px 6px;
-  background: var(--c-primary);
-  color: var(--c-on-primary);
-}
-
-.bubble p {
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-
-.meta {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  margin-top: 2px;
-  opacity: 0.75;
-}
-
-.ticks {
-  display: inline-flex;
-  --icon-size: 16px;
-}
-
-.second {
-  margin-left: -11px;
-}
-
 .empty,
 .older {
   align-self: center;
@@ -107,16 +67,11 @@
 
 .composer {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
   gap: 8px;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--c-border);
   background: var(--c-bg);
-}
-
-.read-only {
-  flex-direction: column;
-  align-items: stretch;
 }
 
 .unsent {
@@ -135,40 +90,4 @@
   overflow-y: auto;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-}
-
-.input {
-  flex: 1;
-  min-height: 44px;
-  max-height: 140px;
-  padding: 11px 14px;
-  border: 1px solid var(--c-border);
-  border-radius: var(--c-radius-input);
-  outline: 0;
-  background: var(--c-surface);
-  font-size: 15px;
-  line-height: 20px;
-  resize: none;
-  field-sizing: content;
-}
-
-.input:focus {
-  border-color: var(--c-primary);
-}
-
-.send {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--c-primary);
-  color: var(--c-on-primary);
-  --icon-size: 20px;
-}
-
-.send:disabled {
-  opacity: 0.5;
 }

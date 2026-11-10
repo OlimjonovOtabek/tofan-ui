@@ -1,6 +1,12 @@
 import { Preset } from '@openng/optimus-ui-themes/types';
 import { ThemePresetName } from '@core/layout/layout.service';
-import { ColorPalette, NOIR_PRIMARY, NamedPalette } from './theme-palettes';
+import {
+  ColorPalette,
+  NEUTRAL_SURFACE_NAME,
+  NOIR_PRIMARY,
+  NamedPalette,
+  SURFACE_PALETTES,
+} from './theme-palettes';
 
 const NOIR_PRIMARY_SCALE = {
   50: '{surface.50}',
@@ -110,7 +116,6 @@ const DEFAULT_COLOR_SCHEME = {
 };
 
 const SURFACE_SHADES = [0, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
-const LIGHT_SURFACE_WHITE_PERCENT = [100, 95, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0];
 const DARK_SURFACE_WHITE_PERCENT = [100, 95, 90, 80, 70, 60, 50, 40, 30, 20, 10, 5];
 
 function tintedSurface(base: string, whitePercent: readonly number[]): Record<number, string> {
@@ -123,8 +128,10 @@ function tintedSurface(base: string, whitePercent: readonly number[]): Record<nu
 }
 
 const TINTED_SURFACES = {
-  light: { surface: tintedSurface('{primary.900}', LIGHT_SURFACE_WHITE_PERCENT) },
-  dark: { surface: tintedSurface('var(--surface-ground)', DARK_SURFACE_WHITE_PERCENT) },
+  light: {
+    surface: SURFACE_PALETTES.find((palette) => palette.name === NEUTRAL_SURFACE_NAME)?.palette,
+  },
+  dark: { surface: tintedSurface('var(--surface-ground-top)', DARK_SURFACE_WHITE_PERCENT) },
 };
 
 const OVERLAY_RADIUS = {

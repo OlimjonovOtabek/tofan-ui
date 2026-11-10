@@ -7,6 +7,10 @@ export const MEDIA_UZ = {
     productImage: 'Mahsulot rasmi',
     document: 'Hujjat',
     garmentImage: 'Futbolka rasmi',
+    chatImage: 'Chat rasmi',
+    chatVoice: 'Chat ovozli xabari',
+    chatVideoNote: 'Chat video xabari',
+    chatFile: 'Chat fayli',
   },
   page: {
     title: 'Media fayllar',

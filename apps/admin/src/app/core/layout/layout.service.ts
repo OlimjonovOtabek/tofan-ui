@@ -1,35 +1,42 @@
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
 
 import { readStoredLayoutConfig, storeLayoutConfig } from './layout-config.storage';
-import { surfaceGroundFor } from './theme/surface-ground';
+import { cardColorFor } from './theme/card-color';
+import { shellGroundFor } from './theme/surface-ground';
+import { strongNameOf } from './theme/tone';
 
-export type MenuMode = 'static' | 'overlay';
 export type ThemePresetName = 'Aura' | 'Lara' | 'Nora';
 
 export interface LayoutConfig {
   preset: ThemePresetName;
   primary: string;
   surface: string | null;
+  ground: string | null;
+  groundMatte: boolean;
+  card: string | null;
+  cardMatte: boolean;
   darkTheme: boolean;
-  menuMode: MenuMode;
+  menuCollapsed: boolean;
 }
 
 interface LayoutState {
-  staticMenuDesktopInactive: boolean;
-  overlayMenuActive: boolean;
   mobileMenuActive: boolean;
   activeMenuPath: string | null;
 }
 
 const DARK_THEME_CLASS = 'app-dark';
 const BLOCKED_SCROLL_CLASS = 'blocked-scroll';
-const DESKTOP_MIN_WIDTH = 992;
+const DESKTOP_MEDIA_QUERY = '(min-width: 960px)';
 const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
   preset: 'Aura',
   primary: 'blue',
   surface: null,
+  ground: null,
+  groundMatte: false,
+  card: null,
+  cardMatte: false,
   darkTheme: false,
-  menuMode: 'static',
+  menuCollapsed: false,
 };
 
 @Injectable({ providedIn: 'root' })
@@ -39,18 +46,25 @@ export class LayoutService {
   private readonly config = signal<LayoutConfig>(readStoredLayoutConfig(DEFAULT_LAYOUT_CONFIG));
 
   private readonly state = signal<LayoutState>({
-    staticMenuDesktopInactive: false,
-    overlayMenuActive: false,
     mobileMenuActive: false,
     activeMenuPath: null,
   });
 
+  private readonly desktop = signal(this.watchDesktop());
+
   readonly layoutConfig = this.config.asReadonly();
   readonly layoutState = this.state.asReadonly();
+  readonly isDesktop = this.desktop.asReadonly();
 
   readonly isDarkTheme = computed(() => this.config().darkTheme);
-  readonly isSidebarActive = computed(
-    () => this.state().overlayMenuActive || this.state().mobileMenuActive,
+  readonly isSidebarActive = computed(() => this.state().mobileMenuActive);
+  readonly isRailMenu = computed(() => this.config().menuCollapsed && this.desktop());
+  readonly cardBackground = computed(() => {
+    const { card, darkTheme, cardMatte } = this.config();
+    return cardColorFor(card, darkTheme, cardMatte);
+  });
+  readonly isStrongGround = computed(
+    () => !this.config().darkTheme && strongNameOf(this.config().ground) !== null,
   );
 
   constructor() {
@@ -71,32 +85,39 @@ export class LayoutService {
   }
 
   toggleMenu(): void {
-    if (!this.isDesktop()) {
-      this.state.update((state) => ({ ...state, mobileMenuActive: !state.mobileMenuActive }));
-    } else if (this.config().menuMode === 'overlay') {
-      this.state.update((state) => ({ ...state, overlayMenuActive: !state.overlayMenuActive }));
-    } else {
-      this.state.update((state) => ({
-        ...state,
-        staticMenuDesktopInactive: !state.staticMenuDesktopInactive,
-      }));
+    if (this.desktop()) {
+      this.updateConfig({ menuCollapsed: !this.config().menuCollapsed });
+      return;
     }
+    this.state.update((state) => ({ ...state, mobileMenuActive: !state.mobileMenuActive }));
   }
 
   hideMenu(): void {
-    this.state.update((state) => ({ ...state, overlayMenuActive: false, mobileMenuActive: false }));
+    this.state.update((state) => ({ ...state, mobileMenuActive: false }));
   }
 
   setActiveMenuPath(path: string | null): void {
     this.state.update((state) => ({ ...state, activeMenuPath: path }));
   }
 
-  private isDesktop(): boolean {
-    return (this.document.defaultView?.innerWidth ?? DESKTOP_MIN_WIDTH) >= DESKTOP_MIN_WIDTH;
+  private watchDesktop(): boolean {
+    const query = this.document.defaultView?.matchMedia?.(DESKTOP_MEDIA_QUERY);
+    if (!query) {
+      return true;
+    }
+    query.addEventListener('change', (event) => this.onViewportChange(event.matches));
+    return query.matches;
   }
 
-  private applySurfaceGround({ primary, darkTheme }: LayoutConfig): void {
-    const { background, top } = surfaceGroundFor(primary, darkTheme);
+  private onViewportChange(desktop: boolean): void {
+    this.desktop.set(desktop);
+    if (desktop) {
+      this.hideMenu();
+    }
+  }
+
+  private applySurfaceGround({ primary, ground, groundMatte, darkTheme }: LayoutConfig): void {
+    const { background, top } = shellGroundFor(ground, primary, darkTheme, groundMatte);
     const rootStyle = this.document.documentElement.style;
     rootStyle.setProperty('--surface-ground', background);
     rootStyle.setProperty('--surface-ground-top', top);

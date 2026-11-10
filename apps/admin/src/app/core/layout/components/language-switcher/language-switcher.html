@@ -1,22 +1,29 @@
-@if (variant() === 'floating') {
-  <p-button
-    type="button"
-    [rounded]="true"
-    severity="secondary"
-    [label]="currentCode()"
-    [ariaLabel]="'layout.topbar.language' | t"
-    (onClick)="menu.toggle($event)"
-  />
-} @else {
-  <button
-    type="button"
-    class="layout-topbar-action"
-    [attr.aria-label]="'layout.topbar.language' | t"
-    [title]="'layout.topbar.language' | t"
-    aria-haspopup="true"
-    (click)="menu.toggle($event)"
-  >
-    <strong class="text-sm">{{ currentCode() }}</strong>
-  </button>
+@switch (variant()) {
+  @case ('segmented') {
+    <div class="language-segments" role="group" [attr.aria-label]="'layout.topbar.language' | t">
+      @for (option of options(); track option.locale) {
+        <button
+          type="button"
+          class="language-segment"
+          [class.is-on]="option.active"
+          [attr.aria-pressed]="option.active"
+          [title]="option.name"
+          (click)="select(option.locale)"
+        >
+          {{ option.code }}
+        </button>
+      }
+    </div>
+  }
+  @case ('floating') {
+    <p-button
+      type="button"
+      [rounded]="true"
+      severity="secondary"
+      [label]="currentCode()"
+      [ariaLabel]="'layout.topbar.language' | t"
+      (onClick)="menu.toggle($event)"
+    />
+    <p-menu #menu [model]="items()" [popup]="true" appendTo="body" />
+  }
 }
-<p-menu #menu [model]="items()" [popup]="true" appendTo="body" />

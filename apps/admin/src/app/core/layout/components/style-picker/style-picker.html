@@ -1,0 +1,55 @@
+<div class="flex items-baseline justify-between gap-2">
+  <span class="text-sm text-muted-color font-semibold">{{
+    'layout.configurator.styles.title' | t
+  }}</span>
+  <span class="text-xs text-muted-color truncate">
+    @if (activeLabel(); as label) {
+      {{ label | t }}
+    } @else {
+      {{ 'layout.configurator.styles.custom' | t }}
+    }
+  </span>
+</div>
+<div class="grid grid-cols-5 gap-2">
+  @for (tile of tiles; track tile.style.id) {
+    @let active = tile.style.id === activeId();
+    <button
+      type="button"
+      class="relative flex h-9 cursor-pointer gap-[3px] overflow-hidden rounded-md border border-surface p-[3px] outline-offset-1 transition-transform hover:-translate-y-px"
+      [class.outline-2]="active"
+      [class.outline-primary]="active"
+      [style.background]="tile.preview.ground"
+      [title]="tile.style.label | t"
+      [attr.aria-label]="tile.style.label | t"
+      [attr.aria-pressed]="active"
+      (click)="choose($event, tile.style)"
+    >
+      <span class="flex w-[30%] flex-col gap-[2px] pt-[3px]" aria-hidden="true">
+        <span class="h-[3px] w-full rounded-full" [style.background]="tile.preview.sheet"></span>
+        <span
+          class="h-[2px] w-3/4 rounded-full opacity-40"
+          [style.background]="tile.preview.accent"
+        ></span>
+        <span
+          class="h-[2px] w-2/3 rounded-full opacity-40"
+          [style.background]="tile.preview.accent"
+        ></span>
+      </span>
+      <span
+        class="flex flex-1 flex-col gap-[3px] rounded-[3px] p-[3px]"
+        aria-hidden="true"
+        [style.background]="tile.preview.sheet"
+      >
+        <span class="h-[3px] w-1/2 rounded-full" [style.background]="tile.preview.accent"></span>
+        <span
+          class="h-[2px] w-full rounded-full opacity-25"
+          [style.background]="tile.preview.accent"
+        ></span>
+        <span
+          class="h-[2px] w-4/5 rounded-full opacity-25"
+          [style.background]="tile.preview.accent"
+        ></span>
+      </span>
+    </button>
+  }
+</div>

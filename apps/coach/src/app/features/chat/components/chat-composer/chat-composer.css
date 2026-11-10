@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  border-top: 1px solid var(--c-border);
+  background: var(--c-bg);
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+}
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.attach {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 232px;
+  padding: 6px;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: var(--c-surface);
+  box-shadow: 0 8px 24px var(--c-shadow);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--c-text);
+  text-align: left;
+  cursor: pointer;
+  --icon-size: 20px;
+}
+
+.item coach-icon {
+  color: var(--c-primary);
+}
+
+.item:hover,
+.item:focus-visible {
+  background: var(--c-surface-2);
+}
+
+.hint {
+  margin-left: auto;
+  color: var(--c-text-muted);
+}
+
+.round {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  --icon-size: 20px;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--c-text-muted);
+  --icon-size: 22px;
+}
+
+.ghost:hover,
+.ghost.is-open {
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+}
+
+.primary {
+  background: var(--c-primary);
+  color: var(--c-on-primary);
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.input {
+  flex: 1;
+  min-height: 44px;
+  max-height: 140px;
+  padding: 11px 14px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--c-radius-input);
+  outline: 0;
+  background: var(--c-surface);
+  font-size: 15px;
+  line-height: 20px;
+  resize: none;
+  field-sizing: content;
+}
+
+.input:focus {
+  border-color: var(--c-primary);
+}
+
+.picker {
+  display: none;
+}

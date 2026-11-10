@@ -69,7 +69,7 @@ Shared auth, HTTP, feedback and i18n live in `libs/core`; shared UI, models and 
 `libs/shared`. Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`,
 `@coach-environments/*`, `@landing/*`. Admin styles live in `apps/admin/src/styles/`; Coach styles live in
 `apps/coach/src/`. Both use Tailwind v4 utilities + `@openng/optimus-ui-tailwindcss`; admin layout is
-based on Sakai (sakai-ng). `AGENTS.md` is the tool-neutral copy of these rules; keep it in sync.
+a side menu plus one sheet modelled on ZM Maktab `feat/ui-design-foundation` (`docs/onboarding.md` section 9). `AGENTS.md` is the tool-neutral copy of these rules; keep it in sync.
 
 ### 2.1 Production
 

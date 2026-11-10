@@ -4,11 +4,22 @@ import { Subject } from 'rxjs';
 import { API_BASE_URL } from '@core/http/api-base-url';
 import { AuthSessionStorage } from '@core/auth/auth-session.storage';
 import { Message, Presence } from '../models/chat';
-import { MessageResponse, PresenceEvent, ReadEvent, TypingEvent } from './chat.dto';
-import { toMessage, toPresence } from './chat.mapper';
+import {
+  ActivityNotice,
+  ChatActivity,
+  SentActivity,
+  shouldSendActivity,
+} from '../models/chat-activity';
+import {
+  ActivityEvent,
+  MessageResponse,
+  PresenceEvent,
+  ReadEvent,
+  chatActivities,
+} from './chat.dto';
+import { toActivityNotice, toMessage, toPresence } from './chat.mapper';
 
 const HUB_PATH = '/hubs/chat';
-const TYPING_INTERVAL_MS = 3000;
 
 export interface ReadNotice {
   readonly conversationId: string;
@@ -16,21 +27,16 @@ export interface ReadNotice {
   readonly readUpTo: Date | null;
 }
 
-export interface TypingNotice {
-  readonly conversationId: string;
-  readonly userId: string;
-}
-
 @Injectable({ providedIn: 'root' })
 export class ChatHub {
   private readonly baseUrl = inject(API_BASE_URL);
   private readonly session = inject(AuthSessionStorage);
   private connection: HubConnection | null = null;
-  private readonly lastTyping = new Map<string, number>();
+  private readonly lastActivity = new Map<string, SentActivity>();
 
   readonly messages = new Subject<Message>();
   readonly reads = new Subject<ReadNotice>();
-  readonly typings = new Subject<TypingNotice>();
+  readonly activities = new Subject<ActivityNotice>();
   readonly presence = new Subject<Presence>();
   readonly reconnected = new Subject<void>();
 
@@ -61,16 +67,18 @@ export class ChatHub {
     }
   }
 
-  typing(conversationId: string): void {
+  activity(conversationId: string, activity: ChatActivity): void {
     if (this.connection?.state !== HubConnectionState.Connected) {
       return;
     }
     const now = Date.now();
-    if (now - (this.lastTyping.get(conversationId) ?? 0) < TYPING_INTERVAL_MS) {
+    if (!shouldSendActivity(this.lastActivity.get(conversationId), activity, now)) {
       return;
     }
-    this.lastTyping.set(conversationId, now);
-    this.connection.send('Typing', conversationId).catch(() => undefined);
+    this.lastActivity.set(conversationId, { activity, at: now });
+    this.connection
+      .send('Activity', conversationId, chatActivities.toApi(activity))
+      .catch(() => undefined);
   }
 
   private build(): HubConnection {
@@ -80,21 +88,30 @@ export class ChatHub {
       })
       .withAutomaticReconnect()
       .build();
+    this.listen(connection);
+    connection.onreconnected(() => this.reconnected.next());
+    return connection;
+  }
+
+  private read(payload: ReadEvent): void {
+    if (payload.conversationId && payload.readerUserId) {
+      this.reads.next({
+        conversationId: payload.conversationId,
+        readerUserId: payload.readerUserId,
+        readUpTo: payload.readUpToUtc ? new Date(payload.readUpToUtc) : null,
+      });
+    }
+  }
+
+  private listen(connection: HubConnection): void {
     connection.on('MessageReceived', (payload: MessageResponse) =>
-      this.messages.next(toMessage(payload)),
+      this.messages.next(toMessage(payload, (path) => `${this.baseUrl}${path}`)),
     );
-    connection.on('ConversationRead', (payload: ReadEvent) => {
-      if (payload.conversationId && payload.readerUserId) {
-        this.reads.next({
-          conversationId: payload.conversationId,
-          readerUserId: payload.readerUserId,
-          readUpTo: payload.readUpToUtc ? new Date(payload.readUpToUtc) : null,
-        });
-      }
-    });
-    connection.on('UserTyping', (payload: TypingEvent) => {
-      if (payload.conversationId && payload.userId) {
-        this.typings.next({ conversationId: payload.conversationId, userId: payload.userId });
+    connection.on('ConversationRead', (payload: ReadEvent) => this.read(payload));
+    connection.on('UserActivity', (payload: ActivityEvent) => {
+      const notice = toActivityNotice(payload);
+      if (notice !== null) {
+        this.activities.next(notice);
       }
     });
     connection.on('UserPresenceChanged', (payload: PresenceEvent) => {
@@ -103,7 +120,5 @@ export class ChatHub {
         this.presence.next(presence);
       }
     });
-    connection.onreconnected(() => this.reconnected.next());
-    return connection;
   }
 }

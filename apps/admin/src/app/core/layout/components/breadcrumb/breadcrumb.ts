@@ -20,10 +20,14 @@ interface BreadcrumbTrail {
     <nav class="layout-breadcrumb" [attr.aria-label]="'layout.topbar.breadcrumb' | t">
       <ol>
         @if (trail.group) {
-          <li>{{ trail.group | t }}</li>
-          <li class="layout-breadcrumb-chevron" aria-hidden="true">/</li>
+          <li class="layout-breadcrumb-group">{{ trail.group | t }}</li>
+          <li class="layout-breadcrumb-chevron" aria-hidden="true">
+            <svg class="layout-stroke-icon" viewBox="0 0 24 24" width="14" height="14">
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </li>
         }
-        <li class="layout-breadcrumb-current">{{ pageTitle(trail) }}</li>
+        <li class="layout-breadcrumb-current" aria-current="page">{{ pageTitle(trail) }}</li>
       </ol>
     </nav>
   `,
