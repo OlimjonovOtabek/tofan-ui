@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start"],
       "port": 4200
+    },
+    {
+      "name": "tofan-coach",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start:coach"],
+      "port": 4300
     }
   ]
 }
