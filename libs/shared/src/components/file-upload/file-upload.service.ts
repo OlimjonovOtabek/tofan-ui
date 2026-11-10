@@ -42,23 +42,26 @@ export class FileUploadService {
     let complete = false;
     const result = new Promise<string>((resolve, reject) => {
       rejectResult = reject;
-      subscription = this.http.request<unknown>(request).pipe(
-        tap((event) => reportProgress(event, onProgress)),
-        filter((event): event is HttpResponse<unknown> => event instanceof HttpResponse),
-      ).subscribe({
-        next: (response) => {
-          complete = true;
-          try {
-            resolve(unwrapResult(response.body) as string);
-          } catch (error) {
-            reject(error);
-          }
-        },
-        error: (error: unknown) => {
-          complete = true;
-          reject(toDomainError(error));
-        },
-      });
+      subscription = this.http
+        .request<unknown>(request)
+        .pipe(
+          tap((event) => reportProgress(event, onProgress)),
+          filter((event): event is HttpResponse<unknown> => event instanceof HttpResponse),
+        )
+        .subscribe({
+          next: (response) => {
+            complete = true;
+            try {
+              resolve(unwrapResult(response.body) as string);
+            } catch (error) {
+              reject(error);
+            }
+          },
+          error: (error: unknown) => {
+            complete = true;
+            reject(toDomainError(error));
+          },
+        });
     });
     return {
       result,
