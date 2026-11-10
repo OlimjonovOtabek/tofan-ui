@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { API_BASE_URL } from '@core/http/api-base-url';
 import { TrainerEditDraft } from '../models/trainer-edit-draft';
-import { TrainerResponse } from './trainer.dto';
+import { TrainerSummaryResponse } from './trainer.dto';
 import { TrainersService } from './trainers.service';
 
 const editDraft: TrainerEditDraft = {
@@ -88,9 +88,19 @@ describe('TrainersService', () => {
 
     expect(page.items.map((trainer) => trainer.vipMonthlyPrice)).toEqual([700000, null, null]);
   });
+
+  it('should send the search and the publish flag when the list is filtered', async () => {
+    const done = service.list({ first: 0, rows: 20 }, { search: 'stage', publishState: 'draft' });
+
+    const request = http.expectOne((candidate) => candidate.url === '/api/admin/trainers');
+    expect(request.request.params.get('Search')).toBe('stage');
+    expect(request.request.params.get('IsPublished')).toBe('false');
+    request.flush({ data: [], totalCount: 0 });
+    await done;
+  });
 });
 
-function trainerResponse(id: string, vipMonthlyPrice: number | null): TrainerResponse {
+function trainerResponse(id: string, vipMonthlyPrice: number | null): TrainerSummaryResponse {
   return {
     id,
     userId: `u-${id}`,

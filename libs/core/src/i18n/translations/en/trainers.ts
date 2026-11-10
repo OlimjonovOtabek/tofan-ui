@@ -23,8 +23,8 @@ export const TRAINERS_EN = {
     priceMissing: 'Not set',
     columns: {
       trainer: 'Trainer',
-      slug: 'Link',
-      userId: 'User ID',
+      account: 'Account',
+      subscribers: 'Active subscribers',
       monthlyPrice: 'Monthly price',
       vipPrice: 'VIP price',
       status: 'Status',
@@ -47,11 +47,16 @@ export const TRAINERS_EN = {
     endedOn: 'Ended {date}',
     columns: {
       trainer: 'Trainer',
-      userId: 'User',
+      subscriber: 'Subscriber',
       startsOn: 'Started',
       endsOn: 'Ends',
       status: 'Status',
+      source: 'How opened',
       tier: 'Tier',
+    },
+    source: {
+      paid: 'Paid',
+      granted: 'Granted by admin',
     },
     actions: {
       end: 'End subscription',
@@ -65,12 +70,19 @@ export const TRAINERS_EN = {
     confirmMakeStandard:
       'Make the subscription to "{name}" Standard? The dates do not change and the user can no longer chat with the trainer.',
   },
-  filters: {
-    trainer: 'Trainer',
-    userId: 'User ID',
+  listFilters: {
+    search: 'Search',
+    searchPlaceholder: 'Trainer name or link',
     status: 'Status',
+  },
+  filters: {
+    search: 'Search',
+    searchPlaceholder: 'Subscriber name or username',
+    trainer: 'Trainer',
+    status: 'Status',
+    tier: 'Tier',
+    endingSoon: 'Ends within 7 days',
     all: 'All',
-    userIdInvalid: 'Enter a UUID.',
   },
   form: {
     header: 'Add trainer',

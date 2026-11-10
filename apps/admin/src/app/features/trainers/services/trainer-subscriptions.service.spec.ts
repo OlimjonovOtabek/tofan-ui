@@ -17,6 +17,9 @@ const response: TrainerSubscriptionResponse = {
   grantedBy: 'a1',
   createdOnUtc: '2026-10-01T10:00:00Z',
   tier: TierDto.Vip,
+  isPaid: false,
+  userFullName: null,
+  userName: null,
 };
 
 describe('TrainerSubscriptionsService', () => {

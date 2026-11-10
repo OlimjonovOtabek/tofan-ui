@@ -1,6 +1,21 @@
 const MAX_INITIALS = 2;
 
-export type TrainerPublishState = 'published' | 'draft';
+export const TRAINER_PUBLISH_STATES = ['published', 'draft'] as const;
+export type TrainerPublishState = (typeof TRAINER_PUBLISH_STATES)[number];
+
+export interface TrainerListSummary {
+  readonly userName: string | null;
+  readonly email: string | null;
+  readonly phoneNumber: string | null;
+  readonly activeSubscribersCount: number;
+}
+
+export const NO_LIST_SUMMARY: TrainerListSummary = {
+  userName: null,
+  email: null,
+  phoneNumber: null,
+  activeSubscribersCount: 0,
+};
 
 export class Trainer {
   constructor(
@@ -15,6 +30,7 @@ export class Trainer {
     readonly createdOn: Date,
     readonly slug: string | null,
     readonly vipMonthlyPrice: number | null,
+    readonly summary: TrainerListSummary = NO_LIST_SUMMARY,
   ) {}
 
   publishState(): TrainerPublishState {
@@ -27,6 +43,11 @@ export class Trainer {
 
   hasVipPrice(): boolean {
     return this.vipMonthlyPrice !== null;
+  }
+
+  contacts(): readonly string[] {
+    const { email, phoneNumber } = this.summary;
+    return [email, phoneNumber].filter((contact): contact is string => contact !== null);
   }
 
   initials(): string {

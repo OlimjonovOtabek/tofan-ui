@@ -1,4 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AppPaths } from '@core/config/app-paths';
 import { Button } from '@openng/optimus-ui/button';
 import { Tag } from '@openng/optimus-ui/tag';
 import { Tooltip } from '@openng/optimus-ui/tooltip';
@@ -13,6 +15,8 @@ import {
 } from '../../models/subscription-tier-labels';
 import { TrainerSubscription } from '../../models/trainer-subscription';
 import {
+  SUBSCRIPTION_SOURCE_LABELS,
+  SUBSCRIPTION_SOURCE_SEVERITIES,
   SUBSCRIPTION_STATUS_LABELS,
   SUBSCRIPTION_STATUS_SEVERITIES,
   TrainerTagSeverity,
@@ -29,7 +33,7 @@ import { PageRequest } from '@shared/models/page';
 import { SelectOption } from '@shared/models/select-option';
 import { Tier } from '@shared/models/tier';
 import { TIER_LABELS } from '@shared/models/tier-labels';
-import { shortId } from '@shared/utils/identifiers';
+import { PersonName, toPersonName } from '@shared/models/person-name';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { formatDate, formatDateTime } from '@core/i18n/date-format';
 import { Dictionary } from '@core/i18n/dictionary';
@@ -45,6 +49,7 @@ import { Translator } from '@core/i18n/translator';
     SubscriptionFilters,
     SubscriptionGrantDialog,
     Button,
+    RouterLink,
     Tag,
     Tooltip,
     TranslatePipe,
@@ -63,10 +68,11 @@ export class TrainerSubscriptionsPage implements OnInit {
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'trainerDisplayName', header: this.column('trainer') },
-    { field: 'userId', header: this.column('userId') },
+    { field: 'userId', header: this.column('subscriber') },
     { field: 'startsOnUtc', header: this.column('startsOn'), sortable: true, width: '10rem' },
     { field: 'endsOnUtc', header: this.column('endsOn'), sortable: true, width: '10rem' },
     { field: 'tier', header: this.column('tier'), width: '8rem' },
+    { field: 'isPaid', header: this.column('source'), sortable: true, width: '9rem' },
     { field: 'status', header: this.column('status'), width: '14rem' },
     { field: 'actions', header: '', width: '8rem' },
   ]);
@@ -79,7 +85,7 @@ export class TrainerSubscriptionsPage implements OnInit {
     this.store.subscriptions();
     return new Date();
   });
-  protected readonly shortId = shortId;
+  protected readonly soldiersPath = AppPaths.soldiers;
 
   ngOnInit(): void {
     void this.store.loadTrainers();
@@ -95,6 +101,18 @@ export class TrainerSubscriptionsPage implements OnInit {
 
   protected statusSeverity(subscription: TrainerSubscription): TrainerTagSeverity {
     return SUBSCRIPTION_STATUS_SEVERITIES[this.statusOf(subscription)];
+  }
+
+  protected subscriberOf(subscription: TrainerSubscription): PersonName {
+    return toPersonName(subscription.userFullName, subscription.userName, subscription.userId);
+  }
+
+  protected sourceLabel(subscription: TrainerSubscription): string {
+    return this.translator.translate(SUBSCRIPTION_SOURCE_LABELS[subscription.source()]);
+  }
+
+  protected sourceSeverity(subscription: TrainerSubscription): TrainerTagSeverity {
+    return SUBSCRIPTION_SOURCE_SEVERITIES[subscription.source()];
   }
 
   protected tierLabel(tier: Tier): string {
