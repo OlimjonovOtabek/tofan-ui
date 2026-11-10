@@ -13,4 +13,12 @@ export class FileDownloadService {
     link.click();
     setTimeout(() => URL.revokeObjectURL(url));
   }
+
+  open(url: string, fileName: string): void {
+    const link = this.document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.rel = 'noopener';
+    link.click();
+  }
 }

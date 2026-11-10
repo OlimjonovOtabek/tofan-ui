@@ -9,6 +9,10 @@ export const MEDIA_EN: Dictionary['media'] = {
     productImage: 'Product image',
     document: 'Document',
     garmentImage: 'Shirt image',
+    chatImage: 'Chat image',
+    chatVoice: 'Chat voice message',
+    chatVideoNote: 'Chat video message',
+    chatFile: 'Chat file',
   },
   page: {
     title: 'Media files',

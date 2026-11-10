@@ -1,0 +1,50 @@
+:host {
+  display: block;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.badge {
+  --icon-size: 20px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--c-radius-tile);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+}
+
+:host(.is-mine) .badge {
+  background: color-mix(in srgb, var(--c-on-primary) 20%, transparent);
+  color: var(--c-on-primary);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.size {
+  opacity: 0.75;
+}

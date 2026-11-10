@@ -46,9 +46,16 @@
             <coach-avatar [initials]="row.initials" [imageUrl]="row.conversation.photoUrl" />
             <span class="text">
               <span class="t-title4 coach-ellipsis">{{ row.name }}</span>
-              <span class="preview t-base3" [class.is-unread]="row.conversation.unreadCount > 0">{{
-                row.preview
-              }}</span>
+              <span
+                class="preview t-base3"
+                [class.is-unread]="row.conversation.unreadCount > 0"
+                [class.is-live]="row.live"
+              >
+                @if (row.icon; as icon) {
+                  <coach-icon [name]="icon" />
+                }
+                <span class="preview-text">{{ row.preview }}</span>
+              </span>
             </span>
             <span class="meta">
               @if (row.time) {

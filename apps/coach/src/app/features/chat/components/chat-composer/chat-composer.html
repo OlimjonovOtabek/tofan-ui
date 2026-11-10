@@ -1,0 +1,108 @@
+<form class="composer" (submit)="$event.preventDefault(); store.send()">
+  @if (store.hasPicked()) {
+    <coach-composer-tray
+      [picked]="store.picked()"
+      [images]="store.pickedKind() === 'image'"
+      [max]="store.maxAttachments"
+      (removed)="store.remove($event)"
+      (added)="attach()"
+    />
+  }
+  @if (store.recording(); as recording) {
+    <coach-voice-recording-bar
+      [state]="recording"
+      (cancelled)="store.cancelRecording()"
+      (sent)="store.finishRecording()"
+    />
+  } @else {
+    <div class="row">
+      <div class="attach">
+        @if (menuOpen()) {
+          <div class="menu" role="menu">
+            <button type="button" role="menuitem" class="item" (click)="browse('image')">
+              <coach-icon name="image" />
+              <span class="t-base3 font-medium">{{ 'coachApp.conversation.attachImage' | t }}</span>
+              <span class="hint t-base5">{{
+                'coachApp.conversation.attachImageHint' | t: imageLimit
+              }}</span>
+            </button>
+            <button type="button" role="menuitem" class="item" (click)="browse('file')">
+              <coach-icon name="file" />
+              <span class="t-base3 font-medium">{{ 'coachApp.conversation.attachFile' | t }}</span>
+              <span class="hint t-base5">{{
+                'coachApp.conversation.attachFileHint' | t: fileLimit
+              }}</span>
+            </button>
+          </div>
+        }
+        <button
+          type="button"
+          class="round ghost"
+          [class.is-open]="menuOpen()"
+          aria-haspopup="menu"
+          [attr.aria-expanded]="menuOpen()"
+          [attr.aria-label]="'coachApp.conversation.attach' | t"
+          (click)="attach()"
+          (keydown.escape)="menuOpen.set(false)"
+        >
+          <coach-icon name="paperclip" />
+        </button>
+      </div>
+      <textarea
+        rows="1"
+        class="input"
+        [attr.maxlength]="maxLength"
+        [placeholder]="
+          (store.hasPicked()
+            ? 'coachApp.conversation.captionHint'
+            : 'coachApp.conversation.inputHint'
+          ) | t
+        "
+        [attr.aria-label]="'coachApp.conversation.inputHint' | t"
+        [value]="store.draft()"
+        (input)="typed($event)"
+        (paste)="pasted($event)"
+        (keydown.enter)="enter($event)"
+      ></textarea>
+      @if (store.showsMicrophone()) {
+        <button
+          type="button"
+          class="round primary"
+          [attr.aria-label]="'coachApp.conversation.recordVoice' | t"
+          (click)="store.startRecording()"
+        >
+          <coach-icon name="mic" />
+        </button>
+      } @else {
+        <button
+          type="submit"
+          class="round primary"
+          [disabled]="!store.canSend()"
+          [attr.aria-label]="'coachApp.conversation.send' | t"
+        >
+          <coach-icon name="arrow-up" />
+        </button>
+      }
+    </div>
+  }
+  <input
+    #imageInput
+    type="file"
+    class="picker"
+    multiple
+    tabindex="-1"
+    aria-hidden="true"
+    [accept]="imageAccept"
+    (change)="chosen('image', $event)"
+  />
+  <input
+    #fileInput
+    type="file"
+    class="picker"
+    multiple
+    tabindex="-1"
+    aria-hidden="true"
+    [accept]="fileAccept"
+    (change)="chosen('file', $event)"
+  />
+</form>

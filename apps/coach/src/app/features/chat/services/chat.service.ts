@@ -6,6 +6,7 @@ import {
   ConversationResponse,
   MessageResponse,
   OpenConversationResponse,
+  SendMessageRequest,
 } from './chat.dto';
 import { toConversation, toMessage } from './chat.mapper';
 
@@ -19,10 +20,11 @@ export interface MessagesPage {
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private readonly api = inject(ApiClient);
+  private readonly apiUrl = (path: string): string => this.api.url(path);
 
   async conversations(): Promise<Conversation[]> {
     const responses = await this.api.get<ConversationResponse[]>(CHAT);
-    return responses.map((response) => toConversation(response, (path) => this.api.url(path)));
+    return responses.map((response) => toConversation(response, this.apiUrl));
   }
 
   open(userId: string): Promise<OpenConversationResponse> {
@@ -38,18 +40,24 @@ export class ChatService {
       },
     );
     return {
-      messages: (response.messages ?? []).map(toMessage),
+      messages: (response.messages ?? []).map((message) => toMessage(message, this.apiUrl)),
       otherReadUpTo:
         response.otherReadUpToUtc === null ? null : new Date(response.otherReadUpToUtc),
     };
   }
 
-  async send(conversationId: string, text: string): Promise<Message> {
+  async send(
+    conversationId: string,
+    text: string,
+    attachments: readonly string[] = [],
+  ): Promise<Message> {
+    const request: SendMessageRequest = { text, attachments: [...attachments] };
     return toMessage(
       await this.api.post<MessageResponse>(
         `${CHAT}/${encodeURIComponent(conversationId)}/messages`,
-        { text },
+        request,
       ),
+      this.apiUrl,
     );
   }
 

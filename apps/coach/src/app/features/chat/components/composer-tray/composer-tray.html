@@ -1,0 +1,62 @@
+@if (images()) {
+  <div class="thumbs">
+    @for (item of items(); track item.id) {
+      <span class="thumb">
+        @if (item.previewUrl; as url) {
+          <img [src]="url" [alt]="item.name" />
+        }
+        <button
+          type="button"
+          class="remove"
+          [attr.aria-label]="'coachApp.conversation.removeAttachment' | t"
+          (click)="removed.emit(item.id)"
+        >
+          <coach-icon name="close" />
+        </button>
+      </span>
+    }
+    @if (canAdd()) {
+      <button
+        type="button"
+        class="add"
+        [attr.aria-label]="'coachApp.conversation.addMore' | t"
+        (click)="added.emit()"
+      >
+        <coach-icon name="plus" />
+      </button>
+    }
+    <span class="count t-base5">{{
+      'coachApp.conversation.attachmentCount' | t: { count: picked().length, max: max() }
+    }}</span>
+  </div>
+} @else {
+  <div class="files">
+    @for (item of items(); track item.id) {
+      <span class="file">
+        <coach-file-badge class="badge t-base7 font-bold" [fileName]="item.name" />
+        <span class="text">
+          <span class="name t-base3 font-semibold">{{ item.name }}</span>
+          <span class="size t-base5">{{ item.size }}</span>
+        </span>
+        <button
+          type="button"
+          class="remove-row"
+          [attr.aria-label]="'coachApp.conversation.removeAttachment' | t"
+          (click)="removed.emit(item.id)"
+        >
+          <coach-icon name="close" />
+        </button>
+      </span>
+    }
+    <span class="file-actions">
+      @if (canAdd()) {
+        <button type="button" class="add-row t-base4 font-semibold" (click)="added.emit()">
+          <coach-icon name="plus" />{{ 'coachApp.conversation.addMore' | t }}
+        </button>
+      }
+      <span class="count t-base5">{{
+        'coachApp.conversation.attachmentCount' | t: { count: picked().length, max: max() }
+      }}</span>
+    </span>
+  </div>
+}

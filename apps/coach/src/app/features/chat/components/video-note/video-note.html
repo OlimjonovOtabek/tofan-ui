@@ -1,0 +1,40 @@
+<button
+  type="button"
+  class="note"
+  [attr.aria-label]="
+    (withSound() ? 'coachApp.conversation.pauseVideoNote' : 'coachApp.conversation.playVideoNote')
+      | t
+  "
+  (click)="toggle()"
+>
+  <video
+    #video
+    class="video"
+    autoplay
+    loop
+    playsinline
+    preload="metadata"
+    [muted]="true"
+    [src]="attachment().url"
+    (timeupdate)="timeChanged()"
+    (ended)="ended()"
+    (error)="failed.emit()"
+  ></video>
+  <svg class="progress-ring" [attr.viewBox]="ring.viewBox" aria-hidden="true">
+    <circle class="track" [attr.cx]="ring.center" [attr.cy]="ring.center" [attr.r]="ring.radius" />
+    <circle
+      class="done"
+      [attr.cx]="ring.center"
+      [attr.cy]="ring.center"
+      [attr.r]="ring.radius"
+      [attr.stroke-dasharray]="ring.length"
+      [attr.stroke-dashoffset]="ringOffset()"
+    />
+  </svg>
+  <span class="clock t-base6 font-medium">
+    @if (!withSound()) {
+      <coach-icon name="volume-off" />
+    }
+    {{ clock() }}
+  </span>
+</button>

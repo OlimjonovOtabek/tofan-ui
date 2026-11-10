@@ -13,15 +13,31 @@
 }
 
 .preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  color: var(--c-text-muted);
+  --icon-size: 16px;
+}
+
+.preview coach-icon {
+  margin-top: 2px;
+}
+
+.preview-text {
   display: -webkit-box;
   overflow: hidden;
-  color: var(--c-text-muted);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
 .preview.is-unread {
   color: var(--c-text);
+  font-weight: 500;
+}
+
+.preview.is-live {
+  color: var(--c-primary);
   font-weight: 500;
 }
 

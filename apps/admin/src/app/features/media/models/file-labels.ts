@@ -1,4 +1,4 @@
-import { FILE_CATEGORIES, FileCategory } from '@shared/models/file-category';
+import { CHAT_FILE_CATEGORIES, FILE_CATEGORIES, FileCategory } from '@shared/models/file-category';
 import { toSelectOptions } from '@shared/models/select-option';
 import { TranslationKey } from '@core/i18n/dictionary';
 
@@ -10,6 +10,17 @@ export const FILE_CATEGORY_LABELS: Record<FileCategory, TranslationKey> = {
   productImage: 'media.categories.productImage',
   document: 'media.categories.document',
   garmentImage: 'media.categories.garmentImage',
+  chatImage: 'media.categories.chatImage',
+  chatVoice: 'media.categories.chatVoice',
+  chatVideoNote: 'media.categories.chatVideoNote',
+  chatFile: 'media.categories.chatFile',
 };
 
-export const FILE_CATEGORY_OPTIONS = toSelectOptions(FILE_CATEGORIES, FILE_CATEGORY_LABELS);
+export const UPLOADABLE_FILE_CATEGORIES = FILE_CATEGORIES.filter(
+  (category) => !CHAT_FILE_CATEGORIES.includes(category),
+);
+
+export const FILE_CATEGORY_OPTIONS = toSelectOptions(
+  UPLOADABLE_FILE_CATEGORIES,
+  FILE_CATEGORY_LABELS,
+);

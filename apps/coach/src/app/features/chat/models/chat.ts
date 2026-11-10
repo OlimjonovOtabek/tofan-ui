@@ -1,5 +1,6 @@
 import { initialsOf } from '@coach/core/clients/client-activity';
 import { daysBetween } from '@coach/core/format/formats';
+import { Attachment, MessageKind, keepFreshUrls } from './chat-attachment';
 
 export const CHAT_FILTERS = ['all', 'unread', 'read'] as const;
 export type ChatFilter = (typeof CHAT_FILTERS)[number];
@@ -16,6 +17,7 @@ export interface Conversation {
   readonly lastSeen: Date | null;
   readonly otherReadUpTo: Date | null;
   readonly lastMessageSenderId: string | null;
+  readonly lastMessageKind: MessageKind | null;
   readonly lastMessageText: string;
   readonly lastMessageOn: Date | null;
   readonly unreadCount: number;
@@ -26,7 +28,9 @@ export interface Message {
   readonly id: string;
   readonly conversationId: string;
   readonly senderUserId: string;
+  readonly kind: MessageKind;
   readonly text: string;
+  readonly attachments: readonly Attachment[];
   readonly sentOn: Date;
 }
 
@@ -70,14 +74,32 @@ export function applyPresence(
   );
 }
 
-export function mergeMessages(incoming: readonly Message[], shown: readonly Message[]): Message[] {
+export function mergeMessages(
+  incoming: readonly Message[],
+  shown: readonly Message[],
+  now: Date,
+): Message[] {
+  const shownById = new Map(shown.map((message) => [message.id, message]));
   const byId = new Map<string, Message>();
-  for (const message of [...incoming, ...shown]) {
+  for (const message of incoming) {
+    if (!byId.has(message.id)) {
+      byId.set(message.id, withKnownUrls(message, shownById.get(message.id), now));
+    }
+  }
+  for (const message of shown) {
     if (!byId.has(message.id)) {
       byId.set(message.id, message);
     }
   }
   return [...byId.values()].sort((a, b) => b.sentOn.getTime() - a.sentOn.getTime());
+}
+
+function withKnownUrls(message: Message, shown: Message | undefined, now: Date): Message {
+  if (shown === undefined || message.attachments.length === 0) {
+    return message;
+  }
+  const attachments = keepFreshUrls(message.attachments, shown.attachments, now);
+  return attachments === message.attachments ? message : { ...message, attachments };
 }
 
 export function isMine(message: Message, otherUserId: string): boolean {

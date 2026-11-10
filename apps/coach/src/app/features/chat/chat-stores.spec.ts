@@ -6,7 +6,8 @@ import { ServiceUnavailableError } from '@shared/models/errors/service-unavailab
 import { ChatListStore } from './chat-list.store';
 import { ConversationStore } from './conversation.store';
 import { Conversation, Message, Presence } from './models/chat';
-import { ChatHub, ReadNotice, TypingNotice } from './services/chat-hub.service';
+import { ActivityNotice } from './models/chat-activity';
+import { ChatHub, ReadNotice } from './services/chat-hub.service';
 import { ChatService } from './services/chat.service';
 
 const conversation = (id: string, unread = 0): Conversation => ({
@@ -18,6 +19,7 @@ const conversation = (id: string, unread = 0): Conversation => ({
   lastSeen: null,
   otherReadUpTo: null,
   lastMessageSenderId: null,
+  lastMessageKind: null,
   lastMessageText: '',
   lastMessageOn: new Date(Number(id.length)),
   unreadCount: unread,
@@ -27,7 +29,9 @@ const message = (id: string, sender: string, minute: number): Message => ({
   id,
   conversationId: 'c1',
   senderUserId: sender,
+  kind: 'text',
   text: id,
+  attachments: [],
   sentOn: new Date(2026, 9, 22, 10, minute),
 });
 
@@ -46,11 +50,11 @@ describe('chat stores', () => {
   const hub = {
     messages: new Subject<Message>(),
     reads: new Subject<ReadNotice>(),
-    typings: new Subject<TypingNotice>(),
+    activities: new Subject<ActivityNotice>(),
     presence: new Subject<Presence>(),
     reconnected: new Subject<void>(),
     start: vi.fn(),
-    typing: vi.fn(),
+    activity: vi.fn(),
   };
 
   beforeEach(() => {
@@ -111,23 +115,6 @@ describe('chat stores', () => {
     expect(store.messages().map((item) => item.id)).toEqual(['m1']);
   });
 
-  it('should send a trimmed message once and keep the text for retry when it fails', async () => {
-    const store = TestBed.inject(ConversationStore);
-    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
-    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
-    await store.open({ conversationId: 'c1' });
-    service.send.mockResolvedValueOnce(message('m9', 'me', 5));
-
-    expect(await store.send('  hello ')).toBe(true);
-    expect(service.send).toHaveBeenCalledWith('c1', 'hello');
-    expect(store.messages()).toHaveLength(1);
-
-    service.send.mockRejectedValueOnce(new Error('offline'));
-    expect(await store.send('again')).toBe(false);
-    expect(notifications.error).toHaveBeenCalledTimes(1);
-    expect(await store.send('   ')).toBe(false);
-  });
-
   it('should show the read-only state without an error when opening is refused for the tier', async () => {
     const store = TestBed.inject(ConversationStore);
     service.open.mockRejectedValue(vipRequired());
@@ -164,7 +151,62 @@ describe('chat stores', () => {
     expect(store.canWrite()).toBe(true);
   });
 
-  it('should switch to read-only and explain it when a send is refused for the tier', async () => {
+  it('should show the other user activity for five seconds and update the read mark', async () => {
+    vi.useFakeTimers();
+    const store = TestBed.inject(ConversationStore);
+    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
+    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
+    await store.open({ conversationId: 'c1' });
+
+    hub.activities.next({ conversationId: 'c1', userId: 'them', activity: 'recordingVoice' });
+    expect(store.activity()).toBe('recordingVoice');
+    hub.activities.next({ conversationId: 'c1', userId: 'someone', activity: 'typing' });
+    expect(store.activity()).toBe('recordingVoice');
+    vi.advanceTimersByTime(5001);
+    expect(store.activity()).toBeNull();
+
+    hub.reads.next({ conversationId: 'c1', readerUserId: 'them', readUpTo: new Date(7) });
+    expect(store.otherReadUpTo()).toEqual(new Date(7));
+    vi.useRealTimers();
+  });
+
+  it('should clear the activity when a message from that user arrives', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
+    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
+    await store.open({ conversationId: 'c1' });
+
+    hub.activities.next({ conversationId: 'c1', userId: 'them', activity: 'typing' });
+    hub.messages.next(message('m1', 'them', 2));
+
+    expect(store.activity()).toBeNull();
+  });
+
+  it('should send activity only for an open writable conversation', async () => {
+    const store = TestBed.inject(ConversationStore);
+    store.notifyActivity('typing');
+    expect(hub.activity).not.toHaveBeenCalled();
+    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
+    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
+    await store.open({ conversationId: 'c1' });
+
+    store.typed();
+
+    expect(hub.activity).toHaveBeenCalledWith('c1', 'typing');
+  });
+
+  it('should show the activity in the list for that conversation only', async () => {
+    const store = TestBed.inject(ChatListStore);
+    service.conversations.mockResolvedValue([conversation('a')]);
+    await store.load();
+
+    hub.activities.next({ conversationId: 'a', userId: 'them', activity: 'uploading' });
+    hub.activities.next({ conversationId: 'a', userId: 'stranger', activity: 'typing' });
+
+    expect(store.activities().get('a')).toBe('uploading');
+  });
+
+  it('should refetch the message page when its media fails to load', async () => {
     const store = TestBed.inject(ConversationStore);
     service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
     service.messages.mockResolvedValue({
@@ -172,46 +214,13 @@ describe('chat stores', () => {
       otherReadUpTo: null,
     });
     await store.open({ conversationId: 'c1' });
-    const refusal = vipRequired();
-    service.send.mockRejectedValueOnce(refusal);
+    service.messages.mockClear();
 
-    const sent = await store.send('hello');
+    store.mediaFailed('m1');
+    store.mediaFailed('m1');
 
-    expect(sent).toBe(false);
-    expect(store.canWrite()).toBe(false);
-    expect(notifications.error).toHaveBeenCalledWith(refusal);
-    expect(store.messages().map((item) => item.id)).toEqual(['m1']);
-    expect(store.loadError()).toBeNull();
-  });
-
-  it('should stay writable when a send fails for another reason', async () => {
-    const store = TestBed.inject(ConversationStore);
-    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
-    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
-    await store.open({ conversationId: 'c1' });
-    service.send.mockRejectedValueOnce(new AccessDeniedError());
-
-    expect(await store.send('hello')).toBe(false);
-
-    expect(store.canWrite()).toBe(true);
-    expect(notifications.error).toHaveBeenCalledTimes(1);
-  });
-
-  it('should show typing for the other user and update the read mark', async () => {
-    vi.useFakeTimers();
-    const store = TestBed.inject(ConversationStore);
-    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
-    service.messages.mockResolvedValue({ messages: [], otherReadUpTo: null });
-    await store.open({ conversationId: 'c1' });
-
-    hub.typings.next({ conversationId: 'c1', userId: 'them' });
-    expect(store.typing()).toBe(true);
-    vi.advanceTimersByTime(5001);
-    expect(store.typing()).toBe(false);
-
-    hub.reads.next({ conversationId: 'c1', readerUserId: 'them', readUpTo: new Date(7) });
-    expect(store.otherReadUpTo()).toEqual(new Date(7));
-    vi.useRealTimers();
+    await vi.waitFor(() => expect(service.messages).toHaveBeenCalledTimes(1));
+    expect(service.messages).toHaveBeenCalledWith('c1', 20, new Date(2026, 9, 22, 10, 1, 0, 1));
   });
 
   it('should load an older page when there is more history', async () => {

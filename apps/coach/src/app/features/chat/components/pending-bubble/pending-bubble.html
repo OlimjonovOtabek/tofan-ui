@@ -1,0 +1,81 @@
+@switch (pending().kind) {
+  @case ('image') {
+    <div class="grid" [class.is-single]="files().length === 1" [style.--columns]="columns()">
+      @for (file of files(); track file.id) {
+        <span class="thumb">
+          @if (file.previewUrl; as url) {
+            <img [src]="url" alt="" />
+          }
+        </span>
+      }
+    </div>
+    @if (pending().caption.trim(); as caption) {
+      <p class="caption t-base2">{{ caption }}</p>
+    }
+  }
+  @case ('file') {
+    <div class="files">
+      @for (file of files(); track file.id) {
+        <span class="file">
+          <coach-file-badge class="badge t-base7 font-bold" [fileName]="file.name" />
+          <span class="name t-base3 font-semibold">{{ file.name }}</span>
+          <span class="size t-base5">{{ file.size }}</span>
+        </span>
+      }
+    </div>
+    @if (pending().caption.trim(); as caption) {
+      <p class="caption t-base2">{{ caption }}</p>
+    }
+  }
+  @case ('voice') {
+    <span class="voice">
+      <span class="mic"><coach-icon name="mic" /></span>
+      <span class="t-base3 font-semibold">{{ duration() }}</span>
+    </span>
+  }
+}
+<div class="status t-base5">
+  @if (failed()) {
+    <coach-icon name="alert-triangle" />
+    <span class="label">{{ 'coachApp.conversation.sendFailed' | t }}</span>
+    <button type="button" class="action" (click)="retried.emit()">
+      <coach-icon name="refresh" />{{ 'coachApp.conversation.retry' | t }}
+    </button>
+    <button
+      type="button"
+      class="action icon-only"
+      [attr.aria-label]="'coachApp.conversation.discard' | t"
+      (click)="discarded.emit()"
+    >
+      <coach-icon name="trash" />
+    </button>
+  } @else {
+    @if (processing()) {
+      <coach-spinner class="spinner" />
+      <span class="label">{{ 'coachApp.conversation.sendingMedia' | t }}</span>
+    } @else {
+      <svg class="progress-ring" viewBox="0 0 48 48" aria-hidden="true">
+        <circle class="track" cx="24" cy="24" [attr.r]="ringRadius" />
+        <circle
+          class="done"
+          cx="24"
+          cy="24"
+          [attr.r]="ringRadius"
+          [attr.stroke-dasharray]="ringLength"
+          [attr.stroke-dashoffset]="ringOffset()"
+        />
+      </svg>
+      <span class="label">{{
+        'coachApp.conversation.sendingProgress' | t: { percent: pending().progress }
+      }}</span>
+    }
+    <button
+      type="button"
+      class="action icon-only"
+      [attr.aria-label]="'coachApp.conversation.cancelUpload' | t"
+      (click)="discarded.emit()"
+    >
+      <coach-icon name="close" />
+    </button>
+  }
+</div>
