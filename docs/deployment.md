@@ -69,7 +69,9 @@ Coach web push uchun Firebase Web app config'i image ichiga ham, repoga ham yozi
 Konteyner ishga tushganda uni env'dan oladi.
 Qiymatlar Firebase console'da: Project settings, General, Your apps, Web app (`firebaseConfig`).
 Stage `tofan-dev` loyihasidan, prod `tofan-68065` loyihasidan olinadi.
-Ular stack env'ida yoki secret store'da saqlanadi, git'ga qo'yilmaydi: GitHub secret scanning API kalitini sizib chiqqan kalit deb belgilaydi.
+Ular serverdagi `/opt/tofan/env/tofan.env` faylida turadi, `stacks/coach.yml` esa ularga `${FIREBASE_*}` orqali murojaat qiladi, shuning uchun stack fayli stage va prod'da bir xil.
+Git'ga qo'yilmaydi: GitHub secret scanning API kalitini sizib chiqqan kalit deb belgilaydi.
+Bu qiymatlar sir emas: browser ularni `/push-config.json` orqali o'qiydi, himoya esa quyidagi kalit cheklovi bilan qilinadi.
 Backend'ning service account kaliti (`firebase-adminsdk-*.json`) panelga hech qachon berilmaydi.
 
 | O'zgaruvchi                    | Qayerdan                                  |
@@ -80,7 +82,17 @@ Backend'ning service account kaliti (`firebase-adminsdk-*.json`) panelga hech qa
 | `FIREBASE_MESSAGING_SENDER_ID` | `firebaseConfig.messagingSenderId`        |
 | `FIREBASE_PUBLIC_VAPID_KEY`    | ixtiyoriy, bo'sh bo'lsa Firebase standart kaliti |
 
-Image'da standart qiymat yo'q: stage va prod stack'larining ikkalasiga ham shu env'larni qo'ying.
+```yaml
+    environment:
+      FIREBASE_PUBLIC_API_KEY: ${FIREBASE_PUBLIC_API_KEY}
+      FIREBASE_APP_ID: ${FIREBASE_APP_ID}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+      FIREBASE_MESSAGING_SENDER_ID: ${FIREBASE_MESSAGING_SENDER_ID}
+      FIREBASE_PUBLIC_VAPID_KEY: ${FIREBASE_PUBLIC_VAPID_KEY}
+```
+
+Image'da standart qiymat yo'q: stage va prod serverlarining ikkalasida ham `tofan.env` ga shu beshta qatorni qo'ying (`FIREBASE_PUBLIC_VAPID_KEY=` bo'sh bo'lishi mumkin).
+Deploy'dan oldin `set -a; . ./env/tofan.env` qilinmasa, qiymatlar bo'sh ketadi va push jimgina o'chadi; deploy'dan keyin `/push-config.json` ni tekshiring.
 `FIREBASE_PROJECT_ID` bo'sh bo'lsa, push o'chadi (`null`) va Coach panelda push sozlamasi ko'rinmaydi.
 Qiymat yetishmasa yoki ruxsat etilmagan belgi bo'lsa, konteyner aniq xabar bilan to'xtaydi.
 Google Cloud console'da har ikki kalitga cheklov qo'yilgan bo'lishi kerak: HTTP referrer (Coach domenlari) va API (Firebase Installations, FCM).
