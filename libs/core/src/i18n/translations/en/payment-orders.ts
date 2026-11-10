@@ -13,7 +13,7 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
   refundedAt: 'Refunded: {date}',
   columns: {
     created: 'Created',
-    user: 'User ID',
+    user: 'User',
     purpose: 'For',
     price: 'Price',
     commission: 'Commission',
@@ -36,12 +36,15 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
     click: 'Click',
   },
   filters: {
+    search: 'Search',
+    searchPlaceholder: 'First name, last name or username',
     status: 'Status',
+    purpose: 'Purpose',
+    trainer: 'Trainer',
+    provider: 'Payment system',
+    created: 'Created',
+    createdPlaceholder: 'Date range',
     all: 'All',
-    userId: 'User ID',
-    referenceId: 'Trainer or tariff ID',
-    idInvalid: 'Enter a full UUID.',
-    idPlaceholder: 'UUID',
   },
   create: {
     open: 'Create order',

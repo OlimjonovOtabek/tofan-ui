@@ -3,8 +3,7 @@ import { PaymentOrderFilter } from '../../models/payment-order-filter';
 import { PaymentOrderFilters } from './payment-order-filters';
 
 const SEARCH_DEBOUNCE_MS = 400;
-const USER_ID = '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b';
-const REFERENCE_ID = '452bcf11-d084-4224-a4d2-54a589dfc707';
+const TRAINER_ID = '452bcf11-d084-4224-a4d2-54a589dfc707';
 
 describe('PaymentOrderFilters', () => {
   beforeEach(() => {
@@ -38,30 +37,41 @@ describe('PaymentOrderFilters', () => {
     return { fixture, emitted, type };
   }
 
-  it('should emit both trimmed ids once when typing settles', () => {
+  it('should emit the trimmed search once when typing settles', () => {
     const { emitted, type } = render();
 
-    type('#paymentOrderUserId', ` ${USER_ID} `);
-    type('#paymentOrderReferenceId', REFERENCE_ID);
+    type('#paymentOrderSearch', ' otab');
+    type('#paymentOrderSearch', ' otabek ');
     vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
 
-    expect(emitted).toEqual([{ userId: USER_ID, referenceId: REFERENCE_ID }]);
+    expect(emitted).toEqual([{ search: 'otabek' }]);
   });
 
-  it('should not emit and should say so when an id is not a UUID yet', () => {
-    const { fixture, emitted, type } = render();
+  it('should not emit again when only spaces are added to the search', () => {
+    const { emitted, type } = render();
 
-    type('#paymentOrderReferenceId', 'not-a-uuid');
+    type('#paymentOrderSearch', 'otabek');
     vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
+    type('#paymentOrderSearch', 'otabek  ');
+    vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
+
+    expect(emitted).toEqual([{ search: 'otabek' }]);
+  });
+
+  it('should list the trainers by name when trainers are given', () => {
+    const { fixture } = render();
+    fixture.componentRef.setInput('trainers', [
+      { id: TRAINER_ID, displayName: 'Stage Coach', standardPrice: 200000 },
+    ]);
     fixture.detectChanges();
 
-    expect(emitted).toEqual([]);
-    expect((fixture.nativeElement as HTMLElement).textContent).toContain("To'liq UUID kiriting.");
+    const trainer = (fixture.nativeElement as HTMLElement).querySelector('#paymentOrderTrainer');
+    expect(trainer).not.toBeNull();
   });
 
   it('should emit an empty filter when the clear button is pressed', () => {
     const { fixture, emitted, type } = render();
-    type('#paymentOrderUserId', USER_ID);
+    type('#paymentOrderSearch', 'otabek');
     vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
 
     const clear = Array.from(
@@ -71,6 +81,6 @@ describe('PaymentOrderFilters', () => {
     TestBed.tick();
     vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
 
-    expect(emitted).toEqual([{ userId: USER_ID }, {}]);
+    expect(emitted).toEqual([{ search: 'otabek' }, {}]);
   });
 });

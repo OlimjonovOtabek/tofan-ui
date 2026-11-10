@@ -13,12 +13,17 @@ import { CatalogHeader } from '@shared/components/catalog-header/catalog-header'
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
 import { SoldierSearchStore } from '@shared/components/soldier-field/soldier-search.store';
 import { PageRequest } from '@shared/models/page';
+import { PersonName, toPersonName } from '@shared/models/person-name';
 import { TIER_LABELS } from '@shared/models/tier-labels';
 import { PaymentOrderCreateDialog } from '../../components/payment-order-create-dialog/payment-order-create-dialog';
 import { PaymentOrderFilters } from '../../components/payment-order-filters/payment-order-filters';
 import { PaymentOrder } from '../../models/payment-order';
 import { PaymentOrderDraft } from '../../models/payment-order-draft';
 import { PaymentOrderFilter } from '../../models/payment-order-filter';
+import {
+  PaymentOrderReference,
+  toPaymentOrderReference,
+} from '../../models/payment-order-reference';
 import {
   PAYMENT_ORDER_STATUS_LABELS,
   PAYMENT_ORDER_STATUS_SEVERITIES,
@@ -33,9 +38,10 @@ const MONEY_FRACTION_DIGITS = 2;
 interface PaymentOrderRow {
   readonly id: string;
   readonly userId: string;
-  readonly referenceId: string;
+  readonly user: PersonName;
   readonly createdAt: string;
   readonly purpose: string;
+  readonly reference: PaymentOrderReference | null;
   readonly price: string;
   readonly commission: string;
   readonly tax: string;
@@ -72,6 +78,10 @@ export class PaymentOrdersPage {
   protected readonly soldiersPath = AppPaths.soldiers;
   protected readonly createVisible = signal(false);
 
+  constructor() {
+    void this.store.loadTrainers();
+  }
+
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'createdOnUtc', header: this.text('paymentOrders.columns.created'), sortable: true },
     { field: 'userId', header: this.text('paymentOrders.columns.user') },
@@ -106,7 +116,9 @@ export class PaymentOrdersPage {
 
   protected openCreate(): void {
     this.createVisible.set(true);
-    void this.store.loadTrainers();
+    if (this.store.trainersFailed()) {
+      void this.store.loadTrainers();
+    }
   }
 
   protected async create(draft: PaymentOrderDraft): Promise<void> {
@@ -119,9 +131,10 @@ export class PaymentOrdersPage {
     return {
       id: order.id,
       userId: order.userId,
-      referenceId: order.referenceId,
+      user: toPersonName(order.userFullName, order.userName, order.userId),
       createdAt: this.date(order.createdAt),
       purpose: this.purposeLabel(order),
+      reference: toPaymentOrderReference(order),
       price: this.money(order.price),
       commission: this.money(order.commissionAmount),
       tax: this.money(order.taxAmount),

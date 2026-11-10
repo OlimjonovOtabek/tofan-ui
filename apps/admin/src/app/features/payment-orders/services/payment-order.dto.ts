@@ -34,6 +34,9 @@ export interface PaymentOrderResponse {
   paidOnUtc: string | null;
   refundedOnUtc: string | null;
   tier: TierDto | null;
+  userFullName: string | null;
+  userName: string | null;
+  referenceName: string | null;
 }
 
 export interface CreatePaymentOrderRequest {
