@@ -1,5 +1,13 @@
 import { Injectable, signal } from '@angular/core';
-import { ConfirmSheet, PromptSheet, SheetAction, SheetChoice, SheetRequest } from './sheet-request';
+import {
+  ConfirmSheet,
+  PairSheet,
+  PromptSheet,
+  SheetAction,
+  SheetChoice,
+  SheetRequest,
+  TextPair,
+} from './sheet-request';
 
 @Injectable({ providedIn: 'root' })
 export class Sheets {
@@ -23,6 +31,10 @@ export class Sheets {
 
   prompt(sheet: PromptSheet): Promise<string | null> {
     return new Promise((resolve) => this.show({ kind: 'prompt', sheet, resolve }));
+  }
+
+  pair(sheet: PairSheet): Promise<TextPair | null> {
+    return new Promise((resolve) => this.show({ kind: 'pair', sheet, resolve }));
   }
 
   dismiss(): void {
@@ -53,6 +65,7 @@ function resolveDismissed(request: SheetRequest | null): void {
       request.resolve(null);
       break;
     case 'prompt':
+    case 'pair':
       request.resolve(null);
       break;
   }
