@@ -5,6 +5,7 @@ import { ChatComposerStore } from './chat-composer.store';
 import { ChatOutboxStore } from './chat-outbox.store';
 import { ConversationStore } from './conversation.store';
 import { PreviewUrls } from './services/preview-urls.service';
+import { VideoNoteRecordingStore } from './video-note-recording.store';
 import { VoiceRecordingStore } from './voice-recording.store';
 
 const file = (name: string, size = 10): File => new File(['x'.repeat(size)], name);
@@ -15,6 +16,14 @@ describe('ChatComposerStore', () => {
   const previews = { create: vi.fn((picked: File) => `blob:${picked.name}`), revoke: vi.fn() };
   const notifications = { error: vi.fn(), failure: vi.fn() };
   const voice = { recording: signal(null), start: vi.fn(), finish: vi.fn(), cancel: vi.fn() };
+  const videoNotes = {
+    recording: signal(null),
+    stream: signal(null),
+    maxMs: 60_000,
+    start: vi.fn(),
+    finish: vi.fn(),
+    cancel: vi.fn(),
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -27,6 +36,7 @@ describe('ChatComposerStore', () => {
         { provide: PreviewUrls, useValue: previews },
         { provide: NotificationService, useValue: notifications },
         { provide: VoiceRecordingStore, useValue: voice },
+        { provide: VideoNoteRecordingStore, useValue: videoNotes },
       ],
     });
   });

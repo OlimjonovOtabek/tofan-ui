@@ -27,6 +27,11 @@
       <p class="caption t-base2">{{ caption }}</p>
     }
   }
+  @case ('videoNote') {
+    @if (files()[0]?.previewUrl; as url) {
+      <video class="note-preview" [src]="url" autoplay loop playsinline [muted]="true"></video>
+    }
+  }
   @case ('voice') {
     <span class="voice">
       <span class="mic"><coach-icon name="mic" /></span>
