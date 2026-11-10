@@ -21,6 +21,8 @@ export interface GarmentResponse {
   ownerId: string | null;
   activatedAt: string | null;
   expiresAt: string | null;
+  ownerFullName?: string | null;
+  ownerUserName?: string | null;
 }
 
 export interface CreateGarmentRequest {

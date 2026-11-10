@@ -1,8 +1,6 @@
 import { Drop } from '../../models/drop';
 import { emptyGarmentFilterValue, toGarmentFilter } from './garment-filter.form';
 
-const OWNER_ID = '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b';
-
 const drops = [
   new Drop('d1', 'Drop 1', 500, 35, new Date('2026-10-11T09:00:00Z'), [
     { id: 'v1', name: 'Oversize', color: '#1A3C6E', imageUrl: null },
@@ -23,7 +21,7 @@ describe('toGarmentFilter', () => {
         {
           serialNumber: ' 01K7 ',
           status: 'inactive',
-          ownerId: OWNER_ID,
+          ownerSearch: ' Otabek ',
           dropId: 'd1',
           variantId: 'v1',
           size: '3XL',
@@ -36,7 +34,7 @@ describe('toGarmentFilter', () => {
     ).toEqual({
       serialNumber: '01K7',
       status: 'inactive',
-      ownerId: OWNER_ID,
+      ownerSearch: 'Otabek',
       dropId: 'd1',
       variantId: 'v1',
       size: '3XL',
@@ -59,8 +57,8 @@ describe('toGarmentFilter', () => {
     });
   });
 
-  it('should leave the owner out when the id is not a UUID', () => {
-    expect(toGarmentFilter({ ...emptyGarmentFilterValue(), ownerId: 'not-a-uuid' }, drops)).toEqual(
+  it('should leave the owner search out when it only holds spaces', () => {
+    expect(toGarmentFilter({ ...emptyGarmentFilterValue(), ownerSearch: '   ' }, drops)).toEqual(
       {},
     );
   });

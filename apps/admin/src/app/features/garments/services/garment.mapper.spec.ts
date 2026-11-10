@@ -24,6 +24,8 @@ const response: GarmentResponse = {
   ownerId: 'u1',
   activatedAt: '2026-09-21T10:12:00Z',
   expiresAt: '2026-11-21T10:12:00Z',
+  ownerFullName: 'Otabek Olimjonov',
+  ownerUserName: 'otabek',
 };
 
 const draft: GarmentDraft = {
@@ -53,6 +55,8 @@ describe('garment mapper', () => {
     expect(garment.manufacturedAt).toEqual(new Date(2026, 7, 14));
     expect(garment.expiresAt).toEqual(new Date('2026-11-21T10:12:00Z'));
     expect(garment.dropName).toBe('Drop 1');
+    expect(garment.ownerFullName).toBe('Otabek Olimjonov');
+    expect(garment.ownerUserName).toBe('otabek');
     expect(garment.editionNumber).toBe(349);
     expect(garment.variantName).toBe('Oversize');
   });
@@ -64,9 +68,12 @@ describe('garment mapper', () => {
       ownerId: null,
       activatedAt: null,
       expiresAt: null,
+      ownerFullName: null,
+      ownerUserName: null,
     });
 
     expect(garment.isClaimed()).toBe(false);
+    expect(garment.ownerFullName).toBeNull();
     expect(garment.activatedAt).toBeNull();
     expect(garment.expiresAt).toBeNull();
   });

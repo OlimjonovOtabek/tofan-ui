@@ -73,7 +73,7 @@ function toFilterQuery(filter: GarmentFilter): Query {
   return {
     SerialNumber: filter.serialNumber,
     Status: filter.status === undefined ? undefined : garmentStatuses.toApi(filter.status),
-    OwnerId: filter.ownerId,
+    OwnerSearch: filter.ownerSearch,
     DropId: filter.dropId,
     VariantId: filter.variantId,
     Size: filter.size,

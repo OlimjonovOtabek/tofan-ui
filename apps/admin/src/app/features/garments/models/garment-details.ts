@@ -21,9 +21,18 @@ export function garmentDetails(garment: Garment): readonly GarmentDetail[] {
     { label: 'garments.fields.manufacturedAt', value: garment.manufacturedAt },
     { label: 'garments.fields.activatedAt', value: garment.activatedAt },
     { label: 'garments.fields.expiresAt', value: garment.expiresAt },
+    { label: 'garments.fields.owner', value: ownerLabel(garment) },
     { label: 'garments.fields.ownerId', value: garment.ownerId, code: true },
     { label: 'garments.fields.id', value: garment.id, code: true },
   ];
+}
+
+function ownerLabel(garment: Garment): string | null {
+  const owner = garment.owner();
+  if (owner === null || owner.isIdFallback) {
+    return null;
+  }
+  return owner.secondary === null ? owner.primary : `${owner.primary} (${owner.secondary})`;
 }
 
 function textOrNull(value: string): string | null {

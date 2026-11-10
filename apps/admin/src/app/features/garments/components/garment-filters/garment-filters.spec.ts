@@ -3,7 +3,6 @@ import { GarmentFilter } from '../../models/garment-filter';
 import { GarmentFilters } from './garment-filters';
 
 const SEARCH_DEBOUNCE_MS = 400;
-const OWNER_ID = '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b';
 
 describe('GarmentFilters', () => {
   beforeEach(() => {
@@ -41,14 +40,12 @@ describe('GarmentFilters', () => {
     expect(emitted).toEqual([{ serialNumber: '01K7' }]);
   });
 
-  it('should leave the owner out when the id is not a UUID', () => {
+  it('should search the owner by name when an owner name is typed', () => {
     const { emitted, type } = render();
 
-    type('#filterOwnerId', 'not-a-uuid');
-    vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
-    type('#filterOwnerId', OWNER_ID);
+    type('#filterOwnerSearch', ' otabek ');
     vi.advanceTimersByTime(SEARCH_DEBOUNCE_MS);
 
-    expect(emitted).toEqual([{}, { ownerId: OWNER_ID }]);
+    expect(emitted).toEqual([{ ownerSearch: 'otabek' }]);
   });
 });

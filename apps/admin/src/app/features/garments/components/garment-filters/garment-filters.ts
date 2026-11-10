@@ -12,7 +12,6 @@ import { Translator } from '@core/i18n/translator';
 import { SelectOption } from '@shared/models/select-option';
 import { NumberField } from '@shared/components/number-field/number-field';
 import { SelectField } from '@shared/components/select-field/select-field';
-import { isUuid } from '@shared/utils/identifiers';
 import {
   CLAIM_STATE_OPTIONS,
   GarmentFilterValue,
@@ -53,11 +52,6 @@ export class GarmentFilters {
     toObservable(this.value)
       .pipe(skip(1), debounceTime(SEARCH_DEBOUNCE_MS), takeUntilDestroyed())
       .subscribe((value) => this.filterChange.emit(toGarmentFilter(value, this.drops())));
-  }
-
-  protected ownerIdInvalid(): boolean {
-    const ownerId = this.value().ownerId.trim();
-    return ownerId.length > 0 && !isUuid(ownerId);
   }
 
   protected reset(): void {
