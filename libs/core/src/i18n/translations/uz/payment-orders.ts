@@ -11,7 +11,7 @@ export const PAYMENT_ORDERS_UZ = {
   refundedAt: 'Qaytarilgan: {date}',
   columns: {
     created: 'Yaratilgan',
-    user: 'Foydalanuvchi ID',
+    user: 'Foydalanuvchi',
     purpose: 'Nima uchun',
     price: 'Narx',
     commission: 'Komissiya',
@@ -34,12 +34,15 @@ export const PAYMENT_ORDERS_UZ = {
     click: 'Click',
   },
   filters: {
+    search: 'Qidirish',
+    searchPlaceholder: 'Ism, familiya yoki username',
     status: 'Holati',
+    purpose: 'Nima uchun',
+    trainer: 'Trener',
+    provider: "To'lov tizimi",
+    created: 'Yaratilgan sana',
+    createdPlaceholder: "Sanalar oralig'i",
     all: 'Hammasi',
-    userId: 'Foydalanuvchi ID',
-    referenceId: 'Trener yoki tarif ID',
-    idInvalid: "To'liq UUID kiriting.",
-    idPlaceholder: 'UUID',
   },
   create: {
     open: 'Buyurtma ochish',

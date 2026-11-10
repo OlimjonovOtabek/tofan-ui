@@ -19,6 +19,9 @@ function subscription(
     'a1',
     new Date('2026-09-10T12:00:00Z'),
     tier,
+    null,
+    null,
+    false,
   );
 }
 
@@ -58,5 +61,29 @@ describe('TrainerSubscription', () => {
 
   it('should offer standard when the subscription is vip', () => {
     expect(subscription('2026-11-10T12:00:00Z', null, 'vip').targetTier()).toBe('standard');
+  });
+
+  it('should say the subscription was paid when it was opened by a payment', () => {
+    const paid = new TrainerSubscription(
+      's2',
+      't1',
+      'Jasur Karimov',
+      'u1',
+      new Date('2026-09-10T12:00:00Z'),
+      new Date('2026-12-10T12:00:00Z'),
+      null,
+      'u1',
+      new Date('2026-09-10T12:00:00Z'),
+      'standard',
+      'Otabek Olimjonov',
+      'otabek',
+      true,
+    );
+
+    expect(paid.source()).toBe('paid');
+  });
+
+  it('should say the subscription was granted when an admin opened it', () => {
+    expect(subscription('2026-12-10T12:00:00Z', null).source()).toBe('granted');
   });
 });

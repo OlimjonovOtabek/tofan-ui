@@ -8,11 +8,12 @@ import {
 } from './models/taken-trainer-account';
 import { TrainerAccount } from './models/trainer-account';
 import { TrainerDraft, createTrainerDraft } from './models/trainer-draft';
+import { TrainerListFilter } from './models/trainer-list-filter';
 import { TrainerEditDraft, createTrainerEditDraft } from './models/trainer-edit-draft';
 import { TrainerAccountsService } from './services/trainer-accounts.service';
 import { TrainerSubscriptionsService } from './services/trainer-subscriptions.service';
 import { TrainersService } from './services/trainers.service';
-import { Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
+import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 
@@ -25,6 +26,7 @@ export class TrainersStore {
 
   private readonly page = signal<Page<Trainer>>(emptyPage<Trainer>());
   private readonly currentRequest = signal<PageRequest>(firstPage());
+  private readonly currentFilter = signal<TrainerListFilter>({});
 
   readonly trainers = computed(() => this.page().items);
   readonly totalCount = computed(() => this.page().totalCount);
@@ -40,13 +42,18 @@ export class TrainersStore {
     this.loading.set(true);
     this.loadError.set(null);
     try {
-      this.page.set(await this.trainersService.list(request));
+      this.page.set(await this.trainersService.list(request, this.currentFilter()));
     } catch (error) {
       this.page.set(emptyPage<Trainer>());
       this.loadError.set(toErrorMessage(error));
     } finally {
       this.loading.set(false);
     }
+  }
+
+  async applyFilter(filter: TrainerListFilter): Promise<void> {
+    this.currentFilter.set(filter);
+    await this.load(firstPage(this.currentRequest().rows || DEFAULT_PAGE_SIZE));
   }
 
   async create(draft: TrainerDraft): Promise<boolean> {

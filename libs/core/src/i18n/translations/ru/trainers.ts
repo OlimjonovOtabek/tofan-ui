@@ -23,8 +23,8 @@ export const TRAINERS_RU = {
     priceMissing: 'Не задана',
     columns: {
       trainer: 'Тренер',
-      slug: 'Ссылка',
-      userId: 'ID пользователя',
+      account: 'Аккаунт',
+      subscribers: 'Активные подписчики',
       monthlyPrice: 'Цена в месяц',
       vipPrice: 'Цена VIP',
       status: 'Статус',
@@ -47,11 +47,16 @@ export const TRAINERS_RU = {
     endedOn: 'Завершена {date}',
     columns: {
       trainer: 'Тренер',
-      userId: 'Пользователь',
+      subscriber: 'Подписчик',
       startsOn: 'Начало',
       endsOn: 'Окончание',
       status: 'Статус',
+      source: 'Как выдана',
       tier: 'Уровень',
+    },
+    source: {
+      paid: 'Оплачена',
+      granted: 'Выдана админом',
     },
     actions: {
       end: 'Завершить подписку',
@@ -65,12 +70,19 @@ export const TRAINERS_RU = {
     confirmMakeStandard:
       'Перевести подписку на тренера «{name}» на уровень Стандарт? Срок не изменится, пользователь не сможет писать тренеру в чате.',
   },
-  filters: {
-    trainer: 'Тренер',
-    userId: 'ID пользователя',
+  listFilters: {
+    search: 'Поиск',
+    searchPlaceholder: 'Имя тренера или ссылка',
     status: 'Статус',
+  },
+  filters: {
+    search: 'Поиск',
+    searchPlaceholder: 'Имя или логин подписчика',
+    trainer: 'Тренер',
+    status: 'Статус',
+    tier: 'Уровень',
+    endingSoon: 'Заканчивается за 7 дней',
     all: 'Все',
-    userIdInvalid: 'Введите UUID.',
   },
   form: {
     header: 'Добавить тренера',

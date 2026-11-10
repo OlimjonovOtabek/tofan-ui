@@ -28,8 +28,9 @@ The trainer panel (`/coach/*`) is not part of this app.
     sells Standard only)
   - `POST /admin/trainers/{id}/publish`, `POST /admin/trainers/{id}/unpublish`
   - `POST /admin/trainers/{id}/subscriptions` (`userId`, `months` 1–12) → `Guid`
-  - `GET /admin/trainer-subscriptions` (paging, sort, `TrainerId`, `UserId`, `IsActive`); each row carries
-    `tier` (`1` Standard, `2` VIP)
+  - `GET /admin/trainer-subscriptions` (paging, sort, `TrainerId`, `UserId`, `IsActive`, `Search`, `Tier`,
+    `EndsFrom`, `EndsTo`); each row carries `tier` (`1` Standard, `2` VIP), `userFullName`, `userName` and
+    `isPaid` (`true` opened by a payment, `false` granted by an admin)
   - `POST /admin/trainer-subscriptions/{id}/end`
   - `PUT /admin/trainer-subscriptions/{id}/tier` (`tier` `1` or `2`): changes the Tier of an active subscription and leaves its dates alone
   - `GET /admin/soldiers` (`Search`, 10 rows): only for the soldier autocomplete in the grant dialog
@@ -87,7 +88,17 @@ The trainer panel (`/coach/*`) is not part of this app.
 - Subscription status is derived: active when it was not ended and `endsOn` is later than now.
   The backend has one `endedOnUtc` for admin and expiry job, so "ended by admin" cannot be shown.
 - The menu item uses a subset route match so it stays active on every tab.
-- The subscriptions table has a "Tier" column (tag: Standard grey, VIP amber).
+- The subscriptions table has a "Tier" column (tag: Standard grey, VIP amber) and a "How opened" column
+  from `TrainerSubscription.source()` (paid or granted by an admin).
+- The subscriber column shows the full name with the username under it (link to the Soldier card), or the
+  short user id when the subscriber has no profile.
+- Subscription filters: search (subscriber name or username), trainer, status, Tier and "Ends within 7 days".
+  `toSubscriptionQuery(filter, now)` sends that toggle as `IsActive=true`, `EndsFrom=now`, `EndsTo=now + 7 days`.
+- `GET /admin/trainers` returns `TrainerSummaryResponse` (API v9.20) with `userName`, `email`, `phoneNumber` and
+  `activeSubscribersCount`, and takes `Search` (`displayName` or `slug` only) and `IsPublished`.
+  The trainers table shows them in an "Account" column (username, email, phone) and a sortable "Active subscribers"
+  column; the slug moved under the trainer name. `components/trainer-list-filters` holds the search and the publish
+  state. The account fields are `null` when the account has no `trainer` role; the column then shows the short user id.
   An active subscription gets one icon action next to "End subscription".
   It reads "VIP qilish" on a Standard subscription and "Standard qilish" on a VIP one (`TrainerSubscription.targetTier()`).
   The page asks `ConfirmDialogService` first.
@@ -141,7 +152,9 @@ The trainer panel (`/coach/*`) is not part of this app.
   bio, photo, email, phone or price keeps it. `trainers.service.spec.ts` proves the key is on the wire as `null` and as
   a number. `app-number-field` emits `null` when the admin clears the input, which must stay `null` and never become 0.
 - A trainer without a price stays a draft: only the trainer can set the price (`PUT /coach/profile`).
-- The subscriptions list has no Tier filter (the backend has no query parameter for it).
+- Do not sort by the subscriber names or by the trainer account fields: `SortField` with `userFullName`, `userName`,
+  `email` or `phoneNumber` is ignored and the list falls back to `id`. `isPaid` and `activeSubscribersCount` sort.
+- `isPaid` replaces the requested admin name: the panel shows whether a subscription was paid, not which admin granted it.
 - A backend without Tiers (the API v9.1 proxy before the release day) sends no `tier`.
   The mapper reads that as Standard so the table still loads.
   The tier action only works against the stage API.

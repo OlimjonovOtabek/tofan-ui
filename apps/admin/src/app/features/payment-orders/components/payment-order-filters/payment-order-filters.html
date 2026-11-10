@@ -1,4 +1,17 @@
 <div class="mb-4 flex flex-wrap items-start gap-3">
+  <div class="flex min-w-64 flex-1 flex-col gap-1">
+    <label for="paymentOrderSearch" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.search' | t
+    }}</label>
+    <input
+      pInputText
+      id="paymentOrderSearch"
+      type="search"
+      [formField]="form.search"
+      [placeholder]="'paymentOrders.filters.searchPlaceholder' | t"
+    />
+  </div>
+
   <div class="flex min-w-40 flex-col gap-1">
     <label for="paymentOrderStatus" class="text-muted-color text-sm">{{
       'paymentOrders.filters.status' | t
@@ -12,36 +25,55 @@
     />
   </div>
 
-  <div class="flex min-w-72 flex-1 flex-col gap-1">
-    <label for="paymentOrderUserId" class="text-muted-color text-sm">{{
-      'paymentOrders.filters.userId' | t
+  <div class="flex min-w-44 flex-col gap-1">
+    <label for="paymentOrderPurpose" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.purpose' | t
     }}</label>
-    <input
-      pInputText
-      id="paymentOrderUserId"
-      type="search"
-      [formField]="form.userId"
-      [placeholder]="'paymentOrders.filters.idPlaceholder' | t"
+    <app-select-field
+      inputId="paymentOrderPurpose"
+      [formField]="form.purpose"
+      [options]="purposeOptions()"
+      [placeholder]="'paymentOrders.filters.all' | t"
+      [showClear]="true"
     />
-    @if (userIdInvalid()) {
-      <small class="text-red-500">{{ 'paymentOrders.filters.idInvalid' | t }}</small>
-    }
   </div>
 
-  <div class="flex min-w-72 flex-1 flex-col gap-1">
-    <label for="paymentOrderReferenceId" class="text-muted-color text-sm">{{
-      'paymentOrders.filters.referenceId' | t
+  <div class="flex min-w-44 flex-col gap-1">
+    <label for="paymentOrderTrainer" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.trainer' | t
     }}</label>
-    <input
-      pInputText
-      id="paymentOrderReferenceId"
-      type="search"
-      [formField]="form.referenceId"
-      [placeholder]="'paymentOrders.filters.idPlaceholder' | t"
+    <app-select-field
+      inputId="paymentOrderTrainer"
+      [formField]="form.trainerId"
+      [options]="trainerOptions()"
+      [placeholder]="'paymentOrders.filters.all' | t"
+      [showClear]="true"
     />
-    @if (referenceIdInvalid()) {
-      <small class="text-red-500">{{ 'paymentOrders.filters.idInvalid' | t }}</small>
-    }
+  </div>
+
+  <div class="flex min-w-36 flex-col gap-1">
+    <label for="paymentOrderProvider" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.provider' | t
+    }}</label>
+    <app-select-field
+      inputId="paymentOrderProvider"
+      [formField]="form.paidWith"
+      [options]="providerOptions()"
+      [placeholder]="'paymentOrders.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex min-w-56 flex-col gap-1">
+    <label for="paymentOrderCreated" class="text-muted-color text-sm">{{
+      'paymentOrders.filters.created' | t
+    }}</label>
+    <app-date-range-field
+      inputId="paymentOrderCreated"
+      [formField]="form.created"
+      [maxDate]="today"
+      [placeholder]="'paymentOrders.filters.createdPlaceholder' | t"
+    />
   </div>
 
   <p-button

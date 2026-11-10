@@ -62,6 +62,8 @@ export enum ExerciseGenderDto {
 
 export const muscleGroups = enumMap<MuscleGroup, MuscleGroupDto>(MuscleGroupDto);
 export const equipmentTypes = enumMap<EquipmentType, EquipmentTypeDto>(EquipmentTypeDto);
-export const difficulties = enumMap<ExerciseDifficulty, ExerciseDifficultyDto>(ExerciseDifficultyDto);
+export const difficulties = enumMap<ExerciseDifficulty, ExerciseDifficultyDto>(
+  ExerciseDifficultyDto,
+);
 export const exerciseTypes = enumMap<ExerciseType, ExerciseTypeDto>(ExerciseTypeDto);
 export const genders = enumMap<ExerciseGender, ExerciseGenderDto>(ExerciseGenderDto);

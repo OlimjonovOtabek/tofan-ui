@@ -1,6 +1,5 @@
 import { TranslationKey } from '@core/i18n/dictionary';
 import { SelectOption, toSelectOptions } from '@shared/models/select-option';
-import { isUuid } from '@shared/utils/identifiers';
 import { Drop } from '../../models/drop';
 import { GarmentSize } from '../../models/garment-catalog';
 import { GarmentFilter } from '../../models/garment-filter';
@@ -18,7 +17,7 @@ export const CLAIM_STATE_OPTIONS: readonly SelectOption<ClaimState, TranslationK
 export interface GarmentFilterValue {
   serialNumber: string;
   status: GarmentStatus | null;
-  ownerId: string;
+  ownerSearch: string;
   dropId: string | null;
   variantId: string | null;
   size: GarmentSize | null;
@@ -31,7 +30,7 @@ export function emptyGarmentFilterValue(): GarmentFilterValue {
   return {
     serialNumber: '',
     status: null,
-    ownerId: '',
+    ownerSearch: '',
     dropId: null,
     variantId: null,
     size: null,
@@ -43,7 +42,7 @@ export function emptyGarmentFilterValue(): GarmentFilterValue {
 
 export function toGarmentFilter(value: GarmentFilterValue, drops: readonly Drop[]): GarmentFilter {
   const serialNumber = value.serialNumber.trim();
-  const ownerId = value.ownerId.trim();
+  const ownerSearch = value.ownerSearch.trim();
   const drop = drops.find((candidate) => candidate.id === value.dropId) ?? null;
   const variantId =
     drop !== null && value.variantId !== null && drop.variant(value.variantId) !== null
@@ -52,7 +51,7 @@ export function toGarmentFilter(value: GarmentFilterValue, drops: readonly Drop[
   return {
     ...(serialNumber.length === 0 ? {} : { serialNumber }),
     ...(value.status === null ? {} : { status: value.status }),
-    ...(isUuid(ownerId) ? { ownerId } : {}),
+    ...(ownerSearch.length === 0 ? {} : { ownerSearch }),
     ...(value.dropId === null ? {} : { dropId: value.dropId }),
     ...(variantId === null ? {} : { variantId }),
     ...(value.size === null ? {} : { size: value.size }),

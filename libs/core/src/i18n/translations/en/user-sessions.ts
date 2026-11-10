@@ -17,10 +17,25 @@ export const USER_SESSIONS_EN: Dictionary['userSessions'] = {
   sendPushShort: 'Send push',
   revokedAt: 'Signed out: {date}',
   columns: {
-    userId: 'User ID',
+    user: 'User',
+    device: 'Device',
     loggedIn: 'Signed in',
     expires: 'Token expires',
     status: 'Status',
+  },
+  filters: {
+    search: 'Search',
+    searchPlaceholder: 'Username',
+    status: 'Status',
+    all: 'All',
+    loggedIn: 'Signed in',
+    loggedInPlaceholder: 'Date range',
+  },
+  device: {
+    app: 'Tofan app',
+    browser: 'Browser',
+    other: 'Other client',
+    unknown: 'No data',
   },
   status: {
     unexpired: 'Not expired',

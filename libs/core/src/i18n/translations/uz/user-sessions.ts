@@ -15,10 +15,25 @@ export const USER_SESSIONS_UZ = {
   sendPushShort: 'Push yuborish',
   revokedAt: 'Chiqilgan: {date}',
   columns: {
-    userId: 'Foydalanuvchi ID',
+    user: 'Foydalanuvchi',
+    device: 'Qurilma',
     loggedIn: 'Kirgan vaqti',
     expires: 'Token muddati',
     status: 'Holati',
+  },
+  filters: {
+    search: 'Qidirish',
+    searchPlaceholder: 'Username',
+    status: 'Holati',
+    all: 'Hammasi',
+    loggedIn: 'Kirgan sana',
+    loggedInPlaceholder: "Sanalar oralig'i",
+  },
+  device: {
+    app: 'Tofan ilovasi',
+    browser: 'Brauzer',
+    other: 'Boshqa mijoz',
+    unknown: "Ma'lumot yo'q",
   },
   status: {
     unexpired: 'Muddati tugamagan',

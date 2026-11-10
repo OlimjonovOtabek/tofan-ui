@@ -1,7 +1,7 @@
 import { Query } from '@core/http/api.dto';
 import { Tier } from '@shared/models/tier';
 import { tiers } from '@shared/models/tier.dto';
-import { SubscriptionFilter } from '../models/subscription-filter';
+import { SubscriptionFilter, endingSoonWindow } from '../models/subscription-filter';
 import { SubscriptionGrant } from '../models/subscription-grant';
 import { TrainerSubscription } from '../models/trainer-subscription';
 import {
@@ -24,6 +24,9 @@ export function toTrainerSubscription(response: TrainerSubscriptionResponse): Tr
     response.grantedBy,
     new Date(response.createdOnUtc),
     tiers.toDomainOrNull(response.tier) ?? 'standard',
+    response.userFullName ?? null,
+    response.userName ?? null,
+    response.isPaid ?? false,
   );
 }
 
@@ -35,10 +38,18 @@ export function toChangeTierRequest(tier: Tier): ChangeTrainerSubscriptionTierRe
   return { tier: tiers.toApi(tier) };
 }
 
-export function toSubscriptionQuery(filter: SubscriptionFilter): Query {
+export function toSubscriptionQuery(filter: SubscriptionFilter, now: Date): Query {
+  const window = filter.endingSoon === true ? endingSoonWindow(now) : null;
   return {
     TrainerId: filter.trainerId,
-    UserId: filter.userId,
-    IsActive: filter.status === undefined ? undefined : filter.status === 'active',
+    Search: filter.search,
+    Tier: filter.tier === undefined ? undefined : tiers.toApi(filter.tier),
+    IsActive: window !== null ? true : toIsActive(filter),
+    EndsFrom: window?.from.toISOString(),
+    EndsTo: window?.before.toISOString(),
   };
+}
+
+function toIsActive(filter: SubscriptionFilter): boolean | undefined {
+  return filter.status === undefined ? undefined : filter.status === 'active';
 }

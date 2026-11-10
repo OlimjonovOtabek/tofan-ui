@@ -5,6 +5,8 @@
   <p-button [label]="'trainers.list.add' | t" icon="pi pi-plus" (onClick)="add()" />
 </div>
 
+<app-trainer-list-filters (filterChange)="applyFilter($event)" />
+
 <app-data-table
   [columns]="columns()"
   [items]="store.trainers()"
@@ -26,22 +28,41 @@
             [label]="trainer.photoUrl === null ? trainer.initials() : undefined"
           />
           <div class="min-w-0">
-            <div class="text-primary font-medium">{{ trainer.displayName }}</div>
+            <div class="text-primary font-medium whitespace-nowrap">{{ trainer.displayName }}</div>
+            @if (trainer.slug; as slug) {
+              <div class="text-muted-color font-mono text-xs whitespace-nowrap">{{ slug }}</div>
+            }
             @if (trainer.bio; as bio) {
               <div class="text-muted-color max-w-md text-sm break-words">{{ bio }}</div>
             }
           </div>
         </div>
       </td>
-      <td class="text-muted-color font-mono text-sm">{{ trainer.slug ?? emptyCell }}</td>
-      <td class="text-muted-color" [title]="trainer.userId">{{ shortId(trainer.userId) }}</td>
       <td>
+        @if (trainer.summary.userName; as userName) {
+          <div class="whitespace-nowrap">{{ userName }}</div>
+        } @else {
+          <div class="text-muted-color font-mono" [title]="trainer.userId">
+            {{ shortId(trainer.userId) }}
+          </div>
+        }
+        @for (contact of trainer.contacts(); track contact) {
+          <div class="text-muted-color text-xs whitespace-nowrap">{{ contact }}</div>
+        }
+      </td>
+      <td
+        class="tabular-nums"
+        [class.text-muted-color]="trainer.summary.activeSubscribersCount === 0"
+      >
+        {{ trainer.summary.activeSubscribersCount }}
+      </td>
+      <td class="whitespace-nowrap">
         <span [class.text-muted-color]="!trainer.hasPrice()">{{ priceLabel(trainer) }}</span>
       </td>
-      <td [class.text-muted-color]="!trainer.hasVipPrice()">
+      <td class="whitespace-nowrap" [class.text-muted-color]="!trainer.hasVipPrice()">
         {{ trainer.hasVipPrice() ? amountLabel(trainer.vipMonthlyPrice) : emptyCell }}
       </td>
-      <td>
+      <td class="whitespace-nowrap">
         <p-tag [value]="statusLabel(trainer)" [severity]="statusSeverity(trainer)" />
       </td>
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(trainer.createdOn) }}</td>

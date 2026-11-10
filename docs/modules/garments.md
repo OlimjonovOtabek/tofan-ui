@@ -13,7 +13,7 @@ filtered shirts (for example one drop) to Excel for the print shop.
 
 - Base routes: `/admin/garments`, `/admin/drops` (backend Garment module, handover:
   `tofan/docs/garment-ui-v1.1.md`)
-- Endpoints used: `GET /admin/garments` (paged, filters `SerialNumber` (ILIKE), `Status`, `OwnerId`,
+- Endpoints used: `GET /admin/garments` (paged, filters `SerialNumber` (ILIKE), `Status`, `OwnerSearch` (owner name or username, API v9.20),
   `DropId`, `VariantId`, `Size`, `IsClaimed`, `EditionFrom`/`EditionTo`), `POST /admin/garments`, `POST /admin/garments/{id}/status`,
   `POST /admin/garments/{id}/extend`, `DELETE /admin/garments/{id}`, `GET /admin/garments/export-links`
   (same filters, no paging), `GET /admin/drops` (every drop with its variants, no paging),
@@ -76,8 +76,11 @@ filtered shirts (for example one drop) to Excel for the print shop.
 
 - Filters (`components/garment-filters`, value → filter in `garment-filter.form.ts`): serial number,
   drop, variant (of the chosen drop only), size, status, owner present or not, number range in the
-  drop, owner id. The toolbar export always sends the current filter, so the file holds exactly what
+  drop, owner search. The toolbar export always sends the current filter, so the file holds exactly what
   the list shows.
+- The list has an "Owner" column from `Garment.owner()`: `ownerFullName` with `ownerUserName` under it, the short
+  owner id when the owner has no profile, "No owner" when nobody activated the shirt. The view dialog shows the
+  owner name next to the owner id. Do not make the owner column sortable (`ownerFullName` and `ownerUserName` fall back to `id`).
 
 - Clicking a row (or the serial number button, which is keyboard reachable) opens
   `components/garment-view-dialog`: every field of the row with a copy button each, the status tag,

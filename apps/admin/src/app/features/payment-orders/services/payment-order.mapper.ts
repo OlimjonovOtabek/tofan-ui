@@ -23,8 +23,11 @@ export function toPaymentOrder(response: PaymentOrderResponse): PaymentOrder {
   return {
     id: response.id,
     userId: response.userId,
+    userFullName: response.userFullName ?? null,
+    userName: response.userName ?? null,
     purpose: purposes.toDomain(response.purpose),
     referenceId: response.referenceId,
+    referenceName: response.referenceName ?? null,
     tier: toTier(response.tier),
     price: response.price,
     commissionAmount: response.commissionAmount,
@@ -43,6 +46,14 @@ export function toPaymentOrder(response: PaymentOrderResponse): PaymentOrder {
 
 export function toPaymentOrderStatusDto(status: PaymentOrderStatus): PaymentOrderStatusDto {
   return statuses.toApi(status);
+}
+
+export function toPaymentPurposeDto(purpose: PaymentPurpose): PaymentPurposeDto {
+  return purposes.toApi(purpose);
+}
+
+export function toPaymentProviderDto(provider: PaymentProvider): PaymentProviderDto {
+  return providers.toApi(provider);
 }
 
 export function toCreatePaymentOrderRequest(draft: PaymentOrderDraft): CreatePaymentOrderRequest {

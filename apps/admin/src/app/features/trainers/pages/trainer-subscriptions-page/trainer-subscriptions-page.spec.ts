@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { TranslationKey } from '@core/i18n/dictionary';
@@ -25,6 +26,9 @@ function subscription(id: string, tier: Tier, state: 'active' | 'ended'): Traine
     'a1',
     LONG_AGO,
     tier,
+    null,
+    null,
+    false,
   );
 }
 
@@ -64,6 +68,7 @@ describe('TrainerSubscriptionsPage', () => {
     confirmations = { confirm: vi.fn().mockResolvedValue(true) };
     TestBed.configureTestingModule({
       providers: [
+        provideRouter([]),
         { provide: TrainerSubscriptionsService, useValue: subscriptions },
         { provide: TrainersService, useValue: { list: vi.fn().mockResolvedValue({ items: [] }) } },
         { provide: SoldierLookupService, useValue: { search: vi.fn().mockResolvedValue([]) } },
@@ -80,6 +85,39 @@ describe('TrainerSubscriptionsPage', () => {
     ]);
 
     expect(tierTags(fixture)).toEqual(['Standard', 'VIP']);
+  });
+
+  it('should show the subscriber name and how the subscription was opened when the table loads', async () => {
+    const paid = new TrainerSubscription(
+      's3',
+      't1',
+      'Jasur Karimov',
+      '3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf',
+      LONG_AGO,
+      FAR_FUTURE,
+      null,
+      'a1',
+      LONG_AGO,
+      'standard',
+      'Otabek Olimjonov',
+      'otabek',
+      true,
+    );
+    const fixture = await render([paid, subscription('s1', 'standard', 'active')]);
+
+    const rows = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('tbody tr'));
+    const cell = (row: Element, index: number): string =>
+      (row.querySelectorAll('td')[index]?.textContent ?? '').replace(/\s+/g, ' ').trim();
+    expect(rows[0].querySelector('td:nth-child(2) a')?.textContent?.trim()).toBe(
+      'Otabek Olimjonov',
+    );
+    expect(rows[0].querySelector('td:nth-child(2) div')?.textContent?.trim()).toBe('otabek');
+    expect(cell(rows[0], 5)).toBe("To'lov orqali");
+    expect(cell(rows[1], 1)).toBe('u1');
+    expect(cell(rows[1], 5)).toBe('Admin bergan');
+    expect(rows[0].querySelector('a')?.getAttribute('href')).toBe(
+      '/soldiers/3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf',
+    );
   });
 
   it('should offer vip and standard actions when the subscriptions are active standard and active vip', async () => {

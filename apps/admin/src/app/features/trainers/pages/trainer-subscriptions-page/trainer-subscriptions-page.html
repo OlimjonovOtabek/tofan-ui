@@ -38,8 +38,18 @@
   <ng-template #row let-subscription>
     <tr>
       <td class="text-primary font-medium">{{ subscription.trainerDisplayName }}</td>
-      <td class="text-muted-color" [title]="subscription.userId">
-        {{ shortId(subscription.userId) }}
+      @let subscriber = subscriberOf(subscription);
+      <td>
+        <a
+          [routerLink]="[soldiersPath, subscription.userId]"
+          class="text-primary whitespace-nowrap"
+          [class.font-mono]="subscriber.isIdFallback"
+          [title]="subscription.userId"
+          >{{ subscriber.primary }}</a
+        >
+        @if (subscriber.secondary; as userName) {
+          <div class="text-muted-color text-xs">{{ userName }}</div>
+        }
       </td>
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(subscription.startsOn) }}</td>
       <td class="text-muted-color whitespace-nowrap">{{ dateLabel(subscription.endsOn) }}</td>
@@ -48,6 +58,9 @@
           [value]="tierLabel(subscription.tier)"
           [severity]="tierSeverity(subscription.tier)"
         />
+      </td>
+      <td>
+        <p-tag [value]="sourceLabel(subscription)" [severity]="sourceSeverity(subscription)" />
       </td>
       <td>
         <p-tag [value]="statusLabel(subscription)" [severity]="statusSeverity(subscription)" />

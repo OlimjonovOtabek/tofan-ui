@@ -6,6 +6,8 @@
     "
   />
 
+  <app-user-session-filters (filterChange)="applyFilter($event)" />
+
   @if (store.userId(); as userId) {
     <div
       class="bg-surface-100 dark:bg-surface-800 mb-4 flex flex-wrap items-center gap-3 rounded px-4 py-3 text-sm"
@@ -27,7 +29,7 @@
 
   <app-data-table
     [columns]="columns()"
-    [items]="store.sessions()"
+    [items]="rows()"
     [totalCount]="store.totalCount()"
     [loading]="store.loading()"
     [error]="store.loadError()"
@@ -38,15 +40,23 @@
     (pageChange)="loadPage($event)"
     (retry)="store.load()"
   >
-    <ng-template #row let-session>
+    <ng-template #row let-row>
+      @let session = row.session;
       <tr>
-        <td class="font-mono text-sm break-all">
+        <td class="break-all">
           <a
             [routerLink]="[accountsPath, session.userId]"
             class="text-primary"
+            [class.font-mono]="row.userIsId"
             [title]="'userSessions.accountCard' | t"
-            >{{ session.userId }}</a
+            >{{ row.user }}</a
           >
+        </td>
+        <td [title]="session.userAgent ?? ''">
+          <div [class.text-muted-color]="!row.deviceIsKnown">{{ row.device }}</div>
+          @if (session.ipAddress; as ipAddress) {
+            <div class="text-muted-color font-mono text-xs">{{ ipAddress }}</div>
+          }
         </td>
         <td class="whitespace-nowrap">{{ dateLabel(session.loggedInAt) }}</td>
         <td class="text-muted-color whitespace-nowrap">{{ dateLabel(session.expiresAt) }}</td>

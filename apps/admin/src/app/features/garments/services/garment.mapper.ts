@@ -30,6 +30,8 @@ export function toGarment(response: GarmentResponse): Garment {
     response.ownerId ?? null,
     toDateOrNull(response.activatedAt),
     toDateOrNull(response.expiresAt),
+    response.ownerFullName ?? null,
+    response.ownerUserName ?? null,
   );
 }
 

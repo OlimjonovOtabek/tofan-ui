@@ -22,6 +22,9 @@ const subscription = new TrainerSubscription(
   'a1',
   new Date('2026-10-01T10:00:00Z'),
   'standard',
+  null,
+  null,
+  false,
 );
 
 const vipSubscription = new TrainerSubscription(
@@ -35,6 +38,9 @@ const vipSubscription = new TrainerSubscription(
   'a1',
   new Date('2026-10-01T10:00:00Z'),
   'vip',
+  null,
+  null,
+  false,
 );
 
 const trainer = new Trainer(

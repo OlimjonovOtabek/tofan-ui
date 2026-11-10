@@ -7,6 +7,9 @@ export class UserSession {
     readonly loggedInAt: Date,
     readonly expiresAt: Date,
     readonly revokedAt: Date | null,
+    readonly userName: string | null,
+    readonly ipAddress: string | null,
+    readonly userAgent: string | null,
   ) {}
 
   status(now: Date = new Date()): UserSessionStatus {

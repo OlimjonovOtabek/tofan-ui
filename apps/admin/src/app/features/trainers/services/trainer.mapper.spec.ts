@@ -1,7 +1,12 @@
-import { toCreateTrainerRequest, toTrainer, toUpdateTrainerRequest } from './trainer.mapper';
-import { TrainerResponse } from './trainer.dto';
+import {
+  toCreateTrainerRequest,
+  toTrainer,
+  toTrainerListQuery,
+  toUpdateTrainerRequest,
+} from './trainer.mapper';
+import { TrainerSummaryResponse } from './trainer.dto';
 
-const response: TrainerResponse = {
+const response: TrainerSummaryResponse = {
   id: 't1',
   userId: 'u1',
   displayName: 'Jasur Karimov',
@@ -12,6 +17,10 @@ const response: TrainerResponse = {
   vipMonthlyPrice: 900000,
   isPublished: true,
   createdOnUtc: '2026-10-02T09:00:00Z',
+  activeSubscribersCount: 4,
+  userName: 'stage-coach',
+  email: 'stage-coach@example.test',
+  phoneNumber: null,
 };
 
 const photoUrlOf = (fileId: string): string => `https://api.example/files/${fileId}/content`;
@@ -103,5 +112,47 @@ describe('toUpdateTrainerRequest', () => {
 
     expect(Object.keys(request)).toContain('vipMonthlyPrice');
     expect(request.vipMonthlyPrice).toBeNull();
+  });
+});
+
+describe('toTrainer account summary', () => {
+  it('should keep the account details and the subscriber count when the list sends them', () => {
+    expect(toTrainer(response, photoUrlOf).summary).toEqual({
+      userName: 'stage-coach',
+      email: 'stage-coach@example.test',
+      phoneNumber: null,
+      activeSubscribersCount: 4,
+    });
+  });
+
+  it('should fall back to empty details when the account has no trainer role', () => {
+    const older: TrainerSummaryResponse = {
+      ...response,
+      userName: undefined,
+      email: undefined,
+      phoneNumber: undefined,
+      activeSubscribersCount: undefined,
+    };
+
+    expect(toTrainer(older, photoUrlOf).summary).toEqual({
+      userName: null,
+      email: null,
+      phoneNumber: null,
+      activeSubscribersCount: 0,
+    });
+  });
+});
+
+describe('toTrainerListQuery', () => {
+  it('should leave the filters out when none is set', () => {
+    expect(toTrainerListQuery({})).toEqual({ Search: undefined, IsPublished: undefined });
+  });
+
+  it('should send the search and the publish flag when they are set', () => {
+    expect(toTrainerListQuery({ search: 'stage', publishState: 'published' })).toEqual({
+      Search: 'stage',
+      IsPublished: true,
+    });
+    expect(toTrainerListQuery({ publishState: 'draft' })['IsPublished']).toBe(false);
   });
 });

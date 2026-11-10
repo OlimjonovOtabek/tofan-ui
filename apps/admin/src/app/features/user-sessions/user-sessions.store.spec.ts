@@ -11,6 +11,9 @@ const session = new UserSession(
   new Date('2026-09-16T08:00:00Z'),
   new Date('2026-12-15T08:00:00Z'),
   null,
+  'otabek',
+  '195.158.8.218',
+  'Dart/3.11 (dart:io)',
 );
 
 describe('UserSessionsStore', () => {
@@ -60,6 +63,30 @@ describe('UserSessionsStore', () => {
       { userId: USER_ID },
       { first: 0, rows: 25, sortField: 'createdOnUtc', sortDirection: 'desc' },
     );
+  });
+
+  it('should keep the user from the link when the list filter changes', async () => {
+    const store = createStore();
+    await store.load({ first: 0, rows: 25 });
+    await store.filterByUser(USER_ID);
+
+    await store.applyFilter({ search: 'otabek', status: 'revoked' });
+
+    expect(service.list).toHaveBeenLastCalledWith(
+      { search: 'otabek', status: 'revoked', userId: USER_ID },
+      { first: 0, rows: 25 },
+    );
+  });
+
+  it('should drop only the user when the link filter is removed', async () => {
+    const store = createStore();
+    await store.load({ first: 0, rows: 25 });
+    await store.applyFilter({ search: 'otabek' });
+    await store.filterByUser(USER_ID);
+
+    await store.filterByUser(null);
+
+    expect(service.list).toHaveBeenLastCalledWith({ search: 'otabek' }, { first: 0, rows: 25 });
   });
 
   it('should expose the error and drop the old rows when a reload fails', async () => {

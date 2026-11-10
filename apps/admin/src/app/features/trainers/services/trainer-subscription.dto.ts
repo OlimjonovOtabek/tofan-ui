@@ -11,6 +11,9 @@ export interface TrainerSubscriptionResponse {
   grantedBy: string;
   createdOnUtc: string;
   tier: TierDto;
+  isPaid: boolean;
+  userFullName: string | null;
+  userName: string | null;
 }
 
 export interface GrantTrainerSubscriptionRequest {

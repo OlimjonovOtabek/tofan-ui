@@ -25,7 +25,7 @@ export class TrainerSubscriptionsService {
   async list(filter: SubscriptionFilter, page: PageRequest): Promise<Page<TrainerSubscription>> {
     const list = await this.apiClient.get<PagedList<TrainerSubscriptionResponse>>(SUBSCRIPTIONS, {
       ...toPagedQuery(page),
-      ...toSubscriptionQuery(filter),
+      ...toSubscriptionQuery(filter, new Date()),
     });
     return toPage(list, toTrainerSubscription);
   }

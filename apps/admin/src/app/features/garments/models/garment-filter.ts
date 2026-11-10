@@ -4,7 +4,7 @@ import { GarmentStatus } from './garment-status';
 export interface GarmentFilter {
   readonly serialNumber?: string;
   readonly status?: GarmentStatus;
-  readonly ownerId?: string;
+  readonly ownerSearch?: string;
   readonly dropId?: string;
   readonly variantId?: string;
   readonly size?: GarmentSize;

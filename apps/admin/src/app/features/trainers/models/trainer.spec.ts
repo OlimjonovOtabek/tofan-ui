@@ -52,4 +52,32 @@ describe('Trainer', () => {
   it('should ignore extra spaces when the name is typed loosely', () => {
     expect(trainerWith('  Jasur   Karimov ', 0).initials()).toBe('JK');
   });
+
+  it('should list the email and the phone when the account has both', () => {
+    const trainer = new Trainer(
+      '1',
+      'u1',
+      'Stage Coach',
+      null,
+      null,
+      null,
+      450000,
+      true,
+      new Date('2026-10-02T09:00:00Z'),
+      'stage-coach',
+      null,
+      {
+        userName: 'stage-coach',
+        email: 'stage-coach@example.test',
+        phoneNumber: '+998901234567',
+        activeSubscribersCount: 4,
+      },
+    );
+
+    expect(trainer.contacts()).toEqual(['stage-coach@example.test', '+998901234567']);
+  });
+
+  it('should list no contact when the account details are missing', () => {
+    expect(trainerWith('Jasur Karimov', 450000).contacts()).toEqual([]);
+  });
 });

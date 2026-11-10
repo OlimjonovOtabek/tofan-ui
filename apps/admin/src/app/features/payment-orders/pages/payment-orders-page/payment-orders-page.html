@@ -12,7 +12,7 @@
     />
   </app-catalog-header>
 
-  <app-payment-order-filters (filterChange)="applyFilter($event)" />
+  <app-payment-order-filters [trainers]="store.trainers()" (filterChange)="applyFilter($event)" />
 
   <app-data-table
     [columns]="columns()"
@@ -33,17 +33,25 @@
           <div class="whitespace-nowrap">{{ order.createdAt }}</div>
           <div class="text-muted-color font-mono text-xs break-all">{{ order.id }}</div>
         </td>
-        <td class="font-mono text-sm break-all">
+        <td>
           <a
             [routerLink]="[soldiersPath, order.userId]"
-            class="text-primary"
+            class="text-primary whitespace-nowrap"
+            [class.font-mono]="order.user.isIdFallback"
             [title]="'paymentOrders.soldierCard' | t"
-            >{{ order.userId }}</a
+            >{{ order.user.primary }}</a
           >
+          @if (order.user.secondary; as userName) {
+            <div class="text-muted-color text-xs">{{ userName }}</div>
+          }
         </td>
         <td>
           <div>{{ order.purpose }}</div>
-          <div class="text-muted-color font-mono text-xs break-all">{{ order.referenceId }}</div>
+          @if (order.reference; as reference) {
+            <div class="text-muted-color text-xs" [class.font-mono]="reference.isId">
+              {{ reference.text }}
+            </div>
+          }
         </td>
         <td class="whitespace-nowrap tabular-nums">{{ order.price }}</td>
         <td class="whitespace-nowrap tabular-nums">{{ order.commission }}</td>

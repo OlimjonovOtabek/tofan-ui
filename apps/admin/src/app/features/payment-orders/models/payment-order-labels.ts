@@ -2,6 +2,8 @@ import { TranslationKey } from '@core/i18n/dictionary';
 import { toSelectOptions } from '@shared/models/select-option';
 import {
   PAYMENT_ORDER_STATUSES,
+  PAYMENT_PROVIDERS,
+  PAYMENT_PURPOSES,
   PaymentOrderStatus,
   PaymentProvider,
   PaymentPurpose,
@@ -36,3 +38,7 @@ export const PAYMENT_ORDER_STATUS_OPTIONS = toSelectOptions(
   PAYMENT_ORDER_STATUSES,
   PAYMENT_ORDER_STATUS_LABELS,
 );
+
+export const PAYMENT_PURPOSE_OPTIONS = toSelectOptions(PAYMENT_PURPOSES, PAYMENT_PURPOSE_LABELS);
+
+export const PAYMENT_PROVIDER_OPTIONS = toSelectOptions(PAYMENT_PROVIDERS, PAYMENT_PROVIDER_LABELS);

@@ -34,9 +34,9 @@ describe('FileUploadService', () => {
 
   it('should ignore cancel after the upload has completed', async () => {
     const task = service.startUpload({ file: new File(['x'], 'a.png'), category: 'avatar' });
-    http.expectOne('/api/files').event(
-      new HttpResponse({ body: { isSuccess: true, data: 'file-1' }, status: 200 }),
-    );
+    http
+      .expectOne('/api/files')
+      .event(new HttpResponse({ body: { isSuccess: true, data: 'file-1' }, status: 200 }));
 
     task.cancel();
 

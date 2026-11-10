@@ -3,15 +3,20 @@ import { Tier } from '@shared/models/tier';
 export const PAYMENT_ORDER_STATUSES = ['pending', 'paid', 'refunded'] as const;
 export type PaymentOrderStatus = (typeof PAYMENT_ORDER_STATUSES)[number];
 
-export type PaymentPurpose = 'trainerSubscription' | 'tariff';
+export const PAYMENT_PURPOSES = ['trainerSubscription', 'tariff'] as const;
+export type PaymentPurpose = (typeof PAYMENT_PURPOSES)[number];
 
-export type PaymentProvider = 'payme' | 'click';
+export const PAYMENT_PROVIDERS = ['payme', 'click'] as const;
+export type PaymentProvider = (typeof PAYMENT_PROVIDERS)[number];
 
 export interface PaymentOrder {
   readonly id: string;
   readonly userId: string;
+  readonly userFullName: string | null;
+  readonly userName: string | null;
   readonly purpose: PaymentPurpose;
   readonly referenceId: string;
+  readonly referenceName: string | null;
   readonly tier: Tier | null;
   readonly price: number;
   readonly commissionAmount: number;
