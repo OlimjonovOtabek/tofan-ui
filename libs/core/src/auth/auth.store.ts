@@ -12,7 +12,6 @@ import { Credentials } from './credentials';
 import { AuthPaths } from './auth-paths';
 import { Roles } from './roles';
 
-
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private readonly router = inject(Router);

@@ -98,6 +98,18 @@ export class ProfilePage {
         run: () => this.go('preview-videos'),
       },
       {
+        icon: 'bell',
+        title: 'coachApp.posts.title',
+        subtitle: this.t('coachApp.posts.subtitle'),
+        run: () => this.go('posts'),
+      },
+      {
+        icon: 'dumbbell',
+        title: 'coachApp.videoCollections.title',
+        subtitle: this.t('coachApp.videoCollections.subtitle'),
+        run: () => this.go('video-collections'),
+      },
+      {
         icon: 'globe',
         title: 'coachApp.profile.language',
         subtitle: this.t(`coachApp.languages.${locale}`),

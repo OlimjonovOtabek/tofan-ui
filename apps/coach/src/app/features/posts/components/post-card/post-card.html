@@ -1,0 +1,38 @@
+<article class="c-card card">
+  <header class="head">
+    <coach-avatar
+      [initials]="post().authorInitials"
+      [imageUrl]="post().authorPhotoUrl"
+      size="small"
+    />
+    <div class="author">
+      <span class="t-base4 font-semibold coach-ellipsis">{{ post().authorName }}</span>
+      <span class="t-base5 tone-muted">
+        {{ date() }}
+        @if (edited()) {
+          · {{ 'coachApp.posts.edited' | t }}
+        }
+      </span>
+    </div>
+    <button
+      type="button"
+      class="more"
+      [disabled]="busy()"
+      [attr.aria-label]="'coachApp.common.more' | t"
+      (click)="more.emit()"
+    >
+      <coach-icon name="more-horizontal" />
+    </button>
+  </header>
+  <h3 class="t-base2 font-semibold title">{{ post().title }}</h3>
+  @if (post().text) {
+    <p class="t-base4 tone-secondary text">{{ post().text }}</p>
+  }
+  @if (post().video; as video) {
+    <coach-video-preview class="video" [posterUrl]="video.posterUrl" (watch)="watch.emit()">
+      @if (flagged()) {
+        <coach-video-status-tag [status]="status()" />
+      }
+    </coach-video-preview>
+  }
+</article>

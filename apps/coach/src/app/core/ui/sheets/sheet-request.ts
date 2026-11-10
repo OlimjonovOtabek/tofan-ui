@@ -30,6 +30,24 @@ export interface PromptSheet {
   readonly maxLength?: number;
 }
 
+export interface PairSheet {
+  readonly title: string;
+  readonly initial: TextPair;
+  readonly titleHint: string;
+  readonly textHint: string;
+  readonly actionLabel: string;
+  readonly titleMaxLength?: number;
+  readonly textMaxLength?: number;
+  readonly titleRequired?: boolean;
+}
+
+export interface TextPair {
+  readonly title: string;
+  readonly text: string;
+}
+
+export const EMPTY_TEXT_PAIR: TextPair = { title: '', text: '' };
+
 export type SheetRequest =
   | {
       readonly kind: 'confirm';
@@ -52,4 +70,9 @@ export type SheetRequest =
       readonly kind: 'prompt';
       readonly sheet: PromptSheet;
       readonly resolve: (text: string | null) => void;
+    }
+  | {
+      readonly kind: 'pair';
+      readonly sheet: PairSheet;
+      readonly resolve: (pair: TextPair | null) => void;
     };

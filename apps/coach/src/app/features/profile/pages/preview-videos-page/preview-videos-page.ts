@@ -1,16 +1,18 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { AppBar } from '@coach/core/ui/app-bar/app-bar';
 import { EmptyState } from '@coach/core/ui/empty-state/empty-state';
 import { Icon } from '@coach/core/ui/icon/icon';
-import { Progress } from '@coach/core/ui/progress/progress';
 import { Sheets } from '@coach/core/ui/sheets/sheets.service';
 import { Spinner } from '@coach/core/ui/spinner/spinner';
 import { canWatch } from '@coach/core/videos/video';
 import { VideoPlayerService } from '@coach/core/videos/video-player.service';
+import { VideoStatusesStore } from '@coach/core/videos/video-statuses.store';
+import { VideoUploadCard } from '@coach/core/videos/video-upload-card';
+import { VIDEO_FILE_ACCEPT } from '@coach/core/videos/video-upload';
 import { MAX_PREVIEW_VIDEOS, PREVIEW_NAME_MAX, PreviewVideo } from '../../models/preview-video';
 import { PreviewVideosStore } from '../../preview-videos.store';
 
@@ -23,21 +25,22 @@ import { PreviewVideosStore } from '../../preview-videos.store';
     AppBar,
     EmptyState,
     Icon,
-    Progress,
+    VideoUploadCard,
     Spinner,
   ],
-  providers: [PreviewVideosStore],
+  providers: [PreviewVideosStore, VideoStatusesStore],
   templateUrl: './preview-videos-page.html',
   styleUrl: './preview-videos-page.css',
 })
 export class PreviewVideosPage {
   protected readonly store = inject(PreviewVideosStore);
+  private readonly statuses = inject(VideoStatusesStore);
   private readonly sheets = inject(Sheets);
   private readonly translator = inject(Translator);
   private readonly player = inject(VideoPlayerService);
 
   protected readonly max = MAX_PREVIEW_VIDEOS;
-  protected readonly percent = computed(() => Math.floor((this.store.uploadProgress() ?? 0) * 100));
+  protected readonly accept = VIDEO_FILE_ACCEPT;
 
   constructor() {
     void this.store.load();
@@ -63,7 +66,7 @@ export class PreviewVideosPage {
   }
 
   protected status(video: PreviewVideo) {
-    return this.store.details()[video.fileId]?.status ?? null;
+    return this.statuses.statusOf(video.fileId);
   }
 
   protected watchable(video: PreviewVideo): boolean {

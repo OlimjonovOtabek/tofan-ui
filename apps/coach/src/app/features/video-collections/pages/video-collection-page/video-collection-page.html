@@ -1,0 +1,91 @@
+<coach-app-bar [title]="'coachApp.videoCollections.detailTitle' | t" [backLink]="backLink" />
+<div class="coach-page coach-page--pushed">
+  @if (store.collection(); as collection) {
+    <coach-collection-header [collection]="collection" [busy]="store.busy()" (edit)="edit()" />
+    <div class="videos-head">
+      <p class="t-base5 tone-secondary">{{ 'coachApp.videoCollections.videosHint' | t }}</p>
+      <p class="t-base4 font-semibold tone-info">
+        {{ 'coachApp.videoCollections.count' | t: { count: collection.videos.length, max: max } }}
+      </p>
+    </div>
+    @let progress = store.uploadProgress();
+    @if (collection.videos.length === 0 && progress === null) {
+      <coach-empty-state
+        icon="play"
+        [title]="'coachApp.videoCollections.videosEmptyTitle' | t"
+        [message]="'coachApp.videoCollections.videosEmptyMessage' | t"
+      />
+    } @else {
+      <div
+        class="list"
+        cdkDropList
+        [cdkDropListDisabled]="store.busy()"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (video of collection.videos; track video.id; let i = $index) {
+          <coach-collection-video-tile
+            cdkDrag
+            [video]="video"
+            [title]="titleOf(video, i)"
+            [status]="statuses.statusOf(video.fileId)"
+            [busy]="store.busy()"
+            (watch)="watch(video)"
+            (more)="more(video, i)"
+          />
+        }
+      </div>
+    }
+    @if (progress !== null) {
+      <coach-video-upload-card [progress]="progress" [preparing]="store.preparing()" />
+    }
+    @if (store.hasRoom()) {
+      <label coachButton="soft" class="add" [class.is-disabled]="store.busy()">
+        <input
+          type="file"
+          [accept]="accept"
+          hidden
+          [disabled]="store.busy()"
+          (change)="chosen($event)"
+        />
+        {{ 'coachApp.previewVideos.add' | t }}
+      </label>
+    } @else {
+      <p class="t-base5 tone-secondary limit">{{ 'coachApp.videoCollections.videosLimit' | t }}</p>
+    }
+    <div class="actions">
+      <button
+        [coachButton]="collection.isPublished ? 'secondary' : 'primary'"
+        type="button"
+        [disabled]="store.busy() && store.action() !== 'publish'"
+        [loading]="store.action() === 'publish'"
+        (click)="store.togglePublished()"
+      >
+        {{
+          (collection.isPublished
+            ? 'coachApp.videoCollections.unpublish'
+            : 'coachApp.videoCollections.publish'
+          ) | t
+        }}
+      </button>
+      <button
+        coachButton="destructive"
+        type="button"
+        [disabled]="store.busy() && store.action() !== 'delete'"
+        [loading]="store.action() === 'delete'"
+        (click)="remove()"
+      >
+        {{ 'coachApp.videoCollections.delete' | t }}
+      </button>
+    </div>
+  } @else if (store.loadError(); as error) {
+    <coach-empty-state
+      icon="alert-triangle"
+      [title]="'coachApp.videoCollections.detailErrorTitle' | t"
+      [message]="error | message"
+      [retryable]="true"
+      (retry)="store.load(collectionId())"
+    />
+  } @else {
+    <div class="loading"><coach-spinner /></div>
+  }
+</div>

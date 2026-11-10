@@ -22,6 +22,16 @@ describe('push messages', () => {
     expect(pushLinkOf({ source: 'video', previewVideoId: 'v1' })).toBe('/profile/preview-videos');
   });
 
+  it('should open the posts of a video on a post', () => {
+    expect(pushLinkOf({ source: 'video', postId: 'p1' })).toBe('/profile/posts');
+  });
+
+  it('should open the collection of a video in a collection', () => {
+    expect(pushLinkOf({ source: 'video', collectionId: 'c 1', collectionVideoId: 'v1' })).toBe(
+      '/profile/video-collections/c%201',
+    );
+  });
+
   it('should open the programs for a video the server could not place', () => {
     expect(pushLinkOf({ source: 'video', programId: 'p1' })).toBe('/programs');
   });

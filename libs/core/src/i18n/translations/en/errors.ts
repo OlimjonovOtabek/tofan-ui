@@ -79,6 +79,18 @@ export const ERRORS_EN: Dictionary['errors'] = {
     MealPlan: {
       TrainerProgramMissing: 'The trainer has not published a meal program yet.',
     },
+    TrainerPost: {
+      NotFound: 'Post not found. Refresh the list and try again.',
+    },
+    TrainerVideoCollection: {
+      NotFound: 'Collection not found. Refresh the list and try again.',
+      VideoNotFound: 'Video not found. Refresh the page and try again.',
+      Empty: 'Add at least one video to publish the collection.',
+      LimitReached: 'That’s 20 collections - delete one to make another.',
+      VideoLimitReached: 'That’s 50 videos - remove one to add another.',
+      OrderMismatch: 'The order is out of date. Refresh the page and try again.',
+      VideoOrderMismatch: 'The video order is out of date. Refresh the page and try again.',
+    },
     Tariff: {
       FreeMustStayFree: 'The Free tariff must always stay free. Keep the price at 0.',
       PaidPriceRequired: 'The price of Standard and VIP tariffs must be above 0.',

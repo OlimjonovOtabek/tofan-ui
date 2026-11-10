@@ -1,6 +1,5 @@
 import { Roles } from './roles';
 
-
 export class UserProfile {
   constructor(
     readonly id: string,

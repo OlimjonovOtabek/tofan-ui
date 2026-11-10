@@ -2,6 +2,7 @@ import { allowedExtensions, extensionOf } from '@shared/utils/file-upload-rules'
 
 export const VIDEO_UPLOAD_MAX_BYTES = 1024 * 1024 * 1024;
 export const VIDEO_FILE_CATEGORY = 'exerciseVideo';
+export const VIDEO_FILE_ACCEPT = 'video/mp4,video/quicktime,video/webm,.mp4,.m4v,.mov,.webm';
 const VIDEO_TOO_LARGE_CODE = 'StoredFile.TooLarge';
 
 export type VideoUploadStatus =

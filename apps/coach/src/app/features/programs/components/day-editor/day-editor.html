@@ -86,13 +86,7 @@
       }
     </div>
     <label class="add c-pressable">
-      <input
-        type="file"
-        accept="video/mp4,video/quicktime,video/webm,.mp4,.m4v,.mov,.webm"
-        multiple
-        hidden
-        (change)="chosen($event)"
-      />
+      <input type="file" [accept]="accept" multiple hidden (change)="chosen($event)" />
       <span class="t-base1 font-semibold">{{ 'coachApp.day.addVideo' | t }}</span>
     </label>
     <p class="c-hint-box">{{ 'coachApp.day.videosHint' | t }}</p>
