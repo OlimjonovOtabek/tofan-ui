@@ -24,7 +24,24 @@
 
 .line {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
   min-width: 0;
+}
+
+.name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.activity {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
 }

@@ -346,7 +346,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     goalLabel: 'Goal',
     kcalOf: '/ {target} kcal',
     levelLabel: 'Level',
-    macroGoal: '{percent}% of {goal} g',
+    macroGoal: '{percent}% of {goal}\u00a0g',
     mealsLogged: '{count, plural, one{{count} meal logged} other{{count} meals logged}}',
     nutritionEmptyMessage: 'Meals this athlete logs today will appear here.',
     nutritionEmptyTitle: 'Nothing logged today',

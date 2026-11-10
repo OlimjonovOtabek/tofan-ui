@@ -351,7 +351,7 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     goalLabel: 'Цель',
     kcalOf: '/ {target} ккал',
     levelLabel: 'Уровень',
-    macroGoal: '{percent}% от {goal} г',
+    macroGoal: '{percent}% от {goal}\u00a0г',
     mealsLogged:
       '{count, plural, one{{count} приём пищи} few{{count} приёма пищи} many{{count} приёмов пищи} other{{count} приёма пищи}}',
     nutritionEmptyMessage: 'Здесь появятся приёмы пищи спортсмена за сегодня.',

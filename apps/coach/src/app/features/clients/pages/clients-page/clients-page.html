@@ -47,7 +47,16 @@
             <coach-avatar [initials]="row.initials" />
             <span class="text">
               <span class="line">
-                <span class="t-title4 coach-ellipsis">{{ row.name }}</span>
+                <span class="name t-title4 coach-ellipsis">{{ row.name }}</span>
+                <span
+                  class="activity t-base5"
+                  [class.tone-warning]="row.lowActivity"
+                  [class.tone-muted]="!row.lowActivity"
+                  >{{ row.activity }}</span
+                >
+              </span>
+              <span class="details">
+                <span class="t-base4 font-medium" [class]="row.accessTone">{{ row.access }}</span>
                 @if (row.vip) {
                   <span class="c-tag c-tag--success">{{ 'coachApp.clients.tierVip' | t }}</span>
                 }
@@ -57,16 +66,7 @@
                   }}</span>
                 }
               </span>
-              <span class="t-base4 font-medium coach-ellipsis" [class]="row.accessTone">{{
-                row.access
-              }}</span>
             </span>
-            <span
-              class="t-base5"
-              [class.tone-warning]="row.lowActivity"
-              [class.tone-muted]="!row.lowActivity"
-              >{{ row.activity }}</span
-            >
           </button>
         }
       </div>
