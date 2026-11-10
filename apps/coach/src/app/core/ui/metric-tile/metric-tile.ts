@@ -5,7 +5,7 @@ export type MetricTone = 'primary' | 'secondary' | 'info' | 'warning' | 'success
 @Component({
   selector: 'coach-metric-tile',
   template: `
-    <span class="t-base4 tone-secondary coach-ellipsis">{{ label() }}</span>
+    <span class="t-base4 tone-secondary coach-clamp-2">{{ label() }}</span>
     <p class="value coach-ellipsis" [class]="'tone-' + valueTone()">
       <span [class]="size() === 'large' ? 't-display3' : 't-title4'">{{ value() }}</span>
       @if (unit(); as unit) {
@@ -15,7 +15,7 @@ export type MetricTone = 'primary' | 'secondary' | 'info' | 'warning' | 'success
       }
     </p>
     @if (caption(); as caption) {
-      <span class="t-base5 coach-ellipsis" [class]="'tone-' + captionTone()">{{ caption }}</span>
+      <span class="t-base5 coach-clamp-2" [class]="'tone-' + captionTone()">{{ caption }}</span>
     }
   `,
   styleUrl: './metric-tile.css',

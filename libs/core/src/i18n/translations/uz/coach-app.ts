@@ -342,7 +342,7 @@ export const COACH_APP_UZ = {
     goalLabel: 'Maqsad',
     kcalOf: '/ {target} kkal',
     levelLabel: 'Daraja',
-    macroGoal: '{goal} g dan {percent}%',
+    macroGoal: '{goal}\u00a0g dan {percent}%',
     mealsLogged: '{count} ta ovqat yozilgan',
     nutritionEmptyMessage: 'Sportchining bugungi ovqatlari shu yerda ko‘rinadi.',
     nutritionEmptyTitle: 'Bugun hech narsa yozilmagan',
