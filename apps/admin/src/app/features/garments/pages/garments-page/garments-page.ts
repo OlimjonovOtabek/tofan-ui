@@ -30,7 +30,6 @@ import { GarmentFormDialog } from '../../components/garment-form-dialog/garment-
 import { GarmentViewDialog } from '../../components/garment-view-dialog/garment-view-dialog';
 import { GarmentsToolbar } from '../../components/garments-toolbar/garments-toolbar';
 
-const SHORT_ID_LENGTH = 8;
 const DETAILS_SEPARATOR = ' · ';
 
 @Component({
@@ -68,6 +67,7 @@ export class GarmentsPage {
       width: '10rem',
     },
     { field: 'status', header: this.column('status'), sortable: true, width: '12rem' },
+    { field: 'ownerId', header: this.column('owner') },
     { field: 'activatedAt', header: this.column('activatedAt'), sortable: true, width: '10rem' },
     { field: 'expiresAt', header: this.column('expiresAt'), sortable: true, width: '10rem' },
     { field: 'actions', header: '', width: '12rem' },
@@ -104,10 +104,6 @@ export class GarmentsPage {
     return [garment.variantName, garment.size, garment.material]
       .filter((detail) => detail.length > 0)
       .join(DETAILS_SEPARATOR);
-  }
-
-  protected shortId(id: string): string {
-    return id.slice(0, SHORT_ID_LENGTH);
   }
 
   protected dateLabel(date: Date | null): string {
@@ -173,10 +169,6 @@ export class GarmentsPage {
 
   protected copyToken(garment: Garment): Promise<void> {
     return this.clipboard.copy(garment.token, 'garments.fields.token');
-  }
-
-  protected copyOwnerId(ownerId: string): Promise<void> {
-    return this.clipboard.copy(ownerId, 'garments.fields.ownerId');
   }
 
   protected loadPage(request: PageRequest): void {

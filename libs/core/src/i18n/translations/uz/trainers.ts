@@ -23,8 +23,8 @@ export const TRAINERS_UZ = {
     priceMissing: 'Belgilanmagan',
     columns: {
       trainer: 'Trener',
-      slug: 'Havola',
-      userId: 'Foydalanuvchi ID',
+      account: 'Akkaunt',
+      subscribers: 'Faol obunachilar',
       monthlyPrice: 'Oylik narx',
       vipPrice: 'VIP narxi',
       status: 'Holati',
@@ -47,11 +47,16 @@ export const TRAINERS_UZ = {
     endedOn: '{date} da tugatilgan',
     columns: {
       trainer: 'Trener',
-      userId: 'Foydalanuvchi',
+      subscriber: 'Obunachi',
       startsOn: 'Boshlangan',
       endsOn: 'Tugaydi',
       status: 'Holati',
+      source: 'Qanday berilgan',
       tier: 'Daraja',
+    },
+    source: {
+      paid: "To'lov orqali",
+      granted: 'Admin bergan',
     },
     actions: {
       end: 'Obunani tugatish',
@@ -65,12 +70,19 @@ export const TRAINERS_UZ = {
     confirmMakeStandard:
       "\"{name}\" trenerining o'quvchisi obunasi Standard qilinsinmi? Muddat o'zgarmaydi, o'quvchi trener bilan chatda yoza olmaydi.",
   },
-  filters: {
-    trainer: 'Trener',
-    userId: 'Foydalanuvchi ID',
+  listFilters: {
+    search: 'Qidirish',
+    searchPlaceholder: 'Trener ismi yoki havolasi',
     status: 'Holati',
+  },
+  filters: {
+    search: 'Qidirish',
+    searchPlaceholder: 'Obunachi ismi yoki username',
+    trainer: 'Trener',
+    status: 'Holati',
+    tier: 'Daraja',
+    endingSoon: '7 kunda tugaydi',
     all: 'Hammasi',
-    userIdInvalid: "UUID ko'rinishida kiriting.",
   },
   form: {
     header: "Trener qo'shish",

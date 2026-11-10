@@ -9,6 +9,8 @@ import {
   toCreatePaymentOrderRequest,
   toPaymentOrder,
   toPaymentOrderStatusDto,
+  toPaymentProviderDto,
+  toPaymentPurposeDto,
 } from './payment-order.mapper';
 
 const subscriptionOrder: PaymentOrderResponse = {
@@ -29,6 +31,9 @@ const subscriptionOrder: PaymentOrderResponse = {
   paidOnUtc: '2026-11-06T05:00:00Z',
   refundedOnUtc: null,
   tier: TierDto.Vip,
+  userFullName: 'Otabek Olimjonov',
+  userName: 'otabek',
+  referenceName: 'Stage Coach',
 };
 
 describe('toPaymentOrder', () => {
@@ -36,8 +41,11 @@ describe('toPaymentOrder', () => {
     expect(toPaymentOrder(subscriptionOrder)).toEqual({
       id: 'o1',
       userId: 'u1',
+      userFullName: 'Otabek Olimjonov',
+      userName: 'otabek',
       purpose: 'trainerSubscription',
       referenceId: 'trainer-1',
+      referenceName: 'Stage Coach',
       tier: 'vip',
       price: 200000,
       commissionAmount: 50000,
@@ -90,6 +98,19 @@ describe('toPaymentOrder', () => {
     expect(order.paidWith).toBe('payme');
     expect(order.refundedAt).toEqual(new Date('2026-11-07T10:00:00Z'));
   });
+
+  it('should keep the names empty when the payer has no profile', () => {
+    const order = toPaymentOrder({
+      ...subscriptionOrder,
+      userFullName: null,
+      userName: null,
+      referenceName: null,
+    });
+
+    expect(order.userFullName).toBeNull();
+    expect(order.userName).toBeNull();
+    expect(order.referenceName).toBeNull();
+  });
 });
 
 describe('toPaymentOrderStatusDto', () => {
@@ -97,6 +118,15 @@ describe('toPaymentOrderStatusDto', () => {
     expect(toPaymentOrderStatusDto('pending')).toBe(1);
     expect(toPaymentOrderStatusDto('paid')).toBe(2);
     expect(toPaymentOrderStatusDto('refunded')).toBe(3);
+  });
+});
+
+describe('toPaymentPurposeDto and toPaymentProviderDto', () => {
+  it('should send the backend numbers when a purpose or a provider filter is chosen', () => {
+    expect(toPaymentPurposeDto('trainerSubscription')).toBe(1);
+    expect(toPaymentPurposeDto('tariff')).toBe(2);
+    expect(toPaymentProviderDto('payme')).toBe(1);
+    expect(toPaymentProviderDto('click')).toBe(2);
   });
 });
 

@@ -6,8 +6,14 @@ import { Page, PageRequest } from '@shared/models/page';
 import { ApiClient } from '@core/http/api-client';
 import { PagedList } from '@core/http/api.dto';
 import { toPage, toPagedQuery } from '@core/http/paging.mapper';
-import { ChangeTrainerPasswordRequest, TrainerResponse } from './trainer.dto';
-import { toCreateTrainerRequest, toTrainer, toUpdateTrainerRequest } from './trainer.mapper';
+import { TrainerListFilter } from '../models/trainer-list-filter';
+import { ChangeTrainerPasswordRequest, TrainerSummaryResponse } from './trainer.dto';
+import {
+  toCreateTrainerRequest,
+  toTrainer,
+  toTrainerListQuery,
+  toUpdateTrainerRequest,
+} from './trainer.mapper';
 
 const TRAINERS = '/admin/trainers';
 const FILES = '/files';
@@ -16,8 +22,11 @@ const FILES = '/files';
 export class TrainersService {
   private readonly apiClient = inject(ApiClient);
 
-  async list(page: PageRequest): Promise<Page<Trainer>> {
-    const list = await this.apiClient.get<PagedList<TrainerResponse>>(TRAINERS, toPagedQuery(page));
+  async list(page: PageRequest, filter: TrainerListFilter = {}): Promise<Page<Trainer>> {
+    const list = await this.apiClient.get<PagedList<TrainerSummaryResponse>>(TRAINERS, {
+      ...toPagedQuery(page),
+      ...toTrainerListQuery(filter),
+    });
     return toPage(list, (response) => toTrainer(response, (fileId) => this.photoUrl(fileId)));
   }
 

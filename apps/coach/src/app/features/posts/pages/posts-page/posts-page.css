@@ -1,0 +1,21 @@
+.waiting,
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list {
+  gap: 12px;
+}
+
+.list:empty {
+  display: none;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  color: var(--c-primary);
+}

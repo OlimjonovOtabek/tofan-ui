@@ -4,9 +4,7 @@
   "projectType": "library",
   "root": "libs/core",
   "sourceRoot": "libs/core/src",
-  "tags": [
-    "type:core"
-  ],
+  "tags": ["type:core"],
   "targets": {
     "test": {
       "executor": "nx:run-commands",

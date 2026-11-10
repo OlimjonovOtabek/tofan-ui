@@ -10,8 +10,11 @@ import { PaymentOrdersPage } from './payment-orders-page';
 const paidSubscription: PaymentOrder = {
   id: 'o1',
   userId: '3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf',
+  userFullName: 'Otabek Olimjonov',
+  userName: 'otabek',
   purpose: 'trainerSubscription',
   referenceId: '452bcf11-d084-4224-a4d2-54a589dfc707',
+  referenceName: 'Stage Coach',
   tier: 'vip',
   price: 200000,
   commissionAmount: 50000,
@@ -30,8 +33,12 @@ const paidSubscription: PaymentOrder = {
 const pendingTariff: PaymentOrder = {
   ...paidSubscription,
   id: 'o2',
+  userId: '9a8b7c6d-1111-4222-8333-444455556666',
+  userFullName: null,
+  userName: null,
   purpose: 'tariff',
   referenceId: '5f6c1a10-7d1e-4a51-9c11-000000000002',
+  referenceName: 'Standard',
   tier: 'standard',
   price: 120000,
   commissionAmount: 0,
@@ -111,7 +118,7 @@ describe('PaymentOrdersPage', () => {
     const [row] = cells(await render());
 
     expect(row.slice(2)).toEqual([
-      'Trener obunasi · VIP 452bcf11-d084-4224-a4d2-54a589dfc707',
+      'Trener obunasi · VIP Stage Coach',
       "200 000 so'm",
       "50 000 so'm",
       "30 000 so'm 12%",
@@ -124,7 +131,7 @@ describe('PaymentOrdersPage', () => {
   it('should show the tariff kind and no paid date when the order is a pending tariff', async () => {
     const [, row] = cells(await render());
 
-    expect(row[2]).toBe('Tofan tarifi · Standard 5f6c1a10-7d1e-4a51-9c11-000000000002');
+    expect(row[2]).toBe('Tofan tarifi · Standard');
     expect(row[8]).toBe('Kutilmoqda');
   });
 
@@ -134,14 +141,35 @@ describe('PaymentOrdersPage', () => {
     expect(row[0]).toMatch(/^\S.* o1$/);
   });
 
-  it('should link the user id to the Soldier card when the table is shown', async () => {
+  it('should show the payer name with the username under it when the payer has a profile', async () => {
+    const [row] = cells(await render());
+
+    expect(row[1]).toBe('Otabek Olimjonov otabek');
+  });
+
+  it('should show the short user id when the payer has no profile', async () => {
+    const [, row] = cells(await render());
+
+    expect(row[1]).toBe('9a8b7c6d');
+  });
+
+  it('should load the trainers for the filter when the page opens', async () => {
+    const fixture = await render();
+
+    expect(trainerOptions.list).toHaveBeenCalledTimes(1);
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('#paymentOrderTrainer'),
+    ).not.toBeNull();
+  });
+
+  it('should link the payer to the Soldier card when the table is shown', async () => {
     const fixture = await render();
 
     const link = (fixture.nativeElement as HTMLElement).querySelector('tbody a');
     expect(link?.getAttribute('href')).toBe('/soldiers/3e41b4c1-713a-4e0b-b2f7-5b5b0384cedf');
   });
 
-  it('should open the create dialog and load the trainers when the create button is pressed', async () => {
+  it('should open the create dialog without loading the trainers again when the create button is pressed', async () => {
     const fixture = await render();
 
     const open = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button')).find(

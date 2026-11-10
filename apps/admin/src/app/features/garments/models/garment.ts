@@ -1,3 +1,4 @@
+import { PersonName, toPersonName } from '@shared/models/person-name';
 import { AssignableGarmentStatus, GarmentStatus } from './garment-status';
 
 export class Garment {
@@ -17,7 +18,15 @@ export class Garment {
     readonly ownerId: string | null = null,
     readonly activatedAt: Date | null = null,
     readonly expiresAt: Date | null = null,
+    readonly ownerFullName: string | null = null,
+    readonly ownerUserName: string | null = null,
   ) {}
+
+  owner(): PersonName | null {
+    return this.ownerId === null
+      ? null
+      : toPersonName(this.ownerFullName, this.ownerUserName, this.ownerId);
+  }
 
   isClaimed(): boolean {
     return this.ownerId !== null;

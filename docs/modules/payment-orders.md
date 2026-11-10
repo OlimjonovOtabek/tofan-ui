@@ -11,7 +11,8 @@ It is one page in the "Narxlar" menu group, next to Tofan tariffs and Platform f
 ## Backend
 
 - Base route: `/admin/payment-orders`
-- Endpoints used: `GET /admin/payment-orders` with `First`, `Rows`, `SortField`, `SortOrder`, `Status`, `UserId`, `ReferenceId`.
+- Endpoints used: `GET /admin/payment-orders` with `First`, `Rows`, `SortField`, `SortOrder`, `Search`, `Status`, `Purpose`, `PaidWith`, `ReferenceId`, `CreatedFrom`, `CreatedTo` (API v9.20, `admin-ui-table-names-v1.md`).
+  Each row also carries `userFullName`, `userName` and `referenceName` (trainer `displayName`, or the tariff kind for a tariff); all three may be `null`.
   It answers a bare paged list `{ data, totalCount }`, not a `Result` envelope.
 - `POST /admin/payment-orders` with `userId`, `purpose`, `referenceId`, `price`; answers `Result<Guid>` (the new order id).
 - `GET /admin/trainers` (`First` 0, `Rows` 100) through `TrainerOptionsService` with its own DTO, only for the trainer select of the create dialog.
@@ -48,11 +49,13 @@ The backend has not described the endpoint, so it was tried on stage with test a
 
 ## Structure notes
 
-- Columns: created with the order ID under it (the ID the sandbox checkout needs), user ID (link to `/soldiers/:userId`), purpose with the reference ID under it, price, commission, tax (with its percent), provider fee (with its percent), total, status.
+- Columns: created with the order ID under it (the ID the sandbox checkout needs), payer (full name with the username under it, link to `/soldiers/:userId`, the short ID when the payer has no profile), purpose with the trainer name under it, price, commission, tax (with its percent), provider fee (with its percent), total, status.
+- `toPaymentOrderReference` decides the line under the purpose: the trainer name for a subscription, nothing for a tariff (the tier already names the kind), the short reference ID when the name is missing.
   A paid order shows the paid date and Click or Payme under the status; a refunded one shows the refund date.
 - The newest orders come first (`created_on_utc` descending); price, commission, tax, provider fee and total sort on the server too.
-- `components/payment-order-filters` holds the status select and the user and reference ID fields.
-  An ID field emits only a full UUID (debounced), and shows a hint while the text is a partial ID, the same way as the Trainer subscriptions filters.
+- `components/payment-order-filters` holds the search (payer name or username), status, purpose, trainer, payment system and created date range (`app-date-range-field`, the period ends before the next day).
+  The trainer list comes from `TrainerOptionsService`, loaded once when the page opens and reused by the create dialog.
+  `toPaymentOrderTarget` sends a chosen trainer as `ReferenceId` with `Purpose=1` (there is no `TrainerId` filter); the purpose select is disabled while a trainer is chosen.
   `PaymentOrdersStore.applyFilter` goes back to the first page and keeps the sort.
 - The page turns each order into a row of ready strings in one `computed`, so the template has no formatting calls.
   Money uses `Intl.NumberFormat` with the admin locale and the `paymentOrders.money` text (`so'm`, `UZS`, `сум`).
@@ -72,8 +75,9 @@ The backend has not described the endpoint, so it was tried on stage with test a
 
 ## Traps
 
-- The response has no user, trainer or tariff names.
-  Do not add a lookup per row; the names are requested from the backend (`userName`, `referenceName`).
+- The names come in the list response; never add a lookup per row.
+- There is no `userPhoneNumber` and no phone search: the phone lives in Keycloak, open the account page for it.
+- Do not make the payer or reference columns sortable: `SortField` with `userFullName`, `userName` or `referenceName` is ignored and the list falls back to `createdOnUtc`.
 - `SortField` values the backend does not know are ignored silently (the list comes back unsorted, not 400), so keep the column `field` names equal to the response properties.
 - Orders cannot be deleted through the API; the backend removed the three probe orders on 2026-11-08 and keeps a CSV copy.
   The order opened from the dialog in the browser check (Stage Coach, 200 000, soldier "Otabek Olimjonov") is kept on purpose: that account can sign in to the mobile app.

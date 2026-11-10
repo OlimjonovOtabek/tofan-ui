@@ -27,7 +27,14 @@ describe('PaymentOrdersService', () => {
 
   it('should send the page, the sort and every filter when all of them are set', async () => {
     const done = service.list(
-      { status: 'paid', userId: USER_ID, referenceId: REFERENCE_ID },
+      {
+        search: 'otabek',
+        status: 'paid',
+        purpose: 'tariff',
+        paidWith: 'click',
+        createdFrom: new Date('2026-11-01T00:00:00.000Z'),
+        createdBefore: new Date('2026-11-10T00:00:00.000Z'),
+      },
       { first: 25, rows: 25, sortField: 'createdOnUtc', sortDirection: 'desc' },
     );
 
@@ -37,12 +44,27 @@ describe('PaymentOrdersService', () => {
     expect(request.request.params.get('Rows')).toBe('25');
     expect(request.request.params.get('SortField')).toBe('created_on_utc');
     expect(request.request.params.get('SortOrder')).toBe('-1');
+    expect(request.request.params.get('Search')).toBe('otabek');
     expect(request.request.params.get('Status')).toBe('2');
-    expect(request.request.params.get('UserId')).toBe(USER_ID);
-    expect(request.request.params.get('ReferenceId')).toBe(REFERENCE_ID);
+    expect(request.request.params.get('Purpose')).toBe('2');
+    expect(request.request.params.get('PaidWith')).toBe('2');
+    expect(request.request.params.get('CreatedFrom')).toBe('2026-11-01T00:00:00.000Z');
+    expect(request.request.params.get('CreatedTo')).toBe('2026-11-10T00:00:00.000Z');
+    expect(request.request.params.has('ReferenceId')).toBe(false);
     request.flush({ data: [], totalCount: 0 });
 
     expect(await done).toEqual({ items: [], totalCount: 0 });
+  });
+
+  it('should filter by trainer through the reference and the subscription purpose when a trainer is chosen', async () => {
+    const done = service.list({ trainerId: REFERENCE_ID }, { first: 0, rows: 25 });
+
+    const request = http.expectOne((candidate) => candidate.url === '/api/admin/payment-orders');
+    expect(request.request.params.get('ReferenceId')).toBe(REFERENCE_ID);
+    expect(request.request.params.get('Purpose')).toBe('1');
+    expect(request.request.params.has('UserId')).toBe(false);
+    request.flush({ data: [], totalCount: 0 });
+    await done;
   });
 
   it('should leave the filters out when none is set', async () => {

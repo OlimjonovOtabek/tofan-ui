@@ -4,7 +4,7 @@ import { Icon } from '../icon/icon';
 import { OptionTile } from '../option-tile/option-tile';
 import { Sheet } from '../sheet/sheet';
 import { TextField } from '../text-field/text-field';
-import { SheetAction, SheetChoice, SheetRequest } from './sheet-request';
+import { EMPTY_TEXT_PAIR, SheetAction, SheetChoice, SheetRequest } from './sheet-request';
 import { Sheets } from './sheets.service';
 
 @Component({
@@ -21,19 +21,28 @@ export class SheetHost {
   protected readonly actionSheet = computed(() => narrow(this.request(), 'actions'));
   protected readonly choiceSheet = computed(() => narrow(this.request(), 'choose'));
   protected readonly promptSheet = computed(() => narrow(this.request(), 'prompt'));
+  protected readonly pairSheet = computed(() => narrow(this.request(), 'pair'));
   protected readonly title = computed(() => {
     const request = this.request();
     if (request === null) {
       return '';
     }
-    return request.kind === 'confirm' || request.kind === 'prompt'
-      ? request.sheet.title
-      : request.title;
+    return request.kind === 'actions' || request.kind === 'choose'
+      ? request.title
+      : request.sheet.title;
   });
   protected readonly promptText = linkedSignal(() => {
     const request = this.request();
     return request?.kind === 'prompt' ? request.sheet.initial : '';
   });
+
+  protected readonly pairTitle = linkedSignal(() => this.initialPair().title);
+  protected readonly pairText = linkedSignal(() => this.initialPair().text);
+  protected readonly canSavePair = computed(
+    () => !this.pairSheet()?.sheet.titleRequired || this.pairTitle().trim().length > 0,
+  );
+
+  private readonly initialPair = computed(() => this.pairSheet()?.sheet.initial ?? EMPTY_TEXT_PAIR);
 
   protected openChanged(open: boolean): void {
     if (!open) {
@@ -74,8 +83,19 @@ export class SheetHost {
     if (request?.kind !== 'prompt') {
       return;
     }
+    const text = this.promptText().trim();
     this.sheets.complete();
-    request.resolve(this.promptText().trim());
+    request.resolve(text);
+  }
+
+  protected savePair(): void {
+    const request = this.request();
+    if (request?.kind !== 'pair' || !this.canSavePair()) {
+      return;
+    }
+    const pair = { title: this.pairTitle().trim(), text: this.pairText().trim() };
+    this.sheets.complete();
+    request.resolve(pair);
   }
 }
 

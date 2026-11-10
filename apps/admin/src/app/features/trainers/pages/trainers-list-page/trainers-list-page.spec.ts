@@ -5,7 +5,7 @@ import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { API_BASE_URL } from '@core/http/api-base-url';
 import { Trainer } from '../../models/trainer';
-import { TrainerResponse } from '../../services/trainer.dto';
+import { TrainerSummaryResponse } from '../../services/trainer.dto';
 import { toTrainer } from '../../services/trainer.mapper';
 import { SoldierLookupService } from '@shared/components/soldier-field/soldier-lookup.service';
 import { TrainerAccountsService } from '../../services/trainer-accounts.service';
@@ -17,7 +17,7 @@ const COMMISSION_HEADER = /komissiya|commission|комиссия/i;
 const VIP_HEADER = /vip/i;
 const EMPTY_CELL = '-';
 
-const response: TrainerResponse = {
+const response: TrainerSummaryResponse = {
   id: 't1',
   userId: '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b',
   displayName: 'Jasur Karimov',
@@ -96,6 +96,34 @@ describe('TrainersListPage', () => {
     const element = await render([trainerWithVip(null), trainer]);
 
     expect(vipCellTexts(element)).toEqual([EMPTY_CELL, EMPTY_CELL]);
+  });
+
+  it('should show the account username, contacts and active subscribers when the list sends them', async () => {
+    const element = await render([
+      toTrainer(
+        {
+          ...response,
+          userName: 'stage-coach',
+          email: 'stage-coach@example.test',
+          phoneNumber: null,
+          activeSubscribersCount: 4,
+        },
+        (fileId) => fileId,
+      ),
+    ]);
+
+    const cells = element.querySelectorAll('tbody tr:first-child td');
+    const account = [...cells[1].querySelectorAll('div')].map((div) => div.textContent?.trim());
+    expect(account).toEqual(['stage-coach', 'stage-coach@example.test']);
+    expect(cells[2].textContent?.trim()).toBe('4');
+  });
+
+  it('should show the short user id when the account has no trainer role', async () => {
+    const element = await render();
+
+    const cells = element.querySelectorAll('tbody tr:first-child td');
+    expect(cells[1].textContent?.trim()).toBe('3f2b8c1e');
+    expect(cells[2].textContent?.trim()).toBe('0');
   });
 });
 

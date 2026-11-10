@@ -78,6 +78,18 @@ export const ERRORS_UZ = {
     MealPlan: {
       TrainerProgramMissing: "Trener hali ovqatlanish dasturini e'lon qilmagan.",
     },
+    TrainerPost: {
+      NotFound: 'Post topilmadi. Ro‘yxatni yangilab, qayta urinib ko‘ring.',
+    },
+    TrainerVideoCollection: {
+      NotFound: 'To‘plam topilmadi. Ro‘yxatni yangilab, qayta urinib ko‘ring.',
+      VideoNotFound: 'Video topilmadi. Sahifani yangilab, qayta urinib ko‘ring.',
+      Empty: 'To‘plamni e’lon qilish uchun kamida bitta video qo‘shing.',
+      LimitReached: 'Bu 20 ta to‘plam - yangisini yaratish uchun bittasini o‘chiring.',
+      VideoLimitReached: 'Bu 50 ta video - yangisini qo‘shish uchun bittasini olib tashlang.',
+      OrderMismatch: 'Tartib eskirgan. Sahifani yangilab, qayta urinib ko‘ring.',
+      VideoOrderMismatch: 'Videolar tartibi eskirgan. Sahifani yangilab, qayta urinib ko‘ring.',
+    },
     Tariff: {
       FreeMustStayFree: "Free tarif doim bepul bo'lishi kerak. Narxni 0 qoldiring.",
       PaidPriceRequired: "Standard va VIP tariflarning narxi 0 dan katta bo'lishi kerak.",

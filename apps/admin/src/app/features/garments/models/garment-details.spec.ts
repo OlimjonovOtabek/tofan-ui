@@ -41,6 +41,7 @@ describe('garmentDetails', () => {
       'garments.fields.manufacturedAt',
       'garments.fields.activatedAt',
       'garments.fields.expiresAt',
+      'garments.fields.owner',
       'garments.fields.ownerId',
       'garments.fields.id',
     ]);
@@ -53,7 +54,39 @@ describe('garmentDetails', () => {
     const details = garmentDetails(garment(null, '  '));
 
     expect(valueOf(details, 'garments.fields.ownerId')).toBeNull();
+    expect(valueOf(details, 'garments.fields.owner')).toBeNull();
     expect(valueOf(details, 'garments.fields.activatedAt')).toBeNull();
     expect(valueOf(details, 'garments.fields.material')).toBeNull();
+  });
+
+  it('should show the owner name with the username when the owner has a profile', () => {
+    const owned = garment('u1', '95% paxta');
+    const named = new Garment(
+      owned.id,
+      owned.token,
+      owned.serialNumber,
+      owned.dropId,
+      owned.dropName,
+      owned.editionNumber,
+      owned.variantName,
+      owned.color,
+      owned.size,
+      owned.material,
+      owned.manufacturedAt,
+      owned.status,
+      owned.ownerId,
+      owned.activatedAt,
+      owned.expiresAt,
+      'Otabek Olimjonov',
+      'otabek',
+    );
+
+    expect(valueOf(garmentDetails(named), 'garments.fields.owner')).toBe(
+      'Otabek Olimjonov (otabek)',
+    );
+  });
+
+  it('should leave the owner name empty when only the owner id is known', () => {
+    expect(valueOf(garmentDetails(garment('u1', '95% paxta')), 'garments.fields.owner')).toBeNull();
   });
 });

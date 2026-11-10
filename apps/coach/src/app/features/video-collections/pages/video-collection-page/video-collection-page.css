@@ -1,0 +1,43 @@
+.videos-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add {
+  cursor: pointer;
+}
+
+.add.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.limit {
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  color: var(--c-primary);
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 10px 28px var(--c-shadow);
+}

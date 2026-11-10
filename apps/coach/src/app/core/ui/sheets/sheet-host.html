@@ -55,4 +55,29 @@
       </button>
     </div>
   }
+  @if (pairSheet(); as request) {
+    <div class="prompt">
+      <div class="pair">
+        <coach-text-field
+          [(value)]="pairTitle"
+          [hint]="request.sheet.titleHint"
+          [maxLength]="request.sheet.titleMaxLength"
+          [autofocus]="true"
+          [ariaLabel]="request.sheet.titleHint"
+          (submitted)="savePair()"
+        />
+        <coach-text-field
+          [(value)]="pairText"
+          [hint]="request.sheet.textHint"
+          [maxLength]="request.sheet.textMaxLength"
+          [rows]="3"
+          [clearable]="false"
+          [ariaLabel]="request.sheet.textHint"
+        />
+      </div>
+      <button coachButton="primary" type="button" [disabled]="!canSavePair()" (click)="savePair()">
+        {{ request.sheet.actionLabel }}
+      </button>
+    </div>
+  }
 </coach-sheet>

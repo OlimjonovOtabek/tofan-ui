@@ -27,6 +27,8 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
 | Clients | `/clients?filter=`, `/clients/:userId` | `/coach/clients`, `adherence`, `workout-sessions`, `nutrition`, `payments` |
 | Chat | `/chat`, `/chat/c/:conversationId`, `/chat/with/:userId` | `/chat/conversations`, SignalR hub `/hubs/chat` |
 | Profile | `/profile`, `edit`, `pricing`, `earnings`, `preview-videos` | `/coach/profile`, `/coach/earnings`, `/coach/preview-videos`, `/files` |
+| Posts | `/profile/posts` | `/coach/posts` (paged, create, update, delete) |
+| Extra exercises | `/profile/video-collections`, `/profile/video-collections/:collectionId` | `/coach/video-collections` (list, read, create, update, delete, publish, unpublish, `order`, `videos`, `videos/order`) |
 
 ## Rules taken from mobile
 
@@ -46,7 +48,21 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
   A Client can be messaged only when the subscription is not ended and the Tier is VIP (`canMessage` in `core/clients/client.ts`; an expiring subscription still can).
   The write button on the Client page and its sticky footer follow that rule, so a Standard or ended Client shows no button.
 - Preview videos: at most 5, can be reordered by drag.
-- Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending.
+- Posts (`features/posts`, mobile `trainer_posts`): a title (required, at most 200), optional text (at most 4000) and at most one video.
+  Text or a video is required, checked before sending (`hasPostContent`).
+  The feed is paged by 10 with a "show older posts" button, newest first.
+  A post is "edited" when it changed more than a minute after it came out.
+  The editor is a sheet on the posts page, because there is no `GET /coach/posts/{id}` to open an edit route on its own.
+  A post without a new video is saved right away; a post with a newly picked video is queued with `saveWhenUploaded` (group `trainer-posts`) and comes out once the video is stored.
+  Creating a post sends a push to every active subscriber (after the video is ready); editing never sends it again.
+  Deleting a post keeps the video file.
+- Extra exercises (`features/video-collections`, mobile `video_collections`): at most 20 collections per coach and 50 videos per collection.
+  A new collection is a draft; it opens right after it is made, and videos are added one at a time (group `video-collection:<id>`).
+  An empty draft cannot be published (`coachApp.videoCollections.publishEmpty`, the backend answers `TrainerVideoCollection.Empty`).
+  Publishing sends no push. Collections and their videos are reordered by drag; a failed reorder restores the old order.
+  A video without a title is shown as "1-mashq", "2-mashq", like program days.
+  Deleting a collection deletes its videos.
+- Processing status comes from `GET /files/videos` and is polled every 5 seconds while a video is pending (`VideoStatusesStore`, provided per page).
 - Pricing (`/profile/pricing`) has the monthly price and an optional VIP price, as on mobile.
   An empty VIP field means `null`: no new VIP sales, and current VIP subscribers keep chat until their subscription ends.
   A VIP price of zero is refused before saving (`coachApp.pricing.vipInvalid`).
@@ -57,7 +73,7 @@ The Content tab (own exercises and foods) is hidden, as on mobile.
 
 ## Video uploads
 
-Program days and preview videos go through `VideoUploadsStore` (`core/videos`), which is global so an upload outlives the screen that started it.
+Program days, preview videos, post videos and collection videos go through `VideoUploadsStore` (`core/videos`), which is global so an upload outlives the screen that started it.
 It follows the mobile `VideoUploadManager` on the `dev` branch of `tofan_trainer`.
 Avatars and other images stay on the shared multipart `FileUploadService`.
 
@@ -125,6 +141,7 @@ A message has a `kind` (`text`, `image`, `file`, `voice`, `videoNote`) and `atta
 The coach turns it on in Profile, since browsers ask for permission on a user action.
 `public/push-worker.js` is a plain service worker without the Firebase SDK: it shows the notification, or tells a visible tab, and a tap opens the screen from `pushLinkOf` (the same routes as mobile).
 A visible tab gets the push `data` plus its `title` and `body` (`toPushNotice`), and `PushStore` shows them in an info toast (`NotificationService.announce`).
+A processed or failed video push opens its program, the preview videos, the posts (`postId`) or its collection (`collectionId`), in that order; one the server could not place opens the programs.
 A failed video push keeps its own localized toast, and a tap on a system notification opens the screen without showing the text again.
 With the tab hidden the worker raises the system notification instead.
 A push without a `title` (data only) is shown nowhere, in a visible tab or a hidden one.
@@ -157,7 +174,7 @@ apps/coach/src/app/
   core/videos      video status, tag, full screen player, tus uploads, compression and the upload queue
   core/push        browser push token and the screen a tapped push opens
   core/theme       light, dark, system theme store
-  features/<x>     auth, dashboard, programs, clients, chat, profile
+  features/<x>     auth, dashboard, programs, clients, chat, profile, posts, video-collections
 ```
 
 ## Design system
@@ -166,7 +183,7 @@ Tokens come from the mobile `Palette`, `Dimensions` and Inter type scale.
 Colors are defined in `core/layout/coach-theme.ts` (`semantic.colorScheme.light|dark.coach`) and exposed as `--c-*` custom properties in `styles.css`.
 Shared classes (`c-card`, `c-tag`, `c-chip`, `c-button`, `c-pill`) live in `ui.css`.
 Icons are the mobile SVGs in one sprite (`core/ui/icon/icon-sprite.html`), drawn with `currentColor`.
-Mobile bottom sheets are `Sheets` (confirm, actions, choose, prompt): a bottom sheet on phones and a centered dialog from 768px.
+Mobile bottom sheets are `Sheets` (confirm, actions, choose, prompt, pair): a bottom sheet on phones and a centered dialog from 768px.
 The app also keeps Optimus UI for the toast host and the preset.
 
 ## Texts

@@ -279,6 +279,10 @@ So'rov: har qatorga `userName` (Soldier ismi va familiyasi, bo'lmasa username) v
 Panel har qator uchun alohida so'rov yubormasligi uchun ma'lumot shu javobning o'zida kelishi kerak.
 Hozircha panel ID ko'rsatadi, foydalanuvchi ID'si Soldier sahifasiga havola.
 
+Javob (2026-11-10, API v9.20, `admin-ui-table-names-v1.md`): to'lov buyurtmalari, trener obunalari, kirishlar jurnali, trenerlar va NFC futbolkalar jadvallariga nom maydonlari va filtrlar qo'shildi, panel ularni ulagan.
+Berilmaganlar: `userPhoneNumber` va telefon bo'yicha qidiruv (telefon Keycloak'da), `TrainerId` filtri (`ReferenceId` + `Purpose=1`), `grantedByName` (o'rniga `isPaid`), sessiyalarda `userFullName` va `lastUsedOnUtc`.
+Mobil ilova sessiyalarida `userAgent` `Dart/3.11 (dart:io)` bo'lib keladi, qurilma nomi uchun ilova o'z `User-Agent` sarlavhasini yuborishi kerak.
+
 ### `POST /admin/payment-orders` nima qiladi
 
 Swagger'da tavsif yo'q edi, shuning uchun endpoint 2026-11-08 da stage'da test hisoblar bilan sinab ko'rildi.

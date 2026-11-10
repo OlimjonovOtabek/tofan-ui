@@ -1,0 +1,26 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.video {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.video-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.pick {
+  cursor: pointer;
+}
+
+.pick.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

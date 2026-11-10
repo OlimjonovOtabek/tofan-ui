@@ -18,6 +18,9 @@ const response: TrainerSubscriptionResponse = {
   grantedBy: 'a1',
   createdOnUtc: '2026-10-01T10:00:00Z',
   tier: TierDto.Standard,
+  isPaid: true,
+  userFullName: 'Otabek Olimjonov',
+  userName: 'otabek',
 };
 
 describe('toTrainerSubscription', () => {
@@ -29,6 +32,27 @@ describe('toTrainerSubscription', () => {
     expect(subscription.startsOn).toEqual(new Date('2026-10-01T10:00:00Z'));
     expect(subscription.endsOn).toEqual(new Date('2026-11-01T10:00:00Z'));
     expect(subscription.endedOn).toBeNull();
+  });
+
+  it('should keep the subscriber names and the payment flag when the backend sends them', () => {
+    const subscription = toTrainerSubscription(response);
+
+    expect(subscription.userFullName).toBe('Otabek Olimjonov');
+    expect(subscription.userName).toBe('otabek');
+    expect(subscription.isPaid).toBe(true);
+  });
+
+  it('should keep the names empty when the subscriber has no profile', () => {
+    const subscription = toTrainerSubscription({
+      ...response,
+      userFullName: null,
+      userName: null,
+      isPaid: false,
+    });
+
+    expect(subscription.userFullName).toBeNull();
+    expect(subscription.userName).toBeNull();
+    expect(subscription.isPaid).toBe(false);
   });
 
   it('should map the end moment when the subscription was ended', () => {
@@ -77,26 +101,44 @@ describe('toGrantRequest', () => {
 });
 
 describe('toSubscriptionQuery', () => {
+  const now = new Date('2026-11-10T09:00:00.000Z');
+
   it('should drop everything when no filter is set', () => {
-    expect(toSubscriptionQuery({})).toEqual({
+    expect(toSubscriptionQuery({}, now)).toEqual({
       TrainerId: undefined,
-      UserId: undefined,
+      Search: undefined,
+      Tier: undefined,
       IsActive: undefined,
+      EndsFrom: undefined,
+      EndsTo: undefined,
     });
   });
 
-  it('should send the trainer and the user when they are set', () => {
-    expect(toSubscriptionQuery({ trainerId: 't1', userId: 'u1' })).toMatchObject({
-      TrainerId: 't1',
-      UserId: 'u1',
-    });
+  it('should send the trainer, the search and the tier when they are set', () => {
+    expect(
+      toSubscriptionQuery({ trainerId: 't1', search: 'otabek', tier: 'vip' }, now),
+    ).toMatchObject({ TrainerId: 't1', Search: 'otabek', Tier: 2 });
   });
 
   it('should ask for active subscriptions when the status is active', () => {
-    expect(toSubscriptionQuery({ status: 'active' })).toMatchObject({ IsActive: true });
+    expect(toSubscriptionQuery({ status: 'active' }, now)).toMatchObject({ IsActive: true });
   });
 
   it('should ask for the closed subscriptions when the status is ended', () => {
-    expect(toSubscriptionQuery({ status: 'ended' })).toMatchObject({ IsActive: false });
+    expect(toSubscriptionQuery({ status: 'ended' }, now)).toMatchObject({ IsActive: false });
+  });
+
+  it('should ask for active subscriptions that end within seven days when ending soon is on', () => {
+    expect(toSubscriptionQuery({ endingSoon: true }, now)).toMatchObject({
+      IsActive: true,
+      EndsFrom: '2026-11-10T09:00:00.000Z',
+      EndsTo: '2026-11-17T09:00:00.000Z',
+    });
+  });
+
+  it('should keep only active subscriptions when ending soon is on with the ended status', () => {
+    expect(toSubscriptionQuery({ endingSoon: true, status: 'ended' }, now)).toMatchObject({
+      IsActive: true,
+    });
   });
 });

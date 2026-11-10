@@ -1,6 +1,8 @@
 import { Tier } from '@shared/models/tier';
 import { SubscriptionStatus } from './subscription-status';
 
+export type SubscriptionSource = 'paid' | 'granted';
+
 export class TrainerSubscription {
   constructor(
     readonly id: string,
@@ -13,6 +15,9 @@ export class TrainerSubscription {
     readonly grantedBy: string,
     readonly createdOn: Date,
     readonly tier: Tier,
+    readonly userFullName: string | null,
+    readonly userName: string | null,
+    readonly isPaid: boolean,
   ) {}
 
   status(now: Date): SubscriptionStatus {
@@ -25,6 +30,10 @@ export class TrainerSubscription {
 
   canChangeTier(now: Date): boolean {
     return this.status(now) === 'active';
+  }
+
+  source(): SubscriptionSource {
+    return this.isPaid ? 'paid' : 'granted';
   }
 
   targetTier(): Tier {

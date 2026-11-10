@@ -1,0 +1,51 @@
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.more {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--c-border);
+  border-radius: 50%;
+  background: var(--c-surface);
+  color: var(--c-text);
+  --icon-size: 16px;
+}
+
+.more:disabled {
+  opacity: 0.5;
+}
+
+.title {
+  margin: 12px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.text {
+  margin: 6px 0 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.video {
+  display: block;
+  margin-top: 12px;
+}

@@ -11,6 +11,7 @@ import { TextField } from '@coach/core/ui/text-field/text-field';
 import { VideoStatusTag } from '@coach/core/videos/video-status-tag';
 import { VideoPlayerService } from '@coach/core/videos/video-player.service';
 import { canWatch, formatVideoDuration } from '@coach/core/videos/video';
+import { VIDEO_FILE_ACCEPT } from '@coach/core/videos/video-upload';
 import { DayEditorStore } from '../../day-editor.store';
 import {
   DAY_DESCRIPTION_MAX,
@@ -44,6 +45,7 @@ export class DayEditor {
   readonly saved = output<DayDraft>();
 
   protected readonly descriptionMax = DAY_DESCRIPTION_MAX;
+  protected readonly accept = VIDEO_FILE_ACCEPT;
   protected readonly uploaded = computed(() => uploadedCount(this.store.draft()));
 
   constructor() {

@@ -5,12 +5,14 @@ import { toPage, toPagedQuery } from '@core/http/paging.mapper';
 import { Page, PageRequest } from '@shared/models/page';
 import { PaymentOrder } from '../models/payment-order';
 import { PaymentOrderDraft } from '../models/payment-order-draft';
-import { PaymentOrderFilter } from '../models/payment-order-filter';
+import { PaymentOrderFilter, toPaymentOrderTarget } from '../models/payment-order-filter';
 import { PaymentOrderResponse } from './payment-order.dto';
 import {
   toCreatePaymentOrderRequest,
   toPaymentOrder,
   toPaymentOrderStatusDto,
+  toPaymentProviderDto,
+  toPaymentPurposeDto,
 } from './payment-order.mapper';
 
 const PAYMENT_ORDERS = '/admin/payment-orders';
@@ -20,11 +22,16 @@ export class PaymentOrdersService {
   private readonly apiClient = inject(ApiClient);
 
   async list(filter: PaymentOrderFilter, page: PageRequest): Promise<Page<PaymentOrder>> {
+    const target = toPaymentOrderTarget(filter);
     const list = await this.apiClient.get<PagedList<PaymentOrderResponse>>(PAYMENT_ORDERS, {
       ...toPagedQuery(page),
+      Search: filter.search,
       Status: filter.status === undefined ? undefined : toPaymentOrderStatusDto(filter.status),
-      UserId: filter.userId,
-      ReferenceId: filter.referenceId,
+      Purpose: target.purpose === undefined ? undefined : toPaymentPurposeDto(target.purpose),
+      ReferenceId: target.referenceId,
+      PaidWith: filter.paidWith === undefined ? undefined : toPaymentProviderDto(filter.paidWith),
+      CreatedFrom: filter.createdFrom?.toISOString(),
+      CreatedTo: filter.createdBefore?.toISOString(),
     });
     return toPage(list, toPaymentOrder);
   }

@@ -1,0 +1,66 @@
+<form class="editor" [formRoot]="postForm">
+  <coach-text-field
+    [formField]="postForm.title"
+    [title]="'coachApp.posts.titleLabel' | t"
+    [hint]="'coachApp.posts.titleHint' | t"
+    [autofocus]="true"
+  />
+  <coach-text-field
+    [formField]="postForm.text"
+    [title]="'coachApp.posts.textLabel' | t"
+    [hint]="'coachApp.posts.textHint' | t"
+    [rows]="6"
+    [showCounter]="true"
+    [clearable]="false"
+  />
+  <div class="video">
+    <span class="c-label">{{ 'coachApp.posts.videoLabel' | t }}</span>
+    @if (video().kind !== 'none') {
+      <coach-video-preview [posterUrl]="posterUrl()" (watch)="watch()" />
+      <div class="video-actions">
+        <label coachButton="secondary" class="pick" [class.is-disabled]="store.saving()">
+          <input
+            type="file"
+            [accept]="accept"
+            hidden
+            [disabled]="store.saving()"
+            (change)="chosen($event)"
+          />
+          {{ 'coachApp.posts.videoReplace' | t }}
+        </label>
+        <button
+          coachButton="destructive"
+          type="button"
+          [disabled]="store.saving()"
+          (click)="removeVideo()"
+        >
+          {{ 'coachApp.posts.videoRemove' | t }}
+        </button>
+      </div>
+    } @else {
+      <label coachButton="soft" class="pick" [class.is-disabled]="store.saving()">
+        <input
+          type="file"
+          [accept]="accept"
+          hidden
+          [disabled]="store.saving()"
+          (change)="chosen($event)"
+        />
+        {{ 'coachApp.posts.videoAdd' | t }}
+      </label>
+    }
+  </div>
+  @if (contentMissing()) {
+    <p class="t-base4 tone-error" role="alert">{{ 'coachApp.posts.contentRequired' | t }}</p>
+  }
+  <coach-note
+    icon="bell"
+    [text]="(post() === null ? 'coachApp.posts.pushNote' : 'coachApp.posts.editNote') | t"
+  />
+  @if (store.saveError(); as error) {
+    <p class="t-base4 tone-error" role="alert">{{ error | message }}</p>
+  }
+  <button coachButton="primary" type="submit" [loading]="store.saving()">
+    {{ (post() === null ? 'coachApp.posts.publish' : 'coachApp.posts.save') | t }}
+  </button>
+</form>

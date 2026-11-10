@@ -1,0 +1,48 @@
+<div class="mb-4 flex flex-wrap items-start gap-3">
+  <div class="flex min-w-64 flex-1 flex-col gap-1">
+    <label for="sessionSearch" class="text-muted-color text-sm">{{
+      'userSessions.filters.search' | t
+    }}</label>
+    <input
+      pInputText
+      id="sessionSearch"
+      type="search"
+      [formField]="form.search"
+      [placeholder]="'userSessions.filters.searchPlaceholder' | t"
+    />
+  </div>
+
+  <div class="flex min-w-48 flex-col gap-1">
+    <label for="sessionStatus" class="text-muted-color text-sm">{{
+      'userSessions.filters.status' | t
+    }}</label>
+    <app-select-field
+      inputId="sessionStatus"
+      [formField]="form.status"
+      [options]="statusOptions()"
+      [placeholder]="'userSessions.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex min-w-56 flex-col gap-1">
+    <label for="sessionLoggedIn" class="text-muted-color text-sm">{{
+      'userSessions.filters.loggedIn' | t
+    }}</label>
+    <app-date-range-field
+      inputId="sessionLoggedIn"
+      [formField]="form.loggedIn"
+      [maxDate]="today"
+      [placeholder]="'userSessions.filters.loggedInPlaceholder' | t"
+    />
+  </div>
+
+  <p-button
+    class="self-end"
+    [label]="'common.actions.clear' | t"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</div>

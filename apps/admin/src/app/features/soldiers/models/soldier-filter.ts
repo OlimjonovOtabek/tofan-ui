@@ -1,3 +1,4 @@
+import { toDayPeriod } from '@shared/utils/day-range';
 import { ExperienceLevel, FitnessGoal, Gender } from './soldier-attributes';
 
 export interface SoldierFilter {
@@ -16,16 +17,9 @@ export interface JoinedPeriod {
 }
 
 export function toJoinedPeriod(firstDay: Date | null, lastDay: Date | null): JoinedPeriod {
+  const period = toDayPeriod([firstDay, lastDay]);
   return {
-    ...(firstDay === null ? {} : { joinedFrom: startOfDay(firstDay) }),
-    ...(lastDay === null ? {} : { joinedBefore: startOfNextDay(lastDay) }),
+    ...(period.from === undefined ? {} : { joinedFrom: period.from }),
+    ...(period.before === undefined ? {} : { joinedBefore: period.before }),
   };
-}
-
-function startOfDay(day: Date): Date {
-  return new Date(day.getFullYear(), day.getMonth(), day.getDate());
-}
-
-function startOfNextDay(day: Date): Date {
-  return new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1);
 }

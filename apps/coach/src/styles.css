@@ -245,6 +245,14 @@ coach-shell {
   white-space: nowrap;
 }
 
+.coach-clamp-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .coach-sr-only {
   position: absolute;
   width: 1px;

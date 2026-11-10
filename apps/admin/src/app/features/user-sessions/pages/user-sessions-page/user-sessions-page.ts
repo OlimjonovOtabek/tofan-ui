@@ -1,8 +1,17 @@
 import { Component, computed, effect, inject, input, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PageRequest } from '@shared/models/page';
-import { isUuid } from '@shared/utils/identifiers';
-import { UserSession, UserSessionStatus } from '../../models/user-session';
+import { isUuid, shortId } from '@shared/utils/identifiers';
+import { UserSessionFilters } from '../../components/user-session-filters/user-session-filters';
+import { toSessionDevice } from '../../models/session-device';
+import { UserSession } from '../../models/user-session';
+import { SessionListFilter } from '../../models/user-session-filter';
+import {
+  SESSION_DEVICE_FALLBACK_LABELS,
+  SESSION_STATUS_LABELS,
+  SESSION_STATUS_SEVERITIES,
+  SessionTagSeverity,
+} from '../../models/user-session-labels';
 import { AppPaths } from '@core/config/app-paths';
 import { CatalogHeader } from '@shared/components/catalog-header/catalog-header';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
@@ -16,17 +25,17 @@ import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 
-type TagSeverity = 'info' | 'secondary' | 'warn';
-
-const STATUS_VIEW: Record<UserSessionStatus, { label: TranslationKey; severity: TagSeverity }> = {
-  unexpired: { label: 'userSessions.status.unexpired', severity: 'info' },
-  expired: { label: 'userSessions.status.expired', severity: 'secondary' },
-  revokedEverywhere: { label: 'userSessions.status.revokedEverywhere', severity: 'warn' },
-};
+interface SessionRow {
+  readonly session: UserSession;
+  readonly user: string;
+  readonly userIsId: boolean;
+  readonly device: string;
+  readonly deviceIsKnown: boolean;
+}
 
 @Component({
   selector: 'app-user-sessions-page',
-  imports: [CatalogHeader, DataTable, RouterLink, Button, Tag, TranslatePipe],
+  imports: [CatalogHeader, DataTable, RouterLink, Button, Tag, TranslatePipe, UserSessionFilters],
   providers: [UserSessionsStore],
   templateUrl: './user-sessions-page.html',
 })
@@ -38,7 +47,8 @@ export class UserSessionsPage {
   protected readonly store = inject(UserSessionsStore);
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
-    { field: 'userId', header: this.text('userSessions.columns.userId') },
+    { field: 'userName', header: this.text('userSessions.columns.user'), sortable: true },
+    { field: 'userAgent', header: this.text('userSessions.columns.device') },
     {
       field: 'createdOnUtc',
       header: this.text('userSessions.columns.loggedIn'),
@@ -55,6 +65,10 @@ export class UserSessionsPage {
     { field: 'actions', header: '', width: '11rem' },
   ]);
 
+  protected readonly rows = computed<readonly SessionRow[]>(() =>
+    this.store.sessions().map((session) => this.toRow(session)),
+  );
+
   protected readonly sendNotificationPath = AppPaths.sendNotification;
   protected readonly userSessionsPath = AppPaths.userSessions;
   protected readonly accountsPath = AppPaths.accounts;
@@ -69,11 +83,11 @@ export class UserSessionsPage {
   }
 
   protected statusLabel(session: UserSession): string {
-    return this.text(STATUS_VIEW[session.status()].label);
+    return this.text(SESSION_STATUS_LABELS[session.status()]);
   }
 
-  protected statusSeverity(session: UserSession): TagSeverity {
-    return STATUS_VIEW[session.status()].severity;
+  protected statusSeverity(session: UserSession): SessionTagSeverity {
+    return SESSION_STATUS_SEVERITIES[session.status()];
   }
 
   protected dateLabel(date: Date): string {
@@ -94,6 +108,21 @@ export class UserSessionsPage {
 
   protected loadPage(request: PageRequest): void {
     void this.store.load(request);
+  }
+
+  protected applyFilter(filter: SessionListFilter): void {
+    void this.store.applyFilter(filter);
+  }
+
+  private toRow(session: UserSession): SessionRow {
+    const device = toSessionDevice(session.userAgent);
+    return {
+      session,
+      user: session.userName ?? shortId(session.userId),
+      userIsId: session.userName === null,
+      device: device.name ?? this.text(SESSION_DEVICE_FALLBACK_LABELS[device.kind]),
+      deviceIsKnown: device.kind !== 'unknown',
+    };
   }
 
   private text(key: TranslationKey): string {

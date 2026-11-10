@@ -10,7 +10,7 @@ export type TileTone = 'primary' | 'info' | 'warning' | 'success' | 'muted';
   imports: [Icon, Progress],
   template: `
     <div class="head">
-      <span class="t-base4 font-medium tone-secondary coach-ellipsis">{{ label() }}</span>
+      <span class="t-base4 font-medium tone-secondary coach-clamp-2">{{ label() }}</span>
       <coach-icon [name]="icon()" [class]="'tone-' + tone()" />
     </div>
     <div class="body">
@@ -21,7 +21,7 @@ export type TileTone = 'primary' | 'info' | 'warning' | 'success' | 'muted';
         }
       </p>
       @if (goal(); as goal) {
-        <p class="goal t-base5 font-medium coach-ellipsis" [class]="'tone-' + goalTone()">
+        <p class="goal t-base5 font-medium coach-clamp-2" [class]="'tone-' + goalTone()">
           {{ goal }}
         </p>
       }

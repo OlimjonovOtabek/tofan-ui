@@ -91,6 +91,30 @@ describe('TrainersStore', () => {
     notifications = { success: vi.fn(), error: vi.fn() };
   });
 
+  it('should reload the first page with the filter when a filter is applied', async () => {
+    const store = createStore();
+    await store.load({ first: 50, rows: 25 });
+
+    await store.applyFilter({ search: 'stage', publishState: 'draft' });
+
+    expect(trainers.list).toHaveBeenLastCalledWith(
+      { first: 0, rows: 25 },
+      { search: 'stage', publishState: 'draft' },
+    );
+  });
+
+  it('should keep the filter when the next page is loaded', async () => {
+    const store = createStore();
+    await store.applyFilter({ publishState: 'published' });
+
+    await store.load({ first: 25, rows: 25 });
+
+    expect(trainers.list).toHaveBeenLastCalledWith(
+      { first: 25, rows: 25 },
+      { publishState: 'published' },
+    );
+  });
+
   it('should expose the account when it is loaded for editing', async () => {
     const store = createStore();
 
@@ -207,12 +231,10 @@ describe('TrainersStore', () => {
 
     await store.load();
 
-    expect(trainers.list).toHaveBeenLastCalledWith({
-      first: 50,
-      rows: 10,
-      sortField: 'displayName',
-      sortDirection: 'asc',
-    });
+    expect(trainers.list).toHaveBeenLastCalledWith(
+      { first: 50, rows: 10, sortField: 'displayName', sortDirection: 'asc' },
+      {},
+    );
   });
 
   it('should expose the error and drop the old rows when a reload fails', async () => {

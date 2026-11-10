@@ -17,10 +17,25 @@ export const USER_SESSIONS_RU: Dictionary['userSessions'] = {
   sendPushShort: 'Отправить push',
   revokedAt: 'Выход: {date}',
   columns: {
-    userId: 'ID пользователя',
+    user: 'Пользователь',
+    device: 'Устройство',
     loggedIn: 'Время входа',
     expires: 'Срок токена',
     status: 'Статус',
+  },
+  filters: {
+    search: 'Поиск',
+    searchPlaceholder: 'Логин',
+    status: 'Статус',
+    all: 'Все',
+    loggedIn: 'Дата входа',
+    loggedInPlaceholder: 'Период',
+  },
+  device: {
+    app: 'Приложение Tofan',
+    browser: 'Браузер',
+    other: 'Другой клиент',
+    unknown: 'Нет данных',
   },
   status: {
     unexpired: 'Не истёк',

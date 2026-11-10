@@ -53,18 +53,18 @@
           <p-tag [value]="statusLabel(garment)" [severity]="statusSeverity(garment)" />
         </td>
         <td>
-          <div>{{ dateLabel(garment.activatedAt) }}</div>
-          @if (garment.ownerId; as ownerId) {
-            <button
-              type="button"
-              class="text-muted-color cursor-pointer text-sm"
-              [title]="ownerId"
-              (click)="$event.stopPropagation(); copyOwnerId(ownerId)"
-            >
-              <i class="pi pi-user mr-1" aria-hidden="true"></i>{{ shortId(ownerId) }}
-            </button>
+          @if (garment.owner(); as owner) {
+            <div [class.font-mono]="owner.isIdFallback" [title]="garment.ownerId">
+              {{ owner.primary }}
+            </div>
+            @if (owner.secondary; as userName) {
+              <div class="text-muted-color text-xs">{{ userName }}</div>
+            }
+          } @else {
+            <span class="text-muted-color">{{ 'garments.list.noOwner' | t }}</span>
           }
         </td>
+        <td>{{ dateLabel(garment.activatedAt) }}</td>
         <td>
           <div>{{ dateLabel(garment.expiresAt) }}</div>
           @if (garment.isExpired(now)) {

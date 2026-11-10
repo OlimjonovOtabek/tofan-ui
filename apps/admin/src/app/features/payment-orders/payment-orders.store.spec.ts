@@ -24,8 +24,11 @@ const draft: PaymentOrderDraft = {
 const order: PaymentOrder = {
   id: 'o1',
   userId: 'u1',
+  userFullName: null,
+  userName: null,
   purpose: 'tariff',
   referenceId: 'tariff-2',
+  referenceName: null,
   tier: null,
   price: 120000,
   commissionAmount: 0,
@@ -106,11 +109,11 @@ describe('PaymentOrdersStore', () => {
   it('should only remember the filter when it arrives before the first page', async () => {
     const store = createStore();
 
-    await store.applyFilter({ userId: 'u1' });
+    await store.applyFilter({ search: 'otabek' });
 
     expect(service.list).not.toHaveBeenCalled();
     await store.load({ first: 0, rows: 25 });
-    expect(service.list).toHaveBeenCalledWith({ userId: 'u1' }, { first: 0, rows: 25 });
+    expect(service.list).toHaveBeenCalledWith({ search: 'otabek' }, { first: 0, rows: 25 });
   });
 
   it('should keep the newest page when an older answer arrives late', async () => {

@@ -57,4 +57,42 @@ describe('Garment', () => {
     expect(garment('hidden').statusChanges()).toEqual(['active', 'revoked']);
     expect(garment('revoked').statusChanges()).toEqual(['active', 'hidden']);
   });
+
+  it('should have no owner when nobody activated the garment', () => {
+    expect(garment('inactive').owner()).toBeNull();
+  });
+
+  it('should name the owner when the list sends the owner names', () => {
+    const owned = new Garment(
+      '1',
+      'n1gq9Xh2',
+      '01K7X8M4Q9F2A6BC3DEFGHJKMN',
+      'd1',
+      'Drop 1',
+      349,
+      'Oversize',
+      '#1A3C6E',
+      'L',
+      '95% paxta',
+      new Date('2026-08-14T00:00:00Z'),
+      'active',
+      '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b',
+      new Date('2026-09-21T10:12:00Z'),
+      null,
+      'Otabek Olimjonov',
+      'otabek',
+    );
+
+    expect(owned.owner()).toEqual({
+      primary: 'Otabek Olimjonov',
+      secondary: 'otabek',
+      isIdFallback: false,
+    });
+  });
+
+  it('should fall back to the short owner id when the owner has no profile', () => {
+    expect(garment('active', '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b').owner()?.primary).toBe(
+      '3f2b8c1e',
+    );
+  });
 });

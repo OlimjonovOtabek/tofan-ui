@@ -18,7 +18,9 @@ import {
 import { TrainerEditDialog } from '../../components/trainer-edit-dialog/trainer-edit-dialog';
 import { TrainerFormDialog } from '../../components/trainer-form-dialog/trainer-form-dialog';
 import { TrainerPasswordDialog } from '../../components/trainer-password-dialog/trainer-password-dialog';
+import { TrainerListFilters } from '../../components/trainer-list-filters/trainer-list-filters';
 import { TrainerRowActions } from '../../components/trainer-row-actions/trainer-row-actions';
+import { TrainerListFilter } from '../../models/trainer-list-filter';
 import { TrainerEditDraft } from '../../models/trainer-edit-draft';
 import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { DataTable, DataTableColumn } from '@shared/components/data-table/data-table';
@@ -39,6 +41,7 @@ import { Translator } from '@core/i18n/translator';
     TrainerEditDialog,
     TrainerPasswordDialog,
     TrainerRowActions,
+    TrainerListFilters,
     SubscriptionGrantDialog,
     Avatar,
     Button,
@@ -58,8 +61,13 @@ export class TrainersListPage {
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'displayName', header: this.column('trainer'), sortable: true },
-    { field: 'slug', header: this.column('slug') },
-    { field: 'userId', header: this.column('userId') },
+    { field: 'userName', header: this.column('account') },
+    {
+      field: 'activeSubscribersCount',
+      header: this.column('subscribers'),
+      sortable: true,
+      width: '9rem',
+    },
     { field: 'monthlyPrice', header: this.column('monthlyPrice'), sortable: true, width: '12rem' },
     { field: 'vipMonthlyPrice', header: this.column('vipPrice'), width: '12rem' },
     { field: 'status', header: this.column('status'), width: '12rem' },
@@ -97,6 +105,10 @@ export class TrainersListPage {
 
   protected dateLabel(date: Date): string {
     return formatDate(date, this.localeStore.locale());
+  }
+
+  protected applyFilter(filter: TrainerListFilter): void {
+    void this.store.applyFilter(filter);
   }
 
   protected readonly shortId = shortId;

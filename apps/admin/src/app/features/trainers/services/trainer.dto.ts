@@ -1,4 +1,4 @@
-export interface TrainerResponse {
+export interface TrainerSummaryResponse {
   id: string;
   userId: string;
   displayName: string;
@@ -9,6 +9,10 @@ export interface TrainerResponse {
   vipMonthlyPrice?: number | null;
   isPublished: boolean;
   createdOnUtc: string;
+  activeSubscribersCount?: number;
+  userName?: string | null;
+  email?: string | null;
+  phoneNumber?: string | null;
 }
 
 export interface CreateTrainerRequest {
