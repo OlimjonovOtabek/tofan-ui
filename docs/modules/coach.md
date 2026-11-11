@@ -135,6 +135,28 @@ A message has a `kind` (`text`, `image`, `file`, `voice`, `videoNote`) and `atta
 - **List preview:** `lastMessageKind` picks the icon (image, paperclip, microphone, video note) and, when `lastMessageText` is empty, the word for the kind (`previewText`).
 - **Trap:** a CSS class called `ring` (and other Tailwind utility names) picks up the Tailwind utility; the progress circles use `progress-ring`.
 
+### Chat v3: deleting a message
+
+Backend contract: `.scratch/chat-v3/backend-chat-v3.md` (stage API; not on `api.peaktofan.com` yet).
+The coach can delete only messages the coach sent, at any time and in a read-only conversation too.
+The message disappears for both sides and leaves no trace; there is no undo.
+
+- **Interaction follows Telegram Web, not the Flutter app:** a right click on a message, or a 500 ms hold on a touch screen, opens the message sheet (`MessageMenu`).
+  The sheet offers "Copy" for a message with text (through the shared `ClipboardService`) and "Delete" for the coach's own message; a message with no action opens nothing.
+  Delete asks for confirmation first; Telegram's "also delete for" checkbox is left out because the backend always deletes for both.
+- **Gesture:** `MessagePress` blocks the browser menu, opens the sheet on `contextmenu`, and on touch starts a timer on `pointerdown` that a move of more than 10 px, `pointerup` or `pointercancel` cancels.
+  Android also fires `contextmenu` during a hold, so it is ignored while the finger is still down, and the click that may follow a hold is swallowed so an image does not open under the sheet.
+  On coarse pointers the bubbles turn off text selection and the iOS callout, otherwise a hold selects text instead.
+- **Request:** `DELETE /chat/conversations/{id}/messages/{messageId}` through `ChatDeletionStore`.
+  The bubble is dimmed while the request runs and a second request for the same message is ignored.
+  `404 Chat.MessageNotFound` means it is already gone (deleted from another device), so the message is removed without a toast; any other failure keeps the message and shows the error.
+- **Hub:** `MessageDeleted` reaches both members and every device of the one who deleted.
+  The conversation removes the message (`ConversationStore.forget`), and the list refetches `GET /chat/conversations`, which brings the new last message, the order, the unread count (the event does not carry it) and drops a conversation that became empty.
+- **Missed events:** after a reconnect the newest page is merged with `mergeNewestPage`: a message that was shown before the request, is missing from the page and falls inside the time the page covers was deleted meanwhile and is dropped.
+  Messages that arrived while the page was loading are kept.
+- **Animation:** the entry leaves with `animate.leave` (220 ms: rows collapse to `0fr`, fade, slight scale) so the neighbours close the gap smoothly.
+  A tab in the background does not run the animation, so the bubble stays until the tab is shown again.
+
 ## Push notifications
 
 `core/push` registers the browser's Firebase token with `PUT /device-tokens/me` (`platform` 3, Web) and removes it on sign-out with `DELETE /device-tokens/me`.
