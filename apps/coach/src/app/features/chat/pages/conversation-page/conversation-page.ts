@@ -21,16 +21,20 @@ import { MessagePipe } from '@core/i18n/message.pipe';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { ChatComposerStore } from '../../chat-composer.store';
+import { ChatDeletionStore } from '../../chat-deletion.store';
 import { ChatOutboxStore } from '../../chat-outbox.store';
 import { ChatPlaybackStore } from '../../chat-playback.store';
 import { ChatComposer } from '../../components/chat-composer/chat-composer';
 import { ImageGallery } from '../../components/image-gallery/image-gallery';
 import { MessageBubble } from '../../components/message-bubble/message-bubble';
+import { MessagePress } from '../../components/message-press/message-press';
 import { PendingBubble } from '../../components/pending-bubble/pending-bubble';
 import { ConversationStore } from '../../conversation.store';
 import { Message, chatInitials, isMine, isRead, opensDay } from '../../models/chat';
+import { canDelete } from '../../models/chat-deletion';
 import { dayLabel, presenceText } from '../../models/chat-text';
 import { VoiceRecordingStore } from '../../voice-recording.store';
+import { MessageMenu } from './message-menu';
 
 const OLDER_THRESHOLD_PX = 240;
 const NEWEST_SCROLL_TOP = 0;
@@ -53,6 +57,7 @@ interface GalleryTarget {
     ChatComposer,
     ImageGallery,
     MessageBubble,
+    MessagePress,
     PendingBubble,
   ],
   providers: [
@@ -61,6 +66,8 @@ interface GalleryTarget {
     VoiceRecordingStore,
     ChatComposerStore,
     ChatPlaybackStore,
+    ChatDeletionStore,
+    MessageMenu,
   ],
   templateUrl: './conversation-page.html',
   styleUrl: './conversation-page.css',
@@ -69,6 +76,8 @@ export class ConversationPage {
   protected readonly store = inject(ConversationStore);
   protected readonly outbox = inject(ChatOutboxStore);
   protected readonly composer = inject(ChatComposerStore);
+  protected readonly deletion = inject(ChatDeletionStore);
+  protected readonly menu = inject(MessageMenu);
   private readonly translator = inject(Translator);
   private readonly locale = inject(LocaleStore).locale;
 
@@ -103,6 +112,7 @@ export class ConversationPage {
       message,
       mine: isMine(message, other),
       read: isMine(message, other) && isRead(message, this.store.otherReadUpTo()),
+      deletable: canDelete(message, other),
       time: formatTime(message.sentOn),
       day: opensDay(messages, index) ? dayLabel(message.sentOn, now, this.locale(), t) : null,
     }));
