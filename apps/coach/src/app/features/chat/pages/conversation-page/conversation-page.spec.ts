@@ -80,7 +80,10 @@ function createFakeStore() {
 }
 
 describe('ConversationPage', () => {
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.body.replaceChildren();
+  });
 
   let store: ReturnType<typeof createFakeStore>;
   let fixture: ComponentFixture<ConversationPage>;
@@ -89,6 +92,10 @@ describe('ConversationPage', () => {
 
   beforeEach(async () => {
     vi.resetAllMocks();
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }),
+    });
     vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
     Element.prototype.scrollTo = vi.fn();
     store = createFakeStore();
@@ -350,12 +357,16 @@ describe('ConversationPage', () => {
       item.textContent?.includes(text),
     );
     bubble?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
     await fixture.whenStable();
-    const request = TestBed.inject(Sheets).request();
-    return request?.kind === 'actions' ? request.actions.map((action) => action.label) : [];
+    return menuItems().map((item) => item.textContent?.trim() ?? '');
   }
 
-  it('should offer copy and delete when the coach right clicks an own message', async () => {
+  function menuItems(): HTMLElement[] {
+    return [...document.querySelectorAll<HTMLElement>('.p-contextmenu-item-content')];
+  }
+
+  it('should offer copy and delete next to the pointer when the coach right clicks an own message', async () => {
     store.messages.set([{ ...message('m1', 'text', [], 'salom'), senderUserId: 'coach' }]);
     fixture.detectChanges();
 
@@ -369,16 +380,25 @@ describe('ConversationPage', () => {
     expect(await rightClick('salom')).toEqual(['Copy']);
   });
 
+  it('should open no menu when the message has no action', async () => {
+    store.messages.set([message('m1', 'voice', [attachment('f1')])]);
+    fixture.detectChanges();
+    const bubble = page().querySelector('coach-message-bubble');
+
+    bubble?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(menuItems()).toEqual([]);
+  });
+
   it('should delete the message only after the coach confirms it', async () => {
     store.messages.set([{ ...message('m1', 'text', [], 'salom'), senderUserId: 'coach' }]);
     fixture.detectChanges();
     await rightClick('salom');
+
+    menuItems()[1].click();
     const sheets = TestBed.inject(Sheets);
-    const actions = sheets.request();
-    if (actions?.kind !== 'actions') {
-      throw new Error('The message menu is not open.');
-    }
-    actions.actions[1].run();
     const confirm = sheets.request();
     expect(confirm?.kind === 'confirm' ? confirm.sheet.title : null).toBe('Delete this message?');
     expect(deletion.delete).not.toHaveBeenCalled();

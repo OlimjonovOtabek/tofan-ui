@@ -14,14 +14,7 @@ export class MessageMenu {
   private readonly clipboard = inject(ClipboardService);
   private readonly deletion = inject(ChatDeletionStore);
 
-  async open(message: Message, deletable: boolean): Promise<void> {
-    const actions = this.actionsFor(message, deletable);
-    if (actions.length > 0) {
-      await this.sheets.actions(this.t('coachApp.conversation.menuTitle'), actions);
-    }
-  }
-
-  private actionsFor(message: Message, deletable: boolean): SheetAction[] {
+  actionsFor(message: Message, deletable: boolean): SheetAction[] {
     const actions: SheetAction[] = [];
     if (message.text !== '') {
       actions.push({

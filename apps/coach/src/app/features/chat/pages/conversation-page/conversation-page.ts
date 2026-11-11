@@ -27,6 +27,7 @@ import { ChatPlaybackStore } from '../../chat-playback.store';
 import { ChatComposer } from '../../components/chat-composer/chat-composer';
 import { ImageGallery } from '../../components/image-gallery/image-gallery';
 import { MessageBubble } from '../../components/message-bubble/message-bubble';
+import { MessageContextMenu } from '../../components/message-context-menu/message-context-menu';
 import { MessagePress } from '../../components/message-press/message-press';
 import { PendingBubble } from '../../components/pending-bubble/pending-bubble';
 import { ConversationStore } from '../../conversation.store';
@@ -57,6 +58,7 @@ interface GalleryTarget {
     ChatComposer,
     ImageGallery,
     MessageBubble,
+    MessageContextMenu,
     MessagePress,
     PendingBubble,
   ],
@@ -77,7 +79,7 @@ export class ConversationPage {
   protected readonly outbox = inject(ChatOutboxStore);
   protected readonly composer = inject(ChatComposerStore);
   protected readonly deletion = inject(ChatDeletionStore);
-  protected readonly menu = inject(MessageMenu);
+  private readonly menu = inject(MessageMenu);
   private readonly translator = inject(Translator);
   private readonly locale = inject(LocaleStore).locale;
 
@@ -86,6 +88,7 @@ export class ConversationPage {
   readonly name = input<string | undefined>(undefined);
 
   private readonly scroller = viewChild<ElementRef<HTMLElement>>('scroller');
+  private readonly contextMenu = viewChild.required(MessageContextMenu);
   private readonly galleryTarget = signal<GalleryTarget | null>(null);
 
   protected readonly title = computed(() => this.store.name() || this.name() || '');
@@ -165,6 +168,10 @@ export class ConversationPage {
 
   protected openImage(message: Message, index: number): void {
     this.galleryTarget.set({ messageId: message.id, index });
+  }
+
+  protected openMenu(event: MouseEvent, message: Message, deletable: boolean): void {
+    this.contextMenu().open(event, this.menu.actionsFor(message, deletable));
   }
 
   protected closeGallery(): void {

@@ -48,7 +48,7 @@
               [mine]="row.mine"
               [read]="row.read"
               [time]="row.time"
-              (menuRequested)="menu.open(row.message, row.deletable)"
+              (menuRequested)="openMenu($event, row.message, row.deletable)"
               (imageOpened)="openImage(row.message, $event)"
               (fileOpened)="store.openFile(row.message.id, $event)"
               (mediaFailed)="store.mediaFailed(row.message.id)"
@@ -93,3 +93,4 @@
     (failed)="store.mediaFailed(gallery.message.id)"
   />
 }
+<coach-message-context-menu [label]="'coachApp.conversation.menuTitle' | t" />

@@ -4,11 +4,6 @@ export const LONG_PRESS_MS = 500;
 const MOVE_TOLERANCE_PX = 10;
 const MOUSE = 'mouse';
 
-interface PressStart {
-  readonly x: number;
-  readonly y: number;
-}
-
 @Directive({
   selector: '[coachMessagePress]',
   host: {
@@ -20,10 +15,10 @@ interface PressStart {
   },
 })
 export class MessagePress {
-  readonly menuRequested = output<void>();
+  readonly menuRequested = output<MouseEvent>();
 
   private timer: ReturnType<typeof setTimeout> | null = null;
-  private start: PressStart | null = null;
+  private start: PointerEvent | null = null;
   private held = false;
   private swallowNextClick = false;
 
@@ -43,7 +38,7 @@ export class MessagePress {
       return;
     }
     this.cancelTimer();
-    this.menuRequested.emit();
+    this.menuRequested.emit(event);
   }
 
   protected pressed(event: PointerEvent): void {
@@ -53,8 +48,8 @@ export class MessagePress {
     if (event.pointerType === MOUSE || !event.isPrimary) {
       return;
     }
-    this.start = { x: event.clientX, y: event.clientY };
-    this.timer = setTimeout(() => this.heldLongEnough(), LONG_PRESS_MS);
+    this.start = event;
+    this.timer = setTimeout(() => this.heldLongEnough(event), LONG_PRESS_MS);
   }
 
   protected moved(event: PointerEvent): void {
@@ -72,11 +67,11 @@ export class MessagePress {
     this.held = false;
   }
 
-  private heldLongEnough(): void {
+  private heldLongEnough(press: PointerEvent): void {
     this.cancelTimer();
     this.held = true;
     this.swallowNextClick = true;
-    this.menuRequested.emit();
+    this.menuRequested.emit(press);
   }
 
   private cancelTimer(): void {
