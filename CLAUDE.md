@@ -48,6 +48,9 @@ npx ng g component apps/admin/src/app/features/<feature>/components/<name>
 ```
 
 After every task: run `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` and `build:landing`. Fix what you broke. Never disable a rule to make it pass.
+The admin dev server loads `scripts/dev-proxy/admin.<env>.mjs`: it adds a `/api/ga4` route that signs GA4 Data API
+calls with the local key `~/.config/tofan/ga4-key.json` (dashboard MVP, `docs/modules/dashboard.md`) in front of the
+backend proxy below; the key never goes into the panel.
 There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
 `http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
 forwards to the stage API `https://api.stage.peaktofan.com` (with `ws: true` for SignalR; the old
