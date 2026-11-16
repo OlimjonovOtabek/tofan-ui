@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DOCUMENT, DestroyRef, computed, inject, signal } from '@angular/core';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
@@ -9,6 +9,7 @@ import { Tab, TabList, Tabs } from '@openng/optimus-ui/tabs';
 import { ActivityPanels } from '../../components/activity-panels/activity-panels';
 import { ActivityTrend } from '../../components/activity-trend/activity-trend';
 import { AudienceSummary } from '../../components/audience-summary/audience-summary';
+import { DashboardPanel } from '../../components/dashboard-panel/dashboard-panel';
 import { DashboardToolbar } from '../../components/dashboard-toolbar/dashboard-toolbar';
 import { EngagementPanels } from '../../components/engagement-panels/engagement-panels';
 import { KeyEvents } from '../../components/key-events/key-events';
@@ -25,7 +26,8 @@ import {
   isDashboardSection,
 } from '../../models/dashboard-section';
 
-const REALTIME_REFRESH_MS = 60_000;
+const REALTIME_REFRESH_MS = 120_000;
+const VISIBLE = 'visible';
 const SKELETON_CARDS = [1, 2, 3, 4, 5, 6];
 
 @Component({
@@ -35,6 +37,7 @@ const SKELETON_CARDS = [1, 2, 3, 4, 5, 6];
     ActivityTrend,
     AudienceSummary,
     Button,
+    DashboardPanel,
     DashboardToolbar,
     EngagementPanels,
     KeyEvents,
@@ -77,7 +80,12 @@ export class DashboardPage {
 
   constructor() {
     void this.store.load();
-    const timer = setInterval(() => void this.store.refreshRealtime(), REALTIME_REFRESH_MS);
+    const document = inject(DOCUMENT);
+    const timer = setInterval(() => {
+      if (document.visibilityState === VISIBLE) {
+        void this.store.refreshRealtime();
+      }
+    }, REALTIME_REFRESH_MS);
     inject(DestroyRef).onDestroy(() => clearInterval(timer));
   }
 

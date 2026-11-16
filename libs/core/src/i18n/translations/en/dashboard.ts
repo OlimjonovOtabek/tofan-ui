@@ -27,7 +27,7 @@ export const DASHBOARD_EN: Dictionary['dashboard'] = {
   },
   states: {
     unavailable:
-      'Some or all analytics did not load. Locally the GA4 key is needed; on the server the backend endpoint does not exist yet.',
+      'Some or all analytics did not load. The GA4 key did not come from the backend or the Google quota is used up for now.',
     empty: 'No active users in this period.',
     noData: 'No data',
     unknown: 'Not set',
@@ -58,6 +58,8 @@ export const DASHBOARD_EN: Dictionary['dashboard'] = {
     newUsers: 'New users',
   },
   realtime: {
+    unavailable:
+      'No data right now. The Google realtime quota may be used up; it retries in 2 minutes.',
     updated: 'Updated at {time}',
     title: 'In the app now',
     hint: 'Active in the last 30 minutes',

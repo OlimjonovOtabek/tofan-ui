@@ -78,6 +78,10 @@
             <app-realtime-panel [realtime]="realtime" [updatedAt]="store.realtimeAt()" />
           } @else if (store.loading()) {
             <p-skeleton height="16rem" borderRadius="0.75rem" />
+          } @else {
+            <app-dashboard-panel class="self-start" [heading]="'dashboard.realtime.title' | t">
+              <p class="text-muted-color m-0 text-sm">{{ 'dashboard.realtime.unavailable' | t }}</p>
+            </app-dashboard-panel>
           }
         </div>
         @if (store.engagement(); as engagement) {

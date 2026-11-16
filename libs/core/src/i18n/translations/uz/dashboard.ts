@@ -25,7 +25,7 @@ export const DASHBOARD_UZ = {
   },
   states: {
     unavailable:
-      "Analitikaning bir qismi yoki hammasi yuklanmadi. Lokal ishga tushirishda GA4 kaliti kerak, serverda esa backend endpoint'i hali yo'q.",
+      "Analitikaning bir qismi yoki hammasi yuklanmadi. GA4 kaliti backend'dan kelmagan yoki Google kvotasi vaqtincha tugagan.",
     empty: "Bu davrda faol foydalanuvchi yo'q.",
     noData: "Ma'lumot yo'q",
     unknown: 'Aniqlanmagan',
@@ -56,6 +56,8 @@ export const DASHBOARD_UZ = {
     newUsers: 'Yangi foydalanuvchilar',
   },
   realtime: {
+    unavailable:
+      "Hozir ma'lumot yo'q. Google realtime kvotasi tugagan bo'lishi mumkin, 2 daqiqada qayta urinadi.",
     updated: '{time} da yangilandi',
     title: 'Hozir ilovada',
     hint: 'Oxirgi 30 daqiqada faol',
