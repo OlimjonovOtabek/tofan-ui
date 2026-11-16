@@ -47,6 +47,7 @@ export class DashboardStore {
     this.span.set(span);
     this.loading.set(true);
     this.failed.set(false);
+    const realtime = this.loadRealtime(round, app).catch(hideRealtimeUntilNextRefresh);
     const results = await Promise.allSettled([
       this.keep(round, this.audience, this.analytics.audience(app, span)),
       this.keep(round, this.reach, this.analytics.reach(app, span)),
@@ -56,8 +57,8 @@ export class DashboardStore {
         this.cohorts,
         this.analytics.retention(app, cohortWeeks(now, RETENTION_WEEKS)),
       ),
-      this.loadRealtime(round, app),
     ]);
+    await realtime;
     if (round === this.loadRound) {
       this.failed.set(results.some((result) => result.status === 'rejected'));
       this.loading.set(false);

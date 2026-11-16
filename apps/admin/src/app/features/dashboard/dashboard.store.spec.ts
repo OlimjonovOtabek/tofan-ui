@@ -141,4 +141,15 @@ describe('DashboardStore', () => {
     expect(store.realtime()).toBeNull();
     expect(store.audience()).toEqual(AUDIENCE);
   });
+
+  it('should keep the page warning off when only realtime fails', async () => {
+    vi.mocked(service.realtime).mockRejectedValue(new ServiceUnavailableError());
+    const store = createStore();
+
+    await store.load(NOW);
+
+    expect(store.failed()).toBe(false);
+    expect(store.realtime()).toBeNull();
+    expect(store.audience()).toEqual(AUDIENCE);
+  });
 });
